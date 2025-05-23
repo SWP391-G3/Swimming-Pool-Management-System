@@ -17,8 +17,8 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author Lenovo
  */
-@WebServlet(name="TestServlet", urlPatterns={"/test"})
-public class TestServlet extends HttpServlet {
+@WebServlet(name="PoolManagementServlet", urlPatterns={"/poolmanagement"})
+public class PoolManagementServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
