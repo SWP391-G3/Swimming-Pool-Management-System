@@ -33,4 +33,15 @@ public class UserDAO extends DBContext{
         }
         return list;
     }
+    
+    public void updateUserProfile(User user) throws SQLException {
+        String sql = "UPDATE Users SET full_name=?, email=?, phone=?, address=?, update_at=GETDATE() WHERE user_id=?";
+        PreparedStatement st = connection.prepareStatement(sql);
+        st.setString(1, user.getFull_name());
+        st.setString(2, user.getEmail());
+        st.setString(3, user.getPhone());
+        st.setString(4, user.getAddress());
+        st.setInt(5, user.getUser_id());
+        st.executeUpdate();
+    }
 }
