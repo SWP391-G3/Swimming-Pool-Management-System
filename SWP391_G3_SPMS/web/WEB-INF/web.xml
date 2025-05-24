@@ -4,9 +4,17 @@
         <servlet-name>CustomerAccountInfor</servlet-name>
         <servlet-class>controller.CustomerAccountInfor</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ListCustomerBookingServlet</servlet-name>
+        <servlet-class>controller.ListCustomerBookingServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>CustomerAccountInfor</servlet-name>
         <url-pattern>/CustomerAccountInfor</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ListCustomerBookingServlet</servlet-name>
+        <url-pattern>/ListCustomerBookingServlet</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
