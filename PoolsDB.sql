@@ -171,8 +171,15 @@ CREATE TABLE Revenue (
     created_at DATETIME NOT NULL DEFAULT GETDATE(),
     CONSTRAINT FK_Revenue_Pool FOREIGN KEY (pool_id) REFERENCES Pools(pool_id)
 );
+-- chạy mỗi dòng này khi 
 
+ALTER TABLE Users
+ADD dob DATE NULL,
+	images NVARCHAR(255) NULL,
+    gender NVARCHAR(10) NULL;
 
+ALTER TABLE Pools
+ADD pool_image NVARCHAR(255);
 
 
 

@@ -18,13 +18,10 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author Lenovo
  */
-<<<<<<<< HEAD:SWP391_G3_SPMS/src/java/controller/PoolManagementServlet.java
-@WebServlet(name="PoolManagementServlet", urlPatterns={"/poolmanagement"})
-public class PoolManagementServlet extends HttpServlet {
-========
+
+
 @WebServlet(name="DeletePoolAdminServlet", urlPatterns={"/deletePoolAdmin"})
 public class DeletePoolAdminServlet extends HttpServlet {
->>>>>>>> main:SWP391_G3_SPMS/src/java/controller/admin/DeletePoolAdminServlet.java
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
