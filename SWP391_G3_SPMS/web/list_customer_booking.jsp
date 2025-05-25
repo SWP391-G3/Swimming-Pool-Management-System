@@ -23,7 +23,7 @@
 </head>
 <body>
 <div class="container mt-4">
-    <h2 class="mb-4 text-primary">Danh sách Booking khách hàng hôm nay</h2>
+    <h2 class="mb-4 text-primary">Danh sách Booking</h2>
     <form class="row mb-4 g-2" method="get">
         <div class="col-md-3">
             <input type="text" name="search" class="form-control" placeholder="Tìm tên, email, số ĐT, bể bơi..." value="<%= (search != null ? search : "") %>"/>
