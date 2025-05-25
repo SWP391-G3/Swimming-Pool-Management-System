@@ -2,7 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller;
+package controller.staff;
+
 
 import dao.UserDAO;
 import java.io.IOException;
@@ -76,8 +77,6 @@ public class StaffAccountServlet extends HttpServlet {
 //            response.sendRedirect("login.jsp");
 //            return;
 //        }
-        System.out.println("UserID param: " + userIdParam);
-        System.out.println("Parsed userId: " + userId);
 
         User user = userDAO.getUserById(userId);
         System.out.println("User lấy từ DB: " + user);
@@ -129,7 +128,7 @@ public class StaffAccountServlet extends HttpServlet {
             error.append("Email không hợp lệ.<br>");
         }
 
-        if (phone == null || !phone.matches("^0\\d{9}$")) {
+        if (phone == null || !phone.matches("^0\\d{9,10}$")) {
             error.append("Số điện thoại không hợp lệ (bắt đầu bằng 0 và có 10 chữ số).<br>");
         }
 
