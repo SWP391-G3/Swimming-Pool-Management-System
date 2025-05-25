@@ -39,6 +39,18 @@ public class User {
         this.update_at = update_at;
     }
 
+    public User(String username, String password, String full_name, String email, String phone, String address, int role_id, boolean status, LocalDate create_at) {
+        this.username = username;
+        this.password = password;
+        this.full_name = full_name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.role_id = role_id;
+        this.status = status;
+        this.create_at = create_at;
+    }
+
    
 
    

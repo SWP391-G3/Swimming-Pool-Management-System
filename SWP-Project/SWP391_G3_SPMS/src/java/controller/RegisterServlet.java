@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import model.User;
 
@@ -73,44 +74,73 @@ public class RegisterServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-   protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    String username = request.getParameter("username");
-    String password = request.getParameter("password");
-    String full_name = request.getParameter("full_name");
-    String email = request.getParameter("email");
-    String phone = request.getParameter("phone");
-    String address = request.getParameter("address");
-    LocalDate currentDate = LocalDate.now();
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-    UserDAO dao = new UserDAO();
-    List<User> userList = dao.getAllUser(); // Lấy danh sách tất cả user
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String full_name = request.getParameter("full_name");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+        String address = request.getParameter("address");
+        LocalDate currentDate = LocalDate.now();
 
-    // Kiểm tra username trùng
-    for (User u : userList) {
-        if (u.getUsername().equalsIgnoreCase(username)) {
-            request.setAttribute("error", "Username already exists. Please try another.");
+        // Kiểm tra định dạng email có đuôi @gmail.com
+        if (!email.toLowerCase().endsWith("@gmail.com")) {
+            request.setAttribute("error", "Email must form @gmail.com.Please try again!");
             request.setAttribute("enteredUsername", username);
             request.setAttribute("enteredEmail", email);
+            request.setAttribute("enteredFullName", full_name);
+            request.setAttribute("enteredPhone", phone);
+            request.setAttribute("enteredAddress", address);
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
-        if (u.getEmail().equalsIgnoreCase(email)) {
-            request.setAttribute("error", "Email already exists. Please try another.");
+
+        UserDAO dao = new UserDAO();
+        List<User> userList = dao.getAllUser();
+
+        for (User u : userList) {
+            if (u.getUsername() != null && u.getUsername().equalsIgnoreCase(username)) {
+                request.setAttribute("error", "Username already exists. Please try another.");
+                request.setAttribute("enteredUsername", username);
+                request.setAttribute("enteredEmail", email);
+                request.setAttribute("enteredFullName", full_name);
+                request.setAttribute("enteredPhone", phone);
+                request.setAttribute("enteredAddress", address);
+                request.getRequestDispatcher("register.jsp").forward(request, response);
+                return;
+            }
+
+            if (u.getEmail() != null && u.getEmail().equalsIgnoreCase(email)) {
+                request.setAttribute("error", "Email already exists. Please try another.");
+                request.setAttribute("enteredUsername", username);
+                request.setAttribute("enteredEmail", email);
+                request.setAttribute("enteredFullName", full_name);
+                request.setAttribute("enteredPhone", phone);
+                request.setAttribute("enteredAddress", address);
+                request.getRequestDispatcher("register.jsp").forward(request, response);
+                return;
+            }
+        }
+        if (!phone.matches("0[0-9]{8,9}")) {
+            request.setAttribute("error", "Phone number must start with 0 and contain 9 to 12 digits.");
             request.setAttribute("enteredUsername", username);
             request.setAttribute("enteredEmail", email);
+            request.setAttribute("enteredFullName", full_name);
+            request.setAttribute("enteredPhone", phone);
+            request.setAttribute("enteredAddress", address);
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
+
+        // Nếu không có lỗi thì thêm người dùng
+        User user = new User(0, username, password, full_name, email, phone, address, 4, true, currentDate, null);
+        dao.insertUser(user);
+        response.sendRedirect("login.jsp");
     }
 
     // Nếu không trùng thì tạo user mới
-    User user = new User(0, username, password, full_name, email, phone, address, 4, true, currentDate, null);
-    dao.insertUser(user);
-    response.sendRedirect("login.jsp");
-}
-
-
     /**
      * Returns a short description of the servlet.
      *
