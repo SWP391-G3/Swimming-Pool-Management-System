@@ -19,6 +19,7 @@ import model.User;
  *
  * @author 84823
  */
+
 @WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
 public class LoginServlet extends HttpServlet {
 
@@ -32,6 +33,7 @@ public class PoolManagementServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
