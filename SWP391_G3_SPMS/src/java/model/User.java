@@ -17,10 +17,13 @@ public class User {
     private String address;
     private int role_id;
     private boolean status;
-    private Date create_at;
-    private Date update_at;
+    private Date created_at;
+    private Date updated_at;
 
-    public User(int user_id, String username, String password, String full_name, String email, String phone, String address, int role_id, boolean status, Date create_at, Date update_at) {
+    public User() {
+    }
+
+    public User(int user_id, String username, String password, String full_name, String email, String phone, String address, int role_id, boolean status, Date created_at, Date updated_at) {
         this.user_id = user_id;
         this.username = username;
         this.password = password;
@@ -30,14 +33,11 @@ public class User {
         this.address = address;
         this.role_id = role_id;
         this.status = status;
-        this.create_at = create_at;
-        this.update_at = update_at;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
     }
 
-    public User() {
-    }
-
-    public User(String username, String password, String full_name, String email, String phone, String address, int role_id, boolean status, Date create_at, Date update_at) {
+    public User(String username, String password, String full_name, String email, String phone, String address, int role_id, boolean status, Date created_at, Date updated_at) {
         this.username = username;
         this.password = password;
         this.full_name = full_name;
@@ -46,11 +46,9 @@ public class User {
         this.address = address;
         this.role_id = role_id;
         this.status = status;
-        this.create_at = create_at;
-        this.update_at = update_at;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
     }
-    
-    
 
     public int getUser_id() {
         return user_id;
@@ -124,20 +122,21 @@ public class User {
         this.status = status;
     }
 
-    public Date getCreate_at() {
-        return create_at;
+    public Date getCreated_at() {
+        return created_at;
     }
 
-    public void setCreate_at(Date create_at) {
-        this.create_at = create_at;
+    public void setCreated_at(Date created_at) {
+        this.created_at = created_at;
     }
 
-    public Date getUpdate_at() {
-        return update_at;
+    public Date getUpdated_at() {
+        return updated_at;
     }
 
-    public void setUpdate_at(Date update_at) {
-        this.update_at = update_at;
+    public void setUpdated_at(Date updated_at) {
+        this.updated_at = updated_at;
     }
+
 
 }
