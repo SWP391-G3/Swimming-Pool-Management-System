@@ -3,8 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller;
+package controller.admin;
 
+import dao.PoolDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -17,8 +18,8 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author Lenovo
  */
-@WebServlet(name="TestServlet", urlPatterns={"/test"})
-public class TestServlet extends HttpServlet {
+@WebServlet(name="DeletePoolAdminServlet", urlPatterns={"/deletePoolAdmin"})
+public class DeletePoolAdminServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +36,10 @@ public class TestServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet TestServlet</title>");  
+            out.println("<title>Servlet DeletePoolAdminServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet TestServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet DeletePoolAdminServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,7 +56,16 @@ public class TestServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        String id = request.getParameter("id");
+        PoolDao dao = new PoolDao();
+        int pool_id;
+        try {
+            pool_id = Integer.parseInt(id);
+            dao.deletePool(pool_id);
+            response.sendRedirect("poolmanagement");
+        } catch (NumberFormatException e) {
+        }
+        
     } 
 
     /** 
