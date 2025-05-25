@@ -32,8 +32,8 @@ public class UserDAO extends DBContext {
                 u.setAddress(rs.getString("address"));
                 u.setRole_id(rs.getInt("role_id"));
                 u.setStatus(rs.getBoolean("status"));
-                u.setCreate_at(rs.getDate("create_at"));
-                u.setUpdate_at(rs.getDate("update_at"));
+                u.setCreated_at(rs.getDate("created_at"));
+                u.setUpdated_at(rs.getDate("updated_at"));
                 users.add(u);
             }
             return users;
@@ -63,8 +63,8 @@ public class UserDAO extends DBContext {
                 u.setAddress(rs.getString("address"));
                 u.setRole_id(rs.getInt("role_id"));
                 u.setStatus(rs.getBoolean("status"));
-                u.setCreate_at(rs.getDate("create_at"));
-                u.setUpdate_at(rs.getDate("update_at"));
+                u.setCreated_at(rs.getDate("created_at"));
+                u.setUpdated_at(rs.getDate("updated_at"));
                 users.add(u);
             }
             return users;
@@ -93,8 +93,8 @@ public class UserDAO extends DBContext {
                 u.setAddress(rs.getString("address"));
                 u.setRole_id(rs.getInt("role_id"));
                 u.setStatus(rs.getBoolean("status"));
-                u.setCreate_at(rs.getDate("create_at"));
-                u.setUpdate_at(rs.getDate("update_at"));
+                u.setCreated_at(rs.getDate("created_at"));
+                u.setUpdated_at(rs.getDate("updated_at"));
                 return u;
             }
         } catch (SQLException ex) {
@@ -108,7 +108,7 @@ public class UserDAO extends DBContext {
         PreparedStatement stm = null;
         ResultSet rs = null;
         Vector<User> users = new Vector<>();
-        String sql = "SELECT * FROM Users WHERE role_id = 1";
+        String sql = "SELECT * FROM Users WHERE role_id = 4";
         try {
             stm = connection.prepareStatement(sql);
             rs = stm.executeQuery();
@@ -123,8 +123,8 @@ public class UserDAO extends DBContext {
                 u.setAddress(rs.getString("address"));
                 u.setRole_id(rs.getInt("role_id"));
                 u.setStatus(rs.getBoolean("status"));
-                u.setCreate_at(rs.getDate("create_at"));
-                u.setUpdate_at(rs.getDate("update_at"));
+                u.setCreated_at(rs.getDate("created_at"));
+                u.setUpdated_at(rs.getDate("updated_at"));
                 users.add(u);
             }
             return users;
@@ -154,8 +154,8 @@ public class UserDAO extends DBContext {
                 u.setAddress(rs.getString("address"));
                 u.setRole_id(rs.getInt("role_id"));
                 u.setStatus(rs.getBoolean("status"));
-                u.setCreate_at(rs.getDate("create_at"));
-                u.setUpdate_at(rs.getDate("update_at"));
+                u.setCreated_at(rs.getDate("created_at"));
+                u.setUpdated_at(rs.getDate("updated_at"));
                 customers.add(u);
             }
             return customers;
@@ -192,4 +192,22 @@ public class UserDAO extends DBContext {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+//    public static void main(String[] args) {
+//        UserDAO dao = new UserDAO();
+//        int testUserId = 4;
+//        User user = dao.getUserByID(testUserId);
+//
+//        if (user != null) {
+//            System.out.println("User found:");
+//            System.out.println("ID: " + user.getUser_id());
+//            System.out.println("Username: " + user.getUsername());
+//            System.out.println("Full Name: " + user.getFull_name());
+//            System.out.println("Email: " + user.getEmail());
+//            System.out.println("Phone: " + user.getPhone());
+//            System.out.println("Address: " + user.getAddress());
+//        } else {
+//            System.out.println("User not found!");
+//        }
+//    }
 }
