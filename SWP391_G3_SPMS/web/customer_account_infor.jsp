@@ -25,7 +25,7 @@
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="#">YourBooking.com</a>
+            <a class="navbar-brand" href="#">PoolHub</a>
             <div class="d-flex align-items-center">
                 <button class="btn btn-link text-white">
                     <i class="fas fa-question-circle"></i>
