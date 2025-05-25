@@ -1,18 +1,28 @@
+
     /*
      * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
      * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
      */
     package model;
 
-<<<<<<< HEAD:SWP-Project/SWP391_G3_SPMS/src/java/model/User.java
+
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+
+
+
 import java.util.Date;
 
 /**
  *
  * @author Lenovo
  */
+
 public class User {
     private int user_id;
     private String username;
@@ -62,6 +72,43 @@ public class User {
 
     public void setUser_id(int user_id) {
         this.user_id = user_id;
+
+
+
+public class User {
+    private int userId;
+    private String username;
+    private String password;
+    private String fullName;
+    private String email;
+    private String phone;
+    private String address;
+    private int roleId;
+    private boolean status;
+    private Date createdAt;
+    private Date updatedAt;
+
+    public User(int userId, String username, String password, String fullName, String email, String phone, String address, int roleId, boolean status, Date createdAt, Date updatedAt) {
+        this.userId = userId;
+        this.username = username;
+        this.password = password;
+        this.fullName = fullName;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.roleId = roleId;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+
     }
 
     public String getUsername() {
@@ -80,12 +127,21 @@ public class User {
         this.password = password;
     }
 
+
     public String getFull_name() {
         return full_name;
     }
 
     public void setFull_name(String full_name) {
         this.full_name = full_name;
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+
     }
 
     public String getEmail() {
@@ -112,12 +168,21 @@ public class User {
         this.address = address;
     }
 
+
     public int getRole_id() {
         return role_id;
     }
 
     public void setRole_id(int role_id) {
         this.role_id = role_id;
+
+    public int getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
+
     }
 
     public boolean isStatus() {
@@ -127,6 +192,7 @@ public class User {
     public void setStatus(boolean status) {
         this.status = status;
     }
+
 
     public LocalDate getCreate_at() {
         return create_at;
@@ -146,8 +212,7 @@ public class User {
     
     
 }
-=======
-    import java.util.Date;
+
 
     /**
      *
@@ -270,4 +335,38 @@ public class User {
 
 
     }
->>>>>>> origin/Kienle:SWP391_G3_SPMS/src/java/model/User.java
+
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", roleId=" + roleId +
+                ", status=" + status +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
+}
