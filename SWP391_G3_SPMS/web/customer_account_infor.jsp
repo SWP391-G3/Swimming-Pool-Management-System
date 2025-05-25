@@ -34,19 +34,13 @@
         </nav>
 
         <div class="container my-4">
-            <% if (user == null) { %>
-            <div class="alert alert-danger text-center">user is null! Không có dữ liệu từ Servlet truyền sang.</div>
-            <% } %>
-            <% if (updateSuccess != null && !updateSuccess.isEmpty()) { %>
-            <div class="alert alert-success" id="updateSuccessAlert"><%= updateSuccess %></div>
-            <% } %>
             <% if (updateError != null && !updateError.isEmpty()) { %>
             <div class="alert alert-danger"><%= updateError %></div>
             <% } %>
             <div class="row">
                 <div class="col-md-3">
                     <div class="list-group">
-                        <a href="#" class="list-group-item list-group-item-action active">
+                        <a href="profile" class="list-group-item list-group-item-action active">
                             <i class="fas fa-user me-2"></i> Personal details
                         </a>
                         <a href="#" class="list-group-item list-group-item-action">
@@ -63,12 +57,15 @@
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <h2 class="card-title">Personal details</h2>
                                 <div class="position-relative">
-                                    <img src="https://via.placeholder.com/64" class="rounded-circle" alt="Profile Picture">
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxAA8303_86z01TPPqxwesKe7q_OJSJgWxvg&s" class="rounded-circle" alt="Profile Picture">
                                     <button class="btn btn-sm btn-primary position-absolute bottom-0 end-0" style="border-radius: 50%;">
                                         <i class="fas fa-camera"></i>
                                     </button>
                                 </div>
                             </div>
+                            <% if (updateSuccess != null && !updateSuccess.isEmpty()) { %>
+                            <div class="alert alert-success" id="updateSuccessAlert"><%= updateSuccess %></div>
+                            <% } %>
                             <p class="text-muted">Update your information and find out how it's used.</p>
                             <form id="personalDetailsForm" method="post" action="profile" autocomplete="off">
                                 <input type="hidden" name="service" value="updateProfile"/>
@@ -160,7 +157,6 @@
         </footer>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-            // Tự động ẩn thông báo thành công sau 5 giây
             document.addEventListener('DOMContentLoaded', function () {
                 var alert = document.getElementById("updateSuccessAlert");
                 if (alert) {
