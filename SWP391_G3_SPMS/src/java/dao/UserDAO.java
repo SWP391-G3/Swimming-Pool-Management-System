@@ -166,20 +166,20 @@ public class UserDAO extends DBContext {
     }
 
     public void updateUser(User user) {
-        PreparedStatement stm = null;
-        String sql = "UPDATE Users SET full_name = ?, email = ?, phone = ?, address = ?, update_at = GETDATE() WHERE user_id = ?";
-        try {
-            stm = connection.prepareStatement(sql);
-            stm.setString(1, user.getFull_name());
-            stm.setString(2, user.getEmail());
-            stm.setString(3, user.getPhone());
-            stm.setString(4, user.getAddress());
-            stm.setInt(5, user.getUser_id());
-            stm.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    PreparedStatement stm = null;
+    String sql = "UPDATE Users SET full_name = ?, email = ?, phone = ?, address = ?, updated_at = GETDATE() WHERE user_id = ?";
+    try {
+        stm = connection.prepareStatement(sql);
+        stm.setString(1, user.getFull_name());
+        stm.setString(2, user.getEmail());
+        stm.setString(3, user.getPhone());
+        stm.setString(4, user.getAddress());
+        stm.setInt(5, user.getUser_id());
+        stm.executeUpdate();
+    } catch (SQLException ex) {
+        Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
+}
 
     public void deleteUser(int userId) {
         PreparedStatement stm = null;
