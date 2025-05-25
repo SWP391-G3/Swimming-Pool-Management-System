@@ -77,6 +77,7 @@ public class StaffAccountServlet extends HttpServlet {
 //            response.sendRedirect("login.jsp");
 //            return;
 //        }
+//
 
         User user = userDAO.getUserById(userId);
         System.out.println("User lấy từ DB: " + user);
