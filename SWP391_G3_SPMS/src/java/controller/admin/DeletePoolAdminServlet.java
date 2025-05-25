@@ -18,48 +18,49 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author Lenovo
  */
-@WebServlet(name = "PoolManagementServlet", urlPatterns = { "/poolmanagement" })
+<<<<<<<< HEAD:SWP391_G3_SPMS/src/java/controller/PoolManagementServlet.java
+@WebServlet(name="PoolManagementServlet", urlPatterns={"/poolmanagement"})
 public class PoolManagementServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     * 
-     * @param request  servlet request
+========
+@WebServlet(name="DeletePoolAdminServlet", urlPatterns={"/deletePoolAdmin"})
+public class DeletePoolAdminServlet extends HttpServlet {
+>>>>>>>> main:SWP391_G3_SPMS/src/java/controller/admin/DeletePoolAdminServlet.java
+   
+    /** 
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+     * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException      if an I/O error occurs
+     * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DeletePoolAdminServlet</title>");
+            out.println("<title>Servlet DeletePoolAdminServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet DeletePoolAdminServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet DeletePoolAdminServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    }
+    } 
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
-    // + sign on the left to edit the code.">
-    /**
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /** 
      * Handles the HTTP <code>GET</code> method.
-     * 
-     * @param request  servlet request
+     * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException      if an I/O error occurs
+     * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         String id = request.getParameter("id");
         PoolDao dao = new PoolDao();
         int pool_id;
@@ -69,26 +70,24 @@ public class PoolManagementServlet extends HttpServlet {
             response.sendRedirect("poolmanagement");
         } catch (NumberFormatException e) {
         }
+        
+    } 
 
-    }
-
-    /**
+    /** 
      * Handles the HTTP <code>POST</code> method.
-     * 
-     * @param request  servlet request
+     * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException      if an I/O error occurs
+     * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
+    /** 
      * Returns a short description of the servlet.
-     * 
      * @return a String containing servlet description
      */
     @Override

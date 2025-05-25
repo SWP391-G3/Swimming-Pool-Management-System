@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package controller.admin;
 
 import dao.PoolDao;
@@ -13,22 +12,24 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
+import model.Pool;
 
 /**
  *
  * @author Lenovo
  */
-@WebServlet(name = "PoolManagementServlet", urlPatterns = { "/poolmanagement" })
-public class PoolManagementServlet extends HttpServlet {
+@WebServlet(name = "StatusPoolAdminServlet", urlPatterns = {"/statusPoolAdmin"})
+public class StatusPoolAdminServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
-     * 
-     * @param request  servlet request
+     *
+     * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException      if an I/O error occurs
+     * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -38,57 +39,73 @@ public class PoolManagementServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DeletePoolAdminServlet</title>");
+            out.println("<title>Servlet StatusPoolAdminServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet DeletePoolAdminServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet StatusPoolAdminServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
-    // + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
-     * 
-     * @param request  servlet request
+     *
+     * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException      if an I/O error occurs
+     * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String id = request.getParameter("id");
-        PoolDao dao = new PoolDao();
-        int pool_id;
-        try {
-            pool_id = Integer.parseInt(id);
-            dao.deletePool(pool_id);
-            response.sendRedirect("poolmanagement");
-        } catch (NumberFormatException e) {
-        }
 
+        int page = 1; // mac dinh ban dau la 1
+        int poolContain = 7;
+        String status = request.getParameter("status");
+        if (request.getParameter("nowStatus") != null) {
+            status = request.getParameter("nowStatus");
+        }
+        boolean pool_status = true;
+        try {
+            pool_status = Boolean.parseBoolean(status);
+        } catch (Exception e) {
+        }
+        if (request.getParameter("page") != null) {
+            page = Integer.parseInt(request.getParameter("page"));
+        }
+        PoolDao pdao = new PoolDao();
+        int totalRecords = pdao.getTotalRecordStatus(pool_status);
+        int totalPages = (int) Math.ceil(totalRecords * 1.0 / poolContain);
+        int start = (page - 1) * poolContain;
+        List<Pool> list = pdao.getPoolByPageStatus(pool_status, start, poolContain);
+        request.setAttribute("listPool", list);
+        request.setAttribute("totalrecords", totalRecords);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("nowstatus", pool_status);
+        request.setAttribute("key_status", pool_status);
+        request.getRequestDispatcher("statusPoolAdmin.jsp").forward(request, response);
     }
 
     /**
      * Handles the HTTP <code>POST</code> method.
-     * 
-     * @param request  servlet request
+     *
+     * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException      if an I/O error occurs
+     * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
     }
 
     /**
      * Returns a short description of the servlet.
-     * 
+     *
      * @return a String containing servlet description
      */
     @Override
