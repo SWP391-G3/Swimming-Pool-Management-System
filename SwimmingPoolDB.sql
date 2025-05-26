@@ -1,5 +1,5 @@
 ﻿-- Cơ sở dữ liệu mới 
-create database SwimmingPoolDB;
+--create database SwimmingPoolDB;
 -- Bảng vai trò người dùng
 CREATE TABLE Roles (
     role_id INT IDENTITY(1,1) PRIMARY KEY,
