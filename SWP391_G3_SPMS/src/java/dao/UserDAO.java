@@ -32,6 +32,9 @@ public class UserDAO extends DBContext {
                 u.setAddress(rs.getString("address"));
                 u.setRoleId(rs.getInt("role_id"));
                 u.setStatus(rs.getBoolean("status"));
+                u.setDob(rs.getDate("dob"));
+                u.setGender(rs.getString("gender"));
+                u.setImages(rs.getString("images"));
                 u.setCreatedAt(rs.getDate("created_at"));
                 u.setUpdatedAt(rs.getDate("updated_at"));
                 users.add(u);
@@ -63,6 +66,9 @@ public class UserDAO extends DBContext {
                 u.setAddress(rs.getString("address"));
                 u.setRoleId(rs.getInt("role_id"));
                 u.setStatus(rs.getBoolean("status"));
+                u.setDob(rs.getDate("dob"));
+                u.setGender(rs.getString("gender"));
+                u.setImages(rs.getString("images"));
                 u.setCreatedAt(rs.getDate("created_at"));
                 u.setUpdatedAt(rs.getDate("updated_at"));
                 users.add(u);
@@ -93,6 +99,9 @@ public class UserDAO extends DBContext {
                 u.setAddress(rs.getString("address"));
                 u.setRoleId(rs.getInt("role_id"));
                 u.setStatus(rs.getBoolean("status"));
+                u.setDob(rs.getDate("dob"));
+                u.setGender(rs.getString("gender"));
+                u.setImages(rs.getString("images"));
                 u.setCreatedAt(rs.getDate("created_at"));
                 u.setUpdatedAt(rs.getDate("updated_at"));
                 return u;
@@ -102,7 +111,7 @@ public class UserDAO extends DBContext {
         }
         return null;
     }
-    
+
     public Vector<User> getUserByName(String name) {
         PreparedStatement stm = null;
         ResultSet rs = null;
@@ -123,6 +132,9 @@ public class UserDAO extends DBContext {
                 u.setAddress(rs.getString("address"));
                 u.setRoleId(rs.getInt("role_id"));
                 u.setStatus(rs.getBoolean("status"));
+                u.setDob(rs.getDate("dob"));
+                u.setGender(rs.getString("gender"));
+                u.setImages(rs.getString("images"));
                 u.setCreatedAt(rs.getDate("created_at"));
                 u.setUpdatedAt(rs.getDate("updated_at"));
                 customers.add(u);
@@ -153,6 +165,9 @@ public class UserDAO extends DBContext {
                 u.setAddress(rs.getString("address"));
                 u.setRoleId(rs.getInt("role_id"));
                 u.setStatus(rs.getBoolean("status"));
+                u.setDob(rs.getDate("dob"));
+                u.setGender(rs.getString("gender"));
+                u.setImages(rs.getString("images"));
                 u.setCreatedAt(rs.getDate("created_at"));
                 u.setUpdatedAt(rs.getDate("updated_at"));
                 users.add(u);
@@ -184,6 +199,9 @@ public class UserDAO extends DBContext {
                 u.setAddress(rs.getString("address"));
                 u.setRoleId(rs.getInt("role_id"));
                 u.setStatus(rs.getBoolean("status"));
+                u.setDob(rs.getDate("dob"));
+                u.setGender(rs.getString("gender"));
+                u.setImages(rs.getString("images"));
                 u.setCreatedAt(rs.getDate("created_at"));
                 u.setUpdatedAt(rs.getDate("updated_at"));
                 customers.add(u);
@@ -195,23 +213,30 @@ public class UserDAO extends DBContext {
         return null;
     }
 
-    public void updateUser (User user) {
+    public void updateUser(User user) {
         PreparedStatement stm = null;
-        String sql = "UPDATE Users SET full_name = ?, email = ?, phone = ?, address = ?, updated_at = GETDATE() WHERE user_id = ?";
+        String sql = "UPDATE Users SET full_name = ?, email = ?, phone = ?, address = ?, dob = ?, gender = ?, images = ?, updated_at = GETDATE() WHERE user_id = ?";
         try {
             stm = connection.prepareStatement(sql);
             stm.setString(1, user.getFullName());
             stm.setString(2, user.getEmail());
             stm.setString(3, user.getPhone());
             stm.setString(4, user.getAddress());
-            stm.setInt(5, user.getUserId());
+            if (user.getDob() != null) {
+                stm.setDate(5, new java.sql.Date(user.getDob().getTime()));
+            } else {
+                stm.setNull(5, java.sql.Types.DATE);
+            }
+            stm.setString(6, user.getGender());
+            stm.setString(7, user.getImages());
+            stm.setInt(8, user.getUserId());
             stm.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void deleteUser (int userId) {
+    public void deleteUser(int userId) {
         PreparedStatement stm = null;
         String sql = "DELETE FROM Users WHERE user_id = ?";
         try {
