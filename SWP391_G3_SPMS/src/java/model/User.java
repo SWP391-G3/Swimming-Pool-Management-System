@@ -8,54 +8,63 @@ import java.util.Date;
 
 public class User {
 
-    private int user_id;
+    private Integer userId;
     private String username;
     private String password;
-    private String full_name;
+    private String fullName;
     private String email;
     private String phone;
     private String address;
-    private int role_id;
-    private boolean status;
-    private Date created_at;
-    private Date updated_at;
+    private Integer roleId;
+    private Boolean status;
+    private Date dob;
+    private String gender;
+    private String images;
+    private Date createdAt;
+    private Date updatedAt;
 
     public User() {
     }
 
-    public User(int user_id, String username, String password, String full_name, String email, String phone, String address, int role_id, boolean status, Date created_at, Date updated_at) {
-        this.user_id = user_id;
+    public User(Integer userId, String username, String password, String fullName, String email, String phone, String address, Integer roleId, Boolean status, Date dob, String gender, String images, Date createdAt, Date updatedAt) {
+        this.userId = userId;
         this.username = username;
         this.password = password;
-        this.full_name = full_name;
+        this.fullName = fullName;
         this.email = email;
         this.phone = phone;
         this.address = address;
-        this.role_id = role_id;
+        this.roleId = roleId;
         this.status = status;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
+        this.dob = dob;
+        this.gender = gender;
+        this.images = images;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
-    public User(String username, String password, String full_name, String email, String phone, String address, int role_id, boolean status, Date created_at, Date updated_at) {
+    public User(String username, String password, String fullName, String email, String phone, String address, Integer roleId, Boolean status, Date dob, String gender, String images, Date createdAt, Date updatedAt) {
         this.username = username;
         this.password = password;
-        this.full_name = full_name;
+        this.fullName = fullName;
         this.email = email;
         this.phone = phone;
         this.address = address;
-        this.role_id = role_id;
+        this.roleId = roleId;
         this.status = status;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
+        this.dob = dob;
+        this.gender = gender;
+        this.images = images;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -74,12 +83,12 @@ public class User {
         this.password = password;
     }
 
-    public String getFull_name() {
-        return full_name;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFull_name(String full_name) {
-        this.full_name = full_name;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getEmail() {
@@ -106,37 +115,59 @@ public class User {
         this.address = address;
     }
 
-    public int getRole_id() {
-        return role_id;
+    public Integer getRoleId() {
+        return roleId;
     }
 
-    public void setRole_id(int role_id) {
-        this.role_id = role_id;
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 
-    public boolean isStatus() {
+    public Boolean getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 
-    public Date getCreated_at() {
-        return created_at;
+    public Date getDob() {
+        return dob;
     }
 
-    public void setCreated_at(Date created_at) {
-        this.created_at = created_at;
+    public void setDob(Date dob) {
+        this.dob = dob;
     }
 
-    public Date getUpdated_at() {
-        return updated_at;
+    public String getGender() {
+        return gender;
     }
 
-    public void setUpdated_at(Date updated_at) {
-        this.updated_at = updated_at;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
+    public String getImages() {
+        return images;
+    }
 
+    public void setImages(String images) {
+        this.images = images;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }
