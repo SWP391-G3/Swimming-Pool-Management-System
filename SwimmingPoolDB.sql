@@ -97,10 +97,14 @@ CREATE TABLE Feedbacks (
     CONSTRAINT FK_Feedback_Pool FOREIGN KEY (pool_id) REFERENCES Pools(pool_id)
 );
 
+-- alter table Pool_Equipment
+-- add device_image NVARCHAR(255)
+
 -- Bảng thiết bị
 CREATE TABLE Pool_Equipment (
     equipment_id INT IDENTITY(1,1) PRIMARY KEY,
     pool_id INT NOT NULL,
+	device_image NVARCHAR(255),
     equipment_name NVARCHAR(100) NOT NULL,
     quantity INT NOT NULL CHECK (quantity >= 0),
     status NVARCHAR(20) NOT NULL DEFAULT 'available', -- available, broken, maintenance
@@ -217,3 +221,35 @@ CREATE TABLE Attendance (
     CONSTRAINT FK_Attendance_Pool FOREIGN KEY (pool_id) REFERENCES Pools(pool_id)
 );
 
+CREATE TABLE Branches (
+    branch_id INT IDENTITY(1,1) PRIMARY KEY,
+    branch_name NVARCHAR(100) NOT NULL,
+    branch_address NVARCHAR(255) NOT NULL,
+    status BIT NOT NULL DEFAULT 1
+);
+
+
+CREATE TABLE Device_Report (
+    report_id INT IDENTITY(1,1) PRIMARY KEY,
+    equipment_id INT NOT NULL,
+    reported_by INT NOT NULL, -- user_id của staff
+    report_time DATETIME NOT NULL DEFAULT GETDATE(),
+    description NVARCHAR(1000) NOT NULL, -- mô tả sự cố
+    status NVARCHAR(20) NOT NULL DEFAULT 'Chưa xử lý', -- Chưa xử lý | Đang xử lý | Đã xử lý
+    response_note NVARCHAR(1000),
+    response_by INT, -- user_id của manager phản hồi (nếu có)
+    response_time DATETIME,
+    CONSTRAINT FK_DeviceReport_Equipment FOREIGN KEY (equipment_id) REFERENCES Pool_Equipment(equipment_id),
+    CONSTRAINT FK_DeviceReport_Staff FOREIGN KEY (reported_by) REFERENCES Users(user_id),
+    CONSTRAINT FK_DeviceReport_Manager FOREIGN KEY (response_by) REFERENCES Users(user_id)
+);
+
+CREATE TABLE Device_Maintenance_History (
+    history_id INT IDENTITY(1,1) PRIMARY KEY,
+    equipment_id INT NOT NULL,
+    fixed_by INT NOT NULL, -- user_id của người xử lý (có thể là manager hoặc kỹ thuật viên)
+    fix_date DATETIME NOT NULL DEFAULT GETDATE(),
+    fix_details NVARCHAR(1000), -- Mô tả việc sửa chữa
+    CONSTRAINT FK_MaintenanceHistory_Equipment FOREIGN KEY (equipment_id) REFERENCES Pool_Equipment(equipment_id),
+    CONSTRAINT FK_MaintenanceHistory_User FOREIGN KEY (fixed_by) REFERENCES Users(user_id)
+);
