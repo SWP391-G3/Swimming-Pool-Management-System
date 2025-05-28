@@ -4,11 +4,15 @@
  */
 package dao;
 
-import java.sql.*;
 import dal.DBContext;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import model.Pool;
@@ -17,55 +21,45 @@ import model.Pool;
  *
  * @author Lenovo
  */
-public class PoolDao extends DBContext {
+public class PoolDAO extends DBContext {
 
     private List<Pool> list;
 
-    public List<Pool> getAllPool() {
-        list = new ArrayList<>();
-        String sql = "select * from Pools";
+    public int getTotalRecord() {
+        String sql = "SELECT COUNT(*) FROM Pools";
+        int totalRecord = 0;
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Date createdDate = rs.getDate(9);
-                Date updatedDate = rs.getDate(10);
-
-                LocalDate createdAt = (createdDate != null) ? createdDate.toLocalDate() : null;
-                LocalDate updatedAt = (updatedDate != null) ? updatedDate.toLocalDate() : null;
-                list.add(new Pool(rs.getInt(1), rs.getString(2), rs.getString(3),
-                        rs.getString(4), rs.getInt(5), rs.getTime(6).toLocalTime(), rs.getTime(7).toLocalTime(),
-                        rs.getBoolean(8), createdAt, updatedAt));
+            if (rs.next()) {
+                totalRecord = rs.getInt(1);
             }
-            return list;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return totalRecord;
     }
 
-    public List<Pool> getPoolByStatus(boolean pool_status) {
+    public List<Pool> getPoolByPage(int start, int recordPerPage) {
         list = new ArrayList<>();
-        String sql = "select * from Pools where pool_status = ?";
-        int result;
-        if (pool_status) {
-            result = 1;
-        } else {
-            result = 0;
-        }
+        String sql = "SELECT * FROM Pools \n"
+                + "ORDER BY pool_id \n"
+                + "OFFSET ? ROWS\n"
+                + "FETCH NEXT ? ROWS ONLY;";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, result);
+            st.setInt(1, start);
+            st.setInt(2, recordPerPage);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
-                Date createdDate = rs.getDate(9);
-                Date updatedDate = rs.getDate(10);
+                Date createdDate = rs.getDate(10);
+                Date updatedDate = rs.getDate(11);
 
                 LocalDate createdAt = (createdDate != null) ? createdDate.toLocalDate() : null;
                 LocalDate updatedAt = (updatedDate != null) ? updatedDate.toLocalDate() : null;
                 list.add(new Pool(rs.getInt(1), rs.getString(2), rs.getString(3),
                         rs.getString(4), rs.getInt(5), rs.getTime(6).toLocalTime(), rs.getTime(7).toLocalTime(),
-                        rs.getBoolean(8), createdAt, updatedAt));
+                        rs.getBoolean(8), rs.getString(9), createdAt, updatedAt));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -73,56 +67,8 @@ public class PoolDao extends DBContext {
         return list;
     }
 
-    public List<Pool> getPoolByLocation(String pool_address) {
-        list = new ArrayList<>();
-        String sql = "select * from Pools where pool_address = ?";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setString(1, pool_address);
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Date createdDate = rs.getDate(9);
-                Date updatedDate = rs.getDate(10);
-
-                LocalDate createdAt = (createdDate != null) ? createdDate.toLocalDate() : null;
-                LocalDate updatedAt = (updatedDate != null) ? updatedDate.toLocalDate() : null;
-                list.add(new Pool(rs.getInt(1), rs.getString(2), rs.getString(3),
-                        rs.getString(4), rs.getInt(5), rs.getTime(6).toLocalTime(), rs.getTime(7).toLocalTime(),
-                        rs.getBoolean(8), createdAt, updatedAt));
-            }
-            return list;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public List<Pool> getPoolByName(String pool_name) {
-        list = new ArrayList<>();
-        String sql = "select * from Pools where pool_name LIKE ?";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setString(1, "%" + pool_name + "%");
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Date createdDate = rs.getDate(9);
-                Date updatedDate = rs.getDate(10);
-
-                LocalDate createdAt = (createdDate != null) ? createdDate.toLocalDate() : null;
-                LocalDate updatedAt = (updatedDate != null) ? updatedDate.toLocalDate() : null;
-                list.add(new Pool(rs.getInt(1), rs.getString(2), rs.getString(3),
-                        rs.getString(4), rs.getInt(5), rs.getTime(6).toLocalTime(), rs.getTime(7).toLocalTime(),
-                        rs.getBoolean(8), createdAt, updatedAt));
-            }
-            return list;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public void insertPool(Pool pool) {
-        String sql = "INSERT INTO Pools (pool_name, pool_road, pool_address, max_slot, open_time, close_time,created_at) VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Pools (pool_name, pool_road, pool_address, max_slot, open_time, close_time,created_at,pool_image) VALUES (?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, pool.getPool_name());
@@ -132,6 +78,58 @@ public class PoolDao extends DBContext {
             st.setTime(5, Time.valueOf(pool.getOpen_time()));
             st.setTime(6, java.sql.Time.valueOf(pool.getClose_time()));
             st.setDate(7, java.sql.Date.valueOf(pool.getCreated_at()));
+            st.setString(8, pool.getPool_image());
+            st.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Pool getPoolByID(int pool_id) {
+        String sql = "select * from Pools where pool_id = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, pool_id);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                Date createdDate = rs.getDate(10);
+                Date updatedDate = rs.getDate(11);
+
+                LocalDate createdAt = (createdDate != null) ? createdDate.toLocalDate() : null;
+                LocalDate updatedAt = (updatedDate != null) ? updatedDate.toLocalDate() : null;
+                return new Pool(rs.getInt(1), rs.getString(2), rs.getString(3),
+                        rs.getString(4), rs.getInt(5), rs.getTime(6).toLocalTime(),
+                        rs.getTime(7).toLocalTime(), rs.getBoolean(8), rs.getString(9),
+                        createdAt, updatedAt);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void updatePool(Pool p) {
+        String sql = "UPDATE Pools SET pool_name = ?, pool_road = ?, pool_address = ?, max_slot = ?, "
+                + "open_time = ?, close_time = ?, pool_status = ?, updated_at = ?,pool_image = ? WHERE pool_id = ?";
+
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setString(1, p.getPool_name());
+            st.setString(2, p.getPool_road());
+            st.setString(3, p.getPool_address());
+            st.setInt(4, p.getMax_slot());
+            st.setTime(5, Time.valueOf(p.getOpen_time()));
+            st.setTime(6, Time.valueOf(p.getClose_time()));
+            int bitStatus;
+            if (p.isPool_status()) {
+                bitStatus = 1;
+            } else {
+                bitStatus = 0;
+            }
+            st.setInt(7, bitStatus);
+            st.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
+            st.setString(9, p.getPool_image());
+            st.setInt(10, p.getPool_id());
+
             st.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -149,307 +147,72 @@ public class PoolDao extends DBContext {
         }
     }
 
-    public void updatePool(Pool p) {
-        String sql = "UPDATE Pools SET pool_name = ?, pool_road = ?, pool_address = ?, max_slot = ?, "
-                + "open_time = ?, close_time = ?, pool_status = ?, updated_at = ? WHERE pool_id = ?";
+    public List<Pool> searchPools(String search, String location, Boolean status, String sort, int start, int recordPerPage) {
+        list = new ArrayList<>();
+        String sql = "SELECT * FROM Pools WHERE 1=1 ";
+        int count = 0;
 
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
-            st.setString(1, p.getPool_name());
-            st.setString(2, p.getPool_road());
-            st.setString(3, p.getPool_address());
-            st.setInt(4, p.getMax_slot());
-            st.setTime(5, Time.valueOf(p.getOpen_time()));
-            st.setTime(6, Time.valueOf(p.getClose_time()));
-            int bitStatus;
-            if (p.isPool_status()) {
-                bitStatus = 1;
-            } else{
-                bitStatus = 0;
-            }
-            st.setInt(7, bitStatus);
-            st.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
-            st.setInt(9, p.getPool_id());
-
-            st.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (search != null && !search.trim().isEmpty()) {
+            sql += " AND pool_name LIKE ? ";
         }
-    }
 
-    public int getTotalRecord() {
-        String sql = "SELECT COUNT(*) FROM Pools";
-        int totalRecord = 0;
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                totalRecord = rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (location != null && !location.trim().isEmpty()) {
+            sql += " AND pool_address = ? ";
         }
-        return totalRecord;
-    }
 
-    public int getTotalRecordMaxSlot() {
-        String sql = "SELECT COUNT(*) FROM Pools";
-        int totalRecord = 0;
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                totalRecord = rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (status != null) {
+            sql += " AND pool_status = ? ";
         }
-        return totalRecord;
-    }
 
-    public int getTotalRecordLocation(String pool_address) {
-        String sql = "SELECT COUNT(*) FROM Pools where pool_address = ?";
-        int totalRecord = 0;
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setString(1, pool_address);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                totalRecord = rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return totalRecord;
-    }
-
-    public int getTotalRecordStatus(boolean pool_status) {
-        String sql = "SELECT COUNT(*) FROM Pools where pool_status = ?";
-        int totalRecord = 0;
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            int bitStatus;
-            if (pool_status) {
-                bitStatus = 1;
+        if (sort != null && !sort.trim().isEmpty()) {
+            if (sort.equals("capacity_asc")) {
+                sql += " ORDER BY max_slot ASC ";
             } else {
-                bitStatus = 0;
+                sql += " ORDER BY max_slot DESC ";
             }
-            st.setInt(1, bitStatus);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                totalRecord = rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else {
+            sql += " ORDER BY pool_id ASC "; 
         }
-        return totalRecord;
-    }
 
-    public Pool getPoolByID(int pool_id) {
-        String sql = "select * from Pools where pool_id = ?";
+        sql += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ";
+
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, pool_id);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                Date createdDate = rs.getDate(9);
-                Date updatedDate = rs.getDate(10);
 
-                LocalDate createdAt = (createdDate != null) ? createdDate.toLocalDate() : null;
-                LocalDate updatedAt = (updatedDate != null) ? updatedDate.toLocalDate() : null;
-                return new Pool(rs.getInt(1), rs.getString(2), rs.getString(3),
-                        rs.getString(4), rs.getInt(5), rs.getTime(6).toLocalTime(),
-                        rs.getTime(7).toLocalTime(), rs.getBoolean(8),
-                        createdAt, updatedAt);
+            // Đặt giá trị tham số theo thứ tự đã thêm
+            if (search != null && !search.trim().isEmpty()) {
+                st.setString(++count, "%" + search + "%");
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
-    public List<Pool> getPoolByPage(int start, int recordPerPage) {
-        list = new ArrayList<>();
-        String sql = "SELECT * FROM Pools \n"
-                + "ORDER BY pool_id \n"
-                + "OFFSET ? ROWS\n"
-                + "FETCH NEXT ? ROWS ONLY;";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, start);
-            st.setInt(2, recordPerPage);
+            if (location != null && !location.trim().isEmpty()) {
+                st.setString(++count, location);
+            }
+
+            if (status != null) {
+                st.setInt(++count, status ? 1 : 0);
+            }
+            st.setInt(++count, start);
+            st.setInt(++count, recordPerPage);
+
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
-                Date createdDate = rs.getDate(9);
-                Date updatedDate = rs.getDate(10);
-
+                Date createdDate = rs.getDate(10);
+                Date updatedDate = rs.getDate(11);
                 LocalDate createdAt = (createdDate != null) ? createdDate.toLocalDate() : null;
                 LocalDate updatedAt = (updatedDate != null) ? updatedDate.toLocalDate() : null;
-                list.add(new Pool(rs.getInt(1), rs.getString(2), rs.getString(3),
-                        rs.getString(4), rs.getInt(5), rs.getTime(6).toLocalTime(), rs.getTime(7).toLocalTime(),
-                        rs.getBoolean(8), createdAt, updatedAt));
+
+                list.add(new Pool(
+                        rs.getInt(1), rs.getString(2), rs.getString(3),
+                        rs.getString(4), rs.getInt(5),
+                        rs.getTime(6).toLocalTime(), rs.getTime(7).toLocalTime(),
+                        rs.getBoolean(8), rs.getString(9),
+                        createdAt, updatedAt
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return list;
     }
-
-    public List<Pool> getPoolByPageLocation(String pool_address, int start, int recordPerPage) {
-        list = new ArrayList<>();
-        String sql = "SELECT * FROM Pools\n"
-                + "WHERE pool_address COLLATE Latin1_General_CI_AI LIKE ?\n"
-                + "ORDER BY pool_id\n"
-                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setString(1, pool_address);
-            st.setInt(2, start);
-            st.setInt(3, recordPerPage);
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Date createdDate = rs.getDate(9);
-                Date updatedDate = rs.getDate(10);
-
-                LocalDate createdAt = (createdDate != null) ? createdDate.toLocalDate() : null;
-                LocalDate updatedAt = (updatedDate != null) ? updatedDate.toLocalDate() : null;
-                list.add(new Pool(rs.getInt(1), rs.getString(2), rs.getString(3),
-                        rs.getString(4), rs.getInt(5), rs.getTime(6).toLocalTime(), rs.getTime(7).toLocalTime(),
-                        rs.getBoolean(8), createdAt, updatedAt));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    public List<Pool> getPoolByPageStatus(boolean pool_status, int start, int recordPerPage) {
-        list = new ArrayList<>();
-        String sql = "SELECT * FROM Pools\n"
-                + "WHERE pool_status = ?\n"
-                + "ORDER BY pool_id\n"
-                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            int bitStatus;
-            if (pool_status) {
-                bitStatus = 1;
-            } else {
-                bitStatus = 0;
-            }
-            st.setInt(1, bitStatus);
-            st.setInt(2, start);
-            st.setInt(3, recordPerPage);
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Date createdDate = rs.getDate(9);
-                Date updatedDate = rs.getDate(10);
-
-                LocalDate createdAt = (createdDate != null) ? createdDate.toLocalDate() : null;
-                LocalDate updatedAt = (updatedDate != null) ? updatedDate.toLocalDate() : null;
-                list.add(new Pool(rs.getInt(1), rs.getString(2), rs.getString(3),
-                        rs.getString(4), rs.getInt(5), rs.getTime(6).toLocalTime(), rs.getTime(7).toLocalTime(),
-                        rs.getBoolean(8), createdAt, updatedAt));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    public List<Pool> getPoolByPageMaxSlotASC(int start, int recordPerPage) {
-        list = new ArrayList<>();
-        String sql = "SELECT * FROM Pools\n"
-                + "ORDER BY max_slot asc\n"
-                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, start);
-            st.setInt(2, recordPerPage);
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Date createdDate = rs.getDate(9);
-                Date updatedDate = rs.getDate(10);
-
-                LocalDate createdAt = (createdDate != null) ? createdDate.toLocalDate() : null;
-                LocalDate updatedAt = (updatedDate != null) ? updatedDate.toLocalDate() : null;
-                list.add(new Pool(rs.getInt(1), rs.getString(2), rs.getString(3),
-                        rs.getString(4), rs.getInt(5), rs.getTime(6).toLocalTime(), rs.getTime(7).toLocalTime(),
-                        rs.getBoolean(8), createdAt, updatedAt));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    public List<Pool> getPoolByPageMaxSlotDESC(int start, int recordPerPage) {
-        list = new ArrayList<>();
-        String sql = "SELECT * FROM Pools\n"
-                + "ORDER BY max_slot desc\n"
-                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, start);
-            st.setInt(2, recordPerPage);
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Date createdDate = rs.getDate(9);
-                Date updatedDate = rs.getDate(10);
-
-                LocalDate createdAt = (createdDate != null) ? createdDate.toLocalDate() : null;
-                LocalDate updatedAt = (updatedDate != null) ? updatedDate.toLocalDate() : null;
-                list.add(new Pool(rs.getInt(1), rs.getString(2), rs.getString(3),
-                        rs.getString(4), rs.getInt(5), rs.getTime(6).toLocalTime(), rs.getTime(7).toLocalTime(),
-                        rs.getBoolean(8), createdAt, updatedAt));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    public List<Pool> sortPoolByMaxSlotASC() {
-        list = new ArrayList<>();
-        String sql = "SELECT * FROM Pools ORDER BY max_slot ASC;";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Date createdDate = rs.getDate(9);
-                Date updatedDate = rs.getDate(10);
-
-                LocalDate createdAt = (createdDate != null) ? createdDate.toLocalDate() : null;
-                LocalDate updatedAt = (updatedDate != null) ? updatedDate.toLocalDate() : null;
-                list.add(new Pool(rs.getInt(1), rs.getString(2), rs.getString(3),
-                        rs.getString(4), rs.getInt(5), rs.getTime(6).toLocalTime(), rs.getTime(7).toLocalTime(),
-                        rs.getBoolean(8), createdAt, updatedAt));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    public List<Pool> sortPoolByMaxSlotDESC() {
-        list = new ArrayList<>();
-        String sql = "SELECT * FROM Pools ORDER BY max_slot DESC;";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Date createdDate = rs.getDate(9);
-                Date updatedDate = rs.getDate(10);
-
-                LocalDate createdAt = (createdDate != null) ? createdDate.toLocalDate() : null;
-                LocalDate updatedAt = (updatedDate != null) ? updatedDate.toLocalDate() : null;
-                list.add(new Pool(rs.getInt(1), rs.getString(2), rs.getString(3),
-                        rs.getString(4), rs.getInt(5), rs.getTime(6).toLocalTime(), rs.getTime(7).toLocalTime(),
-                        rs.getBoolean(8), createdAt, updatedAt));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
 }
