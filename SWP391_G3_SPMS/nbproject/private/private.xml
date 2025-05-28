@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group name="SWP391">
+            <file>file:/E:/HK_5_SU2025/SWP391/SWP-Project/SWP391_G3_SPMS/web/staffSchedule.jsp</file>
+            <file>file:/E:/HK_5_SU2025/SWP391/SWP-Project/SWP391_G3_SPMS/web/staff-css/staff-schedule.css</file>
+            <file>file:/E:/HK_5_SU2025/SWP391/SWP-Project/SWP391_G3_SPMS/src/java/dao/staff/StaffScheduleDAO.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP391/SWP-Project/SWP391_G3_SPMS/web/staffInformation.jsp</file>
+            <file>file:/E:/HK_5_SU2025/SWP391/SWP-Project/SWP391_G3_SPMS/web/staff-css/staff-device.css</file>
+            <file>file:/E:/HK_5_SU2025/SWP391/SWP-Project/SWP391_G3_SPMS/web/staffDashboard.jsp</file>
+            <file>file:/E:/HK_5_SU2025/SWP391/SWP-Project/SWP391_G3_SPMS/web/staffDeviceReport.jsp</file>
+            <file>file:/E:/HK_5_SU2025/SWP391/SWP-Project/SWP391_G3_SPMS/web/staff-css/staff-dashboard.css</file>
+            <file>file:/E:/HK_5_SU2025/SWP391/SWP-Project/SWP391_G3_SPMS/web/check.jsp</file>
+            <file>file:/E:/HK_5_SU2025/SWP391/SWP-Project/SWP391_G3_SPMS/web/staffDeviceHistory.jsp</file>
+            <file>file:/E:/HK_5_SU2025/SWP391/SWP-Project/SWP391_G3_SPMS/web/WEB-INF/web.xml</file>
+            <file>file:/E:/HK_5_SU2025/SWP391/SWP-Project/SWP391_G3_SPMS/web/staffDeviceList.jsp</file>
+            <file>file:/E:/HK_5_SU2025/SWP391/SWP-Project/SWP391_G3_SPMS/src/java/controller/staff/StaffAccountServlet.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP391/SWP-Project/SWP391_G3_SPMS/src/java/controller/staff/StaffScheduleServlet.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP391/SWP-Project/SWP391_G3_SPMS/web/staff-css/staff-information.css</file>
+        </group>
+        <group name="SWP391_Manager">
+            <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/SWP391_G3_SPMS/web/manager.jsp</file>
+            <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/SWP391_G3_SPMS/web/manager-css/manager.css</file>
+            <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dal/DBContext.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dao/UserDAO.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/model/User.java</file>
+        </group>
+    </open-files>
+</project-private>
