@@ -1,5 +1,6 @@
-﻿Create Database SPMSDB; 
+﻿--Create Database PoolDB;  
 
+--use PoolDB;
 CREATE TABLE Roles (
     role_id INT IDENTITY(1,1) PRIMARY KEY,
     role_name NVARCHAR(50) NOT NULL UNIQUE
@@ -212,5 +213,5 @@ CREATE TABLE Customer_CheckIn(
 	CheckInTime DATETIME,
 	CheckOutTime DATETIME,
 	CONSTRAINT FK_CheckIn_User FOREIGN KEY (staff_id) REFERENCES Users(user_id),
-	CONSTRAINT FK_CheckIn_Booking FOREIGN KEY (booking_id) REFERENCES Booking(booking_id),
+	CONSTRAINT FK_CheckIn_Booking FOREIGN KEY (booking_id) REFERENCES Booking(booking_id)
 );
