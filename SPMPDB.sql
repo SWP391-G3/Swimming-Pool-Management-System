@@ -21,7 +21,7 @@ CREATE TABLE Users (
     images NVARCHAR(255),
     created_at DATETIME NOT NULL DEFAULT GETDATE(),
     updated_at DATETIME,
-    CONSTRAINT FK_Users_Roles FOREIGN KEY (role_id) REFERENCES Roles(role_id)
+    CONSTRAINT FK_Users_Roles FOREIGN KEY (role_id) REFERENCES Roles(role_id) 
 );
 
 CREATE TABLE Pools (
@@ -95,7 +95,7 @@ CREATE TABLE FeedbackResponse (
     responseder_id INT NOT NULL,
     response_note NVARCHAR(1000),
     created_at DATETIME NOT NULL DEFAULT GETDATE(),
-    CONSTRAINT FK_Feedback_User FOREIGN KEY (responseder_id) REFERENCES Users(user_id)
+    CONSTRAINT FK_FeedbackResponse_User FOREIGN KEY (responseder_id) REFERENCES Users(user_id)
 );
 
 CREATE TABLE Pool_Device (
@@ -106,7 +106,7 @@ CREATE TABLE Pool_Device (
     quantity INT NOT NULL CHECK (quantity >= 0),
     device_status NVARCHAR(20) NOT NULL DEFAULT 'available', -- available, broken, maintenance
     notes NVARCHAR(255),
-    CONSTRAINT FK_PoolDevice_Pool FOREIGN KEY (pool_id) REFERENCES Pools(pool_id)
+    CONSTRAINT FK_PoolDevices_Pool FOREIGN KEY (pool_id) REFERENCES Pools(pool_id)
 );
 
 CREATE TABLE Device_Report (
@@ -132,7 +132,7 @@ CREATE TABLE Pool_RentItem (
     quantity INT NOT NULL CHECK (quantity >= 0),
     item_status NVARCHAR(20) NOT NULL DEFAULT 'available', -- available, broken, maintenance
     notes NVARCHAR(255),
-    CONSTRAINT FK_PoolDevice_Pool FOREIGN KEY (pool_id) REFERENCES Pools(pool_id)
+    CONSTRAINT FK_PoolRentItem_Pool FOREIGN KEY (pool_id) REFERENCES Pools(pool_id)
 );
 
 CREATE TABLE Pool_RentItemReport (
