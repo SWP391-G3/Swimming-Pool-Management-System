@@ -16,15 +16,9 @@
         <div class="name"><c:out value="${sessionScope.full_name != null ? sessionScope.full_name : 'Manager'}"/></div>
     </div>
     <ul class="menu">
+        
         <li>
-            <a href="managerDashboard.jsp"
-               <c:if test="${activeMenu eq 'dashboard'}">class="active"</c:if>>
-                <svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9-1.41 1.41L12 5.83l-7.59 7.58z"/><path d="M3 12v8h6v-6h6v6h6v-8"/></svg>
-                Dashboard
-            </a>
-        </li>
-        <li>
-            <a href="managerEquipment.jsp"
+            <a href="DeviceServlet"
                <c:if test="${activeMenu eq 'equipment'}">class="active"</c:if>>
                 <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="2"/><rect x="7" y="14" width="10" height="6" rx="1.5" fill="#38bdf8" opacity="0.7"/><circle cx="12" cy="12" r="2" fill="#38bdf8"/></svg>
                 Quản lý thiết bị

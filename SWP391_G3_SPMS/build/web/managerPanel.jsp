@@ -15,8 +15,8 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Manager Dashboard</title>
-    <link rel="stylesheet" href="./manager-css/manager-dashboard.css">
+    <title>Manager Panel</title>
+    <link rel="stylesheet" href="./manager-css/manager-panel.css">
 </head>
 <body>
     <div class="layout">
@@ -28,7 +28,7 @@
                 <p class="desc">Truy cập nhanh các chức năng dành cho quản lý.</p>
             </div>
             <div class="dashboard-cards">
-                <a href="managerEquipment.jsp" class="dashboard-card">
+                <a href="DeviceServlet" class="dashboard-card">
                     <div class="dashboard-card-title">Quản lý thiết bị</div>
                     <div class="dashboard-card-desc">Theo dõi, thêm thiết bị, bảo trì thiết bị bể bơi.</div>
                 </a>
