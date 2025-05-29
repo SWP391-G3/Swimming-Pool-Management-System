@@ -79,6 +79,7 @@ public class AdminAddPoolServlet extends HttpServlet {
         Pool pool;
         String pool_name = request.getParameter("poolName");
         String pool_image = request.getParameter("poolImage");
+        String pool_description = request.getParameter("poolDescription");
         String pool_road = request.getParameter("poolRoad");
         String pool_addresss = request.getParameter("poolAddress");
         String max_slot_raw = request.getParameter("maxSlot");
@@ -89,12 +90,22 @@ public class AdminAddPoolServlet extends HttpServlet {
         LocalTime open, close;
         boolean pool_status;
         int max_slot;
+        String error;
         try {
             open = LocalTime.parse(open_time);
             close = LocalTime.parse(close_time);
+            if (open.compareTo(close) >= 0) {
+                error = "Lỗi khi thêm bể bơi: giờ mở cửa phải nhỏ hơn giờ đóng cửa!";
+                request.setAttribute("error", error);
+                request.getRequestDispatcher("AdminAddPool.jsp").forward(request, response);
+                return;
+            }
             max_slot = Integer.parseInt(max_slot_raw);
+            if (max_slot <= 0) {
+                max_slot = 50;
+            }
             pool_status = Boolean.parseBoolean(status);
-            pool = new Pool(0, pool_name, pool_road, pool_addresss, max_slot, open, close, pool_status, pool_image, currentDate, null);
+            pool = new Pool(0, pool_name, pool_road, pool_addresss, max_slot, open, close, pool_status, pool_image, currentDate, null, pool_description);
             dao.insertPool(pool);
             response.sendRedirect("adminPoolManagement");
         } catch (IOException e) {

@@ -65,16 +65,26 @@ public class AdminSearchPoolServlet extends HttpServlet {
         String status = request.getParameter("status");
         String sort = request.getParameter("sort");
         Boolean pool_status = null;
-        String nameSort, nameStatus = "";
+        String nameSort ="", nameStatus = "";
         PoolDAO dao = new PoolDAO();
         List<Pool> list;
         int page = 1; // mac dinh ban dau la 1
         int poolContain = 4;
-        if (request.getParameter("page") != null) {
-            page = Integer.parseInt(request.getParameter("page"));
-        }
         int totalRecords = dao.getTotalRecord();
         int totalPages = (int) Math.ceil(totalRecords * 1.0 / poolContain);
+        try {
+            String pageStr = request.getParameter("page");
+            if (pageStr != null) {
+                page = Integer.parseInt(pageStr);
+                if (page < 1) {
+                    page = 1;
+                } else if (page > totalPages) {
+                    page = totalPages;
+                }
+            }
+        } catch (NumberFormatException e) {
+            page = 1;
+        }
         int start = (page - 1) * poolContain;
         try {
             if (status != null && !status.trim().isEmpty()) {
@@ -87,7 +97,7 @@ public class AdminSearchPoolServlet extends HttpServlet {
             }
             if (sort.equals("capacity_desc")) {
                 nameSort = "Sức chứa giảm giảm dần";
-            } else {
+            } else if(sort.equals("capacity_asc")) {
                 nameSort = "sức chứa tăng dần";
             }
             list = dao.searchPools(search, location, pool_status, sort, start, poolContain);

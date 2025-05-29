@@ -60,15 +60,28 @@ public class AdminPoolManagement extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int page = 1; // mac dinh ban dau la 1
-        int poolContain = 4;
-        String nameWork = "Quản lý bể bơi";
-        if (request.getParameter("page") != null) {
-            page = Integer.parseInt(request.getParameter("page"));
-        }
         PoolDAO dao = new PoolDAO();
         int totalRecords = dao.getTotalRecord();
+        int page = 1; // mac dinh ban dau la 1
+        int poolContain = 4;
         int totalPages = (int) Math.ceil(totalRecords * 1.0 / poolContain);
+        if (totalPages == 0) {
+            totalPages = 1;
+        }
+        String nameWork = "Quản lý bể bơi";
+        try {
+            String pageStr = request.getParameter("page");
+            if (pageStr != null) {
+                page = Integer.parseInt(pageStr);
+                if (page < 1) {
+                    page = 1;
+                } else if (page > totalPages) {
+                    page = totalPages;
+                }
+            }
+        } catch (NumberFormatException e) {
+            page = 1;
+        }
         int start = (page - 1) * poolContain;
         List<Pool> list = dao.getPoolByPage(start, poolContain);
         request.setAttribute("listPool", list);

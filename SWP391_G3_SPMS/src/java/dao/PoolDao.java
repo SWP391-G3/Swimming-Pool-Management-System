@@ -59,7 +59,7 @@ public class PoolDAO extends DBContext {
                 LocalDate updatedAt = (updatedDate != null) ? updatedDate.toLocalDate() : null;
                 list.add(new Pool(rs.getInt(1), rs.getString(2), rs.getString(3),
                         rs.getString(4), rs.getInt(5), rs.getTime(6).toLocalTime(), rs.getTime(7).toLocalTime(),
-                        rs.getBoolean(8), rs.getString(9), createdAt, updatedAt));
+                        rs.getBoolean(8), rs.getString(9), createdAt, updatedAt, rs.getString(12)));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -100,7 +100,7 @@ public class PoolDAO extends DBContext {
                 return new Pool(rs.getInt(1), rs.getString(2), rs.getString(3),
                         rs.getString(4), rs.getInt(5), rs.getTime(6).toLocalTime(),
                         rs.getTime(7).toLocalTime(), rs.getBoolean(8), rs.getString(9),
-                        createdAt, updatedAt);
+                        createdAt, updatedAt, rs.getString(12));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -110,7 +110,7 @@ public class PoolDAO extends DBContext {
 
     public void updatePool(Pool p) {
         String sql = "UPDATE Pools SET pool_name = ?, pool_road = ?, pool_address = ?, max_slot = ?, "
-                + "open_time = ?, close_time = ?, pool_status = ?, updated_at = ?,pool_image = ? WHERE pool_id = ?";
+                + "open_time = ?, close_time = ?, pool_status = ?, updated_at = ?,pool_image = ?,pool_description = ? WHERE pool_id = ?";
 
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setString(1, p.getPool_name());
@@ -128,7 +128,8 @@ public class PoolDAO extends DBContext {
             st.setInt(7, bitStatus);
             st.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
             st.setString(9, p.getPool_image());
-            st.setInt(10, p.getPool_id());
+            st.setString(10, p.getPool_description());
+            st.setInt(11, p.getPool_id());
 
             st.executeUpdate();
         } catch (SQLException e) {
@@ -171,7 +172,7 @@ public class PoolDAO extends DBContext {
                 sql += " ORDER BY max_slot DESC ";
             }
         } else {
-            sql += " ORDER BY pool_id ASC "; 
+            sql += " ORDER BY pool_id ASC ";
         }
 
         sql += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ";
@@ -206,7 +207,7 @@ public class PoolDAO extends DBContext {
                         rs.getString(4), rs.getInt(5),
                         rs.getTime(6).toLocalTime(), rs.getTime(7).toLocalTime(),
                         rs.getBoolean(8), rs.getString(9),
-                        createdAt, updatedAt
+                        createdAt, updatedAt, rs.getString(12)
                 ));
             }
         } catch (SQLException e) {

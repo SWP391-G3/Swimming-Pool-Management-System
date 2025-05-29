@@ -30,6 +30,7 @@
                     </div>
                     <% 
                         Pool p = (Pool) request.getAttribute("Pool");
+                        if(p != null) {
                     %>
                     <form action="adminUpdatePool" method="POST" class="row g-3 mt-2">
                         <input type="hidden" name="pool_id" value="<%= p.getPool_id() %>"/>
@@ -41,6 +42,11 @@
                         <div class="col-md-6">
                             <label class="form-label">Hình Ảnh</label>
                             <input type="text" name="pool_image" class="form-control" value="<%= p.getPool_image() %>" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Địa chỉ</label>
+                            <input type="text" name="pool_desctiprion" class="form-control" value="<%= p.getPool_description() %>" required>
                         </div>
 
                         <div class="col-md-6">
@@ -76,12 +82,21 @@
 
                         <div class="col-md-6">
                             <label class="form-label">Trạng thái</label>
-                            <select name="pool_status" class="form-select">
-                                <option value="true" selected>Đang hoạt động</option>
+                            <select name="pool_status" class="form-select" required>
+                                <option value="true">Đang hoạt động</option>
                                 <option value="false">Hủy hoạt động</option>
                             </select>
                         </div>
-
+                        <% 
+                            }
+                             String error = (String) request.getAttribute("error");
+                                 if(error == null){
+                                    error = "";
+                                   }
+                        %>
+                        <div class="col-md-6">
+                            <div class="text-danger"><%= error %></div>
+                        </div>
                         <div class="col-md-12">
                             <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i> Cập nhật</button>
                             <a href="adminPoolManagement" class="btn btn-secondary"><i class="bi bi-arrow-left-circle"></i> Quay lại</a>

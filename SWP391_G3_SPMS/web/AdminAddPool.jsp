@@ -27,20 +27,29 @@
                         <h2 class="fw-bold text-primary">Thêm Bể Bơi Mới</h2>
                         <a href="#"><i class="bi bi-person-circle"></i></a>
                     </div>
-
+                    <% 
+                        String error = (String) request.getAttribute("error");
+                        if(error == null){
+                            error = "";
+                        }
+                    %>
                     <form action="adminAddPool" method="POST" class="row g-3 mt-2">
                         <div class="col-md-6">
                             <label class="form-label">Tên bể bơi</label>
-                            <input type="text" name="poolName" class="form-control" placeholder="Nhập tên bể bơi" required>
+                            <input type="text" name="poolName" class="form-control" value="${param.poolName}" placeholder="Nhập tên bể bơi" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Hình ảnh</label>
-                            <input type="text" name="poolImage" class="form-control" placeholder="Nhập link hình ảnh" required>
+                            <input type="text" name="poolImage" class="form-control" value="${param.poolImage}" placeholder="Nhập link hình ảnh" required>
                         </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Mô tả</label>
+                            <input type="text" name="poolDescription" class="form-control" value="${param.poolDescription}" placeholder="Nhập mô tả" required>
+                        </div> 
 
                         <div class="col-md-6">
                             <label class="form-label">Địa chỉ</label>
-                            <input type="text" name="poolRoad" class="form-control" placeholder="Nhập địa chỉ" required>
+                            <input type="text" name="poolRoad" class="form-control" value="${param.poolRoad}" placeholder="Nhập địa chỉ" required>
                         </div>
 
                         <div class="col-md-6">
@@ -57,17 +66,17 @@
 
                         <div class="col-md-6">
                             <label class="form-label">Sức chứa</label>
-                            <input type="number" name="maxSlot" class="form-control" placeholder="Nhập sức chứa" required>
+                            <input type="number" name="maxSlot" class="form-control" value="${param.maxSlot}" placeholder="Nhập sức chứa" required>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Giờ mở cửa</label>
-                            <input type="time" name="openTime" class="form-control" required>
+                            <input type="time" name="openTime" value="${param.openTime}" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Giờ đóng cửa</label>
-                            <input type="time" name="closeTime" class="form-control" required>
+                            <input type="time" name="closeTime" value="${param.closeTime}" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
@@ -77,7 +86,9 @@
                                 <option value="false">Hủy hoạt động</option>
                             </select>
                         </div>
-
+                        <div class="col-md-6">
+                            <div class="text-danger"><%= error %></div>
+                        </div>
                         <div class="col-md-12">
                             <button type="submit" class="btn btn-success"><i class="bi bi-plus-circle"></i> Thêm bể bơi</button>
                             <a href="adminPoolManagement" class="btn btn-secondary"><i class="bi bi-arrow-left-circle"></i> Quay lại</a>

@@ -91,6 +91,7 @@ public class AdminUpdatePoolServlet extends HttpServlet {
         Pool pool;
         String id = request.getParameter("pool_id");
         String pool_name = request.getParameter("pool_name");
+        String pool_desctiprion = request.getParameter("pool_desctiprion");
         String pool_image = request.getParameter("pool_image");
         String pool_road = request.getParameter("pool_road");
         String pool_address = request.getParameter("pool_address");
@@ -102,13 +103,25 @@ public class AdminUpdatePoolServlet extends HttpServlet {
         LocalTime open_time, close_time;
         int max_slot, pool_id;
         boolean pool_status;
+        String error;
         try {
             pool_id = Integer.parseInt(id);
             pool_status = Boolean.parseBoolean(status);
             max_slot = Integer.parseInt(slot);
+            if (max_slot <= 0) {
+                max_slot = 50;
+            }
             open_time = LocalTime.parse(open);
             close_time = LocalTime.parse(close);
-            pool = new Pool(pool_id, pool_name, pool_road, pool_address, max_slot, open_time, close_time, pool_status, pool_image, null, updateDate);
+            if (open_time.compareTo(close_time) >= 0) {
+                error = "Lỗi khi cập nhật bể bơi: Giờ mở cửa phải nhỏ hơn giờ đóng cửa!";
+                pool = dao.getPoolByID(pool_id);
+                request.setAttribute("error", error);
+                request.setAttribute("Pool", pool);
+                request.getRequestDispatcher("AdminUpdatePool.jsp").forward(request, response);
+                return;
+            }
+            pool = new Pool(pool_id, pool_name, pool_road, pool_address, max_slot, open_time, close_time, pool_status, pool_image, null, updateDate, pool_desctiprion);
             dao.updatePool(pool);
             response.sendRedirect("adminPoolManagement");
         } catch (NumberFormatException e) {

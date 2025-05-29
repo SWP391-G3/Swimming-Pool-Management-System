@@ -97,7 +97,7 @@
                                 if (endPage - startPage < visiblePages - 1) {
                                     startPage = Math.max(1, endPage - visiblePages + 1);
                                 }
-                                if(listPool != null){
+                                if(listPool != null && !listPool.isEmpty()){
                                 for(Pool p : listPool){                              
                             %>
                             <tbody>
@@ -116,8 +116,13 @@
                                         <a href="adminDeletePool?id=<%=p.getPool_id()%>" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Xóa</a>
                                     </td>
                                 </tr>
+                                <% }} else { %>
+                                <tr>
+                                    <td colspan="10" class="text-center text-danger fw-bold">Không tìm thấy bể bơi nào phù hợp với tìm kiếm.</td>
+                                </tr>
+                                <%  }%>
                             </tbody>
-                            <% }}%>
+
                         </table>
                     </div>
                     <a href="AdminAddPool.jsp" class="btn btn-success mt-3"><i class="bi bi-bag-plus"></i> Thêm bể bơi mới</a>

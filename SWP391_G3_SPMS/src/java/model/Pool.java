@@ -12,6 +12,7 @@ import java.time.LocalTime;
  * @author Lenovo
  */
 public class Pool {
+
     private int pool_id;
     private String pool_name;
     private String pool_road;
@@ -23,8 +24,9 @@ public class Pool {
     private String pool_image;
     private LocalDate created_at;
     private LocalDate updated_at;
+    private String pool_description;
 
-    public Pool(int pool_id, String pool_name, String pool_road, String pool_address, int max_slot, LocalTime open_time, LocalTime close_time, boolean pool_status, String pool_image, LocalDate created_at, LocalDate updated_at) {
+    public Pool(int pool_id, String pool_name, String pool_road, String pool_address, int max_slot, LocalTime open_time, LocalTime close_time, boolean pool_status, String pool_image, LocalDate created_at, LocalDate updated_at, String pool_description) {
         this.pool_id = pool_id;
         this.pool_name = pool_name;
         this.pool_road = pool_road;
@@ -36,6 +38,7 @@ public class Pool {
         this.pool_image = pool_image;
         this.created_at = created_at;
         this.updated_at = updated_at;
+        this.pool_description = pool_description;
     }
 
     public int getPool_id() {
@@ -109,6 +112,7 @@ public class Pool {
     public void setPool_image(String pool_image) {
         this.pool_image = pool_image;
     }
+
     public LocalDate getCreated_at() {
         return created_at;
     }
@@ -125,9 +129,14 @@ public class Pool {
         this.updated_at = updated_at;
     }
 
-    @Override
-    public String toString() {
-        return "Pool{" + "pool_id=" + pool_id + ", pool_name=" + pool_name + ", pool_road=" + pool_road + ", pool_address=" + pool_address + ", max_slot=" + max_slot + ", open_time=" + open_time + ", close_time=" + close_time + ", pool_status=" + pool_status + ", pool_image=" + pool_image + ", created_at=" + created_at + ", updated_at=" + updated_at + '}';
+    public String getPool_description() {
+        return pool_description;
     }
-  
+
+    public void setPool_description(String pool_description) {
+        this.pool_description = pool_description;
+    }
+
+      
+
 }
