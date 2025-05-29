@@ -35,9 +35,9 @@ CREATE TABLE Pools (
     close_time TIME NOT NULL,
     pool_status BIT NOT NULL DEFAULT 1,
     pool_image NVARCHAR(255),
-	pool_discripton NVARCHAR(255),
     created_at DATETIME NOT NULL DEFAULT GETDATE(),
     updated_at DATETIME,
+	pool_description NVARCHAR(255),
     CONSTRAINT CK_Pools_OpenBeforeClose CHECK (close_time > open_time)
 );
 
@@ -66,7 +66,7 @@ CREATE TABLE Ticket_Types (
 
 CREATE TABLE Ticket (
     ticket_id INT IDENTITY(1,1) PRIMARY KEY,
-    booking_id INT NOT NULL UNIQUE,
+    booking_id INT NOT NULL,
     ticket_type_id INT NOT NULL,
     ticket_price DECIMAL(10,2) NOT NULL,
     payment_status NVARCHAR(20) NOT NULL DEFAULT 'unpaid', -- unpaid, paid, refunded

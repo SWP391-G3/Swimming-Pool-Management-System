@@ -1,11 +1,7 @@
-﻿﻿INSERT INTO Roles(role_name)
-VALUES 
-    (N'admin'),
-    (N'manager'),
-    (N'staff'),
-    (N'customer');
+﻿
+insert into Roles(role_name) values (N'admin'),(N'manager'),(N'staff'),(N'customer');
 
-INSERT INTO Pools (pool_name, pool_road, pool_address, max_slot, open_time, close_time, pool_status, created_at, pool_image, pool_discripton) VALUES
+INSERT INTO Pools (pool_name, pool_road, pool_address, max_slot, open_time, close_time, pool_status, created_at, pool_image, pool_description) VALUES
 (N'Hồ bơi Thanh Xuân', N'Đường Nguyễn Trãi', N'Hà Nội', 50, '06:00:00', '20:00:00', 1, GETDATE(), N'https://villas-guide.com/wp/wp-content/uploads/2024/03/villas_1.jpeg',N'Bể bơi ngoài trời với không gian xanh mát, lý tưởng cho gia đình.'),
 (N'Hồ bơi Cầu Giấy', N'Đường Cầu Giấy', N'Hà Nội', 45, '06:30:00', '19:30:00', 1, GETDATE(), N'https://xaydunghoboigiare.com/upload/images/5-tieu-chuan-quan-trong-trong-thiet-ke-be-boi-gia-dinh-1(1).jpg',N'Hồ bơi trong nhà với hệ thống nước nóng hiện đại.'),
 (N'Hồ bơi Đống Đa', N'Đường Xã Đàn', N'Hà Nội', 40, '07:00:00', '20:00:00', 1, GETDATE(), N'https://png.pngtree.com/background/20230408/original/pngtree-beautiful-indoor-swimming-pool-picture-image_2336818.jpg',N'Bể bơi có khu vui chơi trẻ em an toàn và sôi động.'),
@@ -115,4 +111,30 @@ VALUES
 (3, 450.00, N'Bank Transfer', 'pending', '2025-05-22 14:30:00', 'TXN123458', '2025-05-22 14:30:00'),
 (4, 200.00, N'Mobile Payment', 'paid', '2025-05-23 09:45:00', 'TXN123459', '2025-05-23 09:45:00'),
 (5, 350.00, N'Credit Card', 'refunded', '2025-05-24 16:00:00', 'TXN123460', '2025-05-24 16:00:00');
+
+INSERT INTO Pool_Device (pool_id, device_image, device_name, quantity, device_status, notes) VALUES
+(1, 'https://s.alicdn.com/@sc04/kf/H0e61e19f0f80433cae45dd3287194cc48.jpg_720x720q50.jpg', N'Máy bơm nước hồ bơi', 4, 'available', NULL),
+(2, 'https://kapano.vn/wp-content/uploads/2021/10/Sand-Filter-08.jpg', N'Bộ lọc cát', 1, 'available', NULL),
+(3, 'https://th.bing.com/th/id/OIP.TMz_zJzbYdW0dZLUZcStXwHaD4?w=314&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7', N'Máy châm Clo tự động', 1, 'available', NULL),
+(4, 'https://mvtek.vn/media/product/2416_593a3db74d515ba20a22fc66bbd603b3.jpg', N'Máy đo và điều chỉnh pH', 1, 'available', NULL),
+(5, 'https://www.vinasaco.com/wp-content/uploads/2021/09/skimmer-hut-nuoc-mat-be-boi-kripsol-sks-anh-1.jpg', N'Skimmer hút rác mặt nước', 8, 'available', NULL),
+(1, 'https://denledsct.com/wp-content/uploads/2019/11/Den-Led-am-nuoc-doi-mau-12w-768x768.jpg', N'Đèn LED âm nước', 20, 'available', NULL),
+(2, 'https://nvcons.com/uploads/lua-chon-cau-thang-inox-ho-boi-phu-hop.jpg', N'Thang inox', 4, 'available', NULL),
+(3, 'https://bilico.vn/wp-content/uploads/2020/12/vot-vot-rac-be-boi-tafuma-viet-nam.jpg', N'Vợt vớt rác', 2, 'available', NULL),
+(4, 'https://nvcons.com/uploads/choi-co-be-boi-emaux.jpg', N'Chổi cọ tường', 5, 'available', NULL),
+(5, 'https://bilico.vn/wp-content/uploads/2020/06/s1-robot-don-ve-sinh-atlantis-kripsol-cho-be-boi-ho-boi-600x600.gif', N'Robot hút vệ sinh tự động', 4, 'available', NULL),
+(1, 'https://hoanghaico.com/wp-content/uploads/2022/11/9a44b566c70ebd339f99dd8446bbaa6b.jpg', N'Ống hút vệ sinh', 3, 'available', NULL),
+(2, 'https://thietbihoboichinhhang.vn/uploads/product_resize/mat-hut-ve-sinh-ho-boi.jpg', N'Đầu hút vệ sinh', 3, 'available', NULL),
+(3, 'https://www.hannavietnam.com/assets/images/bo-may-quang-do-ph-clo-du-va-clo-tong-co-dung-dich-chuan/HI97710C.jpg', N'Bộ test Clo', 2, 'available', NULL),
+(4, 'https://www.hannavietnam.com/assets/images/man-hinh-do-ph-do-man-dung-cho-thuy-san-nuoc-man/HI981520_with-probes.jpg', N'Bộ test pH', 2, 'available', NULL),
+(5, 'https://nvcons.com/uploads/may-tao-song-nguoc-dong.jpg', N'Máy tạo dòng bơi ngược', 1, 'available', NULL),
+(1, 'https://vanbidien.com/wp-content/uploads/2023/10/Ung-dung-dong-ho-do-ap-suat-nuoc.jpg', N'Đồng hồ đo áp suất hệ thống lọc', 4, 'available', NULL),
+(2, 'https://camerasaoviet.com/wp-content/uploads/2021/11/camera-giam-sat-khong-day.jpg', N'Camera giám sát hồ bơi', 10, 'available', NULL),
+(3, 'https://bizweb.dktcdn.net/100/199/703/files/tu-dung-do-ca-nhan-cho-nhan-vien-1.png?v=1657249921031', N'Tủ đồ cá nhân', 60, 'available', NULL),
+(4, 'https://viethansecurity.com/media/product/1247_dau_do_khoi_quang_horing_ah_0311_4_nguon_12v_dc_anh_dai_dien123.jpg', N'Thiết bị báo cháy', 5, 'available', NULL),
+(5, 'https://toavietnam.net/images/202107/goods_img/Loa-nen-30W-tro-khang-cao-TOA-TC-631M-P164-23.jpg', N'Hệ thống loa thông báo',5, 'available', NULL),
+(1, 'https://kythuatdo.vn/wp-content/uploads/2020/10/cac-loai-cam-bien-do-muc-chat-long.png', N'Thiết bị cảm biến mực nước', 2, 'available', NULL),
+(2, 'https://smarttech247.vn/wp-content/uploads/2022/08/he-thong-bao-trom-wifi-sim-komax-5a-f10-600x304.jpg', N'Hệ thống báo động an ninh', 1, 'available', NULL),
+(3, 'https://suckhoedoisong.qltns.mediacdn.vn/2013/a2-1388061713956.jpg', N'Tủ thuốc sơ cứu', 5, 'available', NULL),
+(4, 'https://heesun.com.vn/public/media//thumb/banner_am_n%C6%B0%E1%BB%9Bc-min-1349x495.jpg', N'Hệ thống đèn chiếu sáng khu vực hồ (ngoài đèn âm nước)', 15, 'available', NULL);
 
