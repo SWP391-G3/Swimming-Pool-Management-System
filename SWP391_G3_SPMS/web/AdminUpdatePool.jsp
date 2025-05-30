@@ -6,7 +6,7 @@
         <title>Cập nhật bể bơi</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-        <link rel="stylesheet" href="./css/poolManagement.css"/>
+        <link rel="stylesheet" href="style/poolManagement.css"/>
     </head>
     <body>
         <div class="container-fluid">

@@ -1,2 +1,8 @@
 /SWP391_G3_SPMS/build/
 /SWP391_G3_SPMS/nbproject/private/
+dist/
+*.class
+*.war
+*.log
+nbproject/private/
+build/

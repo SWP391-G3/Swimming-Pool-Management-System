@@ -216,4 +216,59 @@ public class PoolDAO extends DBContext {
 
         return list;
     }
+
+    public List<Pool> getTop3() {
+        list = new ArrayList<>();
+        String sql = "select * \n"
+                + "from [dbo].[Pools] \n"
+                + "order by pool_id\n"
+                + "OFFSET 6 ROWS FETCH NEXT 3 ROWS ONLY ";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Date createdDate = rs.getDate(10);
+                Date updatedDate = rs.getDate(11);
+                LocalDate createdAt = (createdDate != null) ? createdDate.toLocalDate() : null;
+                LocalDate updatedAt = (updatedDate != null) ? updatedDate.toLocalDate() : null;
+
+                list.add(new Pool(
+                        rs.getInt(1), rs.getString(2), rs.getString(3),
+                        rs.getString(4), rs.getInt(5),
+                        rs.getTime(6).toLocalTime(), rs.getTime(7).toLocalTime(),
+                        rs.getBoolean(8), rs.getString(9),
+                        createdAt, updatedAt, rs.getString(12)
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Pool> getPoolImage() {
+        list = new ArrayList<>();
+        String sql = "select top 4 * from Pools";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Date createdDate = rs.getDate(10);
+                Date updatedDate = rs.getDate(11);
+                LocalDate createdAt = (createdDate != null) ? createdDate.toLocalDate() : null;
+                LocalDate updatedAt = (updatedDate != null) ? updatedDate.toLocalDate() : null;
+
+                list.add(new Pool(
+                        rs.getInt(1), rs.getString(2), rs.getString(3),
+                        rs.getString(4), rs.getInt(5),
+                        rs.getTime(6).toLocalTime(), rs.getTime(7).toLocalTime(),
+                        rs.getBoolean(8), rs.getString(9),
+                        createdAt, updatedAt, rs.getString(12)
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }
