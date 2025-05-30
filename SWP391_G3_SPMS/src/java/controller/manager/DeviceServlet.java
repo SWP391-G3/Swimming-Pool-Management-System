@@ -62,7 +62,7 @@ public class DeviceServlet extends HttpServlet {
                 List<Pool> pools = deviceDAO.getAllPools();
                 request.setAttribute("device", device);
                 request.setAttribute("poolList", pools);
-                request.getRequestDispatcher("editDevice.jsp").forward(request, response);
+                request.getRequestDispatcher("updateDevice.jsp").forward(request, response);
                 break;
             default:
                 String keyword = request.getParameter("keyword");

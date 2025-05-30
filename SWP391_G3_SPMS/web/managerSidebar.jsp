@@ -19,7 +19,7 @@
 
         <li>
             <a href="DeviceServlet"
-               <c:if test="${activeMenu eq 'equipment'}">class="active"</c:if>>
+               <c:if test="${activeMenu eq 'device'}">class="active"</c:if>>
                    <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="2"/><rect x="7" y="14" width="10" height="6" rx="1.5" fill="#38bdf8" opacity="0.7"/><circle cx="12" cy="12" r="2" fill="#38bdf8"/></svg>
                    Quản lý thiết bị
                </a>

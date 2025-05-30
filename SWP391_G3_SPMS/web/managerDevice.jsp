@@ -43,7 +43,7 @@
                             <th>ID</th>
                             <th>Ảnh</th>
                             <th>Tên thiết bị</th>
-                            <th>Hồ bơi</th> <!-- THÊM CỘT TÊN HỒ BƠI -->
+                            <th>Hồ bơi</th> 
                             <th>Số lượng</th>
                             <th>Trạng thái</th>
                             <th>Ghi chú</th>
@@ -58,7 +58,7 @@
                                     <img src="${device.deviceImage}" alt="Thiết bị" class="thumb">
                                 </td>
                                 <td>${device.deviceName}</td>
-                                <td>${device.poolName}</td> <!-- HIỂN THỊ TÊN HỒ BƠI -->
+                                <td>${device.poolName}</td>
                                 <td>${device.quantity}</td>
                                 <td>
                                     <span class="status ${device.deviceStatus}">
@@ -71,7 +71,7 @@
                                 </td>
                                 <td>${device.notes}</td>
                                 <td>
-                                    <a href="DeviceServlet?action=edit&id=${device.deviceId}" class="btn-edit">Sửa</a>
+                                    <a href="DeviceServlet?action=edit&id=${device.deviceId}" class="btn-edit">Cập nhập</a>
                                     <form action="DeviceServlet" method="post" style="display:inline;">
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="deviceId" value="${device.deviceId}">
