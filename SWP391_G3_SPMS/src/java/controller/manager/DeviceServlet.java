@@ -81,8 +81,8 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             }
 
             int count = deviceDAO.countDevices(keyword, status);
-            int endPage = count / 7;
-            if (count % 7 != 0) endPage++;
+            int endPage = count / 6;           // Tính số lượng trang
+            if (count % 6 != 0) endPage++;
 
             List<Device> devices = deviceDAO.getDevicesByPage(keyword, status, page);
             request.setAttribute("devices", devices);

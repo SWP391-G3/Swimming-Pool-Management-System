@@ -147,7 +147,7 @@ public class DeviceDao extends DBContext {
             ps.setString(1, "%" + (keyword == null ? "" : keyword.trim()) + "%");
             ps.setString(2, status == null ? "" : status.trim());
             ps.setString(3, status == null ? "" : status.trim());
-            ps.setInt(4, (page - 1) * 7);
+            ps.setInt(4, (page - 1) * 6);
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
