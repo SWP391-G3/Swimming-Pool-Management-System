@@ -11,42 +11,36 @@ package model.manager;
 public class Device {
 
     private int deviceId;
-    private int poolId;
     private String deviceImage;
     private String deviceName;
+    private String poolName;
+    private int poolId;
     private int quantity;
     private String deviceStatus;
     private String notes;
 
     
-    public Device() {
-    }
-
-    public Device(int deviceId, int poolId, String deviceImage, String deviceName, int quantity, String deviceStatus, String notes) {
+    public Device(int deviceId, String deviceImage, String deviceName, String poolName, int quantity, String deviceStatus, String notes) {
         this.deviceId = deviceId;
-        this.poolId = poolId;
         this.deviceImage = deviceImage;
         this.deviceName = deviceName;
+        this.poolName = poolName;
         this.quantity = quantity;
         this.deviceStatus = deviceStatus;
         this.notes = notes;
     }
 
-    
+   
+    public Device() {
+    }
+
+    // Getter/Setter đầy đủ
     public int getDeviceId() {
         return deviceId;
     }
 
     public void setDeviceId(int deviceId) {
         this.deviceId = deviceId;
-    }
-
-    public int getPoolId() {
-        return poolId;
-    }
-
-    public void setPoolId(int poolId) {
-        this.poolId = poolId;
     }
 
     public String getDeviceImage() {
@@ -63,6 +57,22 @@ public class Device {
 
     public void setDeviceName(String deviceName) {
         this.deviceName = deviceName;
+    }
+
+    public String getPoolName() {
+        return poolName;
+    }
+
+    public void setPoolName(String poolName) {
+        this.poolName = poolName;
+    }
+
+    public int getPoolId() {
+        return poolId;
+    }
+
+    public void setPoolId(int poolId) {
+        this.poolId = poolId;
     }
 
     public int getQuantity() {
@@ -91,9 +101,11 @@ public class Device {
 
     @Override
     public String toString() {
-        return "Device{" + "deviceId=" + deviceId + ", poolId=" + poolId + ", deviceImage=" + deviceImage + ", deviceName=" + deviceName + ", quantity=" + quantity + ", deviceStatus=" + deviceStatus + ", notes=" + notes + '}';
+        return "Device{" + "deviceId=" + deviceId + ", deviceImage=" + deviceImage + ", deviceName=" + deviceName + ", poolName=" + poolName + ", poolId=" + poolId + ", quantity=" + quantity + ", deviceStatus=" + deviceStatus + ", notes=" + notes + '}';
     }
     
     
-
+    
+    
+    
 }

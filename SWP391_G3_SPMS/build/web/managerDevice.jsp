@@ -6,7 +6,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-    request.setAttribute("activeMenu", "equipment");
+    request.setAttribute("activeMenu", "device");
 %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -18,7 +18,9 @@
     </head>
     <body>
         <div class="layout">
+            <!-- Sidebar  --> 
             <%@ include file="../managerSidebar.jsp" %>
+
             <div class="content-panel">
                 <div class="header">
                     <h2>Quản lý thiết bị hồ bơi</h2>
@@ -32,6 +34,7 @@
                         </select>
                         <button type="submit">Tìm kiếm</button>
                     </form>
+
                     <a href="DeviceServlet?action=add" class="btn-add">+ Thêm thiết bị</a>
                 </div>
                 <table class="equipment-table">
@@ -40,6 +43,7 @@
                             <th>ID</th>
                             <th>Ảnh</th>
                             <th>Tên thiết bị</th>
+                            <th>Hồ bơi</th> <!-- THÊM CỘT TÊN HỒ BƠI -->
                             <th>Số lượng</th>
                             <th>Trạng thái</th>
                             <th>Ghi chú</th>
@@ -52,9 +56,9 @@
                                 <td>${device.deviceId}</td>
                                 <td>
                                     <img src="${device.deviceImage}" alt="Thiết bị" class="thumb">
-
                                 </td>
                                 <td>${device.deviceName}</td>
+                                <td>${device.poolName}</td> <!-- HIỂN THỊ TÊN HỒ BƠI -->
                                 <td>${device.quantity}</td>
                                 <td>
                                     <span class="status ${device.deviceStatus}">

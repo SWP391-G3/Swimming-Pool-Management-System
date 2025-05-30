@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.manager.Device;
+import model.manager.Pool;
 
 /**
  *
@@ -48,14 +49,19 @@ public class DeviceServlet extends HttpServlet {
         if (action == null) {
             action = "list";
         }
+
         switch (action) {
             case "add":
-                request.getRequestDispatcher("/manager/addDevice.jsp").forward(request, response);
+                List<Pool> poolList = deviceDAO.getAllPools();
+                request.setAttribute("poolList", poolList);
+                request.getRequestDispatcher("addDevice.jsp").forward(request, response);
                 break;
             case "edit":
                 int editId = Integer.parseInt(request.getParameter("id"));
                 Device device = deviceDAO.getDeviceById(editId);
+                List<Pool> pools = deviceDAO.getAllPools();
                 request.setAttribute("device", device);
+                request.setAttribute("poolList", pools);
                 request.getRequestDispatcher("editDevice.jsp").forward(request, response);
                 break;
             default:
@@ -73,8 +79,8 @@ public class DeviceServlet extends HttpServlet {
             throws ServletException, IOException {
 
         DeviceDao deviceDAO = new DeviceDao();
-
         String action = request.getParameter("action");
+
         if ("add".equals(action)) {
             Device device = new Device();
             device.setPoolId(Integer.parseInt(request.getParameter("poolId")));
@@ -88,6 +94,7 @@ public class DeviceServlet extends HttpServlet {
         } else if ("edit".equals(action)) {
             Device device = new Device();
             device.setDeviceId(Integer.parseInt(request.getParameter("deviceId")));
+            device.setPoolId(Integer.parseInt(request.getParameter("poolId")));
             device.setDeviceImage(request.getParameter("deviceImage"));
             device.setDeviceName(request.getParameter("deviceName"));
             device.setQuantity(Integer.parseInt(request.getParameter("quantity")));
