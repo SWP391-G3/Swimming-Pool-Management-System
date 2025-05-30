@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Git_Project/SWP-Project/SWP391_G3_SPMS/src/java/model/Pool.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Git_Project/SWP-Project/SWP391_G3_SPMS/src/java/controller/admin/AdminAddPoolServlet.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Git_Project/SWP-Project/SWP391_G3_SPMS/src/java/controller/admin/AdminSearchPoolServlet.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Git_Project/SWP-Project/SWP391_G3_SPMS/web/AdminSearchPool.jsp</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Git_Project/SWP-Project/SWP391_G3_SPMS/web/AdminPoolManagement.jsp</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Git_Project/SWP-Project/SWP391_G3_SPMS/src/java/controller/admin/AdminDeletePoolServlet.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Git_Project/SWP-Project/SWP391_G3_SPMS/web/AdminAddPool.jsp</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Git_Project/SWP-Project/SWP391_G3_SPMS/src/java/controller/admin/AdminUpdatePoolServlet.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Git_Project/SWP-Project/SWP391_G3_SPMS/src/java/dal/DBContext.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Git_Project/SWP-Project/SWP391_G3_SPMS/src/java/controller/admin/AdminPoolManagement.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Git_Project/SWP-Project/SWP391_G3_SPMS/src/java/dao/PoolDAO.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Git_Project/SWP-Project/SWP391_G3_SPMS/web/AdminUpdatePool.jsp</file>
+        </group>
+    </open-files>
+</project-private>
