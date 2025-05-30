@@ -46,30 +46,49 @@ public class DeviceServlet extends HttpServlet {
 
         String action = request.getParameter("action");
         DeviceDao deviceDAO = new DeviceDao();
+
         if (action == null) {
             action = "list";
         }
 
         switch (action) {
-            case "add":
+            case "add": {
+
                 List<Pool> poolList = deviceDAO.getAllPools();
+
                 request.setAttribute("poolList", poolList);
+
                 request.getRequestDispatcher("addDevice.jsp").forward(request, response);
                 break;
-            case "edit":
-                int editId = Integer.parseInt(request.getParameter("id"));
-                Device device = deviceDAO.getDeviceById(editId);
-                List<Pool> pools = deviceDAO.getAllPools();
+            }
+
+            case "update": {
+
+                String id = request.getParameter("id");
+                int updateId = Integer.parseInt(id);
+
+                Device device = deviceDAO.getDeviceById(updateId);
+
+                List<Pool> poolList = deviceDAO.getAllPools();
+
                 request.setAttribute("device", device);
-                request.setAttribute("poolList", pools);
+                request.setAttribute("poolList", poolList);
+
                 request.getRequestDispatcher("updateDevice.jsp").forward(request, response);
                 break;
-            default:
+            }
+
+            default: {
+
                 String keyword = request.getParameter("keyword");
                 String status = request.getParameter("status");
+
                 List<Device> devices = deviceDAO.getAllDevices(keyword, status);
+
                 request.setAttribute("devices", devices);
+
                 request.getRequestDispatcher("managerDevice.jsp").forward(request, response);
+            }
         }
 
     }
@@ -82,30 +101,68 @@ public class DeviceServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         if ("add".equals(action)) {
-            Device device = new Device();
-            device.setPoolId(Integer.parseInt(request.getParameter("poolId")));
-            device.setDeviceImage(request.getParameter("deviceImage"));
-            device.setDeviceName(request.getParameter("deviceName"));
-            device.setQuantity(Integer.parseInt(request.getParameter("quantity")));
-            device.setDeviceStatus(request.getParameter("deviceStatus"));
-            device.setNotes(request.getParameter("notes"));
-            deviceDAO.addDevice(device);
-            response.sendRedirect("DeviceServlet");
-        } else if ("edit".equals(action)) {
-            Device device = new Device();
-            device.setDeviceId(Integer.parseInt(request.getParameter("deviceId")));
-            device.setPoolId(Integer.parseInt(request.getParameter("poolId")));
-            device.setDeviceImage(request.getParameter("deviceImage"));
-            device.setDeviceName(request.getParameter("deviceName"));
-            device.setQuantity(Integer.parseInt(request.getParameter("quantity")));
-            device.setDeviceStatus(request.getParameter("deviceStatus"));
-            device.setNotes(request.getParameter("notes"));
-            deviceDAO.updateDevice(device);
-            response.sendRedirect("DeviceServlet");
+            try {
+                int poolId = Integer.parseInt(request.getParameter("poolId"));
+                String deviceImage = request.getParameter("deviceImage");
+                String deviceName = request.getParameter("deviceName");
+                int quantity = Integer.parseInt(request.getParameter("quantity"));
+                String deviceStatus = request.getParameter("deviceStatus");
+                String notes = request.getParameter("notes");
+
+                Device device = new Device();
+
+                device.setPoolId(poolId);
+                device.setDeviceImage(deviceImage);
+                device.setDeviceName(deviceName);
+                device.setQuantity(quantity);
+                device.setDeviceStatus(deviceStatus);
+                device.setNotes(notes);
+
+                deviceDAO.addDevice(device);
+                response.sendRedirect("DeviceServlet");
+
+            } catch (NumberFormatException e) {
+                request.setAttribute("error", "Số lượng hoặc Pool ID không hợp lệ");
+                request.getRequestDispatcher("add-device.jsp").forward(request, response);
+            }
+
+        } else if ("update".equals(action)) {
+            try {
+                int deviceId = Integer.parseInt(request.getParameter("deviceId"));
+                int poolId = Integer.parseInt(request.getParameter("poolId"));
+                String deviceImage = request.getParameter("deviceImage");
+                String deviceName = request.getParameter("deviceName");
+                int quantity = Integer.parseInt(request.getParameter("quantity"));
+                String deviceStatus = request.getParameter("deviceStatus");
+                String notes = request.getParameter("notes");
+
+                Device device = new Device();
+                device.setDeviceId(deviceId);
+                device.setPoolId(poolId);
+                device.setDeviceImage(deviceImage);
+                device.setDeviceName(deviceName);
+                device.setQuantity(quantity);
+                device.setDeviceStatus(deviceStatus);
+                device.setNotes(notes);
+
+                deviceDAO.updateDevice(device);
+                response.sendRedirect("DeviceServlet");
+
+            } catch (NumberFormatException e) {
+                request.setAttribute("error", "Thiết bị hoặc dữ liệu số không hợp lệ");
+                request.getRequestDispatcher("edit-device.jsp").forward(request, response);
+            }
+
         } else if ("delete".equals(action)) {
-            int deviceId = Integer.parseInt(request.getParameter("deviceId"));
-            deviceDAO.deleteDevice(deviceId);
-            response.sendRedirect("DeviceServlet");
+            try {
+                int deviceId = Integer.parseInt(request.getParameter("deviceId"));
+                deviceDAO.deleteDevice(deviceId);
+                response.sendRedirect("DeviceServlet");
+
+            } catch (NumberFormatException e) {
+                request.setAttribute("error", "ID thiết bị không hợp lệ");
+                request.getRequestDispatcher("DeviceServlet").forward(request, response);
+            }
         }
 
     }

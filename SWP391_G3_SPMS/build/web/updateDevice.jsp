@@ -14,10 +14,10 @@
 
     </head>
     <body>
-        <div class="container">
-            <h2>Sửa thiết bị</h2>
+        <div class="container"> 
+            <h2>--- Cập nhập thiết bị ---</h2>
             <form method="post" action="${pageContext.request.contextPath}/DeviceServlet">
-                <input type="hidden" name="action" value="edit">
+                <input type="hidden" name="action" value="update">
                 <input type="hidden" name="deviceId" value="${device.deviceId}">
 
                 <label>Tên thiết bị:</label>
@@ -38,7 +38,7 @@
 
                 <label>Trạng thái:</label>
                 <select name="deviceStatus">
-                    <option value="available" ${device.deviceStatus == 'available' ? 'selected' : ''}>Sẵn sàng</option>
+                    <option value="available" ${device.deviceStatus == 'available' ? 'selected' : ''}>Tốt</option>
                     <option value="maintenance" ${device.deviceStatus == 'maintenance' ? 'selected' : ''}>Bảo trì</option>
                     <option value="broken" ${device.deviceStatus == 'broken' ? 'selected' : ''}>Hỏng</option>
                 </select>

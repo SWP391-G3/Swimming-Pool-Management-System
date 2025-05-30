@@ -28,7 +28,7 @@
                         <input type="text" name="keyword" placeholder="Tìm theo tên thiết bị..." value="${param.keyword}">
                         <select name="status">
                             <option value="">-- Tất cả trạng thái --</option>
-                            <option value="available" ${param.status == 'available' ? 'selected' : ''}>Sẵn sàng</option>
+                            <option value="available" ${param.status == 'available' ? 'selected' : ''}>Tốt</option>
                             <option value="maintenance" ${param.status == 'maintenance' ? 'selected' : ''}>Bảo trì</option>
                             <option value="broken" ${param.status == 'broken' ? 'selected' : ''}>Hỏng</option>
                         </select>
@@ -63,7 +63,7 @@
                                 <td>
                                     <span class="status ${device.deviceStatus}">
                                         <c:choose>
-                                            <c:when test="${device.deviceStatus == 'available'}">Sẵn sàng</c:when>
+                                            <c:when test="${device.deviceStatus == 'available'}">Tốt</c:when>
                                             <c:when test="${device.deviceStatus == 'maintenance'}">Bảo trì</c:when>
                                             <c:when test="${device.deviceStatus == 'broken'}">Hỏng</c:when>
                                         </c:choose>
@@ -71,11 +71,11 @@
                                 </td>
                                 <td>${device.notes}</td>
                                 <td>
-                                    <a href="DeviceServlet?action=edit&id=${device.deviceId}" class="btn-edit">Cập nhập</a>
+                                    <a href="DeviceServlet?action=update&id=${device.deviceId}" class="btn-edit">Cập nhập</a>
                                     <form action="DeviceServlet" method="post" style="display:inline;">
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="deviceId" value="${device.deviceId}">
-                                        <button type="submit" class="btn-delete" onclick="return confirm('Xóa thiết bị này?')">Xóa</button>
+                                        <button type="submit" class="btn-delete" onclick="return confirm('Bạn chắc chắn muốn xóa thiết bị này?')">Xóa</button>
                                     </form>
                                 </td>
                             </tr>

@@ -12,7 +12,7 @@
             <form action="DeviceServlet" method="post">
                 <input type="hidden" name="action" value="add">
                 <label><span>Hồ bơi:</span>
-                    <select name="poolId" required>
+                    <select name="poolId" required>    <!-- required: bắt buộc phải chọn một giá trị trước khi gửi form -->
                         <c:forEach var="pool" items="${poolList}">
                             <option value="${pool.poolId}">${pool.poolName}</option>
                         </c:forEach>
@@ -20,7 +20,7 @@
                 </label>
                 <label><span>Ảnh (tên file):</span> <input type="text" name="deviceImage"></label>
                 <label><span>Tên thiết bị:</span> <input type="text" name="deviceName" required></label>
-                <label><span>Số lượng:</span> <input type="number" name="quantity" required min="0"></label>
+                <label><span>Số lượng:</span> <input type="number" name="quantity" required min="0" max="1000"></label>
                 <label><span>Trạng thái:</span>
                     <select name="deviceStatus">
                         <option value="available">Sẵn sàng</option>

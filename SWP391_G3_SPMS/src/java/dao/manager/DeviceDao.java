@@ -36,11 +36,11 @@ public class DeviceDao extends DBContext {
             }
         } catch (SQLException e) {
             e.printStackTrace(); // cần thêm tính năng validate các thứ
-            
+
         }
         return deviceList;
     }
-    
+
     // Lấy danh sách hồ bơi (Pool)
     public List<Pool> getAllPools() {
         List<Pool> pools = new ArrayList<>();
