@@ -34,7 +34,7 @@ public class UserDAO extends DBContext {
         return list;
     }
 
-    public  User getUserById(int user_id) {
+    public User getUserById(int user_id) {
         User user = null;
         try {
 
@@ -65,9 +65,9 @@ public class UserDAO extends DBContext {
     }
 
     public boolean updateUserInfo(int userId, String fullName, String email, String phone, String address) {
-        try ( 
-             PreparedStatement ps = connection.prepareStatement(
-                 "UPDATE Users SET full_name=?, email=?, phone=?, address=?, updated_at=GETDATE() WHERE user_id=?")) {
+        try (
+                PreparedStatement ps = connection.prepareStatement(
+                        "UPDATE Users SET full_name=?, email=?, phone=?, address=?, updated_at=GETDATE() WHERE user_id=?")) {
             ps.setString(1, fullName);
             ps.setString(2, email);
             ps.setString(3, phone);
@@ -79,28 +79,5 @@ public class UserDAO extends DBContext {
             return false;
         }
     }
-    
-    
-    
-    public static void main(String[] args) {
-        
-        
-        UserDAO dao = new UserDAO();
-        
-        User user1 = dao.getUserById(3);
-        
-        System.out.println(user1);
-        
-        
-                
-               
-    }
 
 }
-
- 
-        
-        
-     
-        
-

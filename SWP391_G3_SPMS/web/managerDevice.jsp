@@ -5,6 +5,7 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%
     request.setAttribute("activeMenu", "device");
 %>
@@ -81,9 +82,36 @@
                             </tr>
                         </c:forEach>
                     </tbody>
+
                 </table>
-                <!-- Phân trang (có thể thêm nếu cần) -->
+                <!-- Phân trang -->
+
+
+                <div class="pagination">
+                    <c:if test="${page > 1}">
+                        <a href="DeviceServlet?page=${page-1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}">&laquo;</a>
+                    </c:if>
+                    <c:forEach begin="1" end="${endP}" var="i">
+                        <a href="DeviceServlet?page=${i}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}"
+                           class="${i == page ? 'active' : ''}">${i}</a>
+                    </c:forEach>
+                    <c:if test="${page < endP}">
+                        <a href="DeviceServlet?page=${page+1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}">&raquo;</a>
+                    </c:if>
+                </div>
+
+
+
+
             </div>
+
+
         </div>
+
+
+
     </body>
+
+
+
 </html>

@@ -34,12 +34,14 @@ body {
     min-height: 100vh;
 }
 
+/* CHỈ GIỮ 1 KHAI BÁO content-panel */
 .content-panel {
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 32px 36px;
+    padding: 24px 36px 8px 36px; /* giảm padding dưới để dịch lên trên */
     min-height: 100vh;
+    justify-content: flex-start;
 }
 
 .header {
@@ -130,7 +132,7 @@ body {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    margin-bottom: 22px;
+    margin-bottom: 10px; /* giảm khoảng cách với phân trang */
     background: var(--card-bg);
     border-radius: var(--border-radius);
     box-shadow: 0 2px 12px #38bdf80d;
@@ -226,11 +228,14 @@ body {
     box-shadow: 0 7px 16px #f8717199;
 }
 
+/* CHỈ GIỮ 1 KHAI BÁO pagination */
 .pagination {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 7px;
-    margin-top: 18px;
+    margin-top: 12px;    /* giảm margin trên */
+    margin-bottom: 8px;  /* giảm margin dưới */
 }
 .pagination a {
     display: inline-block;
@@ -249,12 +254,13 @@ body {
     transform: scale(1.06);
 }
 
+/* Responsive */
 @media (max-width: 1100px) {
     .layout {
         flex-direction: column;
     }
     .content-panel {
-        padding: 16px 6px;
+        padding: 10px 6px 4px 6px;
     }
 }
 
@@ -281,6 +287,9 @@ body {
     .equipment-table th, .equipment-table td {
         padding: 8px 2px;
         font-size: 0.97em;
+    }
+    .content-panel {
+        padding: 7px 2vw 2px 2vw;
     }
 }
 

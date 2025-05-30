@@ -137,4 +137,3 @@ INSERT INTO Pool_Device (pool_id, device_image, device_name, quantity, device_st
 (2, 'https://smarttech247.vn/wp-content/uploads/2022/08/he-thong-bao-trom-wifi-sim-komax-5a-f10-600x304.jpg', N'Hệ thống báo động an ninh', 1, 'available', NULL),
 (3, 'https://suckhoedoisong.qltns.mediacdn.vn/2013/a2-1388061713956.jpg', N'Tủ thuốc sơ cứu', 5, 'available', NULL),
 (4, 'https://heesun.com.vn/public/media//thumb/banner_am_n%C6%B0%E1%BB%9Bc-min-1349x495.jpg', N'Hệ thống đèn chiếu sáng khu vực hồ (ngoài đèn âm nước)', 15, 'available', NULL);
-

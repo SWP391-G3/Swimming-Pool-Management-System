@@ -119,15 +119,64 @@ public class DeviceDao extends DBContext {
         }
     }
 
+    // Phân trang 
+    public int countDevices(String keyword, String status) {
+        String sql = "SELECT COUNT(*) FROM Pool_Device WHERE device_name LIKE ? AND (device_status = ? OR ? = '')";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, "%" + (keyword == null ? "" : keyword.trim()) + "%");
+            ps.setString(2, status == null ? "" : status.trim());
+            ps.setString(3, status == null ? "" : status.trim());
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public List<Device> getDevicesByPage(String keyword, String status, int page) {
+        List<Device> deviceList = new ArrayList<>();
+        String sql = "SELECT d.device_id, d.device_image, d.device_name, p.pool_name, d.quantity, d.device_status, d.notes "
+                + "FROM Pool_Device d JOIN Pools p ON d.pool_id = p.pool_id "
+                + "WHERE d.device_name LIKE ? AND (d.device_status = ? OR ? = '') "
+                + "ORDER BY d.device_id OFFSET ? ROWS FETCH NEXT 6 ROWS ONLY";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, "%" + (keyword == null ? "" : keyword.trim()) + "%");
+            ps.setString(2, status == null ? "" : status.trim());
+            ps.setString(3, status == null ? "" : status.trim());
+            ps.setInt(4, (page - 1) * 7);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Device device = new Device(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getInt(5),
+                        rs.getString(6),
+                        rs.getString(7)
+                );
+                deviceList.add(device);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return deviceList;
+    }
+
     public static void main(String[] args) {
 
         DeviceDao dao = new DeviceDao();
 
-        List<Pool> a = dao.getAllPools();
+        List<Device> a = dao.getDevicesByPage("", "", 1);
 
-        for (Pool pool : a) {
-            System.out.println(pool);
-
+        for (Device device : a) {
+            System.out.println(device);
         }
 
     }

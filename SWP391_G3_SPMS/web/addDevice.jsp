@@ -23,7 +23,7 @@
                 <label><span>Số lượng:</span> <input type="number" name="quantity" required min="0" max="1000"></label>
                 <label><span>Trạng thái:</span>
                     <select name="deviceStatus">
-                        <option value="available">Sẵn sàng</option>
+                        <option value="available">Tốt</option>
                         <option value="maintenance">Bảo trì</option>
                         <option value="broken">Hỏng</option>
                     </select>
