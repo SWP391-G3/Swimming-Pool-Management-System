@@ -1,11 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.math.BigDecimal;
 
 /**
  *
@@ -15,6 +12,8 @@ public class Booking {
     private int bookingId;
     private int userId;
     private int poolId;
+    private String poolName;
+    private BigDecimal amount;
     private Date bookingDate;
     private Time startTime;
     private Time endTime;
@@ -26,22 +25,12 @@ public class Booking {
     public Booking() {
     }
 
-    public Booking(int bookingId, int userId, int poolId, Date bookingDate, Time startTime, Time endTime, int slotCount, String bookingStatus, Date createdAt, Date updatedAt) {
+    public Booking(int bookingId, int userId, int poolId, String poolName, BigDecimal amount, Date bookingDate, Time startTime, Time endTime, int slotCount, String bookingStatus, Date createdAt, Date updatedAt) {
         this.bookingId = bookingId;
         this.userId = userId;
         this.poolId = poolId;
-        this.bookingDate = bookingDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.slotCount = slotCount;
-        this.bookingStatus = bookingStatus;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public Booking(int userId, int poolId, Date bookingDate, Time startTime, Time endTime, int slotCount, String bookingStatus, Date createdAt, Date updatedAt) {
-        this.userId = userId;
-        this.poolId = poolId;
+        this.poolName = poolName;
+        this.amount = amount;
         this.bookingDate = bookingDate;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -73,6 +62,22 @@ public class Booking {
 
     public void setPoolId(int poolId) {
         this.poolId = poolId;
+    }
+
+    public String getPoolName() {
+        return poolName;
+    }
+
+    public void setPoolName(String poolName) {
+        this.poolName = poolName;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 
     public Date getBookingDate() {
@@ -130,6 +135,6 @@ public class Booking {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
-    
+
     
 }

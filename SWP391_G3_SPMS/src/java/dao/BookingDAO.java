@@ -17,10 +17,12 @@ import java.util.List;
  */
 public class BookingDAO extends DBContext {
 
-    // get booking infor by bookingId
+    //Get booking infor by bookingId
     public Booking getBookingById(int id) throws SQLException {
-        String sql = "SELECT b.*, p.pool_name FROM Booking b "
+        String sql = "SELECT b.*, p.pool_name, ISNULL(pm.amount, 0) AS amount "
+                + "FROM Booking b "
                 + "JOIN Pools p ON b.pool_id = p.pool_id "
+                + "LEFT JOIN Payments pm ON b.booking_id = pm.booking_id "
                 + "WHERE b.booking_id = ?";
         PreparedStatement st = connection.prepareStatement(sql);
         st.setInt(1, id);
@@ -31,6 +33,7 @@ public class BookingDAO extends DBContext {
                     rs.getInt("user_id"),
                     rs.getInt("pool_id"),
                     rs.getString("pool_name"),
+                    rs.getBigDecimal("amount"),
                     rs.getDate("booking_date"),
                     rs.getTime("start_time"),
                     rs.getTime("end_time"),
@@ -46,8 +49,10 @@ public class BookingDAO extends DBContext {
     // Get booking information by userId
     public List<Booking> getBookingByUserId(int uid) throws SQLException {
         List<Booking> list = new ArrayList<>();
-        String sql = "SELECT b.*, p.pool_name FROM Booking b "
+        String sql = "SELECT b.*, p.pool_name, ISNULL(pm.amount, 0) AS amount "
+                + "FROM Booking b "
                 + "JOIN Pools p ON b.pool_id = p.pool_id "
+                + "LEFT JOIN Payments pm ON b.booking_id = pm.booking_id "
                 + "WHERE b.user_id = ?";
         PreparedStatement st = connection.prepareStatement(sql);
         st.setInt(1, uid);
@@ -58,6 +63,7 @@ public class BookingDAO extends DBContext {
                     rs.getInt("user_id"),
                     rs.getInt("pool_id"),
                     rs.getString("pool_name"),
+                    rs.getBigDecimal("amount"),
                     rs.getDate("booking_date"),
                     rs.getTime("start_time"),
                     rs.getTime("end_time"),
@@ -74,7 +80,11 @@ public class BookingDAO extends DBContext {
     // Search for named pools (pool name, LIKE, by user)
     public List<Booking> searchBookingByPoolName(int userId, String poolName) throws SQLException {
         List<Booking> list = new ArrayList<>();
-        String sql = "SELECT b.*, p.pool_name FROM Booking b JOIN Pools p ON b.pool_id = p.pool_id WHERE b.user_id = ? AND p.pool_name LIKE ?";
+        String sql = "SELECT b.*, p.pool_name, ISNULL(pm.amount, 0) AS amount "
+                + "FROM Booking b "
+                + "JOIN Pools p ON b.pool_id = p.pool_id "
+                + "LEFT JOIN Payments pm ON b.booking_id = pm.booking_id "
+                + "WHERE b.user_id = ? AND p.pool_name LIKE ?";
         PreparedStatement st = connection.prepareStatement(sql);
         st.setInt(1, userId);
         st.setString(2, "%" + poolName + "%");
@@ -85,6 +95,7 @@ public class BookingDAO extends DBContext {
                     rs.getInt("user_id"),
                     rs.getInt("pool_id"),
                     rs.getString("pool_name"),
+                    rs.getBigDecimal("amount"),
                     rs.getDate("booking_date"),
                     rs.getTime("start_time"),
                     rs.getTime("end_time"),
@@ -101,7 +112,10 @@ public class BookingDAO extends DBContext {
     // Search for booked pools by date (by user, in range fromDate - toDate)
     public List<Booking> searchBookingByDate(int userId, Date fromDate, Date toDate) throws SQLException {
         List<Booking> list = new ArrayList<>();
-        String sql = "SELECT b.*, p.pool_name FROM Booking b JOIN Pools p ON b.pool_id = p.pool_id "
+        String sql = "SELECT b.*, p.pool_name, ISNULL(pm.amount, 0) AS amount "
+                + "FROM Booking b "
+                + "JOIN Pools p ON b.pool_id = p.pool_id "
+                + "LEFT JOIN Payments pm ON b.booking_id = pm.booking_id "
                 + "WHERE b.user_id = ? AND b.booking_date BETWEEN ? AND ?";
         PreparedStatement st = connection.prepareStatement(sql);
         st.setInt(1, userId);
@@ -114,6 +128,7 @@ public class BookingDAO extends DBContext {
                     rs.getInt("user_id"),
                     rs.getInt("pool_id"),
                     rs.getString("pool_name"),
+                    rs.getBigDecimal("amount"),
                     rs.getDate("booking_date"),
                     rs.getTime("start_time"),
                     rs.getTime("end_time"),
@@ -130,7 +145,10 @@ public class BookingDAO extends DBContext {
     // Sort tanks by most recent (newest) set time
     public List<Booking> sortBookingByDateDesc(int userId) throws SQLException {
         List<Booking> list = new ArrayList<>();
-        String sql = "SELECT b.*, p.pool_name FROM Booking b JOIN Pools p ON b.pool_id = p.pool_id "
+        String sql = "SELECT b.*, p.pool_name, ISNULL(pm.amount, 0) AS amount "
+                + "FROM Booking b "
+                + "JOIN Pools p ON b.pool_id = p.pool_id "
+                + "LEFT JOIN Payments pm ON b.booking_id = pm.booking_id "
                 + "WHERE b.user_id = ? ORDER BY b.booking_date DESC, b.start_time DESC";
         PreparedStatement st = connection.prepareStatement(sql);
         st.setInt(1, userId);
@@ -141,6 +159,7 @@ public class BookingDAO extends DBContext {
                     rs.getInt("user_id"),
                     rs.getInt("pool_id"),
                     rs.getString("pool_name"),
+                    rs.getBigDecimal("amount"),
                     rs.getDate("booking_date"),
                     rs.getTime("start_time"),
                     rs.getTime("end_time"),
@@ -157,7 +176,10 @@ public class BookingDAO extends DBContext {
     // Sort tanks by most recent (oldest) set time
     public List<Booking> sortBookingByDateAsc(int userId) throws SQLException {
         List<Booking> list = new ArrayList<>();
-        String sql = "SELECT b.*, p.pool_name FROM Booking b JOIN Pools p ON b.pool_id = p.pool_id "
+        String sql = "SELECT b.*, p.pool_name, ISNULL(pm.amount, 0) AS amount "
+                + "FROM Booking b "
+                + "JOIN Pools p ON b.pool_id = p.pool_id "
+                + "LEFT JOIN Payments pm ON b.booking_id = pm.booking_id "
                 + "WHERE b.user_id = ? ORDER BY b.booking_date ASC, b.start_time ASC";
         PreparedStatement st = connection.prepareStatement(sql);
         st.setInt(1, userId);
@@ -168,6 +190,7 @@ public class BookingDAO extends DBContext {
                     rs.getInt("user_id"),
                     rs.getInt("pool_id"),
                     rs.getString("pool_name"),
+                    rs.getBigDecimal("amount"),
                     rs.getDate("booking_date"),
                     rs.getTime("start_time"),
                     rs.getTime("end_time"),
@@ -184,8 +207,11 @@ public class BookingDAO extends DBContext {
     // Sort tanks by price from high to low
     public List<Booking> sortBookingByPriceDesc(int userId) throws SQLException {
         List<Booking> list = new ArrayList<>();
-        String sql = "SELECT b.*, p.pool_name FROM Booking b JOIN Pools p ON b.pool_id = p.pool_id "
-                + "WHERE b.user_id = ? ORDER BY p.price DESC";
+        String sql = "SELECT b.*, p.pool_name, ISNULL(pm.amount, 0) AS amount "
+                + "FROM Booking b "
+                + "JOIN Pools p ON b.pool_id = p.pool_id "
+                + "LEFT JOIN Payments pm ON b.booking_id = pm.booking_id "
+                + "WHERE b.user_id = ? ORDER BY amount DESC";
         PreparedStatement st = connection.prepareStatement(sql);
         st.setInt(1, userId);
         ResultSet rs = st.executeQuery();
@@ -195,6 +221,7 @@ public class BookingDAO extends DBContext {
                     rs.getInt("user_id"),
                     rs.getInt("pool_id"),
                     rs.getString("pool_name"),
+                    rs.getBigDecimal("amount"),
                     rs.getDate("booking_date"),
                     rs.getTime("start_time"),
                     rs.getTime("end_time"),
@@ -211,8 +238,11 @@ public class BookingDAO extends DBContext {
     // Sort tanks by price from low to high
     public List<Booking> sortBookingByPriceAsc(int userId) throws SQLException {
         List<Booking> list = new ArrayList<>();
-        String sql = "SELECT b.*, p.pool_name FROM Booking b JOIN Pools p ON b.pool_id = p.pool_id "
-                + "WHERE b.user_id = ? ORDER BY p.price ASC";
+        String sql = "SELECT b.*, p.pool_name, ISNULL(pm.amount, 0) AS amount "
+                + "FROM Booking b "
+                + "JOIN Pools p ON b.pool_id = p.pool_id "
+                + "LEFT JOIN Payments pm ON b.booking_id = pm.booking_id "
+                + "WHERE b.user_id = ? ORDER BY amount ASC";
         PreparedStatement st = connection.prepareStatement(sql);
         st.setInt(1, userId);
         ResultSet rs = st.executeQuery();
@@ -222,6 +252,7 @@ public class BookingDAO extends DBContext {
                     rs.getInt("user_id"),
                     rs.getInt("pool_id"),
                     rs.getString("pool_name"),
+                    rs.getBigDecimal("amount"),
                     rs.getDate("booking_date"),
                     rs.getTime("start_time"),
                     rs.getTime("end_time"),
