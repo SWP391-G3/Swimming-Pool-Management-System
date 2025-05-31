@@ -2,11 +2,27 @@
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
     <servlet>
         <servlet-name>CustomerAccountInfor</servlet-name>
-        <servlet-class>controller.CustomerAccountInforServlet</servlet-class>
+        <servlet-class>controller.Customer.CustomerAccountInforServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ListCustomerBookingServlet</servlet-name>
-        <servlet-class>controller.ListCustomerBookingServlet</servlet-class>
+        <servlet-class>controller.Customer.ListCustomerBookingServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MyAccountServlet</servlet-name>
+        <servlet-class>controller.Customer.MyAccountServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChangePasswordServlet</servlet-name>
+        <servlet-class>controller.Customer.ChangePasswordServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BookingHistoryServlet</servlet-name>
+        <servlet-class>controller.Customer.BookingHistoryServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BookingDetail</servlet-name>
+        <servlet-class>controller.Customer.BookingDetail</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>CustomerAccountInfor</servlet-name>
@@ -15,6 +31,22 @@
     <servlet-mapping>
         <servlet-name>ListCustomerBookingServlet</servlet-name>
         <url-pattern>/ListCustomerBookingServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MyAccountServlet</servlet-name>
+        <url-pattern>/my_account</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChangePasswordServlet</servlet-name>
+        <url-pattern>/change_password</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BookingHistoryServlet</servlet-name>
+        <url-pattern>/booking_history</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BookingDetail</servlet-name>
+        <url-pattern>/booking_detail</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>customer_account_infor.jsp</welcome-file>
