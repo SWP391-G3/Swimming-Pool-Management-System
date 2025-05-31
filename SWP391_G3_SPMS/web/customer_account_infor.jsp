@@ -1,304 +1,293 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="model.User" %>
-<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="model.User,java.text.SimpleDateFormat" %>
 <%
     User user = (User) request.getAttribute("user");
-    String updateSuccess = (String) request.getAttribute("updateSuccess");
-    String updateError = (String) request.getAttribute("updateError");
-    String dobValue = "";
-    if (user != null && user.getDob() != null) {
-        dobValue = new SimpleDateFormat("dd-MM-yyyy").format(user.getDob());
-    }
-    String avatarUrl = (user != null && user.getImages() != null && !user.getImages().isEmpty())
-            ? user.getImages()
-            : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxAA8303_86z01TPPqxwesKe7q_OJSJgWxvg&s";
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Profile - PoolHub</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link href="css/styles.css" rel="stylesheet">
-        <style>
-            .profile-picture-container {
-                position: relative;
-                display: inline-block;
-                width: 120px;
-                height: 120px;
-                overflow: hidden;
-            }
-            .profile-picture-container img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                object-position: center;
-                border-radius: 50%;
-                display: block;
-            }
-            .profile-picture-upload {
-                position: absolute;
-                bottom: 0;
-                right: 0;
-                border-radius: 50%;
-                background: #0071c2;
-                color: #fff;
-                border: none;
-                width: 36px;
-                height: 36px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                z-index: 3;
-            }
-            .profile-picture-upload input[type="file"] {
-                display: none;
-            }
-        </style>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Chỉnh sửa tài khoản</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+            />
+        <link rel="stylesheet" href="css/styles.css" />
     </head>
-    <body>
-        <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <div class="container">
-                <a class="navbar-brand" href="#">PoolHub</a>
-                <div class="d-flex align-items-center">
-                    <button class="btn btn-link text-white">
-                        <i class="fas fa-question-circle"></i>
-                    </button>
-                    <div class="dropdown">
-                        <button class="btn btn-link text-white dropdown-toggle" type="button" id="userMenu" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle"></i>
-                            <span class="ms-2"><%= user != null ? user.getFullName() : "[user null]" %></span>
-                        </button>
-                    </div>
-                </div>
+    <body class="bg-gray-50 min-h-screen font-['Inter'] antialiased">
+        <div class="container mx-auto px-4 py-8">
+            <!-- Nút quay về -->
+            <a
+                href="index.jsp"
+                class="inline-flex items-center text-blue-600 font-medium mb-8 hover:underline"
+                >
+                <svg
+                    class="w-5 h-5 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 19l-7-7 7-7"
+                    />
+                </svg>
+                Trang chủ
+            </a>
+
+            <!-- Hero Image Section -->
+            <div
+                class="relative w-full h-52 md:h-64 mb-8 rounded-lg overflow-hidden shadow-lg"
+                >
+                <img
+                    src="https://www.saharapoolbuilder.com/wp-content/uploads/2019/07/swimming-pool-depth-recommendations.jpg"
+                    alt="Edit Account Banner"
+                    class="w-full h-full object-cover"
+                    />
+                <div
+                    class="absolute inset-0 bg-gradient-to-b from-black/30 to-black/10"
+                    ></div>
+                <!-- Tiêu đề nằm giữa ảnh -->
+                <h1
+                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl md:text-4xl font-bold text-white text-center drop-shadow-lg"
+                    >
+                    CHỈNH SỬA TÀI KHOẢN
+                </h1>
             </div>
-        </nav>
 
-        <div class="container my-4">
-            <% if (updateError != null && !updateError.isEmpty()) { %>
-            <div class="alert alert-danger"><%= updateError %></div>
-            <% } %>
-            <div class="row">
+            <!-- Main Content with Sidebar -->
+            <div class="flex flex-col lg:flex-row gap-8">
                 <!-- Sidebar -->
-                <div class="col-md-3">
-                    <div class="list-group">
-                        <a href="profile" class="list-group-item list-group-item-action active">
-                            <i class="fas fa-user me-2"></i> Personal details
+                <aside
+                    class="bg-white border border-gray-200 rounded-lg p-6 w-full lg:w-1/4 mb-6 lg:mb-0 shadow-sm"
+                    >
+                    <nav class="space-y-2">
+                        <a
+                            href="profile"
+                            class="flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-100 text-blue-700 font-semibold"
+                            >
+                            <svg
+                                class="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5.121 17.804A13.937 13.937 0 0112 15c2.589 0 5.017.735 7.121 2.004M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                                />
+                            </svg>
+                            Thông tin cá nhân
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <i class="fas fa-lock me-2"></i> Security settings
+                        <a
+                            href="#"
+                            class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 font-medium"
+                            >
+                            <svg
+                                class="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 11c0-1.054.816-2 2-2s2 .946 2 2a2 2 0 01-2 2c-1.184 0-2-.946-2-2zm0 0V7m0 4v4m0-4h4m-4 0H8"
+                                />
+                            </svg>
+                            Thiết lập bảo mật
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <i class="fas fa-credit-card me-2"></i> Payment methods
+                        <a
+                            href="#"
+                            class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 font-medium"
+                            >
+                            <svg
+                                class="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M17 9V7a5 5 0 00-10 0v2a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2z"
+                                />
+                            </svg>
+                            Phương thức thanh toán
                         </a>
-                    </div>
-                </div>
-                <!-- Main content -->
-                <div class="col-md-9">
-                    <div class="card">
-                        <div class="card-body">
-                            <!-- Profile header -->
-                            <div class="d-flex justify-content-between align-items-center mb-4">
-                                <h2 class="card-title">Personal details</h2>
-                                <div class="profile-picture-container">
-                                    <img src="<%= avatarUrl %>" alt="Profile Picture" id="avatarPreview">
-                                    <label class="profile-picture-upload" title="Change avatar">
-                                        <i class="fas fa-camera"></i>
-                                        <input type="file" name="images" accept="image/*" form="personalDetailsForm" onchange="previewAvatar(this)">
-                                    </label>
-                                </div>
-                            </div>
-                            <% if (updateSuccess != null && !updateSuccess.isEmpty()) { %>
-                            <div class="alert alert-success" id="updateSuccessAlert"><%= updateSuccess %></div>
-                            <% } %>
-                            <p class="text-muted">Update your information and find out how it's used.</p>
-                            <!-- Profile update form -->
-                            <form id="personalDetailsForm" method="post" action="profile" autocomplete="off" enctype="multipart/form-data">
-                                <input type="hidden" name="service" value="updateProfile"/>
-                                <input type="hidden" name="id" value="<%= user != null ? user.getUserId() : "" %>"/>
+                    </nav>
+                </aside>
 
-                                <!-- Name -->
-                                <div class="row align-items-center py-3 border-bottom detail-row">
-                                    <div class="col-md-3">
-                                        <label class="form-label mb-0">Name</label>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <small class="text-muted d-block current-value">
-                                            <%= (user != null && user.getFullName() != null && !user.getFullName().isEmpty()) ? user.getFullName() : "Add your name" %>
-                                        </small>
-                                        <div class="edit-field d-none">
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" name="full_name" value="<%= user != null ? user.getFullName() : "" %>">
-                                                <button type="submit" class="btn btn-success btn-save-field" name="field" value="full_name" style="min-width:80px;">Save</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 text-end">
-                                        <button type="button" class="btn btn-link edit-button">Edit</button>
-                                    </div>
-                                </div>
-                                <!-- Email -->
-                                <div class="row align-items-center py-3 border-bottom detail-row">
-                                    <div class="col-md-3">
-                                        <label class="form-label mb-0">Email address</label>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <small class="text-muted d-block current-value">
-                                            <%= (user != null && user.getEmail() != null && !user.getEmail().isEmpty()) ? user.getEmail() : "This is the email address you use to sign in." %>
-                                        </small>
-                                        <div class="edit-field d-none">
-                                            <div class="input-group">
-                                                <input type="email" class="form-control" name="email" value="<%= user != null ? user.getEmail() : "" %>">
-                                                <button type="submit" class="btn btn-success btn-save-field" name="field" value="email" style="min-width:80px;">Save</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 text-end">
-                                        <button type="button" class="btn btn-link edit-button">Edit</button>
-                                    </div>
-                                </div>
-                                <!-- Phone -->
-                                <div class="row align-items-center py-3 border-bottom detail-row">
-                                    <div class="col-md-3">
-                                        <label class="form-label mb-0">Phone number</label>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <small class="text-muted d-block current-value">
-                                            <%
-                                                String phoneDisplay = (user != null && user.getPhone() != null && !user.getPhone().isEmpty())
-                                                        ? user.getPhone()
-                                                        : "Properties you book will use this number if they need to contact you.";
-                                            %>
-                                            <%= phoneDisplay %>
-                                        </small>
-                                        <div class="edit-field d-none">
-                                            <div class="input-group">
-                                                <input type="tel" class="form-control" name="phone" value="<%= user != null ? user.getPhone() : "" %>">
-                                                <button type="submit" class="btn btn-success btn-save-field" name="field" value="phone" style="min-width:80px;">Save</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 text-end">
-                                        <button type="button" class="btn btn-link edit-button">Edit</button>
-                                    </div>
-                                </div>
-                                <!-- DOB -->
-                                <div class="row align-items-center py-3 border-bottom detail-row">
-                                    <div class="col-md-3">
-                                        <label class="form-label mb-0">Date of Birth</label>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <small class="text-muted d-block current-value"><%= dobValue.isEmpty() ? "Add your dob" : dobValue %></small>
-                                        <div class="edit-field d-none">
-                                            <div class="input-group">
-                                                <input type="date" class="form-control" name="dob" value="<%= user != null && user.getDob() != null ? new java.text.SimpleDateFormat("yyyy-MM-dd").format(user.getDob()) : "" %>">
-                                                <button type="submit" class="btn btn-success btn-save-field" name="field" value="dob" style="min-width:80px;">Save</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 text-end">
-                                        <button type="button" class="btn btn-link edit-button">Edit</button>
-                                    </div>
-                                </div>
-                                <!-- Gender -->
-                                <div class="row align-items-center py-3 border-bottom detail-row">
-                                    <div class="col-md-3">
-                                        <label class="form-label mb-0">Gender</label>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <small class="text-muted d-block current-value"><%= user != null && user.getGender() != null && !user.getGender().isEmpty() ? user.getGender() : "Add your gender" %></small>
-                                        <div class="edit-field d-none">
-                                            <div class="input-group">
-                                                <select class="form-control" name="gender">
-                                                    <option value="">Select gender</option>
-                                                    <option value="Male" <%= user != null && "Male".equalsIgnoreCase(user.getGender()) ? "selected" : "" %>>Male</option>
-                                                    <option value="Female" <%= user != null && "Female".equalsIgnoreCase(user.getGender()) ? "selected" : "" %>>Female</option>
-                                                    <option value="Other" <%= user != null && "Other".equalsIgnoreCase(user.getGender()) ? "selected" : "" %>>Other</option>
-                                                </select>
-                                                <button type="submit" class="btn btn-success btn-save-field" name="field" value="gender" style="min-width:80px;">Save</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 text-end">
-                                        <button type="button" class="btn btn-link edit-button">Edit</button>
-                                    </div>
-                                </div>
-                                <!-- Address -->
-                                <div class="row align-items-center py-3 detail-row">
-                                    <div class="col-md-3">
-                                        <label class="form-label mb-0">Address</label>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <small class="text-muted d-block current-value">
-                                            <%= (user != null && user.getAddress() != null && !user.getAddress().isEmpty()) ? user.getAddress() : "Add your address" %>
-                                        </small>
-                                        <div class="edit-field d-none">
-                                            <div class="input-group">
-                                                <textarea class="form-control" name="address" rows="3"><%= user != null ? user.getAddress() : "" %></textarea>
-                                                <button type="submit" class="btn btn-success btn-save-field" name="field" value="address" style="min-width:80px;">Save</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 text-end">
-                                        <button type="button" class="btn btn-link edit-button">Edit</button>
-                                    </div>
-                                </div>
-                            </form>
+                <!-- Edit Account Form -->
+                <section
+                    class="flex-1 bg-white border border-gray-200 rounded-lg p-8 shadow-sm"
+                    >
+                    <h1 class="text-2xl font-bold mb-6 text-blue-700">
+                        Chỉnh sửa thông tin cá nhân
+                    </h1>
+                    <% if (request.getAttribute("updateSuccess") != null) { %>
+                    <div class="mb-6 p-4 bg-emerald-100 text-emerald-800 rounded">
+                        <%= request.getAttribute("updateSuccess") %>
+                    </div>
+                    <% } %>
+                    <!-- Avatar + Upload -->
+                    <div class="flex flex-col md:flex-row items-center gap-6 mb-8">
+                        <div class="relative">
+                            <img
+                                id="avatarPreview"
+                                src="<%= user != null && user.getImages() != null && !user.getImages().isEmpty() ? user.getImages() : "https://randomuser.me/api/portraits/men/32.jpg" %>"
+                                alt="Avatar"
+                                class="w-28 h-28 rounded-full border-4 border-blue-300 object-cover shadow"
+                                />
+                            <label
+                                for="avatarUpload"
+                                class="absolute bottom-0 right-0 bg-blue-600 w-9 h-9 flex items-center justify-center rounded-full cursor-pointer shadow-lg hover:bg-blue-700 transition"
+                                >
+                                <svg
+                                    class="w-5 h-5 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M15.232 5.232l3.536 3.536M9 13l3-3m2-2 3-3m2.121-2.121A2.828 2.828 0 0121 4.828c0 .746-.308 1.463-.879 2.034l-6.364 6.364a1 1 0 01-.293.207l-4 2a1 1 0 01-1.316-1.316l2-4a1 1 0 01.207-.293l6.364-6.364A2.828 2.828 0 0119.172 1c.746 0 1.463.308 2.034.879z"
+                                    />
+                                </svg>
+                                <input
+                                    id="avatarUpload"
+                                    name="images"
+                                    type="file"
+                                    accept="image/*"
+                                    class="hidden"
+                                    onchange="previewAvatar(event)"
+                                    form="editAccountForm"
+                                    />
+                            </label>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-lg text-gray-900 mb-1">
+                                <%= user != null ? user.getFullName() : "" %>
+                            </div>
+                            <div class="text-gray-500"><%= user != null ? user.getEmail() : "" %></div>
                         </div>
                     </div>
-                </div>
+
+                    <form id="editAccountForm" action="profile" method="post" enctype="multipart/form-data">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Họ và tên -->
+                            <div>
+                                <label class="block text-gray-600 mb-1 font-medium"
+                                       >Họ và tên</label
+                                >
+                                <input
+                                    type="text"
+                                    name="full_name"
+                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    placeholder="Nhập họ và tên"
+                                    value="<%= user != null ? user.getFullName() : "" %>"
+                                    />
+                            </div>
+                            <!-- Ngày sinh -->
+                            <div>
+                                <label class="block text-gray-600 mb-1 font-medium"
+                                       >Ngày sinh</label
+                                >
+                                <input
+                                    type="date"
+                                    name="dob"
+                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    value="<%= user != null && user.getDob() != null ? df.format(user.getDob()) : "" %>"
+                                    />
+                            </div>
+                            <!-- Email -->
+                            <div>
+                                <label class="block text-gray-600 mb-1 font-medium"
+                                       >Email</label
+                                >
+                                <input
+                                    type="email"
+                                    name="email"
+                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    placeholder="Nhập email"
+                                    value="<%= user != null ? user.getEmail() : "" %>"
+                                    />
+                            </div>
+                            <!-- Số điện thoại -->
+                            <div>
+                                <label class="block text-gray-600 mb-1 font-medium"
+                                       >Số điện thoại</label
+                                >
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    placeholder="Nhập số điện thoại"
+                                    value="<%= user != null ? user.getPhone() : "" %>"
+                                    />
+                            </div>
+                            <!-- Giới tính -->
+                            <div>
+                                <label class="block text-gray-600 mb-1 font-medium"
+                                       >Giới tính</label
+                                >
+                                <select
+                                    name="gender"
+                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    >
+                                    <option value="Nam" <%= user != null && "Nam".equals(user.getGender()) ? "selected" : "" %>>Nam</option>
+                                    <option value="Nữ" <%= user != null && "Nữ".equals(user.getGender()) ? "selected" : "" %>>Nữ</option>
+                                    <option value="Khác" <%= user != null && "Khác".equals(user.getGender()) ? "selected" : "" %>>Khác</option>
+                                </select>
+                            </div>
+                            <!-- Địa chỉ -->
+                            <div>
+                                <label class="block text-gray-600 mb-1 font-medium"
+                                       >Địa chỉ</label
+                                >
+                                <input
+                                    type="text"
+                                    name="address"
+                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    placeholder="Nhập địa chỉ"
+                                    value="<%= user != null ? user.getAddress() : "" %>"
+                                    />
+                            </div>
+                        </div>
+                        <!-- Nút lưu -->
+                        <div class="mt-8 flex justify-end">
+                            <button
+                                type="submit"
+                                class="bg-blue-600 text-white px-6 py-2 rounded-md font-semibold shadow hover:bg-blue-700 transition-colors"
+                                >
+                                Lưu thay đổi
+                            </button>
+                        </div>
+                    </form>
+                </section>
             </div>
         </div>
-        <footer class="bg-light mt-3 py-3">
-            <div class="container">
-                <div class="text-center">
-                    <small class="text-muted">
-                        © 2025 PoolHub™. All rights reserved.
-                    </small>
-                </div>
-            </div>
-        </footer>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-                                            document.addEventListener('DOMContentLoaded', function () {
-                                                var alert = document.getElementById("updateSuccessAlert");
-                                                if (alert) {
-                                                    setTimeout(function () {
-                                                        alert.style.display = "none";
-                                                    }, 5000);
-                                                }
-                                                var editButtons = document.querySelectorAll('.edit-button');
-                                                editButtons.forEach(function (btn) {
-                                                    btn.addEventListener('click', function () {
-                                                        var parentRow = btn.closest('.row');
-                                                        parentRow.querySelector('.current-value').classList.add('d-none');
-                                                        parentRow.querySelector('.edit-field').classList.remove('d-none');
-                                                        btn.classList.add('d-none');
-                                                    });
-                                                });
-
-                                                var saveButtons = document.querySelectorAll('.btn-save-field');
-                                                saveButtons.forEach(function (btn) {
-                                                    btn.addEventListener('click', function () {
-                                                    });
-                                                });
-                                            });
-
-                                            function previewAvatar(input) {
-                                                if (input.files && input.files[0]) {
-                                                    var reader = new FileReader();
-                                                    reader.onload = function (e) {
-                                                        document.getElementById('avatarPreview').src = e.target.result;
-                                                    };
-                                                    reader.readAsDataURL(input.files[0]);
-                                                }
-                                            }
+            // Preview avatar khi upload file
+            function previewAvatar(event) {
+                const reader = new FileReader();
+                reader.onload = function () {
+                    const output = document.getElementById("avatarPreview");
+                    output.src = reader.result;
+                };
+                reader.readAsDataURL(event.target.files[0]);
+            }
         </script>
     </body>
 </html>
-
-//kiên lê
