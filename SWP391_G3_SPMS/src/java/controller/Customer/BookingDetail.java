@@ -49,6 +49,7 @@ public class BookingDetail extends HttpServlet {
             request.setAttribute("userFeedback", userFeedback);
             request.setAttribute("successMsg", request.getParameter("success"));
             request.setAttribute("errorMsg", request.getParameter("error"));
+            // SỬA ĐÚNG ĐƯỜNG DẪN ĐẾN FILE JSP, KHÔNG ĐƯỢC FORWARD TỚI CHÍNH SERVLET
             request.getRequestDispatcher("BookingDetail.jsp").forward(request, response);
         } catch (SQLException e) {
             throw new ServletException(e);
@@ -93,14 +94,14 @@ public class BookingDetail extends HttpServlet {
             }
             if (!alreadyFeedback) {
                 feedbackDAO.sendFeedback(user, poolId, rating, comment);
-                response.sendRedirect("BookingDetail?bookingId=" + bookingId + "&success=1");
+                response.sendRedirect("booking_detail?bookingId=" + bookingId + "&success=1");
             } else {
                 // Không cho feedback lần 2
-                response.sendRedirect("BookingDetail?bookingId=" + bookingId + "&error=1");
+                response.sendRedirect("booking_detail?bookingId=" + bookingId + "&error=1");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("BookingDetail?bookingId=" + request.getParameter("bookingId") + "&error=1");
+            response.sendRedirect("booking_detail?bookingId=" + request.getParameter("bookingId") + "&error=1");
         }
     }
 }
