@@ -1,5 +1,5 @@
 <%-- 
-    Document   : managerEquipment
+    Document   : managerDevice
     Created on : May 28, 2025, 10:10:26 PM
     Author     : Tuan Anh
 --%>
@@ -84,6 +84,7 @@
                     </tbody>
 
                 </table>
+                        
                 <!-- Phân trang -->
 
 

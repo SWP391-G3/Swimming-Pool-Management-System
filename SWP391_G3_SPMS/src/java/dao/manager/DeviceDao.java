@@ -35,7 +35,7 @@ public class DeviceDao extends DBContext {
                         rs.getInt(5), rs.getString(6), rs.getString(7)));
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // cần thêm tính năng validate các thứ
+            e.printStackTrace(); 
 
         }
         return deviceList;
