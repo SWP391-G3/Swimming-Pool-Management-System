@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import model.User;
+import util.PasswordEncryption;
 
 public class UserDAO extends DBContext {
 
@@ -214,10 +215,8 @@ public class UserDAO extends DBContext {
     }
 
     public void updateUser(User user) {
-        PreparedStatement stm = null;
         String sql = "UPDATE Users SET full_name = ?, email = ?, phone = ?, address = ?, dob = ?, gender = ?, images = ?, updated_at = GETDATE() WHERE user_id = ?";
-        try {
-            stm = connection.prepareStatement(sql);
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
             stm.setString(1, user.getFullName());
             stm.setString(2, user.getEmail());
             stm.setString(3, user.getPhone());
@@ -232,7 +231,19 @@ public class UserDAO extends DBContext {
             stm.setInt(8, user.getUserId());
             stm.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+        }
+    }
+
+    public void updatePassword(int userId, String newPassword) {
+        String sql = "UPDATE Users SET password = ?, updated_at = GETDATE() WHERE user_id = ?";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            String hash = PasswordEncryption.hashPassword(newPassword);
+            stm.setString(1, hash);
+            stm.setInt(2, userId);
+            stm.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -248,21 +259,18 @@ public class UserDAO extends DBContext {
         }
     }
 
-//    public static void main(String[] args) {
-//        UserDAO dao = new UserDAO();
-//        int testUserId = 4;
-//        User user = dao.getUserByID(testUserId);
-//
-//        if (user != null) {
-//            System.out.println("User found:");
-//            System.out.println("ID: " + user.getUser_id());
-//            System.out.println("Username: " + user.getUsername());
-//            System.out.println("Full Name: " + user.getFull_name());
-//            System.out.println("Email: " + user.getEmail());
-//            System.out.println("Phone: " + user.getPhone());
-//            System.out.println("Address: " + user.getAddress());
-//        } else {
-//            System.out.println("User not found!");
-//        }
-//    }
+    public boolean checkLogin(String username, String inputPassword) {
+        String sql = "SELECT password FROM Users WHERE username = ?";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setString(1, username);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                String storedHash = rs.getString("password");
+                return PasswordEncryption.checkPassword(inputPassword, storedHash);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
