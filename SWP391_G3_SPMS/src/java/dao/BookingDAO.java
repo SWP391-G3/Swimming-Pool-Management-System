@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class BookingDAO extends DBContext {
 
-    // Lấy thông tin booking theo id
+    // get booking infor by userId
     public Booking getBookingById(int id) throws SQLException {
         String sql = "SELECT * FROM Booking WHERE booking_id = ?";
         PreparedStatement st = connection.prepareStatement(sql);

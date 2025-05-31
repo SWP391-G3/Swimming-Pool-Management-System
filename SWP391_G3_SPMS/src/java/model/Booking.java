@@ -13,42 +13,42 @@ import java.sql.Time;
  */
 public class Booking {
     private int bookingId;
-    private String customerName;
-    private String phone;
-    private String email;
-    private String poolName;
+    private int userId;
+    private int poolId;
     private Date bookingDate;
     private Time startTime;
     private Time endTime;
     private int slotCount;
     private String bookingStatus;
+    private Date createdAt;
+    private Date updatedAt;
 
     public Booking() {
     }
 
-    public Booking(int bookingId, String customerName, String phone, String email, String poolName, Date bookingDate, Time startTime, Time endTime, int slotCount, String bookingStatus) {
+    public Booking(int bookingId, int userId, int poolId, Date bookingDate, Time startTime, Time endTime, int slotCount, String bookingStatus, Date createdAt, Date updatedAt) {
         this.bookingId = bookingId;
-        this.customerName = customerName;
-        this.phone = phone;
-        this.email = email;
-        this.poolName = poolName;
+        this.userId = userId;
+        this.poolId = poolId;
         this.bookingDate = bookingDate;
         this.startTime = startTime;
         this.endTime = endTime;
         this.slotCount = slotCount;
         this.bookingStatus = bookingStatus;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
-    public Booking(String customerName, String phone, String email, String poolName, Date bookingDate, Time startTime, Time endTime, int slotCount, String bookingStatus) {
-        this.customerName = customerName;
-        this.phone = phone;
-        this.email = email;
-        this.poolName = poolName;
+    public Booking(int userId, int poolId, Date bookingDate, Time startTime, Time endTime, int slotCount, String bookingStatus, Date createdAt, Date updatedAt) {
+        this.userId = userId;
+        this.poolId = poolId;
         this.bookingDate = bookingDate;
         this.startTime = startTime;
         this.endTime = endTime;
         this.slotCount = slotCount;
         this.bookingStatus = bookingStatus;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public int getBookingId() {
@@ -59,36 +59,20 @@ public class Booking {
         this.bookingId = bookingId;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public String getPhone() {
-        return phone;
+    public int getPoolId() {
+        return poolId;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPoolName() {
-        return poolName;
-    }
-
-    public void setPoolName(String poolName) {
-        this.poolName = poolName;
+    public void setPoolId(int poolId) {
+        this.poolId = poolId;
     }
 
     public Date getBookingDate() {
@@ -129,6 +113,22 @@ public class Booking {
 
     public void setBookingStatus(String bookingStatus) {
         this.bookingStatus = bookingStatus;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
     
     
