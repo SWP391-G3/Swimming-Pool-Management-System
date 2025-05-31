@@ -44,7 +44,7 @@
 
             <!-- Navigation Cards -->
             <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <a href="booking-history.jsp" class="bg-blue-500 rounded-lg p-6 text-center cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 block">
+                <a href="booking_history" class="bg-blue-500 rounded-lg p-6 text-center cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 block">
                     <div class="flex flex-col items-center">
                         <svg class="w-8 h-8 mb-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
@@ -52,7 +52,7 @@
                         <span class="text-white font-medium">LỊCH SỬ ĐẶT BỂ</span>
                     </div>
                 </a>
-                <a href="voucher-list.jsp" class="bg-blue-500 rounded-lg p-6 text-center cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 block">
+                <a href="#" class="bg-blue-500 rounded-lg p-6 text-center cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 block">
                     <div class="flex flex-col items-center">
                         <svg class="w-8 h-8 mb-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/>
@@ -60,7 +60,7 @@
                         <span class="text-white font-medium">VOUCHER</span>
                     </div>
                 </a>
-                <a href="edit-account.jsp" class="bg-blue-500 rounded-lg p-6 text-center cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 block">
+                <a href="profile" class="bg-blue-500 rounded-lg p-6 text-center cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 block">
                     <div class="flex flex-col items-center">
                         <svg class="w-8 h-8 mb-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
