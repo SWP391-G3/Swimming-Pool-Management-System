@@ -17,9 +17,9 @@
                     <a href="adminPoolManagement"><i class="bi bi-water"></i> Quản lý bể bơi</a>
                     <a href="#"><i class="bi bi-people"></i> Quản lý nhân viên</a>
                     <a href="#"><i class="bi bi-person-check"></i> Quản lý khách hàng</a>
-                    <a href="#"><i class="bi bi-calendar-check"></i> Quản lý đặt lịch</a>
                     <a href="#"><i class="bi bi-graph-up"></i> Thống kê & Báo cáo</a>
                     <a href="#"><i class="bi bi-gear"></i> Cài đặt hệ thống</a>
+                    <a href="#"><i class="bi bi-box-arrow-right"></i>Đăng xuất</a>
                 </nav>
 
                 <!-- Main content -->
