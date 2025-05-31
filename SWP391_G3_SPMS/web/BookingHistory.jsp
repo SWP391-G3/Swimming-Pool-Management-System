@@ -11,7 +11,7 @@
         <link
             href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
             rel="stylesheet"
-        />
+            />
         <link rel="stylesheet" href="css/styles.css" />
     </head>
     <body class="bg-gray-50 min-h-screen font-['Inter'] antialiased">
@@ -19,36 +19,36 @@
             <a
                 href="index.jsp"
                 class="inline-flex items-center text-blue-600 font-medium mb-8 hover:underline"
-            >
+                >
                 <svg
                     class="w-5 h-5 mr-2"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15 19l-7-7 7-7"
+                    >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 19l-7-7 7-7"
                     />
                 </svg>
                 Trang chủ
             </a>
             <div
                 class="relative w-full h-52 md:h-64 mb-8 rounded-lg overflow-hidden shadow-lg"
-            >
+                >
                 <img
                     src="https://images.pexels.com/photos/3584965/pexels-photo-3584965.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                     alt="Booking History Banner"
                     class="w-full h-full object-cover"
-                />
+                    />
                 <div
                     class="absolute inset-0 bg-gradient-to-b from-black/30 to-black/10"
-                ></div>
+                    ></div>
                 <h1
                     class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl md:text-4xl font-bold text-white text-center drop-shadow-lg"
-                >
+                    >
                     LỊCH SỬ ĐẶT BỂ
                 </h1>
             </div>
@@ -65,7 +65,7 @@
                                 value="<%= request.getParameter("poolName") != null ? request.getParameter("poolName") : "" %>"
                                 placeholder="Nhập tên hồ bơi"
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            />
+                                />
                         </div>
                         <div class="flex-1 flex gap-2">
                             <div class="flex-1">
@@ -76,7 +76,7 @@
                                     name="fromDate"
                                     value="<%= request.getParameter("fromDate") != null ? request.getParameter("fromDate") : "" %>"
                                     class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                />
+                                    />
                             </div>
                         </div>
                         <div class="flex-1 min-w-[110px]">
@@ -85,7 +85,7 @@
                             <select
                                 name="sortOrder"
                                 class="w-full border border-gray-300 rounded-md px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            >
+                                >
                                 <option value="date_desc" <%= "date_desc".equals(request.getParameter("sortOrder")) ? "selected" : "" %>>Mới nhất</option>
                                 <option value="date_asc" <%= "date_asc".equals(request.getParameter("sortOrder")) ? "selected" : "" %>>Cũ nhất</option>
                                 <option value="price_asc" <%= "price_asc".equals(request.getParameter("sortOrder")) ? "selected" : "" %>>Giá tăng</option>
@@ -96,7 +96,7 @@
                             <button
                                 type="submit"
                                 class="bg-blue-600 text-white px-6 py-2 rounded-md font-semibold shadow hover:bg-blue-700 transition-colors w-full mt-6 md:mt-0"
-                            >
+                                >
                                 Tìm kiếm
                             </button>
                         </div>
@@ -115,11 +115,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                        <%
-                            List<Booking> bookingList = (List<Booking>) request.getAttribute("bookingList");
-                            if (bookingList != null && !bookingList.isEmpty()) {
-                                for (Booking booking : bookingList) {
-                        %>
+                            <%
+                                List<Booking> bookingList = (List<Booking>) request.getAttribute("bookingList");
+                                if (bookingList != null && !bookingList.isEmpty()) {
+                                    for (Booking booking : bookingList) {
+                            %>
                             <tr class="border-t hover:bg-gray-50">
                                 <td class="py-4 text-blue-600 font-medium">#B<%= booking.getBookingId() %></td>
                                 <td class="text-gray-900"><%= booking.getPoolName() %></td>
@@ -145,23 +145,22 @@
                                 </td>
                                 <td class="font-medium"><%= booking.getAmount() %>₫</td>
                                 <td>
-                                    <button
-                                        class="bg-gray-900 text-white px-4 py-1.5 rounded-md text-sm hover:bg-gray-800 transition-colors"
-                                    >
+                                    <a href="booking_detail?bookingId=<%= booking.getBookingId() %>"
+                                       class="bg-gray-900 text-white px-4 py-1.5 rounded-md text-sm hover:bg-gray-800 transition-colors">
                                         Chi tiết
-                                    </button>
+                                    </a>
                                 </td>
                             </tr>
-                        <%
-                                }
-                            } else {
-                        %>
+                            <%
+                                    }
+                                } else {
+                            %>
                             <tr>
                                 <td colspan="6" class="text-center text-gray-500 py-8">Không có lịch sử đặt bể nào.</td>
                             </tr>
-                        <%
-                            }
-                        %>
+                            <%
+                                }
+                            %>
                         </tbody>
                     </table>
                 </div>
