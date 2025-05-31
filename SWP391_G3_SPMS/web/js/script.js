@@ -1,3 +1,29 @@
+// Navigation card click handler and initial active state
+document.addEventListener('DOMContentLoaded', () => {
+    const navCards = document.querySelectorAll('.cursor-pointer');
+    
+    navCards.forEach(card => {
+        card.addEventListener('click', () => {
+            // Remove active state from all cards
+            navCards.forEach(c => {
+                c.classList.remove('bg-emerald-600');
+                c.classList.add('bg-blue-500');
+            });
+            
+            // Add active state to clicked card
+            card.classList.remove('bg-blue-500');
+            card.classList.add('bg-blue-600');
+        });
+    });
+
+    // Set initial active state to YOUR ORDER
+    if (navCards.length > 0) {
+        navCards[0].classList.remove('bg-blue-500');
+        navCards[0].classList.add('bg-blue-600');
+    }
+});
+
+// Profile detail edit functionality
 document.addEventListener('DOMContentLoaded', function () {
     // Handle edit buttons
     document.querySelectorAll('.edit-button').forEach(button => {
@@ -13,14 +39,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 editField.classList.remove('d-none');
                 this.textContent = 'Save';
 
-                // Set current value to input
-                if (currentValue.textContent !== 'Choose a display name' &&
-                        currentValue.textContent !== 'Add your phone number' &&
-                        currentValue.textContent !== 'Enter your date of birth' &&
-                        currentValue.textContent !== 'Select your nationality' &&
-                        currentValue.textContent !== 'Select your gender' &&
-                        currentValue.textContent !== 'Add your address' &&
-                        currentValue.textContent !== 'Not provided') {
+                // Set current value to input, unless it's a placeholder
+                if (
+                    currentValue.textContent !== 'Choose a display name' &&
+                    currentValue.textContent !== 'Add your phone number' &&
+                    currentValue.textContent !== 'Enter your date of birth' &&
+                    currentValue.textContent !== 'Select your nationality' &&
+                    currentValue.textContent !== 'Select your gender' &&
+                    currentValue.textContent !== 'Add your address' &&
+                    currentValue.textContent !== 'Not provided'
+                ) {
                     input.value = currentValue.textContent;
                 }
                 input.focus();
