@@ -81,11 +81,26 @@ public class DeviceServlet extends HttpServlet {
                     page = 1;
                 }
 
+                
+                if (keyword != null && !keyword.isEmpty() && !keyword.matches("[a-zA-Z0-9\\sÀ-ỹ]+")) {
+                    request.setAttribute("error", "Từ khóa tìm kiếm không hợp lệ (không chứa ký tự đặc biệt).");
+                    request.setAttribute("devices", List.of());
+                    request.setAttribute("endP", 1);
+                    request.setAttribute("page", 1);
+                    request.setAttribute("keyword", keyword);
+                    request.setAttribute("status", status);
+                    request.getRequestDispatcher("managerDevice.jsp").forward(request, response);
+                    return;
+                }
+
                 int count = deviceDAO.countDevices(keyword, status);
-                int endPage = count / 6;           // Tính số lượng trang
+
+                int endPage = count / 6;
                 if (count % 6 != 0) {
                     endPage++;
                 }
+
+                
 
                 List<Device> devices = deviceDAO.getDevicesByPage(keyword, status, page);
                 request.setAttribute("devices", devices);
@@ -118,7 +133,6 @@ public class DeviceServlet extends HttpServlet {
                 String deviceStatus = request.getParameter("deviceStatus");
                 String notes = request.getParameter("notes");
 
-               
                 if (!isValidDeviceName(deviceName)) {
                     request.setAttribute("error", "Tên thiết bị không được chứa ký tự đặc biệt.");
                     request.setAttribute("poolList", deviceDAO.getAllPools());
@@ -153,7 +167,6 @@ public class DeviceServlet extends HttpServlet {
                 String deviceStatus = request.getParameter("deviceStatus");
                 String notes = request.getParameter("notes");
 
-                // ✅ VALIDATE TÊN THIẾT BỊ
                 if (!isValidDeviceName(deviceName)) {
                     request.setAttribute("error", "Tên thiết bị không được chứa ký tự đặc biệt.");
                     Device device = deviceDAO.getDeviceById(deviceId);

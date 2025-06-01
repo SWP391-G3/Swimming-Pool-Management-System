@@ -25,6 +25,8 @@
             <div class="content-panel">
                 <div class="header">
                     <h2>Quản lý thiết bị hồ bơi</h2>
+
+
                     <form class="search-form" method="get" action="DeviceServlet">
                         <input type="text" name="keyword" placeholder="Tìm theo tên thiết bị..." value="${param.keyword}">
                         <select name="status">
@@ -52,39 +54,48 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach var="device" items="${devices}">
-                            <tr>
-                                <td>${device.deviceId}</td>
-                                <td>
-                                    <img src="${device.deviceImage}" alt="Thiết bị" class="thumb">
-                                </td>
-                                <td>${device.deviceName}</td>
-                                <td>${device.poolName}</td>
-                                <td>${device.quantity}</td>
-                                <td>
-                                    <span class="status ${device.deviceStatus}">
-                                        <c:choose>
-                                            <c:when test="${device.deviceStatus == 'available'}">Tốt</c:when>
-                                            <c:when test="${device.deviceStatus == 'maintenance'}">Bảo trì</c:when>
-                                            <c:when test="${device.deviceStatus == 'broken'}">Hỏng</c:when>
-                                        </c:choose>
-                                    </span>
-                                </td>
-                                <td>${device.notes}</td>
-                                <td>
-                                    <a href="DeviceServlet?action=update&id=${device.deviceId}" class="btn-edit">Cập nhập</a>
-                                    <form action="DeviceServlet" method="post" style="display:inline;">
-                                        <input type="hidden" name="action" value="delete">
-                                        <input type="hidden" name="deviceId" value="${device.deviceId}">
-                                        <button type="submit" class="btn-delete" onclick="return confirm('Bạn chắc chắn muốn xóa thiết bị này?')">Xóa</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        </c:forEach>
+                        <c:choose>
+                            <c:when test="${empty devices}">
+                                <tr>
+                                    <td colspan="8" style="text-align: center; color: gray; font-style: italic;">
+                                        Không tìm thấy thiết bị nào phù hợp.
+                                    </td>
+                                </tr>
+                            </c:when>
+                            <c:otherwise>
+                                <c:forEach var="device" items="${devices}">
+                                    <tr>
+                                        <td>${device.deviceId}</td>
+                                        <td><img src="${device.deviceImage}" alt="Thiết bị" class="thumb"></td>
+                                        <td>${device.deviceName}</td>
+                                        <td>${device.poolName}</td>
+                                        <td>${device.quantity}</td>
+                                        <td>
+                                            <span class="status ${device.deviceStatus}">
+                                                <c:choose>
+                                                    <c:when test="${device.deviceStatus == 'available'}">Tốt</c:when>
+                                                    <c:when test="${device.deviceStatus == 'maintenance'}">Bảo trì</c:when>
+                                                    <c:when test="${device.deviceStatus == 'broken'}">Hỏng</c:when>
+                                                </c:choose>
+                                            </span>
+                                        </td>
+                                        <td>${device.notes}</td>
+                                        <td>
+                                            <a href="DeviceServlet?action=update&id=${device.deviceId}" class="btn-edit">Cập nhật</a>
+                                            <form action="DeviceServlet" method="post" style="display:inline;">
+                                                <input type="hidden" name="action" value="delete">
+                                                <input type="hidden" name="deviceId" value="${device.deviceId}">
+                                                <button type="submit" class="btn-delete" onclick="return confirm('Bạn chắc chắn muốn xóa thiết bị này?')">Xóa</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </c:otherwise>
+                        </c:choose>
                     </tbody>
 
                 </table>
-                        
+
                 <!-- Phân trang -->
 
 
@@ -95,10 +106,14 @@
                     <c:forEach begin="1" end="${endP}" var="i">
                         <a href="DeviceServlet?page=${i}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}"
                            class="${i == page ? 'active' : ''}">${i}</a>
+
                     </c:forEach>
+
+
                     <c:if test="${page < endP}">
                         <a href="DeviceServlet?page=${page+1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}">&raquo;</a>
                     </c:if>
+
                 </div>
 
 
