@@ -4,130 +4,139 @@
  */
 package model;
 
-import java.util.Date;
-import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 /**
  *
- * @author LAZYVL
+ * @author Lenovo
  */
 public class Pool {
-    private int poolId;
-    private String poolName;
-    private String poolRoad;
-    private String poolAddress;
-    private int maxSlot;
-    private Time openTime;
-    private Time closeTime;
-    private boolean poolStatus;
-    private String poolImage;
-    private Date createdAt;
-    private Date updatedAt;
 
-    public Pool() {
+    private int pool_id;
+    private String pool_name;
+    private String pool_road;
+    private String pool_address;
+    private int max_slot;
+    private LocalTime open_time;
+    private LocalTime close_time;
+    private boolean pool_status;
+    private String pool_image;
+    private LocalDate created_at;
+    private LocalDate updated_at;
+    private String pool_description;
+
+    public Pool(int pool_id, String pool_name, String pool_road, String pool_address, int max_slot, LocalTime open_time, LocalTime close_time, boolean pool_status, String pool_image, LocalDate created_at, LocalDate updated_at, String pool_description) {
+        this.pool_id = pool_id;
+        this.pool_name = pool_name;
+        this.pool_road = pool_road;
+        this.pool_address = pool_address;
+        this.max_slot = max_slot;
+        this.open_time = open_time;
+        this.close_time = close_time;
+        this.pool_status = pool_status;
+        this.pool_image = pool_image;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
+        this.pool_description = pool_description;
     }
 
-    public Pool(int poolId, String poolName, String poolRoad, String poolAddress, int maxSlot, Time openTime, Time closeTime, boolean poolStatus, String poolImage, Date createdAt, Date updatedAt) {
-        this.poolId = poolId;
-        this.poolName = poolName;
-        this.poolRoad = poolRoad;
-        this.poolAddress = poolAddress;
-        this.maxSlot = maxSlot;
-        this.openTime = openTime;
-        this.closeTime = closeTime;
-        this.poolStatus = poolStatus;
-        this.poolImage = poolImage;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+    public int getPool_id() {
+        return pool_id;
     }
 
-    public int getPoolId() {
-        return poolId;
+    public void setPool_id(int pool_id) {
+        this.pool_id = pool_id;
     }
 
-    public void setPoolId(int poolId) {
-        this.poolId = poolId;
+    public String getPool_name() {
+        return pool_name;
     }
 
-    public String getPoolName() {
-        return poolName;
+    public void setPool_name(String pool_name) {
+        this.pool_name = pool_name;
     }
 
-    public void setPoolName(String poolName) {
-        this.poolName = poolName;
+    public String getPool_road() {
+        return pool_road;
     }
 
-    public String getPoolRoad() {
-        return poolRoad;
+    public void setPool_road(String pool_road) {
+        this.pool_road = pool_road;
     }
 
-    public void setPoolRoad(String poolRoad) {
-        this.poolRoad = poolRoad;
+    public String getPool_address() {
+        return pool_address;
     }
 
-    public String getPoolAddress() {
-        return poolAddress;
+    public void setPool_address(String pool_address) {
+        this.pool_address = pool_address;
     }
 
-    public void setPoolAddress(String poolAddress) {
-        this.poolAddress = poolAddress;
+    public int getMax_slot() {
+        return max_slot;
     }
 
-    public int getMaxSlot() {
-        return maxSlot;
+    public void setMax_slot(int max_slot) {
+        this.max_slot = max_slot;
     }
 
-    public void setMaxSlot(int maxSlot) {
-        this.maxSlot = maxSlot;
+    public LocalTime getOpen_time() {
+        return open_time;
     }
 
-    public Time getOpenTime() {
-        return openTime;
+    public void setOpen_time(LocalTime open_time) {
+        this.open_time = open_time;
     }
 
-    public void setOpenTime(Time openTime) {
-        this.openTime = openTime;
+    public LocalTime getClose_time() {
+        return close_time;
     }
 
-    public Time getCloseTime() {
-        return closeTime;
+    public void setClose_time(LocalTime close_time) {
+        this.close_time = close_time;
     }
 
-    public void setCloseTime(Time closeTime) {
-        this.closeTime = closeTime;
+    public boolean isPool_status() {
+        return pool_status;
     }
 
-    public boolean isPoolStatus() {
-        return poolStatus;
+    public void setPool_status(boolean pool_status) {
+        this.pool_status = pool_status;
     }
 
-    public void setPoolStatus(boolean poolStatus) {
-        this.poolStatus = poolStatus;
+    public String getPool_image() {
+        return pool_image;
     }
 
-    public String getPoolImage() {
-        return poolImage;
+    public void setPool_image(String pool_image) {
+        this.pool_image = pool_image;
     }
 
-    public void setPoolImage(String poolImage) {
-        this.poolImage = poolImage;
+    public LocalDate getCreated_at() {
+        return created_at;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public void setCreated_at(LocalDate created_at) {
+        this.created_at = created_at;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public LocalDate getUpdated_at() {
+        return updated_at;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public void setUpdated_at(LocalDate updated_at) {
+        this.updated_at = updated_at;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public String getPool_description() {
+        return pool_description;
     }
-    
-    
+
+    public void setPool_description(String pool_description) {
+        this.pool_description = pool_description;
+    }
+
+      
+
 }
