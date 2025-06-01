@@ -98,6 +98,10 @@ public class DeviceServlet extends HttpServlet {
         }
     }
 
+    private boolean isValidDeviceName(String name) {
+        return name != null && name.matches("[a-zA-Z0-9\\sÀ-ỹ]+");
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -114,8 +118,15 @@ public class DeviceServlet extends HttpServlet {
                 String deviceStatus = request.getParameter("deviceStatus");
                 String notes = request.getParameter("notes");
 
-                Device device = new Device();
+               
+                if (!isValidDeviceName(deviceName)) {
+                    request.setAttribute("error", "Tên thiết bị không được chứa ký tự đặc biệt.");
+                    request.setAttribute("poolList", deviceDAO.getAllPools());
+                    request.getRequestDispatcher("addDevice.jsp").forward(request, response);
+                    return;
+                }
 
+                Device device = new Device();
                 device.setPoolId(poolId);
                 device.setDeviceImage(deviceImage);
                 device.setDeviceName(deviceName);
@@ -128,6 +139,7 @@ public class DeviceServlet extends HttpServlet {
 
             } catch (NumberFormatException e) {
                 request.setAttribute("error", "Số lượng hoặc Pool ID không hợp lệ");
+                request.setAttribute("poolList", deviceDAO.getAllPools());
                 request.getRequestDispatcher("addDevice.jsp").forward(request, response);
             }
 
@@ -140,6 +152,16 @@ public class DeviceServlet extends HttpServlet {
                 int quantity = Integer.parseInt(request.getParameter("quantity"));
                 String deviceStatus = request.getParameter("deviceStatus");
                 String notes = request.getParameter("notes");
+
+                // ✅ VALIDATE TÊN THIẾT BỊ
+                if (!isValidDeviceName(deviceName)) {
+                    request.setAttribute("error", "Tên thiết bị không được chứa ký tự đặc biệt.");
+                    Device device = deviceDAO.getDeviceById(deviceId);
+                    request.setAttribute("device", device);
+                    request.setAttribute("poolList", deviceDAO.getAllPools());
+                    request.getRequestDispatcher("updateDevice.jsp").forward(request, response);
+                    return;
+                }
 
                 Device device = new Device();
                 device.setDeviceId(deviceId);
@@ -169,7 +191,6 @@ public class DeviceServlet extends HttpServlet {
                 request.getRequestDispatcher("DeviceServlet").forward(request, response);
             }
         }
-
     }
 
     @Override
