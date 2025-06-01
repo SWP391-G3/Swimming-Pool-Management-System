@@ -2,35 +2,27 @@ package model;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.math.BigDecimal;
 
-/**
- *
- * @author LAZYVL
- */
 public class Booking {
+
     private int bookingId;
     private int userId;
     private int poolId;
-    private String poolName;
-    private BigDecimal amount;
     private Date bookingDate;
     private Time startTime;
     private Time endTime;
     private int slotCount;
     private String bookingStatus;
-    private Date createdAt;
-    private Date updatedAt;
+    private java.util.Date createdAt;
+    private java.util.Date updatedAt;
 
-    public Booking() {
-    }
+    public Booking() {}
 
-    public Booking(int bookingId, int userId, int poolId, String poolName, BigDecimal amount, Date bookingDate, Time startTime, Time endTime, int slotCount, String bookingStatus, Date createdAt, Date updatedAt) {
+    public Booking(int bookingId, int userId, int poolId, Date bookingDate, Time startTime, Time endTime,
+            int slotCount, String bookingStatus, java.util.Date createdAt, java.util.Date updatedAt) {
         this.bookingId = bookingId;
         this.userId = userId;
         this.poolId = poolId;
-        this.poolName = poolName;
-        this.amount = amount;
         this.bookingDate = bookingDate;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -62,22 +54,6 @@ public class Booking {
 
     public void setPoolId(int poolId) {
         this.poolId = poolId;
-    }
-
-    public String getPoolName() {
-        return poolName;
-    }
-
-    public void setPoolName(String poolName) {
-        this.poolName = poolName;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
     }
 
     public Date getBookingDate() {
@@ -120,21 +96,20 @@ public class Booking {
         this.bookingStatus = bookingStatus;
     }
 
-    public Date getCreatedAt() {
+    public java.util.Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(java.util.Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt() {
+    public java.util.Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(java.util.Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    
 }
