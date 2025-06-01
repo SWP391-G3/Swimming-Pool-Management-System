@@ -11,9 +11,10 @@ import java.time.LocalDateTime;
  *
  * @author LAZYVL
  */
-public class Discounts {
+public class DiscountDetail{
 
     private int discountId;
+    private int userId;
     private String discountCode;
     private String description;
     private BigDecimal discountPercent;
@@ -23,11 +24,12 @@ public class Discounts {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public Discounts() {
+    public DiscountDetail() {
     }
 
-    public Discounts(int discountId, String discountCode, String description, BigDecimal discountPercent, LocalDateTime validFrom, LocalDateTime validTo, boolean status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public DiscountDetail(int discountId, int userId, String discountCode, String description, BigDecimal discountPercent, LocalDateTime validFrom, LocalDateTime validTo, boolean status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.discountId = discountId;
+        this.userId = userId;
         this.discountCode = discountCode;
         this.description = description;
         this.discountPercent = discountPercent;
@@ -38,12 +40,31 @@ public class Discounts {
         this.updatedAt = updatedAt;
     }
 
+    public DiscountDetail(int discountId, int userId, String discountCode, String description, BigDecimal discountPercent, LocalDateTime validFrom, LocalDateTime validTo, boolean status) {
+        this.discountId = discountId;
+        this.userId = userId;
+        this.discountCode = discountCode;
+        this.description = description;
+        this.discountPercent = discountPercent;
+        this.validFrom = validFrom;
+        this.validTo = validTo;
+        this.status = status;
+    }
+
     public int getDiscountId() {
         return discountId;
     }
 
     public void setDiscountId(int discountId) {
         this.discountId = discountId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getDiscountCode() {
@@ -109,5 +130,6 @@ public class Discounts {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-
+    
+    
 }
