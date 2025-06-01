@@ -1,111 +1,96 @@
 package controller.login;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.api.client.googleapis.auth.oauth2.*;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.oauth2.Oauth2;
+import com.google.api.services.oauth2.model.Userinfo;
 import dao.UserDAO;
 import model.User;
 
-import java.io.IOException;
-import java.time.LocalDate;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import model.Constants;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.Collections;
 
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Form;
-
-//@WebServlet(name = "LoginGoogle", urlPatterns = {"/LoginGoogle"})
+@WebServlet("/LoginGoogle")
 public class LoginGoogle extends HttpServlet {
+
+    private static final String CLIENT_ID = "1011626607904-oroog9kq0dj2t481qcqkp39325sgcjvj.apps.googleusercontent.com";
+    private static final String CLIENT_SECRET = "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";
+    private static final String REDIRECT_URI = "http://localhost:8080/SWP391_G3_SPMS/LoginGoogle";
+    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         String code = request.getParameter("code");
-
+       
         if (code == null || code.isEmpty()) {
             response.sendRedirect("login.jsp");
             return;
         }
 
         try {
-            // 1. Lấy access token từ Google bằng code
-            String accessToken = getToken(code);
+            // 1. Exchange code for access token
+            GoogleTokenResponse tokenResponse
+                    = new GoogleAuthorizationCodeTokenRequest(
+                            GoogleNetHttpTransport.newTrustedTransport(),
+                            JSON_FACTORY,
+                            "https://oauth2.googleapis.com/token",
+                            CLIENT_ID,
+                            CLIENT_SECRET,
+                            code,
+                            REDIRECT_URI
+                    ).execute();
 
-            // 2. Lấy thông tin user JSON từ Google
-            JsonObject userInfo = getUserInfo(accessToken);
+            // 2. Use access token to get user info
+            GoogleCredential credential = new GoogleCredential().setAccessToken(tokenResponse.getAccessToken());
+            Oauth2 oauth2 = new Oauth2.Builder(
+                    GoogleNetHttpTransport.newTrustedTransport(),
+                    JSON_FACTORY, credential)
+                    .setApplicationName("SWP391_G3_SPMS")
+                    .build();
 
-            if (userInfo == null || !userInfo.has("email")) {
-                response.sendRedirect("login.jsp");
-                return;
-            }
+            Userinfo userInfo = oauth2.userinfo().get().execute();
+            String email = userInfo.getEmail();
+            String name = userInfo.getName();
+            String picture = userInfo.getPicture();
 
-            String email = userInfo.get("email").getAsString();
-            String name = userInfo.has("name") ? userInfo.get("name").getAsString() : email;
-
-            // 3. Kiểm tra user trong DB theo email
+            // 3. Check user exists, if not create new user (role = customer)
             UserDAO userDao = new UserDAO();
             User user = userDao.getUserByEmail(email);
-
             if (user == null) {
-                // 4. Nếu chưa có, tạo user mới
-                user = new User();
-                String username = email.substring(0, email.indexOf('@'));
-                user.setUsername(username);
-                user.setPassword(""); // Không cần mật khẩu với Google login
-                user.setFull_name(name);
-                user.setEmail(email);
-                user.setPhone("");
-                user.setAddress("");
-                user.setRole_id(4); // Role mặc định
-                user.setStatus(true);
-                user.setCreate_at(LocalDate.now());
-
+                user = new User(
+                        0,
+                        email, // username
+                        "", // password
+                        name != null ? name : "", // full_name
+                        email, // email
+                        "", // phone
+                        "", // address
+                        4, // role_id
+                        true, // status
+                        null, // dob
+                        "Other", // gender
+                        picture != null ? picture : "",
+                        java.time.LocalDate.now(),
+                        java.time.LocalDate.now()
+                );
                 userDao.insertUser(user);
-            }
+                user = userDao.getUserByEmail(email);
 
-            // 5. Tạo session lưu user
+            }
+            // 4. Set session and redirect
             HttpSession session = request.getSession();
             session.setAttribute("currentUser", user);
 
-            // 6. Redirect về trang admin (hoặc trang khác)
-            response.sendRedirect("customer.jsp");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("homepage.jsp");
+        } catch (GeneralSecurityException e) {
+            throw new ServletException(e);
         }
-    }
-
-    // Hàm lấy access token từ Google bằng code
-    private static String getToken(String code) throws ClientProtocolException, IOException {
-        String response = Request.Post(Constants.GOOGLE_LINK_GET_TOKEN)
-                .bodyForm(Form.form()
-                        .add("client_id", Constants.GOOGLE_CLIENT_ID)
-                        .add("client_secret", Constants.GOOGLE_CLIENT_SECRET)
-                        .add("redirect_uri", Constants.GOOGLE_REDIRECT_URI)
-                        .add("code", code)
-                        .add("grant_type", Constants.GOOGLE_GRANT_TYPE)
-                        .build())
-                .execute()
-                .returnContent()
-                .asString();
-
-        JsonObject jobj = new Gson().fromJson(response, JsonObject.class);
-        return jobj.get("access_token").getAsString();
-    }
-
-    // Hàm lấy thông tin user JSON từ Google
-    private static JsonObject getUserInfo(String accessToken) throws ClientProtocolException, IOException {
-        String url = Constants.GOOGLE_LINK_GET_USER_INFO + accessToken;
-
-        String response = Request.Get(url)
-                .execute()
-                .returnContent()
-                .asString();
-
-        return new Gson().fromJson(response, JsonObject.class);
     }
 }

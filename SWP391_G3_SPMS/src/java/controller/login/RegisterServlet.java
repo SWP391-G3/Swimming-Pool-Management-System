@@ -12,16 +12,18 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import model.User;
+import utils.HashUtils;
 
 /**
  *
  * @author 84823
  */
-
 public class RegisterServlet extends HttpServlet {
 
     /**
@@ -64,20 +66,6 @@ public class RegisterServlet extends HttpServlet {
             throws ServletException, IOException {
 
     }
-    
-      private String hashPassword(String password) {
-        try {
-            java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
-            byte[] hashedBytes = md.digest(password.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-            StringBuilder sb = new StringBuilder();
-            for (byte b : hashedBytes) {
-                sb.append(String.format("%02x", b));
-            }
-            return sb.toString();
-        } catch (Exception e) {
-            throw new RuntimeException("Error hashing password", e);
-        }
-    }
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -91,69 +79,99 @@ public class RegisterServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
+
+        // Lấy dữ liệu từ form
         String username = request.getParameter("username");
-         String rawPassword = request.getParameter("password");
-        String password = hashPassword(rawPassword); 
-        String full_name = request.getParameter("full_name");
+        String password = request.getParameter("password");
+        String confirmPassword = request.getParameter("confirm_password");
+        String fullName = request.getParameter("full_name");
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
+
         String address = request.getParameter("address");
-        LocalDate currentDate = LocalDate.now();
 
-        // Kiểm tra định dạng email có đuôi @gmail.com
-        if (!email.toLowerCase().endsWith("@gmail.com")) {
-            request.setAttribute("error", "Email must form @gmail.com.Please try again!");
-            request.setAttribute("enteredUsername", username);
-            request.setAttribute("enteredEmail", email);
-            request.setAttribute("enteredFullName", full_name);
-            request.setAttribute("enteredPhone", phone);
-            request.setAttribute("enteredAddress", address);
+//        Giữ lại giá trị đã nhập khi lỗi
+        request.setAttribute("enteredUsername", username);
+        request.setAttribute("enteredFullName", fullName);
+        request.setAttribute("enteredEmail", email);
+        request.setAttribute("enteredPhone", phone);
+        request.setAttribute("enteredAddress", address);
+
+        // 1. Kiểm tra rỗng
+        if (username == null || password == null || confirmPassword == null
+                || fullName == null || email == null || phone == null
+                || address == null
+                || username.trim().isEmpty() || password.trim().isEmpty() || confirmPassword.trim().isEmpty()
+                || fullName.trim().isEmpty() || email.trim().isEmpty() || phone.trim().isEmpty()
+                || address.trim().isEmpty()) {
+            request.setAttribute("error", "Tất cả các trường đều là bắt buộc.");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
-         
+
+        // 2. Validate username (4-32 ký tự, không ký tự đặc biệt trừ _)
+        if (!username.matches("^[A-Za-z0-9]{4,32}$")) {
+            request.setAttribute("error", "Tên người dùng phải dài từ 4-32 ký tự, chỉ bao gồm chữ cái, số");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
+        }
+
+        // 3. Validate email
+        if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            request.setAttribute("error", "Email nhâp không đúng format");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
+        }
+
+        // 4. Validate phone (chỉ số, 8-15 số)
+        if (!phone.matches("^0\\d{9}$")) {
+            request.setAttribute("error", "Số điện thoại phải là số và chứa 10 số");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
+        }
+
+        // 5. Validate password và confirm
+        if (password.length() < 9) {
+            request.setAttribute("error", "Mật khẩu phải đủ 9 kí tự");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
+        }
+        if (!password.equals(confirmPassword)) {
+            request.setAttribute("error", "Mật khẩu nhập lại  không hợp lệ");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
+        }
+
+       
         UserDAO dao = new UserDAO();
-        List<User> userList = dao.getAllUser();
-
-        for (User u : userList) {
-            if (u.getUsername() != null && u.getUsername().equalsIgnoreCase(username)) {
-                request.setAttribute("error", "Username already exists. Please try again.");
-                request.setAttribute("enteredUsername", username);
-                request.setAttribute("enteredEmail", email);
-                request.setAttribute("enteredFullName", full_name);
-                request.setAttribute("enteredPhone", phone);
-                request.setAttribute("enteredAddress", address);
-                request.getRequestDispatcher("register.jsp").forward(request, response);
-                return;
-            }
-
-            if (u.getEmail() != null && u.getEmail().equalsIgnoreCase(email)) {
-                request.setAttribute("error", "Email already exists. Please try again.");
-                request.setAttribute("enteredUsername", username);
-                request.setAttribute("enteredEmail", email);
-                request.setAttribute("enteredFullName", full_name);
-                request.setAttribute("enteredPhone", phone);
-                request.setAttribute("enteredAddress", address);
-                request.getRequestDispatcher("register.jsp").forward(request, response);
-                return;
-            }
-        }
-        if (!phone.matches("0[0-9]{8,9}")) {
-            request.setAttribute("error", "Phone number must start with 0 and contains max 10 number ");
-            request.setAttribute("enteredUsername", username);
-            request.setAttribute("enteredEmail", email);
-            request.setAttribute("enteredFullName", full_name);
-            request.setAttribute("enteredPhone", phone);
-            request.setAttribute("enteredAddress", address);
+        if (dao.isUsernameExists(username)) {
+            request.setAttribute("error", "Tên người dùng đã tồn tại! Vui lòng thử lại");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
-            
+        }
+        if (dao.isEmailExists(email)) {
+            request.setAttribute("error", "Email đã tồn tại! Vui lòng thử lại");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
         }
 
-        // Nếu không có lỗi thì thêm người dùng
-        User user = new User(0, username, password, full_name, email, phone, address, 4, true, null, null, currentDate, null);
+        // 8. Hash password SHA-256
+        String hashedPassword = HashUtils.hashPassword(password);
+
+        // 9. Tạo User object, role_id = 4 (customer), status = true, images = null
+        User user = new User(
+                0, username, hashedPassword, fullName, email, phone, address,
+                4, true, null, null, null,
+                java.time.LocalDate.now(), null
+        );
+
+        // 10. Lưu vào DB
         dao.insertUser(user);
-        response.sendRedirect("registersucessfull.jsp");
+
+        // 11. Đăng ký thành công -> chuyển sang register success
+        response.sendRedirect("registersuccessfull.jsp");
     }
 
     // Nếu không trùng thì tạo user mới

@@ -10,6 +10,7 @@ public class Pools {
     private String pool_name;
     private String pool_road;
     private String pool_address;
+    private String pool_description;
     private int max_slot;
     private LocalTime open_time;
     private LocalTime close_time;
@@ -22,11 +23,12 @@ public class Pools {
     public Pools() {
     }
 
-    public Pools(int pool_id, String pool_name, String pool_road, String pool_address, int max_slot, 
+    public Pools(int pool_id, String pool_name, String pool_description, String pool_road, String pool_address, int max_slot, 
                  LocalTime open_time, LocalTime close_time, boolean pool_status, String pool_image, 
                  LocalDateTime created_at, LocalDateTime updated_at) {
         this.pool_id = pool_id;
         this.pool_name = pool_name;
+        this.pool_description = pool_description;
         this.pool_road = pool_road;
         this.pool_address = pool_address;
         this.max_slot = max_slot;
@@ -45,13 +47,20 @@ public class Pools {
     public void setPool_id(int pool_id) {
         this.pool_id = pool_id;
     }
-
-    public String getPool_name() {
+ public String getPool_name() {
         return pool_name;
     }
 
     public void setPool_name(String pool_name) {
         this.pool_name = pool_name;
+    }
+    
+    public String getPool_description() {
+        return pool_description;
+    }
+
+    public void setPool_description(String pool_description) {
+        this.pool_description = pool_description;
     }
 
     public String getPool_road() {
@@ -127,22 +136,22 @@ public class Pools {
     }
 
     // Chuyển đổi LocalTime sang java.sql.Time
-    public Time convertLocalTimeToSQLTime(LocalTime localTime) {
-        return (localTime != null) ? Time.valueOf(localTime) : null;
-    }
-
-    // Chuyển đổi java.sql.Time sang LocalTime
-    public LocalTime convertSQLTimeToLocalTime(Time time) {
-        return (time != null) ? time.toLocalTime() : null;
-    }
-
-    // Chuyển đổi LocalDateTime sang java.sql.Timestamp
-    public Timestamp convertLocalDateTimeToSQLTimestamp(LocalDateTime localDateTime) {
-        return (localDateTime != null) ? Timestamp.valueOf(localDateTime) : null;
-    }
-
-    // Chuyển đổi java.sql.Timestamp sang LocalDateTime
-    public LocalDateTime convertSQLTimestampToLocalDateTime(Timestamp timestamp) {
-        return (timestamp != null) ? timestamp.toLocalDateTime() : null;
-    }
+//    public Time convertLocalTimeToSQLTime(LocalTime localTime) {
+//        return (localTime != null) ? Time.valueOf(localTime) : null;
+//    }
+//
+//    // Chuyển đổi java.sql.Time sang LocalTime
+//    public LocalTime convertSQLTimeToLocalTime(Time time) {
+//        return (time != null) ? time.toLocalTime() : null;
+//    }
+//
+//    // Chuyển đổi LocalDateTime sang java.sql.Timestamp
+//    public Timestamp convertLocalDateTimeToSQLTimestamp(LocalDateTime localDateTime) {
+//        return (localDateTime != null) ? Timestamp.valueOf(localDateTime) : null;
+//    }
+//
+//    // Chuyển đổi java.sql.Timestamp sang LocalDateTime
+//    public LocalDateTime convertSQLTimestampToLocalDateTime(Timestamp timestamp) {
+//        return (timestamp != null) ? timestamp.toLocalDateTime() : null;
+//    }
 }

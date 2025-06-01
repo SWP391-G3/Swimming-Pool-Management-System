@@ -23,6 +23,7 @@ public class User {
     private int role_id;
     private boolean status;
     private Date dob;
+    private String gender;
     private String images;
     private LocalDate create_at;
     private LocalDate update_at;
@@ -30,7 +31,7 @@ public class User {
     public User() {
     }
 
-    public User(int user_id, String username, String password, String full_name, String email, String phone, String address, int role_id, boolean status, Date dob, String images, LocalDate create_at, LocalDate update_at) {
+    public User(int user_id, String username, String password, String full_name, String email, String phone, String address, int role_id, boolean status, Date dob, String gender, String images, LocalDate create_at, LocalDate update_at) {
         this.user_id = user_id;
         this.username = username;
         this.password = password;
@@ -41,24 +42,13 @@ public class User {
         this.role_id = role_id;
         this.status = status;
         this.dob = dob;
+        this.gender = gender;
         this.images = images;
         this.create_at = create_at;
         this.update_at = update_at;
     }
-
-    public User(String username, String password, String full_name, String email, String phone, String address, int role_id, boolean status, Date dob, String images, LocalDate create_at) {
-        this.username = username;
-        this.password = password;
-        this.full_name = full_name;
-        this.email = email;
-        this.phone = phone;
-        this.address = address;
-        this.role_id = role_id;
-        this.status = status;
-        this.dob = dob;
-        this.images = images;
-        this.create_at = create_at;
-    }
+    
+    
 
     public int getUser_id() {
         return user_id;
@@ -146,6 +136,14 @@ public class User {
 
     public void setImages(String images) {
         this.images = images;
+    }
+    
+     public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public LocalDate getCreate_at() {

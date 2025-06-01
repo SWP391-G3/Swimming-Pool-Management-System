@@ -4,7 +4,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <title>Login - Swimming Pool Management</title>
+        <title>Đăng nhập</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
               integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
         <style>
@@ -35,6 +35,21 @@
                 font-weight: 700;
                 color: #0072ff;
                 letter-spacing: 1.5px;
+            }
+
+            .back-to-home-link {
+                margin-top: 20px;
+                text-align: center;
+                font-size: 14px;
+                color: #555;
+            }
+            .back-to-home-link a {
+                color: #0072ff;
+                text-decoration: none;
+                font-weight: 600;
+            }
+            .back-to-home-link a:hover {
+                text-decoration: underline;
             }
 
             label.form-label {
@@ -140,30 +155,32 @@
     </head>
     <body>
         <div class="login-card">
-            <h2>Pool Management Login</h2>
+            <h2>Đăng nhập</h2>
             <form action="login" method="POST" autocomplete="off">
                 <c:if test="${not empty error}">
                     <p class="error-message">${error}</p>
                 </c:if>
 
                 <!-- Username Input -->
-                <label for="usernameInput" class="form-label">Username</label>
-                <input type="text" id="usernameInput" name="username" class="form-control" placeholder="Enter your username" required autofocus>
+                <label for="usernameInput" class="form-label">Tên đăng nhập</label>
+                <input type="text" id="usernameInput" name="username" class="form-control" placeholder="Nhập tên đăng nhập" required autofocus>
 
                 <!-- Password Input -->
-                <label for="passwordInput" class="form-label" style="margin-top:15px;">Password</label>
-                <input type="password" id="passwordInput" name="password" class="form-control" placeholder="Enter your password" required>
+                <label for="passwordInput" class="form-label" style="margin-top:15px;">Mật khẩu</label>
+                <input type="password" id="passwordInput" name="password" class="form-control" placeholder="Nhập mật khẩu" required>
 
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary">Đăng nhập</button>
             </form>
 
             <div class="register-link">
-                Don't have an account? <a href="register.jsp">Register now</a>
+                Bạn chưa có tài khoản? <a href="register.jsp">Đăng ký ngay</a>
             </div>
 
-            <div class="or-text">Or</div>
+            <div class="or-text">Hoặc</div>
 
-            <a href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:8080/SWP391_G3_SPMS_Practice/LoginGoogle&response_type=code&client_id=1011626607904-oroog9kq0dj2t481qcqkp39325sgcjvj.apps.googleusercontent.com&approval_prompt=force"
+
+
+            <a href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:8080/SWP391_G3_SPMS/LoginGoogle&response_type=code&client_id=1011626607904-oroog9kq0dj2t481qcqkp39325sgcjvj.apps.googleusercontent.com&approval_prompt=force"
                class="google-btn" role="button" aria-label="Login with Google">
                 <svg class="google-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 533.5 544.3">
                 <path fill="#4285F4" d="M533.5 278.4c0-17.7-1.6-34.8-4.6-51.4H272v97.5h146.9c-6.3 34.1-25.3 62.9-54 82.1v68h87.2c51-47 80.4-116.1 80.4-195.6z"/>
@@ -171,8 +188,11 @@
                 <path fill="#FBBC05" d="M117.7 323.6c-10.4-30.6-10.4-63.5 0-94.1V158.7H29.5c-39.3 76.8-39.3 168.7 0 245.5l88.2-80.6z"/>
                 <path fill="#EA4335" d="M272 107.7c39.8 0 75.5 13.7 103.7 40.8l77.7-77.7C404.9 24.6 343 0 272 0 168.3 0 74.9 62.9 29.5 152.9l88.2 80.8c22-64.8 82.8-113 154.3-113z"/>
                 </svg>
-                Sign in with Google
+                Đăng nhập với Google
             </a>
+            <div class="back-to-home-link">
+                <a href="homepage.jsp">Quay lại trang chủ</a>
+            </div>
         </div>
     </body>
 </html>
