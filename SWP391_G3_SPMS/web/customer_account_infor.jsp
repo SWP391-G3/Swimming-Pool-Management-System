@@ -87,7 +87,7 @@
                             Thông tin cá nhân
                         </a>
                         <a
-                            href="change-password"
+                            href="change_password"
                             class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 font-medium"
                             >
                             <svg

@@ -1,8 +1,8 @@
 package controller.Customer;
 
-import dao.BookingDAO;
+import dao.BookingDetailDAO;
 import dao.FeedbackDAO;
-import model.Booking;
+import model.BookingDetails;
 import model.Feedback;
 import model.User;
 import jakarta.servlet.*;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-public class BookingDetail extends HttpServlet {
+public class BookingDetailServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -23,9 +23,9 @@ public class BookingDetail extends HttpServlet {
         }
         int bookingId = Integer.parseInt(bookingIdStr);
         try {
-            BookingDAO bookingDAO = new BookingDAO();
-            Booking booking = bookingDAO.getBookingById(bookingId);
-            if (booking == null) {
+            BookingDetailDAO bookingDetailDAO = new BookingDetailDAO();
+            BookingDetails bookingDetail = bookingDetailDAO.getBookingDetailById(bookingId);
+            if (bookingDetail == null) {
                 response.sendRedirect("booking_history");
                 return;
             }
@@ -38,18 +38,17 @@ public class BookingDetail extends HttpServlet {
                 List<Feedback> feedbackList = feedbackDAO.getFeedbackByUserId(user.getUserId());
                 for (Feedback fb : feedbackList) {
                     // Nếu user đã feedback cho đúng pool này
-                    if (fb.getPoolId() == booking.getPoolId()) {
+                    if (fb.getPoolId() == bookingDetail.getPoolId()) {
                         userFeedback = fb;
                         break;
                     }
                 }
             }
 
-            request.setAttribute("booking", booking);
+            request.setAttribute("bookingDetail", bookingDetail);
             request.setAttribute("userFeedback", userFeedback);
             request.setAttribute("successMsg", request.getParameter("success"));
             request.setAttribute("errorMsg", request.getParameter("error"));
-            // SỬA ĐÚNG ĐƯỜNG DẪN ĐẾN FILE JSP, KHÔNG ĐƯỢC FORWARD TỚI CHÍNH SERVLET
             request.getRequestDispatcher("BookingDetail.jsp").forward(request, response);
         } catch (SQLException e) {
             throw new ServletException(e);
@@ -75,9 +74,9 @@ public class BookingDetail extends HttpServlet {
             int rating = Integer.parseInt(ratingStr);
 
             // Kiểm tra quyền feedback
-            BookingDAO bookingDAO = new BookingDAO();
-            Booking booking = bookingDAO.getBookingById(bookingId);
-            if (booking == null || booking.getUserId() != user.getUserId()) {
+            BookingDetailDAO bookingDetailDAO = new BookingDetailDAO();
+            BookingDetails bookingDetail = bookingDetailDAO.getBookingDetailById(bookingId);
+            if (bookingDetail == null || bookingDetail.getUserId() != user.getUserId()) {
                 response.sendRedirect("booking_history");
                 return;
             }

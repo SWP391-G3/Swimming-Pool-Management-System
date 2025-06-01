@@ -1,13 +1,14 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="model.User,model.Booking,model.Discounts,java.util.List,java.text.SimpleDateFormat" %>
+<%@ page import="model.User,model.BookingDetails,model.DiscountDetail,java.util.List,java.text.SimpleDateFormat,java.text.NumberFormat,java.util.Locale" %>
 <%
     User user = (User) request.getAttribute("user");
-    List<Booking> recentBookings = (List<Booking>) request.getAttribute("recentBookings");
-    List<Discounts> voucherActive = (List<Discounts>) request.getAttribute("voucherActive");
-    List<Discounts> voucherUsed = (List<Discounts>) request.getAttribute("voucherUsed");
+    List<BookingDetails> recentBookings = (List<BookingDetails>) request.getAttribute("recentBookings");
+    List<DiscountDetail> voucherActive = (List<DiscountDetail>) request.getAttribute("voucherActive");
+    List<DiscountDetail> voucherUsed = (List<DiscountDetail>) request.getAttribute("voucherUsed");
     int voucherActiveCount = request.getAttribute("voucherActiveCount") != null ? (Integer)request.getAttribute("voucherActiveCount") : 0;
     int voucherUsedCount = request.getAttribute("voucherUsedCount") != null ? (Integer)request.getAttribute("voucherUsedCount") : 0;
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -117,34 +118,34 @@
                             <thead>
                                 <tr class="text-left text-gray-500">
                                     <th class="pb-4">Mã</th>
+                                    <th class="pb-4">Tên bể</th>
+                                    <th class="pb-4">Địa chỉ</th>
                                     <th class="pb-4">Thời gian đặt</th>
                                     <th class="pb-4">Trạng thái</th>
                                     <th class="pb-4">Tổng</th>
-                                    <th class="pb-4">Chi tiết</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <%
                                     if (recentBookings != null && !recentBookings.isEmpty()) {
-                                        for (Booking b : recentBookings) {
+                                        for (BookingDetails b : recentBookings) {
                                 %>
                                 <tr class="border-t hover:bg-gray-50">
                                     <td class="py-4 text-blue-600 font-medium">#<%= b.getBookingId() %></td>
+                                    <td class="text-gray-700"><%= b.getPoolName() %></td>
+                                    <td class="text-gray-700"><%= b.getPoolAddressDetail() %></td>
                                     <td class="text-gray-600"><%= b.getBookingDate() != null ? dateFormat.format(b.getBookingDate()) : "" %></td>
                                     <td>
                                         <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium"><%= b.getBookingStatus() %></span>
                                     </td>
-                                    <td class="font-medium"><!-- Tổng tiền: cần thêm nếu có field --></td>
-                                    <td>
-                                        <a href="booking-detail.jsp?id=<%= b.getBookingId() %>" class="bg-gray-900 text-white px-4 py-1.5 rounded-md text-sm hover:bg-gray-800 transition-colors">Chi tiết</a>
-                                    </td>
+                                    <td class="font-medium"><%= b.getAmount() != null ? currencyFormat.format(b.getAmount()) : "" %></td>
                                 </tr>
                                 <%
                                         }
                                     } else {
                                 %>
                                 <tr>
-                                    <td colspan="5" class="py-4 text-center text-gray-500">Không có lịch sử đặt bể.</td>
+                                    <td colspan="8" class="py-4 text-center text-gray-500">Không có lịch sử đặt bể.</td>
                                 </tr>
                                 <% } %>
                             </tbody>
@@ -184,12 +185,12 @@
                         <div class="space-y-3 mt-4">
                             <%
                                 if (voucherActive != null && !voucherActive.isEmpty()) {
-                                    for (Discounts d : voucherActive) {
+                                    for (DiscountDetail d : voucherActive) {
                             %>
                             <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                                 <div>
                                     <div class="font-medium"><%= d.getDiscountCode() %></div>
-                                    <div class="text-sm text-gray-500">Hiệu lực: <%= d.getValidTo() %></div>
+                                    <div class="text-sm text-gray-500">Hiệu lực: <%= d.getValidTo() != null ? d.getValidTo().toLocalDate() : "" %></div>
                                 </div>
                                 <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
                                     <%= d.getDiscountPercent() != null ? d.getDiscountPercent() + "%" : "" %>

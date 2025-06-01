@@ -11,7 +11,7 @@ package model;
 import java.math.BigDecimal;
 import java.sql.Date;
 
-public class BookingDetail {
+public class BookingDetails {
     private int bookingId;
     private int userId;
     private int poolId;
@@ -24,9 +24,9 @@ public class BookingDetail {
     private int rating;
     private String comment;
 
-    public BookingDetail() {}
+    public BookingDetails() {}
 
-    public BookingDetail(int bookingId, int userId, int poolId, String poolName, String poolAddressDetail, Date bookingDate, int slotCount, BigDecimal amount, String bookingStatus, int rating, String comment) {
+    public BookingDetails(int bookingId, int userId, int poolId, String poolName, String poolAddressDetail, Date bookingDate, int slotCount, BigDecimal amount, String bookingStatus, int rating, String comment) {
         this.bookingId = bookingId;
         this.userId = userId;
         this.poolId = poolId;

@@ -1,5 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.List,model.Pool,model.FeedBack" %>
+<%@page import="java.util.List,model.Pool,model.Feedback" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -152,8 +152,6 @@
                         int count = 0;
                         if(listPool != null){
                         for(Pool p : listPool){
-                        
-                        
                     %>
                     <div class="col-md-4 col-sm-6">
                         <div id="serv_hover" class="room">
@@ -216,9 +214,9 @@
                 </div>
                 <div class="row">
                     <% 
-                        List<FeedBack> listPool3 = (List<FeedBack>) request.getAttribute("listPool3");
+                        List<Feedback> listPool3 = (List<Feedback>) request.getAttribute("listPool3");
                         if(listPool3 != null){
-                            for(FeedBack f : listPool3){
+                            for(Feedback f : listPool3){
                     %>
                     <div class="col-md-4 h-100 d-flex mb-4">
                         <div class="blog_box w-100">

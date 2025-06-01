@@ -1,10 +1,10 @@
 package controller.Customer;
 
-import dao.BookingDAO;
-import dao.DiscountDAO;
+import dao.BookingDetailDAO;
+import dao.DiscountDetailDAO;
 import dao.UserDAO;
-import model.Booking;
-import model.Discounts;
+import model.BookingDetails;
+import model.DiscountDetail;
 import model.User;
 
 import java.util.List;
@@ -19,27 +19,27 @@ public class MyAccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int userId = 4; // TODO: Lấy user id từ session
+        int userId = 2; // TODO: Lấy user id từ session
 
         UserDAO userDAO = new UserDAO();
-        BookingDAO bookingDAO = new BookingDAO();
-        DiscountDAO discountDAO = new DiscountDAO();
+        BookingDetailDAO bookingDetailDAO = new BookingDetailDAO();
+        DiscountDetailDAO discountDetailDAO = new DiscountDetailDAO();
 
         User user = userDAO.getUserByID(userId);
 
-        List<Booking> recentBookings;
-        List<Discounts> vouchersActive, vouchersUsed;
+        List<BookingDetails> recentBookings;
+        List<DiscountDetail> vouchersActive, vouchersUsed;
         try {
-            // Booking gần nhất
-            List<Booking> allBookings = bookingDAO.sortBookingByDateDesc(userId);
+            // Booking gần nhất (BookingDetail)
+            List<BookingDetails> allBookings = bookingDetailDAO.sortBookingDetailByDateDesc(userId);
             recentBookings = allBookings.size() > 3 ? allBookings.subList(0, 3) : allBookings;
 
-            // Voucher ĐANG CÓ: status = 1
-            List<Discounts> allActive = discountDAO.getDiscountByUserIDAndStatus(userId, true);
+            // Voucher ĐANG CÓ: status = true
+            List<DiscountDetail> allActive = discountDetailDAO.getDiscountByUserIDAndStatus(userId, true);
             vouchersActive = allActive.size() > 3 ? allActive.subList(0, 3) : allActive;
 
-            // Voucher ĐÃ DÙNG: status = 0
-            List<Discounts> allUsed = discountDAO.getDiscountByUserIDAndStatus(userId, false);
+            // Voucher ĐÃ DÙNG: status = false
+            List<DiscountDetail> allUsed = discountDetailDAO.getDiscountByUserIDAndStatus(userId, false);
             vouchersUsed = allUsed.size() > 3 ? allUsed.subList(0, 3) : allUsed;
 
             // Đếm tổng số lượng

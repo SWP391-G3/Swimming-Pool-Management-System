@@ -1,7 +1,7 @@
 package controller.Customer;
 
-import dao.BookingDAO;
-import model.Booking;
+import dao.BookingDetailDAO;
+import model.BookingDetails;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
@@ -23,28 +23,27 @@ public class BookingHistoryServlet extends HttpServlet {
             String fromDateStr = request.getParameter("fromDate");
             String sortOrder = request.getParameter("sortOrder");
 
-            BookingDAO dao = new BookingDAO();
-            List<Booking> bookingList = null;
+            BookingDetailDAO dao = new BookingDetailDAO();
+            List<BookingDetails> bookingList = null;
 
             // Ưu tiên tìm kiếm theo tên hồ bơi
             if (poolName != null && !poolName.trim().isEmpty()) {
-                bookingList = dao.searchBookingByPoolName(userId, poolName.trim());
+                bookingList = dao.searchBookingDetailByPoolName(userId, poolName.trim());
             }
-            // Ưu tiên lọc theo ngày nếu có fromDate
+            // Nếu chọn 1 ngày cụ thể, chỉ lấy booking trong ngày đó
             else if (fromDateStr != null && !fromDateStr.isEmpty()) {
-                Date fromDate = Date.valueOf(fromDateStr);
-                Date toDate = new Date(System.currentTimeMillis());
-                bookingList = dao.searchBookingByDate(userId, fromDate, toDate);
+                Date selectedDate = Date.valueOf(fromDateStr);
+                bookingList = dao.searchBookingDetailByDate(userId, selectedDate, selectedDate); // truyền fromDate = toDate = ngày cần tìm
             }
             // Sắp xếp
             else if ("date_asc".equals(sortOrder)) {
-                bookingList = dao.sortBookingByDateAsc(userId);
+                bookingList = dao.sortBookingDetailByDateAsc(userId);
             } else if ("price_asc".equals(sortOrder)) {
-                bookingList = dao.sortBookingByPriceAsc(userId);
+                bookingList = dao.sortBookingDetailByPriceAsc(userId);
             } else if ("price_desc".equals(sortOrder)) {
-                bookingList = dao.sortBookingByPriceDesc(userId);
+                bookingList = dao.sortBookingDetailByPriceDesc(userId);
             } else { // Mặc định: mới nhất
-                bookingList = dao.sortBookingByDateDesc(userId);
+                bookingList = dao.sortBookingDetailByDateDesc(userId);
             }
 
             request.setAttribute("bookingList", bookingList);

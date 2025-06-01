@@ -1,6 +1,12 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.List" %>
-<%@ page import="model.Booking" %>
+<%@ page import="model.BookingDetails" %>
+<%@ page import="java.text.SimpleDateFormat,java.text.NumberFormat,java.util.Locale" %>
+<%
+    List<BookingDetails> bookingList = (List<BookingDetails>) request.getAttribute("bookingList");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -108,7 +114,9 @@
                             <tr class="text-left text-gray-500">
                                 <th class="pb-4">Mã đặt</th>
                                 <th class="pb-4">Tên hồ bơi</th>
+                                <th class="pb-4">Địa chỉ</th>
                                 <th class="pb-4">Thời gian đặt</th>
+                                <th class="pb-4">Số slot</th>
                                 <th class="pb-4">Trạng thái</th>
                                 <th class="pb-4">Tổng tiền</th>
                                 <th class="pb-4">Chi tiết</th>
@@ -116,14 +124,15 @@
                         </thead>
                         <tbody>
                             <%
-                                List<Booking> bookingList = (List<Booking>) request.getAttribute("bookingList");
                                 if (bookingList != null && !bookingList.isEmpty()) {
-                                    for (Booking booking : bookingList) {
+                                    for (BookingDetails booking : bookingList) {
                             %>
                             <tr class="border-t hover:bg-gray-50">
                                 <td class="py-4 text-blue-600 font-medium">#B<%= booking.getBookingId() %></td>
                                 <td class="text-gray-900"><%= booking.getPoolName() %></td>
-                                <td class="text-gray-600"><%= booking.getBookingDate() %> <%= booking.getStartTime() %></td>
+                                <td class="text-gray-700"><%= booking.getPoolAddressDetail() %></td>
+                                <td class="text-gray-600"><%= booking.getBookingDate() != null ? dateFormat.format(booking.getBookingDate()) : "" %></td>
+                                <td class="text-gray-600"><%= booking.getSlotCount() %></td>
                                 <td>
                                     <%
                                         String status = booking.getBookingStatus();
@@ -143,7 +152,7 @@
                                         <%= status %>
                                     </span>
                                 </td>
-                                <td class="font-medium"><%= booking.getAmount() %>₫</td>
+                                <td class="font-medium"><%= booking.getAmount() != null ? currencyFormat.format(booking.getAmount()) : "" %></td>
                                 <td>
                                     <a href="booking_detail?bookingId=<%= booking.getBookingId() %>"
                                        class="bg-gray-900 text-white px-4 py-1.5 rounded-md text-sm hover:bg-gray-800 transition-colors">
@@ -151,16 +160,11 @@
                                     </a>
                                 </td>
                             </tr>
-                            <%
-                                    }
-                                } else {
-                            %>
+                            <% }} else {%>
                             <tr>
-                                <td colspan="6" class="text-center text-gray-500 py-8">Không có lịch sử đặt bể nào.</td>
+                                <td colspan="9" class="text-center text-gray-500 py-8">Không có lịch sử đặt bể nào.</td>
                             </tr>
-                            <%
-                                }
-                            %>
+                            <%}%>
                         </tbody>
                     </table>
                 </div>

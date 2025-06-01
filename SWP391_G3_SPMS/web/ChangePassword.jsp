@@ -80,7 +80,7 @@
               Thông tin cá nhân
             </a>
             <a
-              href="change-password"
+              href="change_password"
               class="flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-100 text-blue-700 font-semibold"
             >
               <svg
@@ -135,7 +135,7 @@
           <%
               }
           %>
-          <form action="change-password" method="post">
+          <form action="change_password" method="post">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <!-- Mật khẩu hiện tại -->
               <div class="md:col-span-2">

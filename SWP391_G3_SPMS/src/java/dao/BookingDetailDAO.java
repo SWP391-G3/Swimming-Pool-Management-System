@@ -5,7 +5,7 @@
 package dao;
 
 import dal.DBContext;
-import model.BookingDetail;
+import model.BookingDetails;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.List;
 public class BookingDetailDAO extends DBContext {
 
     // Get booking detail by bookingId
-    public BookingDetail getBookingDetailById(int id) throws SQLException {
+    public BookingDetails getBookingDetailById(int id) throws SQLException {
         String sql = "SELECT b.booking_id, b.user_id, b.pool_id, p.pool_name, "
                 + "(p.pool_road + ', ' + p.pool_address) AS pool_address_detail, "
                 + "b.booking_date, b.slot_count, ISNULL(pm.amount, 0) AS amount, b.booking_status, "
@@ -32,7 +32,7 @@ public class BookingDetailDAO extends DBContext {
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
         if (rs.next()) {
-            return new BookingDetail(
+            return new BookingDetails(
                     rs.getInt("booking_id"),
                     rs.getInt("user_id"),
                     rs.getInt("pool_id"),
@@ -50,8 +50,8 @@ public class BookingDetailDAO extends DBContext {
     }
 
     // Get all booking details by userId
-    public List<BookingDetail> getBookingDetailsByUserId(int userId) throws SQLException {
-        List<BookingDetail> list = new ArrayList<>();
+    public List<BookingDetails> getBookingDetailsByUserId(int userId) throws SQLException {
+        List<BookingDetails> list = new ArrayList<>();
         String sql = "SELECT b.booking_id, b.user_id, b.pool_id, p.pool_name, "
                 + "(p.pool_road + ', ' + p.pool_address) AS pool_address_detail, "
                 + "b.booking_date, b.slot_count, ISNULL(pm.amount, 0) AS amount, b.booking_status, "
@@ -65,7 +65,7 @@ public class BookingDetailDAO extends DBContext {
         st.setInt(1, userId);
         ResultSet rs = st.executeQuery();
         while (rs.next()) {
-            BookingDetail bd = new BookingDetail(
+            BookingDetails bd = new BookingDetails(
                     rs.getInt("booking_id"),
                     rs.getInt("user_id"),
                     rs.getInt("pool_id"),
@@ -84,8 +84,8 @@ public class BookingDetailDAO extends DBContext {
     }
 
     // Search bookings by pool name (LIKE)
-    public List<BookingDetail> searchBookingDetailByPoolName(int userId, String poolName) throws SQLException {
-        List<BookingDetail> list = new ArrayList<>();
+    public List<BookingDetails> searchBookingDetailByPoolName(int userId, String poolName) throws SQLException {
+        List<BookingDetails> list = new ArrayList<>();
         String sql = "SELECT b.booking_id, b.user_id, b.pool_id, p.pool_name, "
                 + "(p.pool_road + ', ' + p.pool_address) AS pool_address_detail, "
                 + "b.booking_date, b.slot_count, ISNULL(pm.amount, 0) AS amount, b.booking_status, "
@@ -100,7 +100,7 @@ public class BookingDetailDAO extends DBContext {
         st.setString(2, "%" + poolName + "%");
         ResultSet rs = st.executeQuery();
         while (rs.next()) {
-            BookingDetail bd = new BookingDetail(
+            BookingDetails bd = new BookingDetails(
                     rs.getInt("booking_id"),
                     rs.getInt("user_id"),
                     rs.getInt("pool_id"),
@@ -119,8 +119,8 @@ public class BookingDetailDAO extends DBContext {
     }
 
     // Search bookings by date range
-    public List<BookingDetail> searchBookingDetailByDate(int userId, Date fromDate, Date toDate) throws SQLException {
-        List<BookingDetail> list = new ArrayList<>();
+    public List<BookingDetails> searchBookingDetailByDate(int userId, Date fromDate, Date toDate) throws SQLException {
+        List<BookingDetails> list = new ArrayList<>();
         String sql = "SELECT b.booking_id, b.user_id, b.pool_id, p.pool_name, "
                 + "(p.pool_road + ', ' + p.pool_address) AS pool_address_detail, "
                 + "b.booking_date, b.slot_count, ISNULL(pm.amount, 0) AS amount, b.booking_status, "
@@ -136,7 +136,7 @@ public class BookingDetailDAO extends DBContext {
         st.setDate(3, toDate);
         ResultSet rs = st.executeQuery();
         while (rs.next()) {
-            BookingDetail bd = new BookingDetail(
+            BookingDetails bd = new BookingDetails(
                     rs.getInt("booking_id"),
                     rs.getInt("user_id"),
                     rs.getInt("pool_id"),
@@ -155,8 +155,8 @@ public class BookingDetailDAO extends DBContext {
     }
 
     // Sort by booking_date DESC
-    public List<BookingDetail> sortBookingDetailByDateDesc(int userId) throws SQLException {
-        List<BookingDetail> list = new ArrayList<>();
+    public List<BookingDetails> sortBookingDetailByDateDesc(int userId) throws SQLException {
+        List<BookingDetails> list = new ArrayList<>();
         String sql = "SELECT b.booking_id, b.user_id, b.pool_id, p.pool_name, "
                 + "(p.pool_road + ', ' + p.pool_address) AS pool_address_detail, "
                 + "b.booking_date, b.slot_count, ISNULL(pm.amount, 0) AS amount, b.booking_status, "
@@ -171,7 +171,7 @@ public class BookingDetailDAO extends DBContext {
         st.setInt(1, userId);
         ResultSet rs = st.executeQuery();
         while (rs.next()) {
-            BookingDetail bd = new BookingDetail(
+            BookingDetails bd = new BookingDetails(
                     rs.getInt("booking_id"),
                     rs.getInt("user_id"),
                     rs.getInt("pool_id"),
@@ -190,8 +190,8 @@ public class BookingDetailDAO extends DBContext {
     }
 
     // Sort by booking_date ASC
-    public List<BookingDetail> sortBookingDetailByDateAsc(int userId) throws SQLException {
-        List<BookingDetail> list = new ArrayList<>();
+    public List<BookingDetails> sortBookingDetailByDateAsc(int userId) throws SQLException {
+        List<BookingDetails> list = new ArrayList<>();
         String sql = "SELECT b.booking_id, b.user_id, b.pool_id, p.pool_name, "
                 + "(p.pool_road + ', ' + p.pool_address) AS pool_address_detail, "
                 + "b.booking_date, b.slot_count, ISNULL(pm.amount, 0) AS amount, b.booking_status, "
@@ -206,7 +206,7 @@ public class BookingDetailDAO extends DBContext {
         st.setInt(1, userId);
         ResultSet rs = st.executeQuery();
         while (rs.next()) {
-            BookingDetail bd = new BookingDetail(
+            BookingDetails bd = new BookingDetails(
                     rs.getInt("booking_id"),
                     rs.getInt("user_id"),
                     rs.getInt("pool_id"),
@@ -225,8 +225,8 @@ public class BookingDetailDAO extends DBContext {
     }
 
     // Sort by amount DESC
-    public List<BookingDetail> sortBookingDetailByPriceDesc(int userId) throws SQLException {
-        List<BookingDetail> list = new ArrayList<>();
+    public List<BookingDetails> sortBookingDetailByPriceDesc(int userId) throws SQLException {
+        List<BookingDetails> list = new ArrayList<>();
         String sql = "SELECT b.booking_id, b.user_id, b.pool_id, p.pool_name, "
                 + "(p.pool_road + ', ' + p.pool_address) AS pool_address_detail, "
                 + "b.booking_date, b.slot_count, ISNULL(pm.amount, 0) AS amount, b.booking_status, "
@@ -241,7 +241,7 @@ public class BookingDetailDAO extends DBContext {
         st.setInt(1, userId);
         ResultSet rs = st.executeQuery();
         while (rs.next()) {
-            BookingDetail bd = new BookingDetail(
+            BookingDetails bd = new BookingDetails(
                     rs.getInt("booking_id"),
                     rs.getInt("user_id"),
                     rs.getInt("pool_id"),
@@ -260,8 +260,8 @@ public class BookingDetailDAO extends DBContext {
     }
 
     // Sort by amount ASC
-    public List<BookingDetail> sortBookingDetailByPriceAsc(int userId) throws SQLException {
-        List<BookingDetail> list = new ArrayList<>();
+    public List<BookingDetails> sortBookingDetailByPriceAsc(int userId) throws SQLException {
+        List<BookingDetails> list = new ArrayList<>();
         String sql = "SELECT b.booking_id, b.user_id, b.pool_id, p.pool_name, "
                 + "(p.pool_road + ', ' + p.pool_address) AS pool_address_detail, "
                 + "b.booking_date, b.slot_count, ISNULL(pm.amount, 0) AS amount, b.booking_status, "
@@ -276,7 +276,7 @@ public class BookingDetailDAO extends DBContext {
         st.setInt(1, userId);
         ResultSet rs = st.executeQuery();
         while (rs.next()) {
-            BookingDetail bd = new BookingDetail(
+            BookingDetails bd = new BookingDetails(
                     rs.getInt("booking_id"),
                     rs.getInt("user_id"),
                     rs.getInt("pool_id"),

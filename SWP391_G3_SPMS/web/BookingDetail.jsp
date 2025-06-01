@@ -1,12 +1,12 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="model.Booking" %>
+<%@ page import="model.BookingDetails" %>
 <%@ page import="model.Feedback" %>
 <%
-    Booking booking = (Booking) request.getAttribute("booking");
+    BookingDetails bookingDetail = (BookingDetails) request.getAttribute("bookingDetail");
     Feedback userFeedback = (Feedback) request.getAttribute("userFeedback");
     String successMsg = (String) request.getAttribute("successMsg");
     String errorMsg = (String) request.getAttribute("errorMsg");
-    if (booking == null) {
+    if (bookingDetail == null) {
 %>
 <div class="text-red-600 font-bold">Không tìm thấy thông tin booking!</div>
 <%
@@ -45,22 +45,21 @@
                 <div class="mb-6 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-2 gap-4">
                     <div>
                         <div class="text-gray-500 text-sm">Mã đặt</div>
-                        <div class="font-medium text-gray-900">#B<%= booking.getBookingId() %></div>
+                        <div class="font-medium text-gray-900">#B<%= bookingDetail.getBookingId() %></div>
                     </div>
                     <div>
                         <div class="text-gray-500 text-sm">Tên hồ bơi</div>
-                        <div class="font-medium text-gray-900"><%= booking.getPoolName() %></div>
+                        <div class="font-medium text-gray-900"><%= bookingDetail.getPoolName() %></div>
                     </div>
                     <div>
                         <div class="text-gray-500 text-sm">Thời gian đặt</div>
-                        <div class="font-medium text-gray-900"><%= booking.getBookingDate() %> <%= booking.getStartTime() %></div>
+                        <div class="font-medium text-gray-900"><%= bookingDetail.getBookingDate() %></div>
                     </div>
                     <div>
                         <div class="text-gray-500 text-sm">Trạng thái</div>
                         <div>
-                            <%-- Đoạn xử lý trạng thái --%>
                             <%
-                            String statusRaw = booking.getBookingStatus();
+                            String statusRaw = bookingDetail.getBookingStatus();
                             String statusLabel = "Chưa xác nhận";
                             String badgeClass = "bg-yellow-100 text-yellow-800";
                             if ("confirmed".equalsIgnoreCase(statusRaw) || "Đã xác nhận".equalsIgnoreCase(statusRaw)) {
@@ -82,7 +81,7 @@
                     <div>
                         <div class="text-gray-500 text-sm">Địa chỉ</div>
                         <div class="font-medium text-gray-900">
-                            (Chưa có thông tin, cần lấy từ bảng Pools nếu muốn hiển thị)
+                            <%= bookingDetail.getPoolAddressDetail() %>
                         </div>
                     </div>
                 </div>
@@ -91,7 +90,7 @@
                     <div class="text-right">
                         <div class="text-gray-500 text-base font-medium">Tổng tiền</div>
                         <div class="text-3xl md:text-4xl font-extrabold text-blue-700 mt-1 mb-2">
-                            <%= booking.getAmount() %>₫
+                            <%= bookingDetail.getAmount() %>₫
                         </div>
                     </div>
                 </div>
@@ -108,8 +107,8 @@
                     <div class="mb-4 italic text-gray-700 text-center text-lg font-semibold">Cảm ơn quý khách đã đánh giá</div>
                     <% } else { %>
                     <form action="booking_detail" method="post" class="mb-4" id="rateForm">
-                        <input type="hidden" name="bookingId" value="<%= booking.getBookingId() %>"/>
-                        <input type="hidden" name="poolId" value="<%= booking.getPoolId() %>"/>
+                        <input type="hidden" name="bookingId" value="<%= bookingDetail.getBookingId() %>"/>
+                        <input type="hidden" name="poolId" value="<%= bookingDetail.getPoolId() %>"/>
                         <div class="flex items-center gap-3 mb-4">
                             <div class="flex gap-1 text-2xl text-yellow-400 cursor-pointer">
                                 <% for (int i=1; i<=5; i++) { %>
