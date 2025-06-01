@@ -27,7 +27,7 @@ public class DeviceServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
+
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -41,60 +41,62 @@ public class DeviceServlet extends HttpServlet {
     }
 
     @Override
-protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    
-    String action = request.getParameter("action");
-    DeviceDao deviceDAO = new DeviceDao();
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-    if (action == null) {
-        action = "list";
-    }
+        String action = request.getParameter("action");
+        DeviceDao deviceDAO = new DeviceDao();
 
-    switch (action) {
-        case "add":
-            List<Pool> poolList = deviceDAO.getAllPools();
-            request.setAttribute("poolList", poolList);
-            request.getRequestDispatcher("addDevice.jsp").forward(request, response);
-            break;
+        if (action == null) {
+            action = "list";
+        }
 
-        case "update":
-            String id = request.getParameter("id");
-            int updateId = Integer.parseInt(id);
-            Device device = deviceDAO.getDeviceById(updateId);
-            List<Pool> poolList2 = deviceDAO.getAllPools();
-            request.setAttribute("device", device);
-            request.setAttribute("poolList", poolList2);
-            request.getRequestDispatcher("updateDevice.jsp").forward(request, response);
-            break;
+        switch (action) {
+            case "add":
+                List<Pool> poolList = deviceDAO.getAllPools();
+                request.setAttribute("poolList", poolList);
+                request.getRequestDispatcher("addDevice.jsp").forward(request, response);
+                break;
 
-        default: {
-            String keyword = request.getParameter("keyword");
-            String status = request.getParameter("status");
-            String index = request.getParameter("page");
-            int page = 1;
-            try {
-                if (index != null) {
-                    page = Integer.parseInt(index);
+            case "update":
+                String id = request.getParameter("id");
+                int updateId = Integer.parseInt(id);
+                Device device = deviceDAO.getDeviceById(updateId);
+                List<Pool> poolList2 = deviceDAO.getAllPools();
+                request.setAttribute("device", device);
+                request.setAttribute("poolList", poolList2);
+                request.getRequestDispatcher("updateDevice.jsp").forward(request, response);
+                break;
+
+            default: {
+                String keyword = request.getParameter("keyword");
+                String status = request.getParameter("status");
+                String index = request.getParameter("page");
+                int page = 1;
+                try {
+                    if (index != null) {
+                        page = Integer.parseInt(index);
+                    }
+                } catch (NumberFormatException e) {
+                    page = 1;
                 }
-            } catch (NumberFormatException e) {
-                page = 1;
+
+                int count = deviceDAO.countDevices(keyword, status);
+                int endPage = count / 6;           // Tính số lượng trang
+                if (count % 6 != 0) {
+                    endPage++;
+                }
+
+                List<Device> devices = deviceDAO.getDevicesByPage(keyword, status, page);
+                request.setAttribute("devices", devices);
+                request.setAttribute("endP", endPage);
+                request.setAttribute("page", page);
+                request.setAttribute("keyword", keyword);
+                request.setAttribute("status", status);
+                request.getRequestDispatcher("managerDevice.jsp").forward(request, response);
             }
-
-            int count = deviceDAO.countDevices(keyword, status);
-            int endPage = count / 6;           // Tính số lượng trang
-            if (count % 6 != 0) endPage++;
-
-            List<Device> devices = deviceDAO.getDevicesByPage(keyword, status, page);
-            request.setAttribute("devices", devices);
-            request.setAttribute("endP", endPage);
-            request.setAttribute("page", page);
-            request.setAttribute("keyword", keyword);
-            request.setAttribute("status", status);
-            request.getRequestDispatcher("managerDevice.jsp").forward(request, response);
         }
     }
-}
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -126,7 +128,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
 
             } catch (NumberFormatException e) {
                 request.setAttribute("error", "Số lượng hoặc Pool ID không hợp lệ");
-                request.getRequestDispatcher("add-device.jsp").forward(request, response);
+                request.getRequestDispatcher("addDevice.jsp").forward(request, response);
             }
 
         } else if ("update".equals(action)) {
@@ -153,7 +155,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
 
             } catch (NumberFormatException e) {
                 request.setAttribute("error", "Thiết bị hoặc dữ liệu số không hợp lệ");
-                request.getRequestDispatcher("edit-device.jsp").forward(request, response);
+                request.getRequestDispatcher("updateDevice.jsp").forward(request, response);
             }
 
         } else if ("delete".equals(action)) {
