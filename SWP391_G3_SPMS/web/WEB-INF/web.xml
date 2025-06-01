@@ -5,10 +5,6 @@
         <servlet-class>controller.Customer.CustomerAccountInforServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ListCustomerBookingServlet</servlet-name>
-        <servlet-class>controller.Customer.ListCustomerBookingServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>MyAccountServlet</servlet-name>
         <servlet-class>controller.Customer.MyAccountServlet</servlet-class>
     </servlet>
@@ -33,10 +29,6 @@
         <url-pattern>/CustomerAccountInfor</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ListCustomerBookingServlet</servlet-name>
-        <url-pattern>/ListCustomerBookingServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>MyAccountServlet</servlet-name>
         <url-pattern>/my_account</url-pattern>
     </servlet-mapping>
@@ -49,14 +41,10 @@
         <url-pattern>/booking_history</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>BookingDetail</servlet-name>
-        <url-pattern>/booking_detail</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>HomeServlet</servlet-name>
         <url-pattern>/home</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
-        <welcome-file>customer_account_infor.jsp</welcome-file>
+        <welcome-file>my_account</welcome-file>
     </welcome-file-list>
 </web-app>
