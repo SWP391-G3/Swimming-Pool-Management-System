@@ -17,7 +17,7 @@
     <body class="bg-gray-50 min-h-screen font-['Inter'] antialiased">
         <div class="container mx-auto px-4 py-8">
             <a
-                href="index.jsp"
+                href="my_account"
                 class="inline-flex items-center text-blue-600 font-medium mb-8 hover:underline"
                 >
                 <svg
@@ -33,7 +33,7 @@
                     d="M15 19l-7-7 7-7"
                     />
                 </svg>
-                Trang chủ
+                Tài khoản của tôi
             </a>
             <div
                 class="relative w-full h-52 md:h-64 mb-8 rounded-lg overflow-hidden shadow-lg"

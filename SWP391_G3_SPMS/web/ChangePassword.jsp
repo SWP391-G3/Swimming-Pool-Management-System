@@ -16,7 +16,7 @@
     <div class="container mx-auto px-4 py-8">
       <!-- Nút quay về -->
       <a
-        href="index.jsp"
+        href="my_account"
         class="inline-flex items-center text-blue-600 font-medium mb-8 hover:underline"
       >
         <svg
@@ -32,7 +32,7 @@
             d="M15 19l-7-7 7-7"
           />
         </svg>
-        Trang chủ
+        Tài khoản của tôi
       </a>
 
       <!-- Hero Image Section -->
