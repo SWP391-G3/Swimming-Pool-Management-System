@@ -24,7 +24,7 @@ public class PoolListServlet extends HttpServlet {
 
         int pageSize = 6;
         PoolsDAO dao = new PoolsDAO();
-        int totalPools = dao.countFilteredPools(searchName, searchLocation);
+        int totalPools = dao.countFilteredPools(searchName,searchLocation);
         int totalPages = (int) Math.ceil((double) totalPools / pageSize);
         if (pageParam != null && !pageParam.isEmpty()) {
             try {
@@ -32,15 +32,11 @@ public class PoolListServlet extends HttpServlet {
             } catch (NumberFormatException e) {
                 currentPage = 1;
             }
+            if (currentPage > totalPages) {
+                currentPage = totalPages; // 👉 chính dòng này đã đưa bạn về TRANG CUỐI
+            }
         }
 
-        if (totalPages == 0) {
-            totalPages = 1;
-        }
-
-        if (currentPage > totalPages) {
-            currentPage = 1;
-        }
         List<Pools> pools = dao.getPools(searchName, searchLocation, sortBy, currentPage, pageSize);
 
         request.setAttribute("pools", pools);
