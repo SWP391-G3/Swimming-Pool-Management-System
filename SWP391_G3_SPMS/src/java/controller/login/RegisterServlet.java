@@ -116,8 +116,8 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        if (!email.matches("^[a-zA-Z0-9._]+@[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)+$")) {
-            request.setAttribute("error", "Email nhập không đúng format");
+        if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
+            request.setAttribute("error", "Email không đúng định dạng ");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
