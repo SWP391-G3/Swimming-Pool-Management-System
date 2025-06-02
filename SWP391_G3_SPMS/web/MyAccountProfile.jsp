@@ -136,7 +136,23 @@
                                     <td class="text-gray-700"><%= b.getPoolAddressDetail() %></td>
                                     <td class="text-gray-600"><%= b.getBookingDate() != null ? dateFormat.format(b.getBookingDate()) : "" %></td>
                                     <td>
-                                        <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium"><%= b.getBookingStatus() %></span>
+                                        <%
+                                            String status = b.getBookingStatus();
+                                            String badgeClass = "bg-gray-100 text-gray-800";
+                                            if ("confirmed".equalsIgnoreCase(status) || "Đã xác nhận".equalsIgnoreCase(status)) {
+                                                badgeClass = "bg-emerald-100 text-emerald-800";
+                                                status = "Đã xác nhận";
+                                            } else if ("pending".equalsIgnoreCase(status) || "Chờ xác nhận".equalsIgnoreCase(status)) {
+                                                badgeClass = "bg-yellow-100 text-yellow-800";
+                                                status = "Chờ xác nhận";
+                                            } else if ("cancelled".equalsIgnoreCase(status) || "Đã hủy".equalsIgnoreCase(status)) {
+                                                badgeClass = "bg-red-100 text-red-800";
+                                                status = "Đã hủy";
+                                            }
+                                        %>
+                                        <span class="<%= badgeClass %> px-3 py-1 rounded-full text-sm font-medium">
+                                            <%= status %>
+                                        </span>
                                     </td>
                                     <td class="font-medium"><%= b.getAmount() != null ? currencyFormat.format(b.getAmount()) : "" %></td>
                                 </tr>
