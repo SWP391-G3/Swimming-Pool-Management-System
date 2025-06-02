@@ -6,8 +6,8 @@ import util.PasswordEncryption;
 
 import java.io.IOException;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -23,7 +23,6 @@ public class ChangePasswordServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Lấy user id (thực tế nên lấy từ session)
         int userId = 4; // TODO: lấy từ session thực tế
         UserDAO userDAO = new UserDAO();
         User user = userDAO.getUserByID(userId);

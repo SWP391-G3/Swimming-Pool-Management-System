@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
 @WebServlet("/profile")
@@ -23,8 +24,7 @@ public class CustomerAccountInforServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Lấy userId từ session hoặc test cứng
-        int userId = 4; // TODO: lấy từ session thực tế
+        int userId = 2; // lấy cố định
         UserDAO userDAO = new UserDAO();
         User userDetails = userDAO.getUserByID(userId);
         if (userDetails != null) {
@@ -39,8 +39,11 @@ public class CustomerAccountInforServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         UserDAO userDAO = new UserDAO();
-        // Lấy userId từ session hoặc cố định
-        int userId = 4; // TODO: lấy từ session thực tế
+        
+        //User user = (User) session.getAttribute("user");
+        //int userId = user.getId();
+        
+        int userId = 2; // lấy cố định
 
         // Lấy thông tin từ form
         String fullName = request.getParameter("full_name");

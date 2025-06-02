@@ -11,6 +11,7 @@ import java.util.List;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -19,7 +20,7 @@ public class MyAccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int userId = 2; // TODO: Lấy user id từ session
+        int userId = 2; // Gan tam userId = 2
 
         UserDAO userDAO = new UserDAO();
         BookingDetailDAO bookingDetailDAO = new BookingDetailDAO();
@@ -28,7 +29,8 @@ public class MyAccountServlet extends HttpServlet {
         User user = userDAO.getUserByID(userId);
 
         List<BookingDetails> recentBookings;
-        List<DiscountDetail> vouchersActive, vouchersUsed;
+        List<DiscountDetail> vouchersActive;
+        List<DiscountDetail> vouchersUsed;
         try {
             // Booking gần nhất (BookingDetail)
             List<BookingDetails> allBookings = bookingDetailDAO.sortBookingDetailByDateDesc(userId);
@@ -51,8 +53,8 @@ public class MyAccountServlet extends HttpServlet {
 
         request.setAttribute("user", user);
         request.setAttribute("recentBookings", recentBookings);
-        request.setAttribute("voucherActive", vouchersActive); // Đang có
-        request.setAttribute("voucherUsed", vouchersUsed);     // Đã dùng
+        request.setAttribute("voucherActive", vouchersActive);
+        request.setAttribute("voucherUsed", vouchersUsed);
 
         request.getRequestDispatcher("MyAccountProfile.jsp").forward(request, response);
     }
