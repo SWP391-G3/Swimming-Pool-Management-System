@@ -8,33 +8,34 @@ package model.manager;
  *
  * @author Tuan Anh
  */
+
 public class Device {
 
     private int deviceId;
     private String deviceImage;
     private String deviceName;
-    private String poolName;
     private int poolId;
+    private String poolName; // THÊM DÒNG NÀY
     private int quantity;
     private String deviceStatus;
     private String notes;
 
-    
-    public Device(int deviceId, String deviceImage, String deviceName, String poolName, int quantity, String deviceStatus, String notes) {
+    public Device() {
+    }
+
+    // Constructor với poolName
+    public Device(int deviceId, String deviceImage, String deviceName, int poolId, String poolName, int quantity, String deviceStatus, String notes) {
         this.deviceId = deviceId;
         this.deviceImage = deviceImage;
         this.deviceName = deviceName;
+        this.poolId = poolId;
         this.poolName = poolName;
         this.quantity = quantity;
         this.deviceStatus = deviceStatus;
         this.notes = notes;
     }
 
-   
-    public Device() {
-    }
-
-    // Getter/Setter đầy đủ
+    // Các getter/setter
     public int getDeviceId() {
         return deviceId;
     }
@@ -59,20 +60,20 @@ public class Device {
         this.deviceName = deviceName;
     }
 
-    public String getPoolName() {
-        return poolName;
-    }
-
-    public void setPoolName(String poolName) {
-        this.poolName = poolName;
-    }
-
     public int getPoolId() {
         return poolId;
     }
 
     public void setPoolId(int poolId) {
         this.poolId = poolId;
+    }
+
+    public String getPoolName() {
+        return poolName;
+    }
+
+    public void setPoolName(String poolName) {
+        this.poolName = poolName;
     }
 
     public int getQuantity() {
@@ -98,14 +99,4 @@ public class Device {
     public void setNotes(String notes) {
         this.notes = notes;
     }
-
-    @Override
-    public String toString() {
-        return "Device{" + "deviceId=" + deviceId + ", deviceImage=" + deviceImage + ", deviceName=" + deviceName + ", poolName=" + poolName + ", poolId=" + poolId + ", quantity=" + quantity + ", deviceStatus=" + deviceStatus + ", notes=" + notes + '}';
-    }
-    
-    
-    
-    
-    
 }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao.manager;
 
 import dal.DBContext;
@@ -11,44 +7,79 @@ import java.util.List;
 import java.sql.ResultSet;
 import model.manager.Device;
 import java.sql.SQLException;
-import java.util.AbstractList;
 import model.manager.Pool;
 
-/**
- *
- * @author Tuan Anh
- */
 public class DeviceDao extends DBContext {
 
-    public List<Device> getAllDevices(String keyword, String status) {
+    // Lấy tất cả thiết bị theo branch_id (chi nhánh)
+    public List<Device> getDevicesByBranchId(int branchId) {
         List<Device> deviceList = new ArrayList<>();
-        String sql = "SELECT d.device_id ,d.device_image ,d.device_name,p.pool_name ,d.quantity , d.device_status , d.notes "
-                + "FROM Pool_Device d JOIN Pools p ON d.pool_id = p.pool_id "
-                + "WHERE d.device_name LIKE ? AND (d.device_status = ? OR ? = '')";
+        String sql = "SELECT d.device_id, d.device_image, d.device_name, d.pool_id, p.pool_name, d.quantity, d.device_status, d.notes "
+                + "FROM Pool_Device d "
+                + "JOIN Pools p ON d.pool_id = p.pool_id "
+                + "WHERE p.branch_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, "%" + (keyword == null ? "" : keyword) + "%");
-            ps.setString(2, status == null ? "" : status);
-            ps.setString(3, status == null ? "" : status);
+            ps.setInt(1, branchId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                deviceList.add(new Device(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),
-                        rs.getInt(5), rs.getString(6), rs.getString(7)));
+                Device device = new Device(
+                        rs.getInt(1), // device_id
+                        rs.getString(2), // device_image
+                        rs.getString(3), // device_name
+                        rs.getInt(4), // pool_id
+                        rs.getString(5), // pool_name
+                        rs.getInt(6), // quantity
+                        rs.getString(7), // device_status
+                        rs.getString(8) // notes
+                );
+                deviceList.add(device);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); 
-
+            e.printStackTrace();
         }
         return deviceList;
     }
 
-    // Lấy danh sách hồ bơi (Pool)
-    public List<Pool> getAllPools() {
-        List<Pool> pools = new ArrayList<>();
-        String sql = "SELECT pool_id, pool_name FROM Pools";
+    // Lấy tất cả thiết bị theo managerId
+    public List<Device> getDevicesByManagerId(int managerId) {
+        List<Device> deviceList = new ArrayList<>();
+        String sql = "SELECT d.device_id, d.device_image, d.device_name, d.pool_id, p.pool_name, d.quantity, d.device_status, d.notes "
+                + "FROM Pool_Device d "
+                + "JOIN Pools p ON d.pool_id = p.pool_id "
+                + "JOIN Branchs b ON p.branch_id = b.branch_id "
+                + "WHERE b.manager_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, managerId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                pools.add(new Pool(rs.getInt(1), rs.getString(2)));
+                Device device = new Device(
+                        rs.getInt(1), // device_id
+                        rs.getString(2), // device_image
+                        rs.getString(3), // device_name
+                        rs.getInt(4), // pool_id
+                        rs.getString(5), // pool_name
+                        rs.getInt(6), // quantity
+                        rs.getString(7), // device_status
+                        rs.getString(8) // notes
+                );
+                deviceList.add(device);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return deviceList;
+    }
+
+    // Lấy danh sách hồ bơi của 1 chi nhánh
+    public List<Pool> getPoolsByBranchId(int branchId) {
+        List<Pool> pools = new ArrayList<>();
+        String sql = "SELECT pool_id, pool_name FROM Pools WHERE branch_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, branchId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Pool pool = new Pool(rs.getInt(1), rs.getString(2));
+                pools.add(pool);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -56,7 +87,35 @@ public class DeviceDao extends DBContext {
         return pools;
     }
 
-    // Thêm thiết bị mới
+    // Lấy danh sách thiết bị theo pool_id (nếu muốn lấy poolName thì JOIN Pools)
+    public List<Device> getDevicesByPoolId(int poolId) {
+        List<Device> devices = new ArrayList<>();
+        String sql = "SELECT d.device_id, d.device_image, d.device_name, d.pool_id, p.pool_name, d.quantity, d.device_status, d.notes "
+                + "FROM Pool_Device d "
+                + "JOIN Pools p ON d.pool_id = p.pool_id "
+                + "WHERE d.pool_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, poolId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                devices.add(new Device(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getInt(4),
+                        rs.getString(5),
+                        rs.getInt(6),
+                        rs.getString(7),
+                        rs.getString(8)
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return devices;
+    }
+
+    // Thêm, sửa, xóa thiết bị: KHÔNG ĐỔI
     public void addDevice(Device device) {
         String sql = "INSERT INTO Pool_Device (pool_id, device_image, device_name, quantity, device_status, notes) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -72,26 +131,6 @@ public class DeviceDao extends DBContext {
         }
     }
 
-    // Lấy thiết bị theo ID
-    public Device getDeviceById(int id) {
-        String sql = "SELECT d.device_id, d.device_image, d.device_name, p.pool_name, d.quantity, d.device_status, d.notes, d.pool_id "
-                + "FROM Pool_Device d JOIN Pools p ON d.pool_id = p.pool_id WHERE d.device_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                Device d = new Device(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),
-                        rs.getInt(5), rs.getString(6), rs.getString(7));
-                d.setPoolId(rs.getInt(8));
-                return d;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    // Cập nhật thiết bị
     public void updateDevice(Device device) {
         String sql = "UPDATE Pool_Device SET pool_id = ?, device_image = ?, device_name = ?, quantity = ?, device_status = ?, notes = ? WHERE device_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -108,7 +147,6 @@ public class DeviceDao extends DBContext {
         }
     }
 
-    // Xóa thiết bị theo ID
     public void deleteDevice(int deviceId) {
         String sql = "DELETE FROM Pool_Device WHERE device_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -119,66 +157,110 @@ public class DeviceDao extends DBContext {
         }
     }
 
-    // Phân trang 
-    public int countDevices(String keyword, String status) {
-        String sql = "SELECT COUNT(*) FROM Pool_Device WHERE device_name LIKE ? AND (device_status = ? OR ? = '')";
+    // Lấy thiết bị theo ID (bao gồm poolName)
+    public Device getDeviceById(int id) {
+        String sql = "SELECT d.device_id, d.device_image, d.device_name, d.pool_id, p.pool_name, d.quantity, d.device_status, d.notes "
+                + "FROM Pool_Device d "
+                + "JOIN Pools p ON d.pool_id = p.pool_id "
+                + "WHERE d.device_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, "%" + (keyword == null ? "" : keyword.trim()) + "%");
-            ps.setString(2, status == null ? "" : status.trim());
-            ps.setString(3, status == null ? "" : status.trim());
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    public List<Device> getDevicesByPage(String keyword, String status, int page) {
-        List<Device> deviceList = new ArrayList<>();
-        String sql = "SELECT d.device_id, d.device_image, d.device_name, p.pool_name, d.quantity, d.device_status, d.notes "
-                + "FROM Pool_Device d JOIN Pools p ON d.pool_id = p.pool_id "
-                + "WHERE d.device_name LIKE ? AND (d.device_status = ? OR ? = '') "
-                + "ORDER BY d.device_id OFFSET ? ROWS FETCH NEXT 6 ROWS ONLY";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, "%" + (keyword == null ? "" : keyword.trim()) + "%");
-            ps.setString(2, status == null ? "" : status.trim());
-            ps.setString(3, status == null ? "" : status.trim());
-            ps.setInt(4, (page - 1) * 6);
-
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Device device = new Device(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getString(4),
-                        rs.getInt(5),
-                        rs.getString(6),
-                        rs.getString(7)
+                return new Device(
+                        rs.getInt(1), // device_id
+                        rs.getString(2), // device_image
+                        rs.getString(3), // device_name
+                        rs.getInt(4), // pool_id
+                        rs.getString(5), // pool_name
+                        rs.getInt(6), // quantity
+                        rs.getString(7), // device_status
+                        rs.getString(8) // notes
                 );
-                deviceList.add(device);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return deviceList;
+        return null;
     }
+    
+    
+    //Phân trang 
+    // Đếm thiết bị theo branch và pool
+public int countDevicesWithPool(String keyword, String status, int branchId, Integer poolId) {
+    int count = 0;
+    String sql = "SELECT COUNT(*) "
+               + "FROM Pool_Device d "
+               + "JOIN Pools p ON d.pool_id = p.pool_id "
+               + "WHERE p.branch_id = ? "
+               + (poolId != null ? "AND d.pool_id = ? " : "")
+               + "AND (? IS NULL OR d.device_name LIKE ?) "
+               + "AND (? IS NULL OR d.device_status = ?)";
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        int idx = 1;
+        ps.setInt(idx++, branchId);
+        if (poolId != null) ps.setInt(idx++, poolId);
+        ps.setString(idx++, (keyword == null || keyword.isEmpty()) ? null : keyword);
+        ps.setString(idx++, (keyword == null || keyword.isEmpty()) ? null : "%" + keyword + "%");
+        ps.setString(idx++, (status == null || status.isEmpty()) ? null : status);
+        ps.setString(idx++, (status == null || status.isEmpty()) ? null : status);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            count = rs.getInt(1);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return count;
+}
+
+// Lấy thiết bị phân trang theo branch và pool
+public List<Device> getDevicesByPageAndPool(String keyword, String status, int page, int pageSize, int branchId, Integer poolId) {
+    List<Device> devices = new ArrayList<>();
+    String sql = "SELECT d.device_id, d.device_image, d.device_name, d.pool_id, p.pool_name, d.quantity, d.device_status, d.notes "
+            + "FROM Pool_Device d "
+            + "JOIN Pools p ON d.pool_id = p.pool_id "
+            + "WHERE p.branch_id = ? "
+            + (poolId != null ? "AND d.pool_id = ? " : "")
+            + "AND (? IS NULL OR d.device_name LIKE ?) "
+            + "AND (? IS NULL OR d.device_status = ?) "
+            + "ORDER BY d.device_id "
+            + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        int idx = 1;
+        ps.setInt(idx++, branchId);
+        if (poolId != null) ps.setInt(idx++, poolId);
+        ps.setString(idx++, (keyword == null || keyword.isEmpty()) ? null : keyword);
+        ps.setString(idx++, (keyword == null || keyword.isEmpty()) ? null : "%" + keyword + "%");
+        ps.setString(idx++, (status == null || status.isEmpty()) ? null : status);
+        ps.setString(idx++, (status == null || status.isEmpty()) ? null : status);
+        ps.setInt(idx++, (page - 1) * pageSize);
+        ps.setInt(idx++, pageSize);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Device device = new Device(
+                rs.getInt(1),
+                rs.getString(2),
+                rs.getString(3),
+                rs.getInt(4),
+                rs.getString(5),
+                rs.getInt(6),
+                rs.getString(7),
+                rs.getString(8)
+            );
+            devices.add(device);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return devices;
+}
 
     public static void main(String[] args) {
-
         DeviceDao dao = new DeviceDao();
-
-        List<Device> a = dao.getDevicesByPage("", "", 1);
-
+        List<Device> a = dao.getDevicesByBranchId(1);
         for (Device device : a) {
             System.out.println(device);
         }
-
     }
-
 }

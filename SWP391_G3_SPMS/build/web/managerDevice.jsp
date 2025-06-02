@@ -29,12 +29,19 @@
 
                     <form class="search-form" method="get" action="DeviceServlet">
                         <input type="text" name="keyword" placeholder="Tìm theo tên thiết bị..." value="${param.keyword}">
+                        <select name="poolId">
+                            <option value="">-- Tất cả hồ bơi --</option>
+                            <c:forEach var="pool" items="${poolList}">
+                                <option value="${pool.poolId}" ${pool.poolId == param.poolId ? 'selected' : ''}>${pool.poolName}</option>
+                            </c:forEach>
+                        </select>
                         <select name="status">
                             <option value="">-- Tất cả trạng thái --</option>
                             <option value="available" ${param.status == 'available' ? 'selected' : ''}>Tốt</option>
                             <option value="maintenance" ${param.status == 'maintenance' ? 'selected' : ''}>Bảo trì</option>
                             <option value="broken" ${param.status == 'broken' ? 'selected' : ''}>Hỏng</option>
                         </select>
+                        
                         <button type="submit">Tìm kiếm</button>
                     </form>
 

@@ -4,41 +4,53 @@
  */
 package model.manager;
 
+import java.util.List;
+
 /**
  *
  * @author Tuan Anh
  */
 public class Pool {
 
-    public int poolId;
-    public String poolName;
+    private int poolId;
+    private String poolName;
+    private int branchId; // thuộc về chi nhánh nào
+    private List<Device> devices; // các thiết bị của hồ bơi
 
-    public Pool() {
-    }
+    public Pool() {}
 
     public Pool(int poolId, String poolName) {
         this.poolId = poolId;
         this.poolName = poolName;
     }
 
-    public int getPoolId() {
-        return poolId;
-    }
-
-    public void setPoolId(int poolId) {
+    
+    
+    
+    public Pool(int poolId, String poolName, int branchId, List<Device> devices) {
         this.poolId = poolId;
-    }
-
-    public String getPoolName() {
-        return poolName;
-    }
-
-    public void setPoolName(String poolName) {
         this.poolName = poolName;
+        this.branchId = branchId;
+        this.devices = devices;
     }
+
+    // getter/setter
+    public int getPoolId() { return poolId; }
+    public void setPoolId(int poolId) { this.poolId = poolId; }
+    public String getPoolName() { return poolName; }
+    public void setPoolName(String poolName) { this.poolName = poolName; }
+    public int getBranchId() { return branchId; }
+    public void setBranchId(int branchId) { this.branchId = branchId; }
+    public List<Device> getDevices() { return devices; }
+    public void setDevices(List<Device> devices) { this.devices = devices; }
 
     @Override
     public String toString() {
-        return "Pool{" + "poolId=" + poolId + ", poolName=" + poolName + '}';
+        return "Pool{" +
+                "poolId=" + poolId +
+                ", poolName='" + poolName + '\'' +
+                ", branchId=" + branchId +
+                ", devices=" + devices +
+                '}';
     }
 }

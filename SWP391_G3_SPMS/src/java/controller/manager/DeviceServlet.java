@@ -39,6 +39,7 @@ public class DeviceServlet extends HttpServlet {
             out.println("</html>");
         }
     }
+    private static final int PAGE_SIZE = 5; // Số thiết bị mỗi trang
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -47,27 +48,30 @@ public class DeviceServlet extends HttpServlet {
         String action = request.getParameter("action");
         DeviceDao deviceDAO = new DeviceDao();
 
+        // GÁN CỨNG branchId ĐỂ TEST
+        int branchId = 2; // Đổi số này để test các chi nhánh khác
+
         if (action == null) {
             action = "list";
         }
 
         switch (action) {
-            case "add":
-                List<Pool> poolList = deviceDAO.getAllPools();
+            case "add": {
+                List<Pool> poolList = deviceDAO.getPoolsByBranchId(branchId);
                 request.setAttribute("poolList", poolList);
                 request.getRequestDispatcher("addDevice.jsp").forward(request, response);
                 break;
-
-            case "update":
+            }
+            case "update": {
                 String id = request.getParameter("id");
                 int updateId = Integer.parseInt(id);
                 Device device = deviceDAO.getDeviceById(updateId);
-                List<Pool> poolList2 = deviceDAO.getAllPools();
+                List<Pool> poolList2 = deviceDAO.getPoolsByBranchId(branchId);
                 request.setAttribute("device", device);
                 request.setAttribute("poolList", poolList2);
                 request.getRequestDispatcher("updateDevice.jsp").forward(request, response);
                 break;
-
+            }
             default: {
                 String keyword = request.getParameter("keyword");
                 String status = request.getParameter("status");
@@ -80,8 +84,16 @@ public class DeviceServlet extends HttpServlet {
                 } catch (NumberFormatException e) {
                     page = 1;
                 }
+                String poolIdParam = request.getParameter("poolId");
+                Integer poolId = null;
+                if (poolIdParam != null && !poolIdParam.isEmpty()) {
+                    try {
+                        poolId = Integer.parseInt(poolIdParam);
+                    } catch (NumberFormatException e) {
+                        poolId = null;
+                    }
+                }
 
-                
                 if (keyword != null && !keyword.isEmpty() && !keyword.matches("[a-zA-Z0-9\\sÀ-ỹ]+")) {
                     request.setAttribute("error", "Từ khóa tìm kiếm không hợp lệ (không chứa ký tự đặc biệt).");
                     request.setAttribute("devices", List.of());
@@ -93,21 +105,24 @@ public class DeviceServlet extends HttpServlet {
                     return;
                 }
 
-                int count = deviceDAO.countDevices(keyword, status);
-
-                int endPage = count / 6;
-                if (count % 6 != 0) {
+                // Đếm theo pool nếu có chọn pool, nếu không sẽ đếm toàn chi nhánh
+                int count = deviceDAO.countDevicesWithPool(keyword, status, branchId, poolId);
+                int endPage = count / PAGE_SIZE;
+                if (count % PAGE_SIZE != 0) {
                     endPage++;
                 }
+                List<Device> devices = deviceDAO.getDevicesByPageAndPool(keyword, status, page, PAGE_SIZE, branchId, poolId);
 
-                
+                // Danh sách pool để filter
+                List<Pool> poolList = deviceDAO.getPoolsByBranchId(branchId);
 
-                List<Device> devices = deviceDAO.getDevicesByPage(keyword, status, page);
                 request.setAttribute("devices", devices);
                 request.setAttribute("endP", endPage);
                 request.setAttribute("page", page);
                 request.setAttribute("keyword", keyword);
                 request.setAttribute("status", status);
+                request.setAttribute("poolId", poolIdParam);
+                request.setAttribute("poolList", poolList);
                 request.getRequestDispatcher("managerDevice.jsp").forward(request, response);
             }
         }
@@ -124,6 +139,9 @@ public class DeviceServlet extends HttpServlet {
         DeviceDao deviceDAO = new DeviceDao();
         String action = request.getParameter("action");
 
+        // GÁN CỨNG branchId ĐỂ TEST
+        int branchId = 1;
+
         if ("add".equals(action)) {
             try {
                 int poolId = Integer.parseInt(request.getParameter("poolId"));
@@ -135,7 +153,7 @@ public class DeviceServlet extends HttpServlet {
 
                 if (!isValidDeviceName(deviceName)) {
                     request.setAttribute("error", "Tên thiết bị không được chứa ký tự đặc biệt.");
-                    request.setAttribute("poolList", deviceDAO.getAllPools());
+                    request.setAttribute("poolList", deviceDAO.getPoolsByBranchId(branchId));
                     request.getRequestDispatcher("addDevice.jsp").forward(request, response);
                     return;
                 }
@@ -153,7 +171,7 @@ public class DeviceServlet extends HttpServlet {
 
             } catch (NumberFormatException e) {
                 request.setAttribute("error", "Số lượng hoặc Pool ID không hợp lệ");
-                request.setAttribute("poolList", deviceDAO.getAllPools());
+                request.setAttribute("poolList", deviceDAO.getPoolsByBranchId(branchId));
                 request.getRequestDispatcher("addDevice.jsp").forward(request, response);
             }
 
@@ -171,7 +189,7 @@ public class DeviceServlet extends HttpServlet {
                     request.setAttribute("error", "Tên thiết bị không được chứa ký tự đặc biệt.");
                     Device device = deviceDAO.getDeviceById(deviceId);
                     request.setAttribute("device", device);
-                    request.setAttribute("poolList", deviceDAO.getAllPools());
+                    request.setAttribute("poolList", deviceDAO.getPoolsByBranchId(branchId));
                     request.getRequestDispatcher("updateDevice.jsp").forward(request, response);
                     return;
                 }
