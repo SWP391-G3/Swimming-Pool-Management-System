@@ -49,7 +49,7 @@ public class PoolsDAO extends DBContext {
             params.add("%" + location.trim() + "%");
         }
 
-        // Luôn có ORDER BY: nếu không truyền sortBy thì mặc định theo pool_id
+        
         if (sortBy != null && !sortBy.isEmpty()) {
             sql.append(" ORDER BY max_slot ").append("asc".equalsIgnoreCase(sortBy) ? "ASC" : "DESC");
         } else {
@@ -121,5 +121,21 @@ public class PoolsDAO extends DBContext {
         }
         return count;
     }
+
+//    public int countPools() {
+//        int count = 0;
+//        String sql = "SELECT COUNT(*) FROM Pools";  
+//
+//        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+//            ResultSet rs = ps.executeQuery();
+//            if (rs.next()) {
+//                count = rs.getInt(1);  
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();  
+//        }
+//
+//        return count;
+//    }
 
 }

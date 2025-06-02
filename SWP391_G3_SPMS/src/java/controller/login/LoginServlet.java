@@ -36,17 +36,17 @@ public class LoginServlet extends HttpServlet {
         User user = dao.getUserByUsername(username); // Lấy user theo username
 
         if (user != null) {
-            // Hash password nhập vào để so sánh với hash lưu trong DB
+           
             String hashedInputPassword = HashUtils.hashPassword(password);
             
 
             if (hashedInputPassword.equals(user.getPassword())) {
-                // Đăng nhập thành công
+                
                 HttpSession session = request.getSession();
                 session.setAttribute("currentUser", user);
 
                 int roleId = user.getRole_id();
-                // Điều hướng theo role
+                
                 switch (roleId) {
                     case 1:
                         response.sendRedirect("admin.jsp");
@@ -76,3 +76,4 @@ public class LoginServlet extends HttpServlet {
         }
     }
 }
+

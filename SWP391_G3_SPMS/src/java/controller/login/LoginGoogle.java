@@ -64,14 +64,15 @@ public class LoginGoogle extends HttpServlet {
             UserDAO userDao = new UserDAO();
             User user = userDao.getUserByEmail(email);
             if (user == null) {
+                String username=email.split("@")[0];
                 user = new User(
                         0,
-                        email, // username
+                        username, // usernameS
                         "", // password
                         name != null ? name : "", // full_name
                         email, // email
-                        "", // phone
-                        "", // address
+                        null, // phone
+                        null, // address
                         4, // role_id
                         true, // status
                         null, // dob

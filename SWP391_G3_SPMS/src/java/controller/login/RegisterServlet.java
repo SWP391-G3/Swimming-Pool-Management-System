@@ -99,7 +99,6 @@ public class RegisterServlet extends HttpServlet {
         request.setAttribute("enteredPhone", phone);
         request.setAttribute("enteredAddress", address);
 
-        // 1. Kiểm tra rỗng
         if (username == null || password == null || confirmPassword == null
                 || fullName == null || email == null || phone == null
                 || address == null
@@ -111,28 +110,24 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        // 2. Validate username (4-32 ký tự, không ký tự đặc biệt trừ _)
         if (!username.matches("^[A-Za-z0-9]{4,32}$")) {
             request.setAttribute("error", "Tên người dùng phải dài từ 4-32 ký tự, chỉ bao gồm chữ cái, số");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
 
-        // 3. Validate email
-        if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
-            request.setAttribute("error", "Email nhâp không đúng format");
+        if (!email.matches("^[a-zA-Z0-9._]+@[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)+$")) {
+            request.setAttribute("error", "Email nhập không đúng format");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
 
-        // 4. Validate phone (chỉ số, 8-15 số)
         if (!phone.matches("^0\\d{9}$")) {
             request.setAttribute("error", "Số điện thoại phải là số và chứa 10 số");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
 
-        // 5. Validate password và confirm
         if (password.length() < 9) {
             request.setAttribute("error", "Mật khẩu phải đủ 9 kí tự");
             request.getRequestDispatcher("register.jsp").forward(request, response);
@@ -144,7 +139,6 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-       
         UserDAO dao = new UserDAO();
         if (dao.isUsernameExists(username)) {
             request.setAttribute("error", "Tên người dùng đã tồn tại! Vui lòng thử lại");
@@ -171,7 +165,9 @@ public class RegisterServlet extends HttpServlet {
         dao.insertUser(user);
 
         // 11. Đăng ký thành công -> chuyển sang register success
-        response.sendRedirect("registersuccessfull.jsp");
+//        response.sendRedirect("registersuccessfull.jsp");
+        request.setAttribute("mess", "Đăng kí thành công");
+        request.getRequestDispatcher("register.jsp").forward(request, response);
     }
 
     // Nếu không trùng thì tạo user mới
