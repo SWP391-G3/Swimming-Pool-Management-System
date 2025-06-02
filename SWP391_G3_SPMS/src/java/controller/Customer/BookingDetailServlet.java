@@ -2,6 +2,7 @@ package controller.Customer;
 
 import dao.BookingDetailDAO;
 import dao.FeedbackDAO;
+import dao.UserDAO;
 import model.BookingDetails;
 import model.Feedback;
 import model.User;
@@ -58,7 +59,12 @@ public class BookingDetailServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        User user = (User) request.getSession().getAttribute("user");
+        //User user = (User) request.getSession().getAttribute("user");
+        
+        int userId = 2;
+        UserDAO userDAO = new UserDAO();
+        User user = userDAO.getUserByID(userId);
+        
         if (user == null) {
             response.sendRedirect("login.jsp");
             return;

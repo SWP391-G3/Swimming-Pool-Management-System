@@ -102,7 +102,7 @@
                     <div class="text-green-600 font-medium mb-2">Gửi đánh giá thành công!</div>
                     <div class="mb-4 italic text-gray-700 text-center text-lg font-semibold">Cảm ơn quý khách đã đánh giá</div>
                     <% } else if (errorMsg != null) { %>
-                    <div class="text-red-600 font-medium mb-2">Bạn đã gửi đánh giá cho hồ bơi này hoặc có lỗi xảy ra.</div>
+                    <div class="text-red-600 font-medium mb-2">Bạn đã gửi đánh giá cho hồ bơi này.</div>
                     <% } else if (userFeedback != null) { %>
                     <div class="mb-4 italic text-gray-700 text-center text-lg font-semibold">Cảm ơn quý khách đã đánh giá</div>
                     <% } else { %>
