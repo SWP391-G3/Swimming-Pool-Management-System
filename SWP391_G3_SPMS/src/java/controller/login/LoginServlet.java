@@ -16,13 +16,12 @@ import jakarta.servlet.http.HttpSession;
 import model.User;
 import utils.HashUtils;
 
-
 /**
  *
  * @author 84823
  */
 public class LoginServlet extends HttpServlet {
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -36,17 +35,16 @@ public class LoginServlet extends HttpServlet {
         User user = dao.getUserByUsername(username); // Lấy user theo username
 
         if (user != null) {
-           
+
             String hashedInputPassword = HashUtils.hashPassword(password);
-            
 
             if (hashedInputPassword.equals(user.getPassword())) {
-                
+
                 HttpSession session = request.getSession();
                 session.setAttribute("currentUser", user);
 
                 int roleId = user.getRole_id();
-                
+
                 switch (roleId) {
                     case 1:
                         response.sendRedirect("admin.jsp");
@@ -76,4 +74,3 @@ public class LoginServlet extends HttpServlet {
         }
     }
 }
-

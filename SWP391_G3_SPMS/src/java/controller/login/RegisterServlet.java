@@ -123,7 +123,7 @@ public class RegisterServlet extends HttpServlet {
         }
 
         if (!phone.matches("^0\\d{9}$")) {
-            request.setAttribute("error", "Số điện thoại phải là số và chứa 10 số");
+            request.setAttribute("error", "Số điện thoại phải đúng format bắt đầu phải là số 0 và chứa 10 số");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
@@ -164,8 +164,8 @@ public class RegisterServlet extends HttpServlet {
         // 10. Lưu vào DB
         dao.insertUser(user);
 
-        // 11. Đăng ký thành công -> chuyển sang register success
-//        response.sendRedirect("registersuccessfull.jsp");
+        
+        
         request.setAttribute("mess", "Đăng kí thành công");
         request.getRequestDispatcher("register.jsp").forward(request, response);
     }

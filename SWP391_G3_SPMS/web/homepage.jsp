@@ -25,7 +25,7 @@
                 <a href="LogoutServlet">Logout</a>
             </c:if>
 
-            <c:if test="${empty sessionScope.currentUser}">
+                <c:if test="${empty sessionScope.currentUser}">
                 <a href="login.jsp">Đăng nhập</a>
                 <a href="register.jsp">Đăng ký</a>
             </c:if>

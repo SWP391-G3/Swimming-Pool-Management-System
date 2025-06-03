@@ -24,7 +24,7 @@ public class PoolListServlet extends HttpServlet {
 
         int pageSize = 6;
         PoolsDAO dao = new PoolsDAO();
-        int totalPools = dao.countFilteredPools(searchName,searchLocation);
+        int totalPools = dao.countPools();
         int totalPages = (int) Math.ceil((double) totalPools / pageSize);
         if (pageParam != null && !pageParam.isEmpty()) {
             try {
@@ -33,7 +33,7 @@ public class PoolListServlet extends HttpServlet {
                 currentPage = 1;
             }
             if (currentPage > totalPages) {
-                currentPage = totalPages; // 👉 chính dòng này đã đưa bạn về TRANG CUỐI
+                currentPage = totalPages; 
             }
         }
 

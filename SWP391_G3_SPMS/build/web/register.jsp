@@ -113,6 +113,8 @@
         <c:if test="${not empty mess}">
          <p class="error-message">${mess}</p>
     </c:if>
+         
+         
     <form action="register" method="POST" autocomplete="off">
         <div class="row">
             <div class="col-md-12">
