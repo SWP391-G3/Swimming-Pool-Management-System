@@ -140,13 +140,24 @@ INSERT INTO Pool_Device (pool_id, device_image, device_name, quantity, device_st
 
 ---Tuấn Anh Insert thêm cho bảng Branch
 
+INSERT INTO dbo.Users 
+(username, password, full_name, email, phone, address, role_id, status, dob, gender, images, created_at, updated_at) 
+VALUES
+('manager2', 'manager2@123', N'Manager HCM', 'manager2@example.com', '0900000002', 'Hồ Chí Minh', 2, 1, '1986-02-02', 'Female', NULL, GETDATE(), NULL),
+('manager3', 'manager3@123', N'Manager Đà Nẵng', 'manager3@example.com', '0900000003', 'Đà Nẵng', 2, 1, '1987-03-03', 'Male', NULL, GETDATE(), NULL),
+('manager4', 'manager4@123', N'Manager Cần Thơ', 'manager4@example.com', '0900000004', 'Cần Thơ', 2, 1, '1988-04-04', 'Female', NULL, GETDATE(), NULL),
+('manager5', 'manager5@123', N'Manager Quy Nhơn', 'manager5@example.com', '0900000005', 'Quy Nhơn', 2, 1, '1989-05-05', 'Male', NULL, GETDATE(), NULL);
+
+
+
+
 -- Thêm 5 chi nhánh (Branch)
 INSERT INTO Branchs (branch_name, manager_id) VALUES
 (N'Chi nhánh Hà Nội', 2),
-(N'Chi nhánh Hồ Chí Minh', 2),
-(N'Chi nhánh Đà Nẵng', 2),
-(N'Chi nhánh Cần Thơ', 2),
-(N'Chi nhánh Quy Nhơn', 2);
+(N'Chi nhánh Hồ Chí Minh', 11),
+(N'Chi nhánh Đà Nẵng', 12),
+(N'Chi nhánh Cần Thơ', 13),
+(N'Chi nhánh Quy Nhơn', 14);
 
 -- Bước 2: Gán mỗi chi nhánh cho 5 hồ bơi tương ứng theo pool_id đã có sẵn
 

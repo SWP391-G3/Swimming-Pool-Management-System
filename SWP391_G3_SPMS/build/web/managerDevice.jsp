@@ -41,7 +41,7 @@
                             <option value="maintenance" ${param.status == 'maintenance' ? 'selected' : ''}>Bảo trì</option>
                             <option value="broken" ${param.status == 'broken' ? 'selected' : ''}>Hỏng</option>
                         </select>
-                        
+
                         <button type="submit">Tìm kiếm</button>
                     </form>
 
@@ -108,19 +108,15 @@
 
                 <div class="pagination">
                     <c:if test="${page > 1}">
-                        <a href="DeviceServlet?page=${page-1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}">&laquo;</a>
+                        <a href="DeviceServlet?page=${page-1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}">&laquo;</a>
                     </c:if>
                     <c:forEach begin="1" end="${endP}" var="i">
-                        <a href="DeviceServlet?page=${i}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}"
+                        <a href="DeviceServlet?page=${i}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}"
                            class="${i == page ? 'active' : ''}">${i}</a>
-
                     </c:forEach>
-
-
                     <c:if test="${page < endP}">
-                        <a href="DeviceServlet?page=${page+1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}">&raquo;</a>
+                        <a href="DeviceServlet?page=${page+1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}">&raquo;</a>
                     </c:if>
-
                 </div>
 
 

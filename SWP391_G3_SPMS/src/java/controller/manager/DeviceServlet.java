@@ -49,7 +49,7 @@ public class DeviceServlet extends HttpServlet {
         DeviceDao deviceDAO = new DeviceDao();
 
         // GÁN CỨNG branchId ĐỂ TEST
-        int branchId = 2; // Đổi số này để test các chi nhánh khác
+        int branchId = 1; // Đổi số này để test các chi nhánh khác
 
         if (action == null) {
             action = "list";
