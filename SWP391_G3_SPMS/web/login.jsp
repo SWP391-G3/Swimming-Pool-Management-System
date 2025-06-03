@@ -191,7 +191,7 @@
                 Đăng nhập với Google
             </a>
             <div class="back-to-home-link">
-                <a href="homepage.jsp">Quay lại trang chủ</a>
+                <a href="homepage">Quay lại trang chủ</a>
             </div>
         </div>
     </body>

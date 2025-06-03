@@ -172,7 +172,7 @@
         </div>
     </form>
                 <div class="login-link">
-                    <a href="homepage.jsp">Quay lại trang chủ</a>
+                    <a href="homepage">Quay lại trang chủ</a>
                 </div>
     <div class="login-link">
         Đã có tài khoản? <a href="login.jsp">Đăng nhập</a>

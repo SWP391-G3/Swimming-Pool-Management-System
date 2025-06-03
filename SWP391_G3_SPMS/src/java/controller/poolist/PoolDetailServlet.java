@@ -1,4 +1,4 @@
-package controller.pool;
+package controller.poolist;
 
 import dao.PoolsDAO;
 import jakarta.servlet.ServletException;

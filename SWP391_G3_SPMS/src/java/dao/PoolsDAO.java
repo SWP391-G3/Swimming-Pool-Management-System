@@ -92,8 +92,7 @@ public class PoolsDAO extends DBContext {
         return list;
     }
 
-    
- public int countFilteredPools(String name, String location) {
+    public int countFilteredPools(String name, String location) {
         int count = 0;
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Pools WHERE 1=1");
         if (name != null && !name.isEmpty()) {
@@ -103,12 +102,15 @@ public class PoolsDAO extends DBContext {
             sql.append(" AND pool_address LIKE ?");
         }
         try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
-            int idx = 1;
+            int idx = 0;
+           
             if (name != null && !name.isEmpty()) {
-                ps.setString(idx++, "%" + name + "%");
+                 idx++;
+                ps.setString(idx, "%" + name + "%");
             }
             if (location != null && !location.isEmpty()) {
-                ps.setString(idx++, "%" + location + "%");
+                 idx++;
+                ps.setString(idx, "%" + location + "%");
             }
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -119,4 +121,10 @@ public class PoolsDAO extends DBContext {
         }
         return count;
     }
+    
+    
+//  SELECT * FROM Pools
+//
+//ORDER BY max_slot DESC
+//OFFSET 0 ROWS FETCH NEXT 6 ROWS ONLY;
 }
