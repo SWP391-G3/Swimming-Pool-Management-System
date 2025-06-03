@@ -48,7 +48,6 @@ public class DeviceServlet extends HttpServlet {
         String action = request.getParameter("action");
         DeviceDao deviceDAO = new DeviceDao();
 
-        
         int branchId = 1; // test 
 
         if (action == null) {
@@ -139,7 +138,6 @@ public class DeviceServlet extends HttpServlet {
         DeviceDao deviceDAO = new DeviceDao();
         String action = request.getParameter("action");
 
-        
         int branchId = 1;
 
         if ("add".equals(action)) {
@@ -167,7 +165,18 @@ public class DeviceServlet extends HttpServlet {
                 device.setNotes(notes);
 
                 deviceDAO.addDevice(device);
-                response.sendRedirect("DeviceServlet");
+
+                
+                int count = deviceDAO.countDevicesWithPool(null, null, branchId, poolId);
+                int endPage = count / PAGE_SIZE;
+                if (count % PAGE_SIZE != 0) {
+                    endPage++;
+                }
+
+             
+                response.sendRedirect("DeviceServlet?page=" + endPage);
+
+                
 
             } catch (NumberFormatException e) {
                 request.setAttribute("error", "Số lượng hoặc Pool ID không hợp lệ");

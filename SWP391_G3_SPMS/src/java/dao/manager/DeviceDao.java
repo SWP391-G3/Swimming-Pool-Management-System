@@ -113,10 +113,10 @@ public class DeviceDao extends DBContext {
             if (poolId != null) {
                 ps.setInt(idx++, poolId);
             }
-            ps.setString(idx++, (keyword == null || keyword.isEmpty()) ? null : keyword);
-            ps.setString(idx++, (keyword == null || keyword.isEmpty()) ? null : "%" + keyword + "%");
-            ps.setString(idx++, (status == null || status.isEmpty()) ? null : status);
-            ps.setString(idx++, (status == null || status.isEmpty()) ? null : status);
+            ps.setString(idx++, (keyword == null  || keyword.isEmpty()) ? null : keyword);
+            ps.setString(idx++, (keyword == null  || keyword.isEmpty()) ? null : "%" + keyword + "%");
+            ps.setString(idx++, (status  == null  || status.isEmpty())  ? null : status);
+            ps.setString(idx++, (status  == null  || status.isEmpty())  ? null : status);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 count = rs.getInt(1);

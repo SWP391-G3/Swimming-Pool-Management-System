@@ -15,7 +15,7 @@ public class Branch {
     private int branchId;
     private String branchName;
     private int managerId;
-    private List<Pool> pools; // mỗi chi nhánh có các hồ bơi
+    private List<Pool> pools; 
 
     public Branch() {
     }
