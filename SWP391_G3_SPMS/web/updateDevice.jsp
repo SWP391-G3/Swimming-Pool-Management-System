@@ -16,7 +16,7 @@
         <div class="container"> 
             <h2>--- Cập nhật thiết bị ---</h2>
 
-            <!-- ✅ Hiển thị lỗi -->
+            <!-- hiển thị lỗi -->
             <c:if test="${not empty error}">
                 <div style="color: red; font-weight: bold; margin-bottom: 10px;">
                     ${error}

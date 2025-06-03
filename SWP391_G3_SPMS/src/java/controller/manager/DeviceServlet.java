@@ -48,8 +48,8 @@ public class DeviceServlet extends HttpServlet {
         String action = request.getParameter("action");
         DeviceDao deviceDAO = new DeviceDao();
 
-        // GÁN CỨNG branchId ĐỂ TEST
-        int branchId = 1; // Đổi số này để test các chi nhánh khác
+        
+        int branchId = 1; // test 
 
         if (action == null) {
             action = "list";
@@ -139,7 +139,7 @@ public class DeviceServlet extends HttpServlet {
         DeviceDao deviceDAO = new DeviceDao();
         String action = request.getParameter("action");
 
-        // GÁN CỨNG branchId ĐỂ TEST
+        
         int branchId = 1;
 
         if ("add".equals(action)) {
