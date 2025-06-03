@@ -24,8 +24,8 @@ public class PoolListServlet extends HttpServlet {
 
         int pageSize = 6;
         PoolsDAO dao = new PoolsDAO();
-        int totalPools = dao.countPools();
-        int totalPages = (int) Math.ceil((double) totalPools / pageSize);
+        int totalPools = dao.countFilteredPools(searchName, searchLocation);
+        int totalPages = (int) Math.ceil((double) totalPools / pageSize);   // 25/10 
         if (pageParam != null && !pageParam.isEmpty()) {
             try {
                 currentPage = Integer.parseInt(pageParam);

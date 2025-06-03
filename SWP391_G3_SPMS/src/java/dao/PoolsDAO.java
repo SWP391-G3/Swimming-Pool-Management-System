@@ -92,27 +92,23 @@ public class PoolsDAO extends DBContext {
         return list;
     }
 
-    public int countFilteredPools(String name, String location) {
+    
+ public int countFilteredPools(String name, String location) {
         int count = 0;
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Pools WHERE 1=1");
-
         if (name != null && !name.isEmpty()) {
             sql.append(" AND pool_name LIKE ?");
         }
-
         if (location != null && !location.isEmpty()) {
             sql.append(" AND pool_address LIKE ?");
         }
-
         try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
-            int idx = 0;
-            if (name != null && !name.trim().isEmpty()) {
-                idx++;
-                ps.setString(idx, "%" + name + "%");
+            int idx = 1;
+            if (name != null && !name.isEmpty()) {
+                ps.setString(idx++, "%" + name + "%");
             }
-            if (location != null && !location.trim().isEmpty()) {
-                idx++;
-                ps.setString(idx, "%" + location + "%");
+            if (location != null && !location.isEmpty()) {
+                ps.setString(idx++, "%" + location + "%");
             }
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -123,20 +119,4 @@ public class PoolsDAO extends DBContext {
         }
         return count;
     }
-
-//    public int countPools() {
-//        int count = 0;
-//        String sql = "SELECT COUNT(*) FROM Pools";  
-//
-//        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-//            ResultSet rs = ps.executeQuery();
-//            if (rs.next()) {
-//                count = rs.getInt(1);  
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();  
-//        }
-//
-//        return count;
-//    }
 }
