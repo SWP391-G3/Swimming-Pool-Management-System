@@ -43,6 +43,7 @@
                         </select>
 
                         <button type="submit">Tìm kiếm</button>
+
                     </form>
 
                     <a href="DeviceServlet?action=add" class="btn-add">+ Thêm thiết bị</a>

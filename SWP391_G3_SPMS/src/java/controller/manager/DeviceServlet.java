@@ -39,7 +39,7 @@ public class DeviceServlet extends HttpServlet {
             out.println("</html>");
         }
     }
-    private static final int PAGE_SIZE = 5; // Số thiết bị mỗi trang
+    private static final int PAGE_SIZE = 5; 
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -48,7 +48,7 @@ public class DeviceServlet extends HttpServlet {
         String action = request.getParameter("action");
         DeviceDao deviceDAO = new DeviceDao();
 
-        int branchId = 1; // test 
+        int branchId = 2; // test 
 
         if (action == null) {
             action = "list";
@@ -110,6 +110,8 @@ public class DeviceServlet extends HttpServlet {
                 if (count % PAGE_SIZE != 0) {
                     endPage++;
                 }
+                
+                
                 List<Device> devices = deviceDAO.getDevicesByPageAndPool(keyword, status, page, PAGE_SIZE, branchId, poolId);
 
                 // Danh sách pool để filter
