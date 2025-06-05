@@ -83,6 +83,77 @@ public class BookingDetailDAO extends DBContext {
         return list;
     }
 
+    //Search All Info
+    public List<BookingDetails> searchBookingDetails(
+            int userId,
+            String poolName,
+            String fromDateStr,
+            String status,
+            String sortOrder
+    ) throws SQLException {
+        List<BookingDetails> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+                "SELECT b.booking_id, b.user_id, b.pool_id, p.pool_name, "
+                + "(p.pool_road + ', ' + p.pool_address) AS pool_address_detail, "
+                + "b.booking_date, b.slot_count, ISNULL(pm.amount, 0) AS amount, b.booking_status, "
+                + "f.rating, f.comment "
+                + "FROM Booking b "
+                + "JOIN Pools p ON b.pool_id = p.pool_id "
+                + "LEFT JOIN Payments pm ON b.booking_id = pm.booking_id "
+                + "LEFT JOIN Feedbacks f ON b.user_id = f.user_id AND b.pool_id = f.pool_id "
+                + "WHERE b.user_id = ?"
+        );
+        List<Object> params = new ArrayList<>();
+        params.add(userId);
+
+        if (poolName != null && !poolName.trim().isEmpty()) {
+            sql.append(" AND p.pool_name LIKE ?");
+            params.add("%" + poolName.trim() + "%");
+        }
+        if (fromDateStr != null && !fromDateStr.trim().isEmpty()) {
+            sql.append(" AND b.booking_date = ?");
+            params.add(Date.valueOf(fromDateStr));
+        }
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append(" AND b.booking_status = ?");
+            params.add(status.trim());
+        }
+
+        // Sắp xếp
+        if ("date_asc".equals(sortOrder)) {
+            sql.append(" ORDER BY b.booking_date ASC");
+        } else if ("price_asc".equals(sortOrder)) {
+            sql.append(" ORDER BY amount ASC");
+        } else if ("price_desc".equals(sortOrder)) {
+            sql.append(" ORDER BY amount DESC");
+        } else {
+            sql.append(" ORDER BY b.booking_date DESC");
+        }
+
+        PreparedStatement st = connection.prepareStatement(sql.toString());
+        for (int i = 0; i < params.size(); ++i) {
+            st.setObject(i + 1, params.get(i));
+        }
+        ResultSet rs = st.executeQuery();
+        while (rs.next()) {
+            BookingDetails bd = new BookingDetails(
+                    rs.getInt("booking_id"),
+                    rs.getInt("user_id"),
+                    rs.getInt("pool_id"),
+                    rs.getString("pool_name"),
+                    rs.getString("pool_address_detail"),
+                    rs.getDate("booking_date"),
+                    rs.getInt("slot_count"),
+                    rs.getBigDecimal("amount"),
+                    rs.getString("booking_status"),
+                    rs.getObject("rating") == null ? null : rs.getInt("rating"),
+                    rs.getString("comment")
+            );
+            list.add(bd);
+        }
+        return list;
+    }
+
     // Search bookings by pool name (LIKE)
     public List<BookingDetails> searchBookingDetailByPoolName(int userId, String poolName) throws SQLException {
         List<BookingDetails> list = new ArrayList<>();

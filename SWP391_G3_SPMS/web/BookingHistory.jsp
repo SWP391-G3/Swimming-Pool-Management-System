@@ -62,6 +62,7 @@
                 <h2 class="text-2xl font-bold mb-8 text-blue-700">Lịch sử đặt bể</h2>
                 <form class="w-full mb-8" method="get">
                     <div class="flex flex-col md:flex-row md:items-end gap-4">
+                        <!--Search bằng tên -->
                         <div class="flex-1">
                             <label class="block text-gray-600 mb-1 font-medium"
                                    >Tên hồ bơi</label>
@@ -73,6 +74,17 @@
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 />
                         </div>
+                        <!--Search bằng Status -->
+                        <div class="flex-1 min-w-[110px]">
+                            <label class="block text-gray-600 mb-1 font-medium">Trạng thái</label>
+                            <select name="status" class="w-full border border-gray-300 rounded-md px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                <option value="">Tất cả</option>
+                                <option value="confirmed" <%= "confirmed".equals(request.getParameter("status")) ? "selected" : "" %>>Đã xác nhận</option>
+                                <option value="pending" <%= "pending".equals(request.getParameter("status")) ? "selected" : "" %>>Chờ xác nhận</option>
+                                <option value="cancelled" <%= "cancelled".equals(request.getParameter("status")) ? "selected" : "" %>>Đã hủy</option>
+                            </select>
+                        </div>
+                        <!--Search theo Ngày -->
                         <div class="flex-1 flex gap-2">
                             <div class="flex-1">
                                 <label class="block text-gray-600 mb-1 font-medium"
@@ -85,6 +97,7 @@
                                     />
                             </div>
                         </div>
+                        <!--Sắp xếp -->
                         <div class="flex-1 min-w-[110px]">
                             <label class="block text-gray-600 mb-1 font-medium"
                                    >Sắp xếp</label>
@@ -98,6 +111,7 @@
                                 <option value="price_desc" <%= "price_desc".equals(request.getParameter("sortOrder")) ? "selected" : "" %>>Giá giảm</option>
                             </select>
                         </div>
+                        <!--Gửi tìm kiếm -->
                         <div class="flex-shrink-0 md:ml-2">
                             <button
                                 type="submit"
@@ -108,6 +122,7 @@
                         </div>
                     </div>
                 </form>
+                <!--Danh sách Booking  -->
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>

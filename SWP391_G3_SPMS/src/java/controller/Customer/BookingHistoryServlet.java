@@ -31,28 +31,11 @@ public class BookingHistoryServlet extends HttpServlet {
 
             String poolName = request.getParameter("poolName");
             String fromDateStr = request.getParameter("fromDate");
+            String status = request.getParameter("status");
             String sortOrder = request.getParameter("sortOrder");
 
             BookingDetailDAO dao = new BookingDetailDAO();
-            List<BookingDetails> bookingList = null;
-
-            // Tim kiem theo ten
-            if (poolName != null && !poolName.trim().isEmpty()) {
-                bookingList = dao.searchBookingDetailByPoolName(userId, poolName.trim());
-            } // Tim kiem history trong 1 ngay cu the
-            else if (fromDateStr != null && !fromDateStr.isEmpty()) {
-                Date selectedDate = Date.valueOf(fromDateStr);
-                bookingList = dao.searchBookingDetailByDate(userId, selectedDate, selectedDate);
-            } // Sắp xếp
-            else if ("date_asc".equals(sortOrder)) {
-                bookingList = dao.sortBookingDetailByDateAsc(userId);
-            } else if ("price_asc".equals(sortOrder)) {
-                bookingList = dao.sortBookingDetailByPriceAsc(userId);
-            } else if ("price_desc".equals(sortOrder)) {
-                bookingList = dao.sortBookingDetailByPriceDesc(userId);
-            } else { // Mặc định: mới nhất
-                bookingList = dao.sortBookingDetailByDateDesc(userId);
-            }
+            List<BookingDetails> bookingList = dao.searchBookingDetails(userId,poolName,fromDateStr,status,sortOrder);
 
             request.setAttribute("bookingList", bookingList);
         } catch (Exception e) {
