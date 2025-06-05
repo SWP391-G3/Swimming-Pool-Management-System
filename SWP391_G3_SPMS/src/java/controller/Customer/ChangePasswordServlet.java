@@ -3,6 +3,7 @@ package controller.Customer;
 import dao.UserDAO;
 import model.User;
 import util.PasswordEncryption;
+import util.CheckNewPassword;
 
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -16,14 +17,20 @@ public class ChangePasswordServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Hiển thị trang đổi mật khẩu
         request.getRequestDispatcher("ChangePassword.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int userId = 4; // TODO: lấy từ session thực tế
+        //        HttpSession session = request.getSession();
+        //        User user = (User) session.getAttribute("user");
+        //        if (user == null) {
+        //            response.sendRedirect("login.jsp");
+        //            return;
+        //        }
+
+        int userId = 2;
         UserDAO userDAO = new UserDAO();
         User user = userDAO.getUserByID(userId);
 
@@ -41,11 +48,15 @@ public class ChangePasswordServlet extends HttpServlet {
             message = "Mật khẩu hiện tại không đúng!";
         } else if (!newPassword.equals(confirmPassword)) {
             message = "Mật khẩu mới và xác nhận không khớp!";
-        } else if (newPassword.length() < 6) {
-            message = "Mật khẩu mới phải có ít nhất 6 ký tự!";
         } else {
-            userDAO.updatePassword(user.getUserId(), newPassword);
-            message = "Đổi mật khẩu thành công!";
+            // Kiểm tra quy tắc mật khẩu mới
+            String ruleMsg = CheckNewPassword.validateNewPassword(newPassword, currentPassword);
+            if (ruleMsg != null) {
+                message = ruleMsg;
+            } else {
+                userDAO.updatePassword(user.getUserId(), PasswordEncryption.hashPassword(newPassword)); //Mã hóa trước khi lưu
+                message = "Đổi mật khẩu thành công!";
+            }
         }
 
         request.setAttribute("message", message);

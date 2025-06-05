@@ -25,4 +25,11 @@ public class PasswordEncryption{
     public static boolean checkPassword(String inputPassword, String storedHash) {
         return hashPassword(inputPassword).equals(storedHash);
     }
+    
+//    public static void main(String[] args) {
+//        String password = "manager@123";
+//        String hashedPassword = hashPassword(password);
+//        System.out.println("Password gốc: " + password);
+//        System.out.println("SHA-256 đã mã hóa: " + hashedPassword);
+//    }
 }
