@@ -6,6 +6,13 @@
     List<BookingDetails> bookingList = (List<BookingDetails>) request.getAttribute("bookingList");
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+    
+    Integer currentPage = (Integer) request.getAttribute("currentPage");
+    Integer totalPages = (Integer) request.getAttribute("totalPages");
+    String poolNameParam = request.getAttribute("poolName") != null ? (String) request.getAttribute("poolName") : "";
+    String fromDateParam = request.getAttribute("fromDate") != null ? (String) request.getAttribute("fromDate") : "";
+    String statusParam = request.getAttribute("status") != null ? (String) request.getAttribute("status") : "";
+    String sortOrderParam = request.getAttribute("sortOrder") != null ? (String) request.getAttribute("sortOrder") : "";
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -182,6 +189,25 @@
                             <%}%>
                         </tbody>
                     </table>
+                    <% if (totalPages != null && totalPages > 1) { %>
+                    <div class="flex justify-center items-center mt-8 gap-2">
+                        <% for (int i = 1; i <= totalPages; i++) { %>
+                        <form method="get" style="display:inline;">
+                            <input type="hidden" name="poolName" value="<%= poolNameParam %>"/>
+                            <input type="hidden" name="fromDate" value="<%= fromDateParam %>"/>
+                            <input type="hidden" name="status" value="<%= statusParam %>"/>
+                            <input type="hidden" name="sortOrder" value="<%= sortOrderParam %>"/>
+                            <input type="hidden" name="page" value="<%= i %>"/>
+                            <button
+                                type="submit"
+                                class="px-3 py-1 rounded-md border font-medium
+                                <%= (i == currentPage) ? "bg-blue-600 text-white border-blue-600" : "bg-white text-blue-600 border-gray-300 hover:bg-blue-100" %>">
+                                <%= i %>
+                            </button>
+                        </form>
+                        <% } %>
+                    </div>
+                    <% } %>
                 </div>
             </section>
         </div>

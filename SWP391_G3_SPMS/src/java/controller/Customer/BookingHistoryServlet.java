@@ -34,10 +34,30 @@ public class BookingHistoryServlet extends HttpServlet {
             String status = request.getParameter("status");
             String sortOrder = request.getParameter("sortOrder");
 
+            // Lấy trang hiện tại (nếu không có thì mặc định là 1)
+            int page = 1;
+            String pageStr = request.getParameter("page");
+            if (pageStr != null && !pageStr.isEmpty()) {
+                page = Integer.parseInt(pageStr);
+            }
+            int pageSize = 5;
+
             BookingDetailDAO dao = new BookingDetailDAO();
-            List<BookingDetails> bookingList = dao.searchBookingDetails(userId,poolName,fromDateStr,status,sortOrder);
+            int totalBookings = dao.countBookingDetails(userId, poolName, fromDateStr, status);
+            int totalPages = (int) Math.ceil((double) totalBookings / pageSize);
+
+            List<BookingDetails> bookingList = dao.searchBookingDetails(
+                    userId, poolName, fromDateStr, status, sortOrder, page, pageSize
+            );
 
             request.setAttribute("bookingList", bookingList);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+            // Giữ lại các tham số filter để dùng cho link phân trang
+            request.setAttribute("poolName", poolName);
+            request.setAttribute("fromDate", fromDateStr);
+            request.setAttribute("status", status);
+            request.setAttribute("sortOrder", sortOrder);
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Có lỗi xảy ra khi lấy lịch sử đặt bể!");
