@@ -15,10 +15,19 @@ public class BookingHistoryServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         try {
-            Integer userId = (Integer) request.getSession().getAttribute("userId");
-            if (userId == null) userId = 2; // test cứng, thay bằng lấy từ phiên đăng nhập thực tế
+            // Lấy session hiện có
+            HttpSession session = request.getSession(false);
+            Integer userId = null;
+            if (session != null) {
+                userId = (Integer) session.getAttribute("userId");
+            }
+            if (userId == null) {
+//                response.sendRedirect("login.jsp");
+//                return;
+                userId = 2;
+            }
 
             String poolName = request.getParameter("poolName");
             String fromDateStr = request.getParameter("fromDate");
@@ -27,16 +36,14 @@ public class BookingHistoryServlet extends HttpServlet {
             BookingDetailDAO dao = new BookingDetailDAO();
             List<BookingDetails> bookingList = null;
 
-            // Ưu tiên tìm kiếm theo tên hồ bơi
+            // Tim kiem theo ten
             if (poolName != null && !poolName.trim().isEmpty()) {
                 bookingList = dao.searchBookingDetailByPoolName(userId, poolName.trim());
-            }
-            // Nếu chọn 1 ngày cụ thể, chỉ lấy booking trong ngày đó
+            } // Tim kiem history trong 1 ngay cu the
             else if (fromDateStr != null && !fromDateStr.isEmpty()) {
                 Date selectedDate = Date.valueOf(fromDateStr);
-                bookingList = dao.searchBookingDetailByDate(userId, selectedDate, selectedDate); // truyền fromDate = toDate = ngày cần tìm
-            }
-            // Sắp xếp
+                bookingList = dao.searchBookingDetailByDate(userId, selectedDate, selectedDate);
+            } // Sắp xếp
             else if ("date_asc".equals(sortOrder)) {
                 bookingList = dao.sortBookingDetailByDateAsc(userId);
             } else if ("price_asc".equals(sortOrder)) {

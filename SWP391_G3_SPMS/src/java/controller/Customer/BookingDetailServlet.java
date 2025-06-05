@@ -38,7 +38,7 @@ public class BookingDetailServlet extends HttpServlet {
                 FeedbackDAO feedbackDAO = new FeedbackDAO();
                 List<Feedback> feedbackList = feedbackDAO.getFeedbackByUserId(user.getUserId());
                 for (Feedback fb : feedbackList) {
-                    // Nếu user đã feedback cho đúng pool này
+                    // Nếu user đã feedback cho pool này
                     if (fb.getPoolId() == bookingDetail.getPoolId()) {
                         userFeedback = fb;
                         break;
@@ -60,6 +60,7 @@ public class BookingDetailServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //User user = (User) request.getSession().getAttribute("user");
+        //int userId = user.getUserId();
         
         int userId = 2;
         UserDAO userDAO = new UserDAO();
@@ -101,7 +102,7 @@ public class BookingDetailServlet extends HttpServlet {
                 feedbackDAO.sendFeedback(user, poolId, rating, comment);
                 response.sendRedirect("booking_detail?bookingId=" + bookingId + "&success=1");
             } else {
-                // Không cho feedback lần 2
+                // Thong bao da feedback
                 response.sendRedirect("booking_detail?bookingId=" + bookingId + "&error=1");
             }
         } catch (Exception e) {

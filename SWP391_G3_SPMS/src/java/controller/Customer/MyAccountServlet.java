@@ -20,6 +20,14 @@ public class MyAccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+//        HttpSession session = request.getSession();
+//        User user = (User) session.getAttribute("user");
+//        if (user == null) {
+//            response.sendRedirect("login.jsp");
+//            return;
+//        }
+
         int userId = 2; // Gan tam userId = 2
 
         UserDAO userDAO = new UserDAO();
@@ -32,19 +40,19 @@ public class MyAccountServlet extends HttpServlet {
         List<DiscountDetail> vouchersActive;
         List<DiscountDetail> vouchersUsed;
         try {
-            // Booking gần nhất (BookingDetail)
+            // Recent bookings (BookingDetail)
             List<BookingDetails> allBookings = bookingDetailDAO.sortBookingDetailByDateDesc(userId);
             recentBookings = allBookings.size() > 3 ? allBookings.subList(0, 3) : allBookings;
 
-            // Voucher ĐANG CÓ: status = true
+            // Voucher AVAILABLE: status = true
             List<DiscountDetail> allActive = discountDetailDAO.getDiscountByUserIDAndStatus(userId, true);
             vouchersActive = allActive.size() > 3 ? allActive.subList(0, 3) : allActive;
 
-            // Voucher ĐÃ DÙNG: status = false
+            // Voucher USED: status = false
             List<DiscountDetail> allUsed = discountDetailDAO.getDiscountByUserIDAndStatus(userId, false);
             vouchersUsed = allUsed.size() > 3 ? allUsed.subList(0, 3) : allUsed;
 
-            // Đếm tổng số lượng
+            // Count total quantity
             request.setAttribute("voucherActiveCount", allActive.size());
             request.setAttribute("voucherUsedCount", allUsed.size());
         } catch (Exception e) {

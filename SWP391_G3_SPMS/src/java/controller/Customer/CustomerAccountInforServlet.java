@@ -24,14 +24,22 @@ public class CustomerAccountInforServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int userId = 2; // lấy cố định
+//        User user = (User) session.getAttribute("user");
+//        int userId = user.getId();
+//        if (user == null) {
+//            response.sendRedirect("login.jsp");
+//            return;
+//        }
+//        int userId = user.getId();
+
+        int userId = 2;
         UserDAO userDAO = new UserDAO();
         User userDetails = userDAO.getUserByID(userId);
         if (userDetails != null) {
             request.setAttribute("user", userDetails);
-            request.getRequestDispatcher("customer_account_infor.jsp").forward(request, response);
+            request.getRequestDispatcher("EditAccountInfo.jsp").forward(request, response);
         } else {
-            response.getWriter().println("Not found user in database!");
+            response.getWriter().println("Không tìm thấy người dùng trong cơ sở dữ liệu!");
         }
     }
 
@@ -39,11 +47,15 @@ public class CustomerAccountInforServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         UserDAO userDAO = new UserDAO();
-        
-        //User user = (User) session.getAttribute("user");
-        //int userId = user.getId();
-        
-        int userId = 2; // lấy cố định
+
+//        User user = (User) session.getAttribute("user");
+//        int userId = user.getId();
+//        if (user == null) {
+//            response.sendRedirect("login.jsp");
+//            return;
+//        }
+//        int userId = user.getId();
+        int userId = 2;
 
         // Lấy thông tin từ form
         String fullName = request.getParameter("full_name");
@@ -52,20 +64,61 @@ public class CustomerAccountInforServlet extends HttpServlet {
         String address = request.getParameter("address");
         String dobStr = request.getParameter("dob");
         String gender = request.getParameter("gender");
+
+        StringBuilder error = new StringBuilder();
+
+        // Validate họ tên
+        if (fullName == null || !fullName.matches("^[A-Za-zÀ-ỹĐđ'\\-]+( [A-Za-zÀ-ỹĐđ'\\-]+)*$")) {
+            error.append("Họ và tên không hợp lệ.");
+        }
+
+        // Validate email
+        if (email == null || !email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            error.append("Email không hợp lệ.\n");
+        }
+
+        // Validate số điện thoại
+        if (phone == null || !phone.matches("^(0\\d{8,14}|\\+\\d{8,14})$")) {
+            error.append("Số điện thoại không hợp lệ.\n");
+        }
+
+        // Validate ngày sinh
         Date dob = null;
-        if (dobStr != null && !dobStr.isEmpty()) {
+        if (dobStr == null || dobStr.isEmpty()) {
+            error.append("Ngày sinh không được bỏ trống.\n");
+        } else {
             try {
                 dob = new SimpleDateFormat("yyyy-MM-dd").parse(dobStr);
+                Date today = new Date();
+                if (dob.after(today)) {
+                    error.append("Ngày sinh không được lớn hơn ngày hiện tại.\n");
+                } else {
+                    int yearNow = today.getYear() + 1900;
+                    int yearDob = dob.getYear() + 1900;
+                    int age = yearNow - yearDob;
+                    if (age < 10 || age > 120) {
+                        error.append("Tuổi phải từ 10 đến 120.\n");
+                    }
+                }
             } catch (Exception e) {
-                dob = null;
+                error.append("Ngày sinh không hợp lệ.\n");
             }
+        }
+
+        if (error.length() > 0) {
+            // Có lỗi, trả lại form và thông báo
+            User user = userDAO.getUserByID(userId);
+            request.setAttribute("user", user);
+            request.setAttribute("error", error.toString());
+            request.getRequestDispatcher("EditAccountInfo.jsp").forward(request, response);
+            return;
         }
 
         Part filePart = request.getPart("images");
         String images = null;
         String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
         File uploadDir = new File(uploadPath);
-        
+
         if (!uploadDir.exists()) {
             uploadDir.mkdir();
         }
@@ -94,9 +147,9 @@ public class CustomerAccountInforServlet extends HttpServlet {
 
             request.setAttribute("updateSuccess", "Cập nhật thông tin thành công!");
             request.setAttribute("user", userDAO.getUserByID(userId));
-            request.getRequestDispatcher("customer_account_infor.jsp").forward(request, response);
+            request.getRequestDispatcher("EditAccountInfo.jsp").forward(request, response);
         } else {
-            response.getWriter().println("Not found user in database!");
+            response.getWriter().println("Không tìm thấy người dùng trong cơ sở dữ liệu!");
         }
     }
 }
