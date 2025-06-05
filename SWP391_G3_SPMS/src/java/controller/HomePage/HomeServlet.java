@@ -1,37 +1,36 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
 package controller.HomePage;
 
-import dao.FeedbackDAO;
+import dao.FeedbackHomepageDAO;
 import dao.PoolDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
-import model.Feedback;
+import model.FeedbackHomepage;
 import model.Pool;
 
-public class HomeServlet extends HttpServlet { 
+@WebServlet(name = "HomeServlet", urlPatterns = {"/home"})
+public class HomeServlet extends HttpServlet {
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         PoolDAO dao = new PoolDAO();
-        FeedbackDAO fdao = new FeedbackDAO();
+        FeedbackHomepageDAO fdao = new FeedbackHomepageDAO();
         List<Pool> list = dao.getTop3();
         List<Pool> list2 = dao.getPoolImage();
-        List<Feedback> listFeedback = fdao.getFeedback();
+        List<FeedbackHomepage> listFeedback = fdao.getFeedback();
         request.setAttribute("listPool", list);
         request.setAttribute("listPool2", list2);
         request.setAttribute("listPool3", listFeedback);
         request.getRequestDispatcher("HomePage.jsp").forward(request, response);
-    } 
-    
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        doGet(request, response);
     }
 
 }
