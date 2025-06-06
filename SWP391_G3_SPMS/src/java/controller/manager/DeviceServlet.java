@@ -39,7 +39,7 @@ public class DeviceServlet extends HttpServlet {
             out.println("</html>");
         }
     }
-    private static final int PAGE_SIZE = 5; 
+    private static final int PAGE_SIZE = 5;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -48,7 +48,7 @@ public class DeviceServlet extends HttpServlet {
         String action = request.getParameter("action");
         DeviceDao deviceDAO = new DeviceDao();
 
-        int branchId = 2; // test 
+        int branchId = 1; // test 
 
         if (action == null) {
             action = "list";
@@ -110,11 +110,17 @@ public class DeviceServlet extends HttpServlet {
                 if (count % PAGE_SIZE != 0) {
                     endPage++;
                 }
-                
-                
+
+                if (page > endPage) {
+                    page = endPage;
+                }
+
+                if (page < 1) {
+                    page = 1;
+                }
+
                 List<Device> devices = deviceDAO.getDevicesByPageAndPool(keyword, status, page, PAGE_SIZE, branchId, poolId);
 
-                // Danh sách pool để filter
                 List<Pool> poolList = deviceDAO.getPoolsByBranchId(branchId);
 
                 request.setAttribute("devices", devices);
@@ -130,7 +136,10 @@ public class DeviceServlet extends HttpServlet {
     }
 
     private boolean isValidDeviceName(String name) {
-        return name != null && name.matches("[a-zA-Z0-9\\sÀ-ỹ]+");
+        if (name == null || name.trim().isEmpty()) {
+            return false;
+        }
+        return name.matches("[a-zA-Z0-9\\sÀ-ỹ]+");
     }
 
     @Override
@@ -168,17 +177,13 @@ public class DeviceServlet extends HttpServlet {
 
                 deviceDAO.addDevice(device);
 
-                
                 int count = deviceDAO.countDevicesWithPool(null, null, branchId, poolId);
                 int endPage = count / PAGE_SIZE;
                 if (count % PAGE_SIZE != 0) {
                     endPage++;
                 }
 
-             
                 response.sendRedirect("DeviceServlet?page=" + endPage);
-
-                
 
             } catch (NumberFormatException e) {
                 request.setAttribute("error", "Số lượng hoặc Pool ID không hợp lệ");
