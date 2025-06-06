@@ -68,7 +68,7 @@ public class CustomerAccountInforServlet extends HttpServlet {
         StringBuilder error = new StringBuilder();
 
         // Validate họ tên
-        if (fullName == null || !fullName.matches("^[A-Za-zÀ-ỹĐđ'\\-]+( [A-Za-zÀ-ỹĐđ'\\-]+)*$")) {
+        if (fullName == null || !fullName.matches("^(?=.{4,50}$)[A-Za-zÀ-ỹĐđ'\\-]+( [A-Za-zÀ-ỹĐđ'\\-]+)*$")) {
             error.append("Họ và tên không hợp lệ.");
         }
 
@@ -78,7 +78,7 @@ public class CustomerAccountInforServlet extends HttpServlet {
         }
 
         // Validate số điện thoại
-        if (phone == null || !phone.matches("^(0\\d{8,14}|\\+\\d{8,14})$")) {
+        if (phone == null || !phone.matches("^0\\d{9}$")) {
             error.append("Số điện thoại không hợp lệ.\n");
         }
 

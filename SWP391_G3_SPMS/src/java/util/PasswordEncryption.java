@@ -5,7 +5,6 @@
 package util;
 
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 public class PasswordEncryption{
     public static String hashPassword(String password) {
@@ -27,9 +26,13 @@ public class PasswordEncryption{
     }
     
 //    public static void main(String[] args) {
-//        String password = "manager@123";
+//        String password = "ccea582e8616f7fd66f21062a2ca3185d0422ecb411e2a85cdd361c3c8cf7719";
 //        String hashedPassword = hashPassword(password);
 //        System.out.println("Password gốc: " + password);
 //        System.out.println("SHA-256 đã mã hóa: " + hashedPassword);
-//    }
+//    }//manager@123
+//    //324d52ea400e79ae65163f0b369e295c4993d26204c66317ee8e53f31ae003e3
+//    //K1i2e3n4@
+//    //ccea582e8616f7fd66f21062a2ca3185d0422ecb411e2a85cdd361c3c8cf7719
+//    //4eb2ecb13cc2c415de94598b2f1a9f834bf010dc17ccd199fde9ef39d5076fe1
 }

@@ -33,5 +33,26 @@ public class CheckNewPassword {
         }
         return null; // hợp lệ
     }
-
+    
+    //Ham kiem tra Register Password
+    public static String validateRegisterPassword(String newPassword) {
+        if (newPassword == null || newPassword.isEmpty()) {
+            return "Mật khẩu mới không được để trống!";
+        }
+        if (newPassword.length() < 8) {
+            return "Mật khẩu mới phải có ít nhất 8 ký tự!";
+        }
+        if (newPassword.matches(".*\\s+.*")) {
+            return "Mật khẩu mới không được chứa khoảng trắng!";
+        }
+        int groups = 0;
+        if (newPassword.matches(".*[a-z].*")) groups++;           // chữ thường
+        if (newPassword.matches(".*[A-Z].*")) groups++;           // chữ hoa
+        if (newPassword.matches(".*\\d.*")) groups++;             // số
+        if (newPassword.matches(".*[^a-zA-Z0-9].*")) groups++;    // ký tự đặc biệt
+        if (groups < 3) {
+            return "Mật khẩu mới phải có ít nhất 3 trong 4 nhóm: chữ thường, chữ hoa, số, ký tự đặc biệt!";
+        }
+        return null; // hợp lệ
+    }
 }

@@ -24,7 +24,7 @@
         <div class="container mx-auto px-4 py-8">
 
             <!-- Back homepage -->
-            <a href="index.jsp"
+            <a href="home"
                class="absolute top-4 left-4 z-50 bg-white/70 px-4 py-2 rounded-full shadow flex items-center gap-2 hover:bg-blue-100 transition">
                 <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>

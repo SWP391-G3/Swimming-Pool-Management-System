@@ -54,7 +54,7 @@ public class ChangePasswordServlet extends HttpServlet {
             if (ruleMsg != null) {
                 message = ruleMsg;
             } else {
-                userDAO.updatePassword(user.getUserId(), PasswordEncryption.hashPassword(newPassword)); //Mã hóa trước khi lưu
+                userDAO.updatePassword(user.getUserId(), newPassword); //Mã hóa trước khi lưu
                 message = "Đổi mật khẩu thành công!";
             }
         }
