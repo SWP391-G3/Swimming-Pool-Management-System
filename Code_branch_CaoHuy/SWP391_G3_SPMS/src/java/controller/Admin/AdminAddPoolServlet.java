@@ -90,8 +90,14 @@ public class AdminAddPoolServlet extends HttpServlet {
         LocalTime open, close;
         boolean pool_status;
         int max_slot;
-        String error ;
+        String error;
         try {
+            if (!pool_name.matches("^[\\p{L}0-9 ]+$")) {
+                error = "Tên bể bơi không được chứa ký tự đặc biệt!";
+                request.setAttribute("error", error);
+                request.getRequestDispatcher("AdminAddPool.jsp").forward(request, response);
+                return;
+            }
             open = LocalTime.parse(open_time);
             close = LocalTime.parse(close_time);
             if (open.compareTo(close) >= 0) {
@@ -102,10 +108,13 @@ public class AdminAddPoolServlet extends HttpServlet {
             }
             max_slot = Integer.parseInt(max_slot_raw);
             if (max_slot <= 0) {
-                max_slot = 50;
+                error = "Số lượng sức chứa của bể bơi không được nhỏ hơn 0!";
+                request.setAttribute("error", error);
+                request.getRequestDispatcher("AdminAddPool.jsp").forward(request, response);
+                return;
             }
             pool_status = Boolean.parseBoolean(status);
-            pool = new Pool(0, pool_name, pool_road, pool_addresss, max_slot, open, close, pool_status, pool_image ,currentDate, null,pool_description);
+            pool = new Pool(0, pool_name, pool_road, pool_addresss, max_slot, open, close, pool_status, pool_image, currentDate, null, pool_description);
             dao.insertPool(pool);
             response.sendRedirect("adminPoolManagement");
         } catch (IOException e) {

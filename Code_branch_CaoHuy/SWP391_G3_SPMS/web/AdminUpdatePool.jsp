@@ -32,7 +32,11 @@
                             <i class="bi bi-person-circle fs-3 text-dark"></i>
                         </a>
                     </div>
-                    <% 
+                    <%  
+                        String error = (String) request.getAttribute("error");
+                        if(error == null){
+                            error = "";
+                        }
                         Pool p = (Pool) request.getAttribute("Pool");
                         if(p != null) {
                     %>
@@ -93,14 +97,7 @@
                         </div>
                         <% 
                             }
-                             String error = (String) request.getAttribute("error");
-                                 if(error == null){
-                                    error = "";
-                                   }
                         %>
-                        <div class="col-md-6">
-                            <div class="text-danger"><%= error %></div>
-                        </div>
                         <div class="col-md-12">
                             <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i> Cập nhật</button>
                             <a href="adminPoolManagement" class="btn btn-secondary"><i class="bi bi-arrow-left-circle"></i> Quay lại</a>
@@ -109,7 +106,37 @@
                 </main>
             </div>
         </div>
-                        
+
+        <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="errorModalLabel">Lỗi</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="errorMessage"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Check for error on page load and show modal if error exists
+            window.onload = function () {
+            <% if (error != null && !error.isEmpty()) { %>
+                document.getElementById('errorMessage').textContent = "<%= error %>";
+                var myModal = new bootstrap.Modal(document.getElementById('errorModal'));
+                myModal.show();
+            <% } %>
+            };
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

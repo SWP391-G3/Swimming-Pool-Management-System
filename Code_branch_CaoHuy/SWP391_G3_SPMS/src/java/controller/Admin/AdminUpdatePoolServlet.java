@@ -108,8 +108,20 @@ public class AdminUpdatePoolServlet extends HttpServlet {
             pool_id = Integer.parseInt(id);
             pool_status = Boolean.parseBoolean(status);
             max_slot = Integer.parseInt(slot);
+            if (!pool_name.matches("^[\\p{L}0-9 ]+$")) {
+                error = "Tên bể bơi không được chứa ký tự đặc biệt!";
+                pool = dao.getPoolByID(pool_id);
+                request.setAttribute("error", error); 
+                request.setAttribute("Pool", pool);
+                request.getRequestDispatcher("AdminUpdatePool.jsp").forward(request, response);
+                return;
+            }
             if (max_slot <= 0) {
-                max_slot = 50;
+                error = "Số lượng sức chứa của bể bơi không được nhỏ hơn 0!";
+                pool = dao.getPoolByID(pool_id);
+                request.setAttribute("error", error);
+                request.setAttribute("Pool", pool);
+                request.getRequestDispatcher("AdminUpdatePool.jsp").forward(request, response);
             }
             open_time = LocalTime.parse(open);
             close_time = LocalTime.parse(close);
@@ -121,7 +133,7 @@ public class AdminUpdatePoolServlet extends HttpServlet {
                 request.getRequestDispatcher("AdminUpdatePool.jsp").forward(request, response);
                 return;
             }
-            pool = new Pool(pool_id, pool_name, pool_road, pool_address, max_slot, open_time, close_time, pool_status, pool_image, null, updateDate,pool_desctiprion);
+            pool = new Pool(pool_id, pool_name, pool_road, pool_address, max_slot, open_time, close_time, pool_status, pool_image, null, updateDate, pool_desctiprion);
             dao.updatePool(pool);
             String success = "Cập nhật bể bơi thành công!";
             request.setAttribute("success", success);
