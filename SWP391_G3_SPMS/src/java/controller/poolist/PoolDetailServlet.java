@@ -9,6 +9,7 @@ import model.Pools;
 
 @WebServlet("/pool-detail")
 public class PoolDetailServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -22,7 +23,7 @@ public class PoolDetailServlet extends HttpServlet {
             PoolsDAO dao = new PoolsDAO();
             Pools pool = dao.getPoolById(poolId);
             if (pool == null) {
-                // Không tìm thấy bể bơi, quay lại homepage
+
                 response.sendRedirect("homepage");
                 return;
             }

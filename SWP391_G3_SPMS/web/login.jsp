@@ -163,11 +163,11 @@
 
                 <!-- Username Input -->
                 <label for="usernameInput" class="form-label">Tên đăng nhập</label>
-                <input type="text" id="usernameInput" name="username" class="form-control" placeholder="Nhập tên đăng nhập" required autofocus>
+                <input type="text" id="usernameInput" name="username" class="form-control" placeholder="Nhập tên đăng nhập" >
 
                 <!-- Password Input -->
                 <label for="passwordInput" class="form-label" style="margin-top:15px;">Mật khẩu</label>
-                <input type="password" id="passwordInput" name="password" class="form-control" placeholder="Nhập mật khẩu" required>
+                <input type="password" id="passwordInput" name="password" class="form-control" placeholder="Nhập mật khẩu" >
 
                 <button type="submit" class="btn btn-primary">Đăng nhập</button>
             </form>
@@ -191,7 +191,7 @@
                 Đăng nhập với Google
             </a>
             <div class="back-to-home-link">
-                <a href="homepage">Quay lại trang chủ</a>
+                <a href="landingpage.jsp">Quay lại trang chủ</a>
             </div>
         </div>
     </body>

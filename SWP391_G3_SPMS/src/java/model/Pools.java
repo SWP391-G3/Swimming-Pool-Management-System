@@ -4,8 +4,10 @@ import java.sql.Timestamp;
 import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.LocalDate;
 
 public class Pools {
+
     private int pool_id;
     private String pool_name;
     private String pool_road;
@@ -17,15 +19,19 @@ public class Pools {
 
     private boolean pool_status;
     private String pool_image;
-    private LocalDateTime created_at;
-    private LocalDateTime updated_at;
+    private LocalDate created_at;
+    private LocalDate updated_at;
+    
+    
+    
+    
 
     public Pools() {
     }
 
-    public Pools(int pool_id, String pool_name, String pool_description, String pool_road, String pool_address, int max_slot, 
-                 LocalTime open_time, LocalTime close_time, boolean pool_status, String pool_image, 
-                 LocalDateTime created_at, LocalDateTime updated_at) {
+    public Pools(int pool_id, String pool_name, String pool_description, String pool_road, String pool_address, int max_slot,
+            LocalTime open_time, LocalTime close_time, boolean pool_status, String pool_image,
+            LocalDate created_at, LocalDate updated_at) {
         this.pool_id = pool_id;
         this.pool_name = pool_name;
         this.pool_description = pool_description;
@@ -39,6 +45,20 @@ public class Pools {
         this.created_at = created_at;
         this.updated_at = updated_at;
     }
+    public Pools(int pool_id, String pool_name, String pool_road, String pool_address, int max_slot, LocalTime open_time, LocalTime close_time, boolean pool_status, String pool_image, LocalDate created_at, LocalDate updated_at, String pool_description) {
+        this.pool_id = pool_id;
+        this.pool_name = pool_name;
+        this.pool_road = pool_road;
+        this.pool_address = pool_address;
+        this.max_slot = max_slot;
+        this.open_time = open_time;
+        this.close_time = close_time;
+        this.pool_status = pool_status;
+        this.pool_image = pool_image;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
+        this.pool_description = pool_description;
+    }
 
     public int getPool_id() {
         return pool_id;
@@ -47,14 +67,15 @@ public class Pools {
     public void setPool_id(int pool_id) {
         this.pool_id = pool_id;
     }
- public String getPool_name() {
+
+    public String getPool_name() {
         return pool_name;
     }
 
     public void setPool_name(String pool_name) {
         this.pool_name = pool_name;
     }
-    
+
     public String getPool_description() {
         return pool_description;
     }
@@ -119,39 +140,20 @@ public class Pools {
         this.pool_image = pool_image;
     }
 
-    public LocalDateTime getCreated_at() {
+    public LocalDate getCreated_at() {
         return created_at;
     }
 
-    public void setCreated_at(LocalDateTime created_at) {
+    public void setCreated_at(LocalDate created_at) {
         this.created_at = created_at;
     }
 
-    public LocalDateTime getUpdated_at() {
+    public LocalDate getUpdated_at() {
         return updated_at;
     }
 
-    public void setUpdated_at(LocalDateTime updated_at) {
+    public void setUpdated_at(LocalDate updated_at) {
         this.updated_at = updated_at;
     }
 
-    // Chuyển đổi LocalTime sang java.sql.Time
-//    public Time convertLocalTimeToSQLTime(LocalTime localTime) {
-//        return (localTime != null) ? Time.valueOf(localTime) : null;
-//    }
-//
-//    // Chuyển đổi java.sql.Time sang LocalTime
-//    public LocalTime convertSQLTimeToLocalTime(Time time) {
-//        return (time != null) ? time.toLocalTime() : null;
-//    }
-//
-//    // Chuyển đổi LocalDateTime sang java.sql.Timestamp
-//    public Timestamp convertLocalDateTimeToSQLTimestamp(LocalDateTime localDateTime) {
-//        return (localDateTime != null) ? Timestamp.valueOf(localDateTime) : null;
-//    }
-//
-//    // Chuyển đổi java.sql.Timestamp sang LocalDateTime
-//    public LocalDateTime convertSQLTimestampToLocalDateTime(Timestamp timestamp) {
-//        return (timestamp != null) ? timestamp.toLocalDateTime() : null;
-//    }
 }

@@ -29,6 +29,6 @@
     </servlet-mapping>
     <!-- Welcome file -->
     <welcome-file-list>
-        <welcome-file>homepage</welcome-file>
+        <welcome-file>landingpage.jsp</welcome-file>
     </welcome-file-list>
 </web-app>

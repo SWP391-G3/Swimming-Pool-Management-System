@@ -18,33 +18,50 @@ public class PoolListServlet extends HttpServlet {
             throws ServletException, IOException {
         String searchName = request.getParameter("searchName");
         String searchLocation = request.getParameter("searchLocation");
-        String sortBy = request.getParameter("sortBy");
+        String capacity = request.getParameter("capacity");
+        String openTime = request.getParameter("openTime");
+        String closeTime = request.getParameter("closeTime");
         String pageParam = request.getParameter("page");
         int currentPage = 1;
-
         int pageSize = 6;
+
+        // Nếu searchLocation là "All", không lọc theo vị trí
+        if ("All".equals(searchLocation)) {
+            searchLocation = null; // Đặt searchLocation thành null để không lọc theo vị trí
+        }
+
         PoolsDAO dao = new PoolsDAO();
-        int totalPools = dao.countFilteredPools(searchName, searchLocation);
-        int totalPages = (int) Math.ceil((double) totalPools / pageSize);   // 25/10 
+        
+        // Tính toán tổng số hồ bơi sau khi lọc
+        int totalPools = dao.countFilteredPools(searchName, searchLocation, capacity, openTime, closeTime);
+        int totalPages = (int) Math.ceil((double) totalPools / pageSize);
+
         if (pageParam != null && !pageParam.isEmpty()) {
             try {
                 currentPage = Integer.parseInt(pageParam);
             } catch (NumberFormatException e) {
                 currentPage = 1;
             }
-            if (currentPage > totalPages) {
-                currentPage = totalPages; 
+            if (currentPage > totalPages && totalPages > 0) {
+                currentPage = totalPages;
+            }
+            if (currentPage < 1) {
+                currentPage = 1;
             }
         }
 
-        List<Pools> pools = dao.getPools(searchName, searchLocation, sortBy, currentPage, pageSize);
+        // Lấy danh sách hồ bơi dựa trên các tham số đã lọc
+        List<Pools> pools = dao.getPools(searchName, searchLocation, capacity, openTime, closeTime, currentPage, pageSize);
 
+        // Gửi dữ liệu vào request để hiển thị
         request.setAttribute("pools", pools);
-
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
+        
+        // Giữ lại param cho form/filter và phân trang
+        request.setAttribute("param", request.getParameterMap());
 
-        request.getRequestDispatcher("homepage.jsp").forward(request, response);
+        request.getRequestDispatcher("viewpoolList.jsp").forward(request, response);
     }
 
 }

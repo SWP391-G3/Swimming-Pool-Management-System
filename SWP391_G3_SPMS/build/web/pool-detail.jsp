@@ -32,7 +32,7 @@
             }
             .pool-image {
                 width: 100%;
-                max-width: 355px;
+                max-width: 300px;
                 height: auto;
                 display: block;
                 margin: 0 auto 28px auto;
@@ -40,6 +40,7 @@
                 box-shadow: 0 3px 15px rgba(25, 118, 210, 0.12), 0 1px 3px rgba(0,0,0,0.06);
                 border: 2px solid #e3f2fd;
                 transition: transform 0.2s;
+                object-fit: contain
             }
             .pool-image:hover {
                 transform: scale(1.027);
@@ -150,18 +151,8 @@
                     <span class="info-value">${pool.close_time}</span>
                 </div>
                 <div class="info-row"><span class="info-label">Description:</span> <span class="info-value">${pool.pool_description}</span></div>
-                <div class="info-row">
-                    <span class="info-label">Trạng thái:</span>
-                    <c:choose>
-                        <c:when test="${pool.pool_status}">
-                            <span class="status-badge">Đang hoạt động</span>
-                        </c:when>
-                        <c:otherwise>
-                            <span class="status-badge closed">Hủy hoạt động</span>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
-                <a href="homepage.jsp" class="back-link">Quay lại trang chủ</a>
+             
+                <a href="homepage" class="back-link">Quay lại trang chủ</a>
             </c:if>
             <c:if test="${empty pool}">
                 <div class="notfound">Không tìm thấy </div>

@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 import model.User;
 import utils.HashUtils;
+import utils.CheckNewPassword;
 
 /**
  *
@@ -90,51 +91,52 @@ public class RegisterServlet extends HttpServlet {
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
 
-        String address = request.getParameter("address");
-
 //        Giữ lại giá trị đã nhập khi lỗi
         request.setAttribute("enteredUsername", username);
         request.setAttribute("enteredFullName", fullName);
         request.setAttribute("enteredEmail", email);
         request.setAttribute("enteredPhone", phone);
-        request.setAttribute("enteredAddress", address);
 
         if (username == null || password == null || confirmPassword == null
                 || fullName == null || email == null || phone == null
-                || address == null
                 || username.trim().isEmpty() || password.trim().isEmpty() || confirmPassword.trim().isEmpty()
-                || fullName.trim().isEmpty() || email.trim().isEmpty() || phone.trim().isEmpty()
-                || address.trim().isEmpty()) {
-            request.setAttribute("error", "Tất cả các trường đều là bắt buộc.");
+                || fullName.trim().isEmpty() || email.trim().isEmpty() || phone.trim().isEmpty()) {
+            request.setAttribute("error", "Tất cả các trường đều phải bắt buộc nhập");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
+        if (!fullName.matches("^(?=.{4,50}$)[A-Za-zÀ-ỹĐđ'\\-]+( [A-Za-zÀ-ỹĐđ'\\-]+)*$")) {
+            request.setAttribute("error", "Họ tên phải dài từ 4 đến 50 ký tự, chỉ bao gồm chữ cái và 1 khoảng trắng (không chứa số hoặc ký tự đặc biệt)");
 
-        if (!username.matches("^[A-Za-z0-9]{4,32}$")) {
-            request.setAttribute("error", "Tên người dùng phải dài từ 4-32 ký tự, chỉ bao gồm chữ cái, số");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
-
-        if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
-            request.setAttribute("error", "Email không đúng định dạng ");
+        if (!email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
+            request.setAttribute("error", "Email không đúng định dạng.Vui lòng thử lại");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
-
         if (!phone.matches("^0\\d{9}$")) {
             request.setAttribute("error", "Số điện thoại phải đúng format bắt đầu phải là số 0 và đủ 10 số");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
-
-        if (password.length() < 9) {
-            request.setAttribute("error", "Mật khẩu phải đủ 9 kí tự");
+        if (!username.matches("^[A-Za-z0-9]{4,50}$")) {
+            request.setAttribute("error", "Tên đăng nhập phải dài từ 4-50 ký tự, chỉ bao gồm chữ cái, số,không được chưa dấu cách");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
-        if (!password.equals(confirmPassword)) {
-            request.setAttribute("error", "Mật khẩu nhập lại không hợp lệ");
+
+        //Kiem tra quy tac dat mat khau
+        String ruleMsg = CheckNewPassword.validateRegisterPassword(password);
+        if (ruleMsg != null) {
+            request.setAttribute("error", ruleMsg);
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
+        }
+
+        if (!confirmPassword.equals(password)) {
+            request.setAttribute("error", "Mật khẩu nhập lại không khớp!");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
@@ -156,7 +158,7 @@ public class RegisterServlet extends HttpServlet {
 
         // 9. Tạo User object, role_id = 4 (customer), status = true, images = null
         User user = new User(
-                0, username, hashedPassword, fullName, email, phone, address,
+                0, username, hashedPassword, fullName, email, phone, null,
                 4, true, null, null, null,
                 java.time.LocalDate.now(), null
         );
@@ -164,7 +166,7 @@ public class RegisterServlet extends HttpServlet {
         // 10. Lưu vào DB
         dao.insertUser(user);
 
-        request.setAttribute("mess", "Đăng kí thành công");
+        request.setAttribute("mess", "Đăng kí thành công.Bạn có thể đăng nhập ngay");
         request.getRequestDispatcher("register.jsp").forward(request, response);
     }
 

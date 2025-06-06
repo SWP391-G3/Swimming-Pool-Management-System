@@ -30,6 +30,11 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        if (username.trim().isEmpty() || password.trim().isEmpty()) {
+            request.setAttribute("error", "Tên đăng nhập hoặc mật khẩu không được bỏ trống");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
+        }
 
         UserDAO dao = new UserDAO();
         User user = dao.getUserByUsername(username); // Lấy user theo username
@@ -57,20 +62,22 @@ public class LoginServlet extends HttpServlet {
                         break;
                     case 4:
                         response.sendRedirect("homepage.jsp");
+                         
                         break;
                     default:
                         response.sendRedirect("index.jsp");
                         break;
                 }
             } else {
-                // Sai password
+                // Sai password   
                 request.setAttribute("error", "Sai tên đăng nhập hoặc mật khẩu");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
         } else {
-            // Không tồn tại user
+            // Không tồn tại user  
             request.setAttribute("error", "Sai tên đăng nhập hoặc mật khẩu");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }
+
 }
