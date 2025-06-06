@@ -1,0 +1,116 @@
+.sidebar {
+    height: 100vh;
+    background-color: #0f172a;
+    color: white;
+    padding: 1rem 0;
+    position: fixed;
+    width: 250px;
+}
+
+.sidebar h4 {
+    color: #38bdf8;
+}
+
+.sidebar a {
+    display: block;
+    padding: 10px 20px;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.sidebar a:hover, .sidebar a:focus {
+    background-color: #1e293b;
+    color: #38bdf8;
+    border-left: 4px solid #38bdf8;
+}
+
+.sidebar a i {
+    margin-right: 10px;
+}
+
+.header-bar {
+    background: linear-gradient(90deg, #e3f2fd, #ffffff);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.header-bar:hover {
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+.profile-icon i {
+    transition: transform 0.2s ease;
+}
+
+.profile-icon:hover i {
+    transform: scale(1.2);
+    color: #0d6efd;
+}
+
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.pagination a {
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.pagination a.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination a.btn-secondary {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.pagination a.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.pagination a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+    max-width: 100%;
+    overflow-x: auto; /* Tránh tràn */
+    padding: 10px 0;
+}
+.pagination a {
+    padding: 6px 12px;
+    min-width: 40px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: 0.3s;
+}
+.pagination-container {
+    margin-top: 0;
+    padding-bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+

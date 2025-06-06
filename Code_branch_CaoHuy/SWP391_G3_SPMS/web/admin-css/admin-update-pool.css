@@ -1,0 +1,179 @@
+/* General form styling */
+form {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* Styling for form labels */
+.form-label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Styling for form inputs and selects */
+.form-control, .form-select {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 12px 15px;
+    font-size: 14px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #f9f9f9;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 6px rgba(52, 152, 219, 0.3);
+    background-color: #ffffff;
+    outline: none;
+}
+
+/* Placeholder styling */
+.form-control::placeholder {
+    color: #95a5a6;
+    font-style: italic;
+}
+
+/* Styling for buttons */
+.btn-success, .btn-secondary {
+    padding: 12px 25px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-transform: uppercase;
+}
+
+.btn-success {
+    background-color: #2ecc71;
+    border: none;
+    color: #ffffff;
+}
+
+.btn-success:hover {
+    background-color: #27ae60;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: #7f8c8d;
+    border: none;
+    color: #ffffff;
+}
+
+.btn-secondary:hover {
+    background-color: #6c757d;
+    transform: translateY(-2px);
+}
+
+/* Icon spacing in buttons */
+.btn i {
+    margin-right: 8px;
+}
+
+/* Error message styling */
+.text-danger {
+    margin-top: 15px;
+    font-size: 14px;
+    padding: 12px;
+    border-radius: 6px;
+    color: #c62828;
+}
+
+/* Spacing for form rows */
+.row.g-3 {
+    margin-bottom: 20px;
+}
+
+/* Adjust main content padding */
+.main-content {
+    padding: 25px;
+}
+
+/* Sidebar hover effect */
+.sidebar a:hover {
+    background-color: #34495e;
+    color: #ffffff;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+/* Modal styling */
+.modal-backdrop.show {
+    opacity: 0.6;
+}
+
+/* Tổng thể modal */
+#errorModal .modal-dialog {
+    max-width: 400px;
+}
+
+#errorModal .modal-content {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    border: none;
+}
+
+/* Header với icon */
+#errorModal .modal-header {
+    background-color: #fef2f2;
+    border-bottom: none;
+    justify-content: center;
+    padding: 30px 20px 10px;
+}
+
+#errorModal .modal-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #d32f2f;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.error-icon {
+    width: 28px;
+    height: 28px;
+    fill: #d32f2f;
+}
+
+/* Nội dung lỗi */
+#errorModal .modal-body {
+    text-align: center;
+    padding: 10px 24px 20px;
+    font-size: 16px;
+    color: #5c1f1f;
+    font-weight: 500;
+}
+
+/* Footer với nút */
+#errorModal .modal-footer {
+    border-top: none;
+    justify-content: center;
+    padding-bottom: 24px;
+}
+
+#errorModal .btn-secondary {
+    background-color: #d32f2f;
+    border: none;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 50px;
+    transition: 0.3s ease;
+}
+
+#errorModal .btn-secondary:hover {
+    background-color: #b71c1c;
+}
+
+#errorModal .btn-close {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    filter: invert(37%) sepia(92%) saturate(2957%) hue-rotate(339deg) brightness(95%) contrast(95%);
+}
