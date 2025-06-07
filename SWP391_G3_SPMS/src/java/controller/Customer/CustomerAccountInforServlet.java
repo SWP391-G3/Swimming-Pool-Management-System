@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import util.CheckCustomerInfor;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -67,42 +68,29 @@ public class CustomerAccountInforServlet extends HttpServlet {
 
         StringBuilder error = new StringBuilder();
 
-        // Validate họ tên
-        if (fullName == null || !fullName.matches("^(?=.{4,50}$)[A-Za-zÀ-ỹĐđ'\\-]+( [A-Za-zÀ-ỹĐđ'\\-]+)*$")) {
-            error.append("Họ và tên không hợp lệ.");
+        // Validate họ tên:
+        String fullNameError = CheckCustomerInfor.validateFullName(fullName);
+        if (!fullNameError.isEmpty()) {
+            error.append(fullNameError);
         }
 
         // Validate email
-        if (email == null || !email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
-            error.append("Email không hợp lệ.\n");
+        String emailError = CheckCustomerInfor.validateEmail(email);
+        if (!emailError.isEmpty()) {
+            error.append(emailError);
         }
 
         // Validate số điện thoại
-        if (phone == null || !phone.matches("^0\\d{9}$")) {
-            error.append("Số điện thoại không hợp lệ.\n");
+        String phoneError = CheckCustomerInfor.validatePhone(phone);
+        if (!phoneError.isEmpty()) {
+            error.append(phoneError);
         }
 
         // Validate ngày sinh
-        Date dob = null;
-        if (dobStr == null || dobStr.isEmpty()) {
-            error.append("Ngày sinh không được bỏ trống.\n");
-        } else {
-            try {
-                dob = new SimpleDateFormat("yyyy-MM-dd").parse(dobStr);
-                Date today = new Date();
-                if (dob.after(today)) {
-                    error.append("Ngày sinh không được lớn hơn ngày hiện tại.\n");
-                } else {
-                    int yearNow = today.getYear() + 1900;
-                    int yearDob = dob.getYear() + 1900;
-                    int age = yearNow - yearDob;
-                    if (age < 10 || age > 120) {
-                        error.append("Tuổi phải từ 10 đến 120.\n");
-                    }
-                }
-            } catch (Exception e) {
-                error.append("Ngày sinh không hợp lệ.\n");
-            }
+        Date[] dobHolder = new Date[1];
+        String dobError = CheckCustomerInfor.validateDob(dobStr, dobHolder);
+        if (!dobError.isEmpty()) {
+            error.append(dobError);
         }
 
         if (error.length() > 0) {
@@ -113,6 +101,8 @@ public class CustomerAccountInforServlet extends HttpServlet {
             request.getRequestDispatcher("EditAccountInfo.jsp").forward(request, response);
             return;
         }
+        // Nếu không lỗi, lấy dob từ dobHolder
+        Date dob = dobHolder[0];
 
         Part filePart = request.getPart("images");
         String images = null;
