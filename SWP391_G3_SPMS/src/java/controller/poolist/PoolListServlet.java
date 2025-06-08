@@ -34,7 +34,7 @@ public class PoolListServlet extends HttpServlet {
         
         // Tính toán tổng số hồ bơi sau khi lọc
         int totalPools = dao.countFilteredPools(searchName, searchLocation, capacity, openTime, closeTime);
-        int totalPages = (int) Math.ceil((double) totalPools / pageSize);
+        int totalPages = (int) Math.ceil((double) totalPools / pageSize);   //25/6   
 
         if (pageParam != null && !pageParam.isEmpty()) {
             try {
@@ -58,8 +58,7 @@ public class PoolListServlet extends HttpServlet {
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
         
-        // Giữ lại param cho form/filter và phân trang
-        request.setAttribute("param", request.getParameterMap());
+      
 
         request.getRequestDispatcher("viewpoolList.jsp").forward(request, response);
     }

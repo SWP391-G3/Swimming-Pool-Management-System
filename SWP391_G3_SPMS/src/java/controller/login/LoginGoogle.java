@@ -28,7 +28,7 @@ public class LoginGoogle extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String code = request.getParameter("code");
-       
+
         if (code == null || code.isEmpty()) {
             response.sendRedirect("login.jsp");
             return;
@@ -49,6 +49,7 @@ public class LoginGoogle extends HttpServlet {
 
             // 2. Use access token to get user info
             GoogleCredential credential = new GoogleCredential().setAccessToken(tokenResponse.getAccessToken());
+
             Oauth2 oauth2 = new Oauth2.Builder(
                     GoogleNetHttpTransport.newTrustedTransport(),
                     JSON_FACTORY, credential)
@@ -64,7 +65,7 @@ public class LoginGoogle extends HttpServlet {
             UserDAO userDao = new UserDAO();
             User user = userDao.getUserByEmail(email);
             if (user == null) {
-                String username=email.split("@")[0];
+                String username = email.split("@")[0];
                 user = new User(
                         0,
                         username, // usernameS

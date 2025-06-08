@@ -100,6 +100,15 @@
                     padding: 10px 2vw;
                 }
             }
+            .sucees_message{
+                margin-bottom: 15px;
+                padding: 12px;
+                background-color: greenyellow;
+
+                border-radius: 8px;
+                font-weight: 600;
+                text-align: center;
+            }
         </style>
     </head>
     <body>
@@ -111,62 +120,61 @@
                 <p class="error-message">${error}</p>
             </c:if>
             <c:if test="${not empty mess}">
-                <p class="error-message">${mess}</p>
+                <p class="sucees_message">${mess}</p>
             </c:if>
 
 
             <form action="register" method="POST" autocomplete="off">
-                <div class="row">
-                    <div class="col-md-12">
-                        <!-- Full Name -->
-                        <div class="mb-3">
-                            <label for="full_name" class="form-label">Họ và tên</label>
-                            <input type="text" id="full_name" name="full_name" class="form-control" placeholder="Nhập họ và tên"
-                                   value="${enteredFullName != null ? enteredFullName : ''}"  />
-                        </div>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Full Name -->
+            <div class="mb-3">
+                <label for="full_name" class="form-label">Họ và tên</label>
+                <input type="text" id="full_name" name="full_name" class="form-control" placeholder="Nhập họ và tên"
+                       value="${param.full_name != null ? param.full_name : ''}" />
+            </div>
 
-                        <!-- Email -->
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="text" id="email" name="email" class="form-control" placeholder="email@gmail.com"
-                                   value="${enteredEmail != null ? enteredEmail : ''}"  />
-                        </div>
+            <!-- Email -->
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="text" id="email" name="email" class="form-control" placeholder="email@gmail.com"
+                       value="${param.email != null ? param.email : ''}" />
+            </div>
 
-                        <!-- Phone -->
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Số điện thoại</label>
-                            <input type="tel" id="phone" name="phone" class="form-control" placeholder="Nhập số điện thoại"
-                                   value="${enteredPhone != null ? enteredPhone : ''}"  />
-                        </div>
+            <!-- Phone -->
+            <div class="mb-3">
+                <label for="phone" class="form-label">Số điện thoại</label>
+                <input type="tel" id="phone" name="phone" class="form-control" placeholder="Nhập số điện thoại"
+                       value="${param.phone != null ? param.phone : ''}" />
+            </div>
 
-                    
+            <!-- Username -->
+            <div class="mb-3">
+                <label for="username" class="form-label">Tên đăng nhập</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Tên đăng nhập"
+                       value="${param.username != null ? param.username : ''}" />
+            </div>
 
-                        <!-- Username -->
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Tên đăng nhập</label>
-                            <input type="text" id="username" name="username" class="form-control" placeholder="Tên đăng nhập"
-                                   value="${enteredUsername != null ? enteredUsername : ''}"  />
-                        </div>
+            <!-- Password -->
+            <div class="mb-3">
+                <label for="password" class="form-label">Mật khẩu</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Nhập mật khẩu" />
+            </div>
 
-                        <!-- Password -->
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Mật khẩu</label>
-                            <input type="password" id="password" name="password" class="form-control" placeholder="Nhập mật khẩu"  />
-                        </div>
+            <!-- Confirm Password -->
+            <div class="mb-3">
+                <label for="confirm_password" class="form-label">Nhập lại mật khẩu</label>
+                <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Nhập lại mật khẩu" />
+            </div>
 
-                        <!-- Confirm Password -->
-                        <div class="mb-3">
-                            <label for="confirm_password" class="form-label">Nhập lại mật khẩu</label>
-                            <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Nhập lại mật khẩu"  />
-                        </div>
+            <!-- Submit Button (aligned bottom) -->
+            <div class="mb-3 mt-4 pt-2">
+                <button type="submit" class="btn btn-primary w-100">Đăng ký</button>
+            </div>
+        </div>
+    </div>
+</form>
 
-                        <!-- Submit Button (aligned bottom) -->
-                        <div class="mb-3 mt-4 pt-2">
-                            <button type="submit" class="btn btn-primary w-100">Đăng ký</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
 
             <div class="login-link">
                 <a href="landingpage.jsp">Quay lại trang chủ</a>

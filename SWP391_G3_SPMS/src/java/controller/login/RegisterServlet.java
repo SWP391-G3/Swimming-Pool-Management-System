@@ -91,12 +91,6 @@ public class RegisterServlet extends HttpServlet {
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
 
-//        Giữ lại giá trị đã nhập khi lỗi
-        request.setAttribute("enteredUsername", username);
-        request.setAttribute("enteredFullName", fullName);
-        request.setAttribute("enteredEmail", email);
-        request.setAttribute("enteredPhone", phone);
-
         if (username == null || password == null || confirmPassword == null
                 || fullName == null || email == null || phone == null
                 || username.trim().isEmpty() || password.trim().isEmpty() || confirmPassword.trim().isEmpty()
@@ -105,17 +99,19 @@ public class RegisterServlet extends HttpServlet {
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
-        if (!fullName.matches("^(?=.{4,50}$)[A-Za-zÀ-ỹĐđ'\\-]+( [A-Za-zÀ-ỹĐđ'\\-]+)*$")) {
+        if (!fullName.matches("^(?=.{4,50}$)[A-Za-zÀ-ỹĐđ'\\-]+( [A-Za-zÀ-ỹĐđ'\\-]+)*$")) {   // Nguyễn Văn A    Nguyễn
             request.setAttribute("error", "Họ tên phải dài từ 4 đến 50 ký tự, chỉ bao gồm chữ cái và 1 khoảng trắng (không chứa số hoặc ký tự đặc biệt)");
 
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
-        if (!email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
+        if (!email.matches("^[a-zA-Z0-9]+@[a-zA-Z]+\\.[a-zA-Z]+$")) {
+
             request.setAttribute("error", "Email không đúng định dạng.Vui lòng thử lại");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
+
         if (!phone.matches("^0\\d{9}$")) {
             request.setAttribute("error", "Số điện thoại phải đúng format bắt đầu phải là số 0 và đủ 10 số");
             request.getRequestDispatcher("register.jsp").forward(request, response);
@@ -152,11 +148,15 @@ public class RegisterServlet extends HttpServlet {
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
+        if (dao.isPhoneExists(phone)) {
+            request.setAttribute("error", "Số điện thoại đã tồn tại! Vui lòng thử lại");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
+        }
 
         // 8. Hash password SHA-256
         String hashedPassword = HashUtils.hashPassword(password);
 
-        // 9. Tạo User object, role_id = 4 (customer), status = true, images = null
         User user = new User(
                 0, username, hashedPassword, fullName, email, phone, null,
                 4, true, null, null, null,
@@ -170,12 +170,6 @@ public class RegisterServlet extends HttpServlet {
         request.getRequestDispatcher("register.jsp").forward(request, response);
     }
 
-    // Nếu không trùng thì tạo user mới
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";

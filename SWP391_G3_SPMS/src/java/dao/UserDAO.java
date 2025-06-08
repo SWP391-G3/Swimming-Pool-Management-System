@@ -101,6 +101,19 @@ public class UserDAO extends DBContext {
         }
     }
 
+    public boolean isPhoneExists(String phone) {
+        try {
+            String sql = "SELECT * FROM Users WHERE phone = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, phone);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();  // Nếu có kết quả, tức là số điện thoại đã tồn tại
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public User getUserByUsername(String username) {
         String sql = "SELECT * FROM Users WHERE username = ?";
         try (PreparedStatement st = connection.prepareStatement(sql)) {

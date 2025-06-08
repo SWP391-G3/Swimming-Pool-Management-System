@@ -137,7 +137,7 @@
     </head>
     <body>
         <div class="container">
-            <h2>Pool Detail</h2>
+            <h2>Chi tiết hồ bơi</h2>
             <c:if test="${not empty pool}">
                 <img class="pool-image" src="${pool.pool_image}" alt="${pool.pool_name}"/>
                 <div class="info-row"><span class="info-label">Tên hồ bơi:</span> <span class="info-value">${pool.pool_name}</span></div>

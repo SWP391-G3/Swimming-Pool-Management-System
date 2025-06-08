@@ -82,8 +82,8 @@ public class PoolsDAO extends DBContext {
         }
         
 
-        // Mặc định sort mới nhất
-        sql.append(" ORDER BY pool_id DESC");
+       
+        sql.append(" ORDER BY pool_id ASC");
         sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
         params.add((page - 1) * pageSize);
         params.add(pageSize);
@@ -114,11 +114,12 @@ public class PoolsDAO extends DBContext {
                 }
                 pool.setPool_description(rs.getString("pool_description"));
                 list.add(pool);
+               
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return list;
+       return list;
     }
 
     public int countFilteredPools(String name, String location, String capacity, String openTime, String closeTime) {
