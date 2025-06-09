@@ -15,7 +15,7 @@ public class Device {
     private String deviceImage;
     private String deviceName;
     private int poolId;
-    private String poolName; // THÊM DÒNG NÀY
+    private String poolName; 
     private int quantity;
     private String deviceStatus;
     private String notes;

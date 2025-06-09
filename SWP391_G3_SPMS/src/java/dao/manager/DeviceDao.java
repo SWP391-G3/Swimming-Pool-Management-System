@@ -69,7 +69,7 @@ public class DeviceDao extends DBContext {
         }
     }
 
-    // Lấy thiết bị theo ID (bao gồm poolName)
+    // Lấy thiết bị theo ID 
     public Device getDeviceById(int id) {
         String sql = "SELECT d.device_id, d.device_image, d.device_name, d.pool_id, p.pool_name, d.quantity, d.device_status, d.notes "
                 + "FROM Pool_Device d "
@@ -97,7 +97,7 @@ public class DeviceDao extends DBContext {
     }
 
     //Phân trang 
-    // Đếm thiết bị theo branch và pool
+    // Đếm thiết bị theo chi nhánh và hồ bơi
     public int countDevicesWithPool(String keyword, String status, int branchId, Integer poolId) {
         int count = 0;
         String sql = "SELECT COUNT(*) "
@@ -127,7 +127,7 @@ public class DeviceDao extends DBContext {
         return count;
     }
 
-// Lấy thiết bị phân trang theo branch và pool
+// Lấy danh sách thiết bị theo trang có thể lọc theo hồ bơi , từ khóa , trạng thái
     public List<Device> getDevicesByPageAndPool(String keyword, String status, int page, int pageSize, int branchId, Integer poolId) {
         List<Device> devices = new ArrayList<>();
         String sql = "SELECT d.device_id, d.device_image, d.device_name, d.pool_id, p.pool_name, d.quantity, d.device_status, d.notes "

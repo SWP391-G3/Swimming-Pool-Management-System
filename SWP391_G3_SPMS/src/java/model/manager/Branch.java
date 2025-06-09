@@ -27,7 +27,7 @@ public class Branch {
         this.pools = pools;
     }
 
-    // getter/setter các trường
+    
     public int getBranchId() {
         return branchId;
     }

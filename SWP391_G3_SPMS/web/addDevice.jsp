@@ -23,15 +23,14 @@
                 </div>
             </c:if>
 
-            <form action="DeviceServlet" method="post">
-                <input type="hidden" name="action" value="add">
+            <form action="AddDeviceServlet" method="post">
 
                 <div class="form-group">
                     <label>Hồ bơi:</label>
                     <select name="poolId" required>
                         <c:forEach var="pool" items="${poolList}">
                             <option value="${pool.poolId}" 
-                                    <c:if test="${param.poolId == pool.poolId}">selected</c:if>>
+                                    <c:if test="${(not empty param.poolId ? param.poolId : poolId) == pool.poolId.toString()}">selected</c:if>>
                                 ${pool.poolName}
                             </option>
                         </c:forEach>
@@ -50,7 +49,7 @@
 
                 <div class="form-group">
                     <label>Số lượng:</label>
-                    <input type="number" name="quantity" required min="0" max="1000" value="${param.quantity}">
+                    <input type="number" name="quantity" required min="1" max="1000" value="${param.quantity}">
                 </div>
 
                 <div class="form-group">
@@ -67,9 +66,15 @@
                     <textarea name="notes">${param.notes}</textarea>
                 </div>
 
+                <input type="hidden" name="returnPoolId" value="${poolId}">
+                <input type="hidden" name="returnKeyword" value="${keyword}">
+                <input type="hidden" name="returnStatus" value="${status}">
+                <input type="hidden" name="returnPage" value="${page}">
+
                 <div class="button-group">
                     <button type="submit">Thêm</button>
-                    <a href="DeviceServlet" class="btn-back">Quay lại</a>
+                    <a href="ListDeviceServlet?page=${page}&poolId=${poolId}&keyword=${keyword}&status=${status}" class="btn-back">Quay lại</a>
+
                 </div>
             </form>
         </div>

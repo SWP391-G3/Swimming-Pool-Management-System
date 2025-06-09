@@ -14,8 +14,8 @@ public class Pool {
 
     private int poolId;
     private String poolName;
-    private int branchId; // thuộc về chi nhánh nào
-    private List<Device> devices; // các thiết bị của hồ bơi
+    private int branchId; 
+    private List<Device> devices; 
 
     public Pool() {}
 

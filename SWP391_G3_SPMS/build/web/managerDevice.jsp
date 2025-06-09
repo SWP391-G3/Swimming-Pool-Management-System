@@ -27,26 +27,27 @@
                     <h2>Quản lý thiết bị hồ bơi</h2>
 
 
-                    <form class="search-form" method="get" action="DeviceServlet">
-                        <input type="text" name="keyword" placeholder="Tìm theo tên thiết bị..." value="${param.keyword}">
+                    <form class="search-form" method="get" action="ListDeviceServlet">
+                        <input type="text" name="keyword" placeholder="Tìm theo tên thiết bị..." value="${keyword}">
                         <select name="poolId">
                             <option value="">-- Tất cả hồ bơi --</option>
                             <c:forEach var="pool" items="${poolList}">
-                                <option value="${pool.poolId}" ${pool.poolId == param.poolId ? 'selected' : ''}>${pool.poolName}</option>
+                                <option value="${pool.poolId}" <c:if test="${fn:trim(pool.poolId) == fn:trim(poolId)}">selected</c:if>>${pool.poolName}</option>
                             </c:forEach>
                         </select>
                         <select name="status">
                             <option value="">-- Tất cả trạng thái --</option>
-                            <option value="available" ${param.status == 'available' ? 'selected' : ''}>Tốt</option>
-                            <option value="maintenance" ${param.status == 'maintenance' ? 'selected' : ''}>Bảo trì</option>
-                            <option value="broken" ${param.status == 'broken' ? 'selected' : ''}>Hỏng</option>
+                            <option value="available" ${status == 'available' ? 'selected' : ''}>Tốt</option>
+                            <option value="maintenance" ${status == 'maintenance' ? 'selected' : ''}>Bảo trì</option>
+                            <option value="broken" ${status == 'broken' ? 'selected' : ''}>Hỏng</option>
                         </select>
 
                         <button type="submit">Tìm kiếm</button>
 
                     </form>
 
-                    <a href="DeviceServlet?action=add" class="btn-add">+ Thêm thiết bị</a>
+                    <a href="AddDeviceServlet?poolId=${poolId}&keyword=${keyword}&status=${status}&page=${page}" class="btn-add">+ Thêm thiết bị</a>
+
                 </div>
                 <table class="equipment-table">
                     <thead>
@@ -89,10 +90,20 @@
                                         </td>
                                         <td>${device.notes}</td>
                                         <td>
-                                            <a href="DeviceServlet?action=update&id=${device.deviceId}" class="btn-edit">Cập nhật</a>
-                                            <form action="DeviceServlet" method="post" style="display:inline;">
-                                                <input type="hidden" name="action" value="delete">
+                                            <a href="UpdateDeviceServlet?id=${device.deviceId}
+                                               &poolId=${not empty poolId ? fn:trim(poolId) : ''}
+                                               &keyword=${not empty keyword ? fn:trim(keyword) : ''}
+                                               &status=${not empty status ? fn:trim(status) : ''}
+                                               &page=${page}" class="btn-edit">Cập nhật</a>
+
+
+
+                                            <form action="DeleteDeviceServlet" method="get" style="display:inline;">
                                                 <input type="hidden" name="deviceId" value="${device.deviceId}">
+                                                <input type="hidden" name="poolId" value="${poolId}">
+                                                <input type="hidden" name="keyword" value="${keyword}">
+                                                <input type="hidden" name="status" value="${status}">
+                                                <input type="hidden" name="page" value="${page}">
                                                 <button type="submit" class="btn-delete" onclick="return confirm('Bạn chắc chắn muốn xóa thiết bị này?')">Xóa</button>
                                             </form>
                                         </td>
@@ -109,29 +120,20 @@
 
                 <div class="pagination">
                     <c:if test="${page > 1}">
-                        <a href="DeviceServlet?page=${page-1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}">&laquo;</a>
+                        <a href="ListDeviceServlet?page=${page-1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}">&laquo;</a>
                     </c:if>
                     <c:forEach begin="1" end="${endP}" var="i">
-                        <a href="DeviceServlet?page=${i}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}"
+                        <a href="ListDeviceServlet?page=${i}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}"
                            class="${i == page ? 'active' : ''}">${i}</a>
                     </c:forEach>
                     <c:if test="${page < endP}">
-                        <a href="DeviceServlet?page=${page+1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}">&raquo;</a>
+                        <a href="ListDeviceServlet?page=${page+1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}">&raquo;</a>
                     </c:if>
                 </div>
 
-
-
-
             </div>
 
-
         </div>
-
-
-
     </body>
-
-
 
 </html>

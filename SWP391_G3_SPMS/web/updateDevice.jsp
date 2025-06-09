@@ -23,8 +23,9 @@
                 </div>
             </c:if>
 
-            <form method="post" action="${pageContext.request.contextPath}/DeviceServlet">
-                <input type="hidden" name="action" value="update">
+            <form method="post" action="${pageContext.request.contextPath}/UpdateDeviceServlet">
+
+
                 <input type="hidden" name="deviceId" value="${device.deviceId}">
 
                 <div class="form-group">
@@ -38,15 +39,15 @@
                     <select name="poolId">
                         <c:forEach var="pool" items="${poolList}">
                             <option value="${pool.poolId}"
-                                <c:choose>
-                                    <c:when test="${param.poolId == pool.poolId}">
+                                    <c:choose>
+                                        <c:when test="${not empty param.poolId && param.poolId.trim() == pool.poolId.toString()}">
                                         selected
                                     </c:when>
-                                    <c:when test="${empty param.poolId && pool.poolId == device.poolId}">
-                                        selected
-                                    </c:when>
-                                </c:choose>
-                            >${pool.poolName}</option>
+                                        <c:when test="${empty param.poolId && pool.poolId == device.poolId}">
+                                            selected
+                                        </c:when>
+                                    </c:choose>
+                                    >${pool.poolName}</option>
                         </c:forEach>
                     </select>
                 </div>
@@ -60,7 +61,7 @@
 
                 <div class="form-group">
                     <label>Số lượng:</label>
-                    <input type="number" name="quantity" required min="0"
+                    <input type="number" name="quantity" required min="1" max="1000"
                            value="${not empty param.quantity ? param.quantity : device.quantity}">
                 </div>
 
@@ -68,11 +69,11 @@
                     <label>Trạng thái:</label>
                     <select name="deviceStatus">
                         <option value="available" 
-                            ${param.deviceStatus == 'available' || (empty param.deviceStatus && device.deviceStatus == 'available') ? 'selected' : ''}>Tốt</option>
+                                ${param.deviceStatus == 'available' || (empty param.deviceStatus && device.deviceStatus == 'available') ? 'selected' : ''}>Tốt</option>
                         <option value="maintenance" 
-                            ${param.deviceStatus == 'maintenance' || (empty param.deviceStatus && device.deviceStatus == 'maintenance') ? 'selected' : ''}>Bảo trì</option>
+                                ${param.deviceStatus == 'maintenance' || (empty param.deviceStatus && device.deviceStatus == 'maintenance') ? 'selected' : ''}>Bảo trì</option>
                         <option value="broken" 
-                            ${param.deviceStatus == 'broken' || (empty param.deviceStatus && device.deviceStatus == 'broken') ? 'selected' : ''}>Hỏng</option>
+                                ${param.deviceStatus == 'broken' || (empty param.deviceStatus && device.deviceStatus == 'broken') ? 'selected' : ''}>Hỏng</option>
                     </select>
                 </div>
 
@@ -81,9 +82,18 @@
                     <textarea name="notes">${not empty param.notes ? param.notes : device.notes}</textarea>
                 </div>
 
+                <input type="hidden" name="returnPoolId" value="${poolId}">
+                <input type="hidden" name="returnKeyword" value="${keyword}">
+                <input type="hidden" name="returnStatus" value="${status}">
+                <input type="hidden" name="returnPage" value="${page}">
+
+
+
+
                 <div class="button-group">
                     <button type="submit">Cập nhật</button>
-                    <a href="DeviceServlet" class="btn-back">Quay lại</a>
+                    <a href="ListDeviceServlet?page=${page}&poolId=${poolId}&keyword=${keyword}&status=${status}" class="btn-back">Quay lại</a>
+
                 </div>
             </form>
         </div>

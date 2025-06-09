@@ -28,7 +28,7 @@
                 <p class="desc">Truy cập nhanh các chức năng dành cho quản lý.</p>
             </div>
             <div class="dashboard-cards">
-                <a href="DeviceServlet" class="dashboard-card">
+                <a href="ListDeviceServlet" class="dashboard-card">
                     <div class="dashboard-card-title">Quản lý thiết bị</div>
                     <div class="dashboard-card-desc">Theo dõi, thêm thiết bị, bảo trì thiết bị bể bơi.</div>
                 </a>
