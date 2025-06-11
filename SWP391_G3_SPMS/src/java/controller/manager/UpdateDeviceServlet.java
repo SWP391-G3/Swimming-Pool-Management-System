@@ -62,6 +62,13 @@ public class UpdateDeviceServlet extends HttpServlet {
         }
         request.setAttribute("page", page);
 
+        String pageSize = request.getParameter("pageSize");
+        if (pageSize != null) {
+            pageSize = pageSize.trim();
+            if (pageSize.isEmpty()) pageSize = null;
+        }
+        request.setAttribute("pageSize", pageSize);
+
         request.getRequestDispatcher("updateDevice.jsp").forward(request, response);
     }
 
@@ -96,6 +103,19 @@ public class UpdateDeviceServlet extends HttpServlet {
             if (returnPage.isEmpty()) returnPage = null;
         }
 
+        String pageSizeParam = request.getParameter("pageSize");
+        int pageSize = 5;
+        if (pageSizeParam != null) {
+            try {
+                pageSize = Integer.parseInt(pageSizeParam.trim());
+                if (pageSize != 5 && pageSize != 10 && pageSize != 20) {
+                    pageSize = 5;
+                }
+            } catch (NumberFormatException e) {
+                pageSize = 5;
+            }
+        }
+
         try {
             int id = Integer.parseInt(request.getParameter("deviceId"));
             int poolId = Integer.parseInt(request.getParameter("poolId"));
@@ -113,6 +133,7 @@ public class UpdateDeviceServlet extends HttpServlet {
                 request.setAttribute("keyword", returnKeyword);
                 request.setAttribute("status", returnStatus);
                 request.setAttribute("page", returnPage);
+                request.setAttribute("pageSize", pageSize);
                 request.getRequestDispatcher("updateDevice.jsp").forward(request, response);
                 return;
             }
@@ -131,6 +152,7 @@ public class UpdateDeviceServlet extends HttpServlet {
             if (returnStatus != null) {
                 redirectUrl += "&status=" + returnStatus;
             }
+            redirectUrl += "&pageSize=" + pageSize;
 
             response.sendRedirect(redirectUrl);
 
@@ -140,6 +162,7 @@ public class UpdateDeviceServlet extends HttpServlet {
             request.setAttribute("keyword", returnKeyword);
             request.setAttribute("status", returnStatus);
             request.setAttribute("page", returnPage);
+            request.setAttribute("pageSize", pageSize);
             request.getRequestDispatcher("updateDevice.jsp").forward(request, response);
         }
     }

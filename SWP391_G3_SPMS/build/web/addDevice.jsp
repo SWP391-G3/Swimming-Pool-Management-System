@@ -1,5 +1,5 @@
 <%-- 
-    Document   : managerDevice
+    Document   : addDevice
     Created on : May 28, 2025, 10:10:26 PM
     Author     : Tuan Anh
 --%>
@@ -72,10 +72,11 @@
             <input type="hidden" name="returnKeyword" value="${keyword}">
             <input type="hidden" name="returnStatus" value="${status}">
             <input type="hidden" name="returnPage" value="${page}">
+            <input type="hidden" name="pageSize" value="${pageSize}">
 
             <div class="button-group">
                 <button type="submit">Thêm</button>
-                <a href="ListDeviceServlet?page=${page}&poolId=${poolId}&keyword=${keyword}&status=${status}" class="btn-back">Quay lại</a>
+                <a href="ListDeviceServlet?page=${page}&poolId=${poolId}&keyword=${keyword}&status=${status}&pageSize=${pageSize}" class="btn-back">Quay lại</a>
             </div>
         </form>
     </div>

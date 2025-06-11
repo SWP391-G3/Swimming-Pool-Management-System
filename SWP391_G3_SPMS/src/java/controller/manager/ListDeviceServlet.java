@@ -49,11 +49,26 @@ public class ListDeviceServlet extends HttpServlet {
         }
     }
 
-    private static final int PAGE_SIZE = 5;
+    // Không cần thiết nữa, đã dùng biến pageSize động
+    // private static final int PAGE_SIZE = 5;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        int defaultPageSize = 5;
+        int pageSize = defaultPageSize;
+        String pageSizeParam = request.getParameter("pageSize");
+        if (pageSizeParam != null) {
+            try {
+                pageSize = Integer.parseInt(pageSizeParam);
+                if (pageSize != 5 && pageSize != 10 && pageSize != 20) {
+                    pageSize = defaultPageSize;
+                }
+            } catch (NumberFormatException e) {
+                pageSize = defaultPageSize;
+            }
+        }
 
         DeviceDao deviceDAO = new DeviceDao();
         int branchId = 1;
@@ -88,18 +103,19 @@ public class ListDeviceServlet extends HttpServlet {
             keyword = keyword.trim();
             if (!keyword.isEmpty() && !keyword.matches("[a-zA-Z0-9\\sÀ-ỹ]+")) {
                 request.setAttribute("error", "Từ khóa tìm kiếm không hợp lệ (không chứa ký tự đặc biệt)");
+                request.setAttribute("pageSize", pageSize); // Truyền lại pageSize khi báo lỗi
                 request.getRequestDispatcher("managerDevice.jsp").forward(request, response);
                 return;
             }
         }
 
         int count = deviceDAO.countDevicesWithPool(keyword, status, branchId, poolId);
-        int endPage = count / PAGE_SIZE;
-        if (count % PAGE_SIZE != 0) {
+        int endPage = count / pageSize;
+        if (count % pageSize != 0) {
             endPage++;
         }
 
-        List<Device> devices = deviceDAO.getDevicesByPageAndPool(keyword, status, page, PAGE_SIZE, branchId, poolId);
+        List<Device> devices = deviceDAO.getDevicesByPageAndPool(keyword, status, page, pageSize, branchId, poolId);
         List<Pool> poolList = deviceDAO.getPoolsByBranchId(branchId);
 
         request.setAttribute("devices", devices);
@@ -109,6 +125,7 @@ public class ListDeviceServlet extends HttpServlet {
         request.setAttribute("status", status);
         request.setAttribute("poolId", poolIdParam);
         request.setAttribute("poolList", poolList);
+        request.setAttribute("pageSize", pageSize); // Bổ sung dòng này để truyền pageSize về JSP
         request.getRequestDispatcher("managerDevice.jsp").forward(request, response);
     }
 

@@ -23,7 +23,7 @@ import model.manager.Pool;
 @WebServlet(name = "AddDeviceServlet", urlPatterns = {"/AddDeviceServlet"})
 public class AddDeviceServlet extends HttpServlet {
 
-    private static final int PAGE_SIZE = 5;
+    // private static final int PAGE_SIZE = 5; // Không còn dùng cố định, bỏ đi
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -62,6 +62,13 @@ public class AddDeviceServlet extends HttpServlet {
         }
         request.setAttribute("page", page);
 
+        String pageSize = request.getParameter("pageSize");
+        if (pageSize != null) {
+            pageSize = pageSize.trim();
+            if (pageSize.isEmpty()) pageSize = null;
+        }
+        request.setAttribute("pageSize", pageSize);
+
         request.getRequestDispatcher("addDevice.jsp").forward(request, response);
     }
 
@@ -96,6 +103,19 @@ public class AddDeviceServlet extends HttpServlet {
             if (returnPage.isEmpty()) returnPage = null;
         }
 
+        String pageSizeParam = request.getParameter("pageSize");
+        int pageSize = 5; // default
+        if (pageSizeParam != null) {
+            try {
+                pageSize = Integer.parseInt(pageSizeParam.trim());
+                if (pageSize != 5 && pageSize != 10 && pageSize != 20) {
+                    pageSize = 5;
+                }
+            } catch (NumberFormatException e) {
+                pageSize = 5;
+            }
+        }
+
         Integer filterPoolId = (returnPoolId != null) ? Integer.parseInt(returnPoolId) : null;
 
         try {
@@ -113,6 +133,7 @@ public class AddDeviceServlet extends HttpServlet {
                 request.setAttribute("keyword", returnKeyword);
                 request.setAttribute("status", returnStatus);
                 request.setAttribute("page", returnPage);
+                request.setAttribute("pageSize", pageSize);
                 request.getRequestDispatcher("addDevice.jsp").forward(request, response);
                 return;
             }
@@ -123,10 +144,10 @@ public class AddDeviceServlet extends HttpServlet {
             int count = deviceDAO.countDevicesWithPool(
                     returnKeyword, returnStatus, branchId, filterPoolId);
 
-            int endPage = count / PAGE_SIZE;
-            if (count % PAGE_SIZE != 0) {
-            endPage++;
-        }
+            int endPage = count / pageSize;
+            if (count % pageSize != 0) {
+                endPage++;
+            }
 
             String redirectUrl = "ListDeviceServlet?page=" + endPage;
 
@@ -139,6 +160,7 @@ public class AddDeviceServlet extends HttpServlet {
             if (returnStatus != null) {
                 redirectUrl += "&status=" + returnStatus;
             }
+            redirectUrl += "&pageSize=" + pageSize;
 
             response.sendRedirect(redirectUrl);
 
@@ -149,6 +171,7 @@ public class AddDeviceServlet extends HttpServlet {
             request.setAttribute("keyword", returnKeyword);
             request.setAttribute("status", returnStatus);
             request.setAttribute("page", returnPage);
+            request.setAttribute("pageSize", pageSize);
             request.getRequestDispatcher("addDevice.jsp").forward(request, response);
         }
     }
