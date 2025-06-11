@@ -58,8 +58,9 @@ public class LoginGoogle extends HttpServlet {
 
             Userinfo userInfo = oauth2.userinfo().get().execute();
             String email = userInfo.getEmail();
-            String name = userInfo.getName();
+//            String name = userInfo.getName();
             String picture = userInfo.getPicture();
+          
 
             // 3. Check user exists, if not create new user (role = customer)
             UserDAO userDao = new UserDAO();
@@ -70,7 +71,7 @@ public class LoginGoogle extends HttpServlet {
                         0,
                         username, // usernameS
                         "", // password
-                        name != null ? name : "", // full_name
+                    username, // full_name
                         email, // email
                         null, // phone
                         null, // address

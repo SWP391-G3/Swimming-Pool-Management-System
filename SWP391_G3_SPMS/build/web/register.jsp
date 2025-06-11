@@ -156,11 +156,10 @@
             </div>
 
             <!-- Password -->
-            <div class="mb-3">
-                <label for="password" class="form-label">Mật khẩu</label>
+             <div class="mb-3">
+                <label for="password" class="form-label">Nhập mật khẩu</label>
                 <input type="password" id="password" name="password" class="form-control" placeholder="Nhập mật khẩu" />
             </div>
-
             <!-- Confirm Password -->
             <div class="mb-3">
                 <label for="confirm_password" class="form-label">Nhập lại mật khẩu</label>

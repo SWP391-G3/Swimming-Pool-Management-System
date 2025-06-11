@@ -34,10 +34,10 @@ public class PoolListServlet extends HttpServlet {
         
         // Tính toán tổng số hồ bơi sau khi lọc
         int totalPools = dao.countFilteredPools(searchName, searchLocation, capacity, openTime, closeTime);
-        int totalPages = (int) Math.ceil((double) totalPools / pageSize);   //25/6   
+        int totalPages = (int) Math.ceil((double) totalPools / pageSize);   //25/6   4,5
 
         if (pageParam != null && !pageParam.isEmpty()) {
-            try {
+            try { 
                 currentPage = Integer.parseInt(pageParam);
             } catch (NumberFormatException e) {
                 currentPage = 1;
