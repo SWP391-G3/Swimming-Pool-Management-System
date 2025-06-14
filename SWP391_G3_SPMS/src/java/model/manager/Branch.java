@@ -15,12 +15,12 @@ public class Branch {
     private int branchId;
     private String branchName;
     private int managerId;
-    private List<Pool> pools; 
+    private List<Pooldevice> pools; 
 
     public Branch() {
     }
 
-    public Branch(int branchId, String branchName, int managerId, List<Pool> pools) {
+    public Branch(int branchId, String branchName, int managerId, List<Pooldevice> pools) {
         this.branchId = branchId;
         this.branchName = branchName;
         this.managerId = managerId;
@@ -52,11 +52,11 @@ public class Branch {
         this.managerId = managerId;
     }
 
-    public List<Pool> getPools() {
+    public List<Pooldevice> getPools() {
         return pools;
     }
 
-    public void setPools(List<Pool> pools) {
+    public void setPools(List<Pooldevice> pools) {
         this.pools = pools;
     }
 

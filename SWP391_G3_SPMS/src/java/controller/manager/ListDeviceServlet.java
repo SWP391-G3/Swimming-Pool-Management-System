@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.manager.Device;
-import model.manager.Pool;
+import model.manager.Pooldevice;
 
 /**
  *
@@ -49,8 +49,7 @@ public class ListDeviceServlet extends HttpServlet {
         }
     }
 
-    // Không cần thiết nữa, đã dùng biến pageSize động
-    // private static final int PAGE_SIZE = 5;
+    
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -62,7 +61,7 @@ public class ListDeviceServlet extends HttpServlet {
         if (pageSizeParam != null) {
             try {
                 pageSize = Integer.parseInt(pageSizeParam);
-                if (pageSize != 5 && pageSize != 10 && pageSize != 20) {
+                if (pageSize != 5 && pageSize != 10 && pageSize != 15) {
                     pageSize = defaultPageSize;
                 }
             } catch (NumberFormatException e) {
@@ -116,7 +115,7 @@ public class ListDeviceServlet extends HttpServlet {
         }
 
         List<Device> devices = deviceDAO.getDevicesByPageAndPool(keyword, status, page, pageSize, branchId, poolId);
-        List<Pool> poolList = deviceDAO.getPoolsByBranchId(branchId);
+        List<Pooldevice> poolList = deviceDAO.getPoolsByBranchId(branchId);
 
         request.setAttribute("devices", devices);
         request.setAttribute("endP", endPage);

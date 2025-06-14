@@ -10,16 +10,16 @@ import java.util.List;
  *
  * @author Tuan Anh
  */
-public class Pool {
+public class Pooldevice {
 
     private int poolId;
     private String poolName;
     private int branchId; 
     private List<Device> devices; 
 
-    public Pool() {}
+    public Pooldevice() {}
 
-    public Pool(int poolId, String poolName) {
+    public Pooldevice(int poolId, String poolName) {
         this.poolId = poolId;
         this.poolName = poolName;
     }
@@ -27,7 +27,7 @@ public class Pool {
     
     
     
-    public Pool(int poolId, String poolName, int branchId, List<Device> devices) {
+    public Pooldevice(int poolId, String poolName, int branchId, List<Device> devices) {
         this.poolId = poolId;
         this.poolName = poolName;
         this.branchId = branchId;

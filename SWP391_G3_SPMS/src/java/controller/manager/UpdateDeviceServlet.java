@@ -24,7 +24,7 @@ public class UpdateDeviceServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        // fix lỗi git
         int branchId = 1;
         String idRaw = request.getParameter("id");
         int id = (idRaw != null && !idRaw.trim().isEmpty()) ? Integer.parseInt(idRaw.trim()) : 0;

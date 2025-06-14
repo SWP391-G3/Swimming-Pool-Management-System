@@ -43,9 +43,11 @@
 
                         <!-- Dropdown chọn số lượng/trang -->
                         <select name="pageSize" id="pageSizeSelect" onchange="document.getElementById('searchForm').submit();">
+                            
                             <option value="5" ${pageSize == 5 ? 'selected' : ''}>5/Trang</option>
                             <option value="10" ${pageSize == 10 ? 'selected' : ''}>10/Trang</option>
-                            <option value="20" ${pageSize == 15 ? 'selected' : ''}>15/Trang</option>
+                            <option value="15" ${pageSize == 15 ? 'selected' : ''}>15/Trang</option>
+                            
                         </select>
 
                         <input type="hidden" name="page" value="${page}">

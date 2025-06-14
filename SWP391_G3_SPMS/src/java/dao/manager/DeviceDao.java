@@ -7,19 +7,19 @@ import java.util.List;
 import java.sql.ResultSet;
 import model.manager.Device;
 import java.sql.SQLException;
-import model.manager.Pool;
+import model.manager.Pooldevice;
 
 public class DeviceDao extends DBContext {
 
     // Lấy danh sách hồ bơi của 1 chi nhánh
-    public List<Pool> getPoolsByBranchId(int branchId) {
-        List<Pool> pools = new ArrayList<>();
+    public List<Pooldevice> getPoolsByBranchId(int branchId) {
+        List<Pooldevice> pools = new ArrayList<>();
         String sql = "SELECT pool_id, pool_name FROM Pools WHERE branch_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, branchId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Pool pool = new Pool(rs.getInt(1), rs.getString(2));
+                Pooldevice pool = new Pooldevice(rs.getInt(1), rs.getString(2));
                 pools.add(pool);
             }
         } catch (SQLException e) {

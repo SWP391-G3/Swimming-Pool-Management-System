@@ -20,10 +20,12 @@
             <file>file:/E:/HK_5_SU2025/SWP391/SWP-Project/SWP391_G3_SPMS/web/staff-css/staff-information.css</file>
         </group>
         <group name="SWP391_Manager">
+            <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/src/java/dal/DBContext.java</file>
             <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/src/java/controller/manager/DeleteDeviceServlet.java</file>
             <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/web/updateDevice.jsp</file>
             <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/web/addDevice.jsp</file>
             <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/src/java/controller/manager/ListDeviceServlet.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/src/java/model/manager/Branch.java</file>
             <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/src/java/controller/manager/UpdateDeviceServlet.java</file>
             <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/web/managerPanel.jsp</file>
             <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/web/manager-css/manager-panel.css</file>
@@ -31,6 +33,8 @@
             <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/web/managerSidebar.jsp</file>
             <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/src/java/controller/manager/AddDeviceServlet.java</file>
             <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/web/manager-css/manager-device-v2.css</file>
+            <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/src/java/dao/UserDAO.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/src/java/model/manager/Pooldevice.java</file>
             <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/web/manager-css/managerAddUpdate-device.css</file>
             <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/src/java/dao/manager/DeviceDao.java</file>
         </group>

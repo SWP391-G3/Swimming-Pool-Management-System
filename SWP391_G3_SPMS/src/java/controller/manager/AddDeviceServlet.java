@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.manager.Device;
-import model.manager.Pool;
+import model.manager.Pooldevice;
 
 /**
  *
@@ -23,7 +23,7 @@ import model.manager.Pool;
 @WebServlet(name = "AddDeviceServlet", urlPatterns = {"/AddDeviceServlet"})
 public class AddDeviceServlet extends HttpServlet {
 
-    // private static final int PAGE_SIZE = 5; // Không còn dùng cố định, bỏ đi
+   
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -31,7 +31,7 @@ public class AddDeviceServlet extends HttpServlet {
 
         int branchId = 1;
         DeviceDao deviceDAO = new DeviceDao();
-        List<Pool> poolList = deviceDAO.getPoolsByBranchId(branchId);
+        List<Pooldevice> poolList = deviceDAO.getPoolsByBranchId(branchId);
         request.setAttribute("poolList", poolList);
 
         String poolId = request.getParameter("poolId");
@@ -104,7 +104,7 @@ public class AddDeviceServlet extends HttpServlet {
         }
 
         String pageSizeParam = request.getParameter("pageSize");
-        int pageSize = 5; // default
+        int pageSize = 5; 
         if (pageSizeParam != null) {
             try {
                 pageSize = Integer.parseInt(pageSizeParam.trim());
