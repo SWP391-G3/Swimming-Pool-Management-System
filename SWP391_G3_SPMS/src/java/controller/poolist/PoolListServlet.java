@@ -1,6 +1,6 @@
 package controller.poolist;
 
-import dao.PoolsDAO;
+import dao.PoolsCustomerDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import model.Pools;
+import model.PoolsCustomer;
 
 @WebServlet("/homepage")
 public class PoolListServlet extends HttpServlet {
@@ -30,7 +30,7 @@ public class PoolListServlet extends HttpServlet {
             searchLocation = null; // Đặt searchLocation thành null để không lọc theo vị trí
         }
 
-        PoolsDAO dao = new PoolsDAO();
+        PoolsCustomerDAO dao = new PoolsCustomerDAO();
         
         // Tính toán tổng số hồ bơi sau khi lọc
         int totalPools = dao.countFilteredPools(searchName, searchLocation, capacity, openTime, closeTime);
@@ -51,7 +51,7 @@ public class PoolListServlet extends HttpServlet {
         }
 
         // Lấy danh sách hồ bơi dựa trên các tham số đã lọc
-        List<Pools> pools = dao.getPools(searchName, searchLocation, capacity, openTime, closeTime, currentPage, pageSize);
+        List<PoolsCustomer> pools = dao.getPools(searchName, searchLocation, capacity, openTime, closeTime, currentPage, pageSize);
 
         // Gửi dữ liệu vào request để hiển thị
         request.setAttribute("pools", pools);

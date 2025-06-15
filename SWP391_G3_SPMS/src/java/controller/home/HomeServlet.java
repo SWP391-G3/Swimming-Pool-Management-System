@@ -5,7 +5,7 @@
 package controller.home;
 
 import dao.FeedBackDAO;
-import dao.PoolsDAO;
+import dao.PoolsCustomerDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.FeedBack;
-import model.Pools;
+import model.PoolsCustomer;
 
 /**
  *
@@ -62,10 +62,10 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        PoolsDAO dao = new PoolsDAO();
+        PoolsCustomerDAO dao = new PoolsCustomerDAO();
         FeedBackDAO fdao = new FeedBackDAO();
-        List<Pools> list = dao.getTop3();
-        List<Pools> list2 = dao.getPoolImage();
+        List<PoolsCustomer> list = dao.getTop3();
+        List<PoolsCustomer> list2 = dao.getPoolImage();
         List<FeedBack> listFeedback = fdao.getFeedback();
         request.setAttribute("listPool", list);
         request.setAttribute("listPool2", list2);

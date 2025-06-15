@@ -1,11 +1,11 @@
 package controller.poolist;
 
-import dao.PoolsDAO;
+import dao.PoolsCustomerDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
-import model.Pools;
+import model.PoolsCustomer;
 
 @WebServlet("/pool-detail")
 public class PoolDetailServlet extends HttpServlet {
@@ -20,8 +20,8 @@ public class PoolDetailServlet extends HttpServlet {
         }
         try {
             int poolId = Integer.parseInt(poolIdStr);
-            PoolsDAO dao = new PoolsDAO();
-            Pools pool = dao.getPoolById(poolId);
+            PoolsCustomerDAO dao = new PoolsCustomerDAO();
+            PoolsCustomer pool = dao.getPoolById(poolId);
             if (pool == null) {
 
                 response.sendRedirect("homepage");

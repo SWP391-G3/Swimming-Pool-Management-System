@@ -224,6 +224,8 @@ public class PoolsDAO extends DBContext {
             e.printStackTrace();
         }
         return list;
+        
+        
     }
 
 }

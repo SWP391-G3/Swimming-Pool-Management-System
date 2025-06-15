@@ -25,13 +25,11 @@
             <file>file:/D:/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/model/FeedBack.java</file>
             <file>file:/D:/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/login/RegisterServlet.java</file>
             <file>file:/D:/SWP391_G3_SPMS/SWP391_G3_SPMS/web/login.jsp</file>
-            <file>file:/D:/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/model/Pools.java</file>
             <file>file:/D:/SWP391_G3_SPMS/SWP391_G3_SPMS/web/index.jsp.jsp</file>
             <file>file:/D:/SWP391_G3_SPMS/SWP391_G3_SPMS/web/WEB-INF/web.xml</file>
             <file>file:/D:/SWP391_G3_SPMS/SWP391_G3_SPMS/web/homepage.jsp</file>
             <file>file:/D:/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/utils/CheckNewPassword.java</file>
             <file>file:/D:/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/poolist/PoolListServlet.java</file>
-            <file>file:/D:/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dao/PoolsDAO.java</file>
             <file>file:/D:/SWP391_G3_SPMS/SWP391_G3_SPMS/web/admin.jsp</file>
         </group>
     </open-files>

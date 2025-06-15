@@ -20,6 +20,7 @@ import java.util.List;
 import model.User;
 import utils.HashUtils;
 import utils.CheckNewPassword;
+import static utils.CheckNewPassword.validateRegisterPassword;
 
 /**
  *
@@ -91,52 +92,22 @@ public class RegisterServlet extends HttpServlet {
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
 
-        if (username == null || password == null || confirmPassword == null
-                || fullName == null || email == null || phone == null
-                || username.trim().isEmpty() || password.trim().isEmpty() || confirmPassword.trim().isEmpty()
-                || fullName.trim().isEmpty() || email.trim().isEmpty() || phone.trim().isEmpty()) {
-            request.setAttribute("error", "Tất cả các trường đều phải bắt buộc nhập");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-            return;
-        }
-        if (!fullName.matches("^(?=.{4,50}$)[A-Za-zÀ-ỹĐđ'\\-]+( [A-Za-zÀ-ỹĐđ'\\-]+)*$")) {   // Nguyễn Văn A    Nguyễn
-            request.setAttribute("error", "Họ tên phải dài từ 4 đến 50 ký tự, chỉ bao gồm chữ cái và 1 khoảng trắng (không chứa số hoặc ký tự đặc biệt)");
-
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-            return;
-        }
-        if (!email.matches("^[a-zA-Z0-9]+@[a-zA-Z]+\\.[a-zA-Z]+$")) {
-
-            request.setAttribute("error", "Email không đúng định dạng.Vui lòng thử lại");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-            return;
-        }
-
-        if (!phone.matches("^0\\d{9}$")) {
-            request.setAttribute("error", "Số điện thoại phải đúng format bắt đầu phải là số 0 và đủ 10 số");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-            return;
-        }
-        if (!username.matches("^[A-Za-z0-9]{4,50}$")) {
-            request.setAttribute("error", "Tên đăng nhập phải dài từ 4-50 ký tự, chỉ bao gồm chữ cái, số,không được chưa dấu cách");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-            return;
-        }
-
-        //Kiem tra quy tac dat mat khau
-        String ruleMsg = CheckNewPassword.validateRegisterPassword(password);
-        if (ruleMsg != null) {
-            request.setAttribute("error", ruleMsg);
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-            return;
-        }
-
+        // Kiểm tra mật khẩu nhập lại có khớp không
         if (!confirmPassword.equals(password)) {
             request.setAttribute("error", "Mật khẩu nhập lại không khớp!");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
 
+        // Kiểm tra mật khẩu theo các quy tắc
+        String passwordValidationMessage = validateRegisterPassword(password);
+        if (passwordValidationMessage != null) {
+            request.setAttribute("error", passwordValidationMessage);
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
+        }
+
+        // Kiểm tra sự tồn tại của username, email, phone trong database
         UserDAO dao = new UserDAO();
         if (dao.isUsernameExists(username)) {
             request.setAttribute("error", "Tên người dùng đã tồn tại! Vui lòng thử lại");
@@ -154,19 +125,21 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        // 8. Hash password SHA-256
+        // Hash mật khẩu SHA-256 trước khi lưu vào cơ sở dữ liệu
         String hashedPassword = HashUtils.hashPassword(password);
 
+        // Tạo đối tượng người dùng và lưu vào DB
         User user = new User(
                 0, username, hashedPassword, fullName, email, phone, null,
                 4, true, null, null, null,
                 java.time.LocalDate.now(), null
         );
 
-        // 10. Lưu vào DB
+        // Lưu vào DB
         dao.insertUser(user);
 
-        request.setAttribute("mess", "Đăng kí thành công.Bạn có thể đăng nhập ngay");
+        // Gửi thông báo đăng ký thành công cho người dùng
+        request.setAttribute("mess", "Đăng kí thành công. Bạn có thể đăng nhập ngay");
         request.getRequestDispatcher("register.jsp").forward(request, response);
     }
 
