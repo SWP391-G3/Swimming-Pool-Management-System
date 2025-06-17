@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/util/HashGen.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/dal/DBContext.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/controller/manager/DeleteDeviceServlet.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/controller/Admin/Pool/AdminDeletePoolServlet.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/controller/Admin/Customer/AdminUpdateCustomerServlet.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/web/login.jsp</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/controller/login/LogoutServlet.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/controller/Admin/Customer/AdminLockCustomerServlet.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/web/AdminPoolManagement.jsp</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/dao/admin/CustomerDAO.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/dao/PoolDAO.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/controller/login/LoginServlet.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/web/AdminUpdatePool.jsp</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/controller/Customer/MyAccountServlet.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/web/adminUpdateCustomer.jsp</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/web/managerPanel.jsp</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/controller/manager/UpdateDeviceServlet.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/dao/manager/DeviceDao.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/web/MyAccountProfile.jsp</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/web/adminViewCustomerList.jsp</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/controller/manager/AddDeviceServlet.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/dao/BookingDAO.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/model/admin/Customer.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/web/updateDevice.jsp</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/web/AdminSearchPool.jsp</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/controller/Admin/Customer/AdminViewCustomerListServlet.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/controller/login/LoginGoogle.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/web/WEB-INF/web.xml</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/web/managerSidebar.jsp</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/web/managerDevice.jsp</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/web/register.jsp</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/web/addDevice.jsp</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/web/AdminAddPool.jsp</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/web/LandingPage.jsp</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/controller/Admin/Pool/AdminPoolManagement.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Iteration1-SWP/SWP391_G3_SPMS/src/java/controller/manager/ListDeviceServlet.java</file>
+        </group>
+    </open-files>
+</project-private>
