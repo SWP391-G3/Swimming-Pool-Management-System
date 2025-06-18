@@ -17,14 +17,6 @@
         <servlet-class>controller.Customer.BookingHistoryServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>BookingDetail</servlet-name>
-        <servlet-class>controller.Customer.BookingDetail</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>HomeServlet</servlet-name>
-        <servlet-class>controller.HomePage.HomeServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>BookingDetailServlet</servlet-name>
         <servlet-class>controller.Customer.BookingDetailServlet</servlet-class>
     </servlet>
@@ -43,10 +35,6 @@
     <servlet-mapping>
         <servlet-name>BookingHistoryServlet</servlet-name>
         <url-pattern>/booking_history</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>HomeServlet</servlet-name>
-        <url-pattern>/home</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>BookingDetailServlet</servlet-name>

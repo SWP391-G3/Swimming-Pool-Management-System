@@ -104,46 +104,13 @@ public class AdminUpdatePoolServlet extends HttpServlet {
         LocalTime open_time, close_time;
         int max_slot, pool_id, branch_id;
         boolean pool_status;
-        String error;
         try {
             pool_id = Integer.parseInt(id);
             pool_status = Boolean.parseBoolean(status);
             max_slot = Integer.parseInt(slot);
-            if (!pool_name.matches("^[\\p{L}0-9 ]+$")) {
-                error = "Tên bể bơi không được chứa ký tự đặc biệt!";
-                pool = dao.getPoolByID(pool_id);
-                request.setAttribute("error", error);
-                request.setAttribute("Pool", pool);
-                request.getRequestDispatcher("AdminUpdatePool.jsp").forward(request, response);
-                return;
-            }
             branch_id = Integer.parseInt(branch_idRaw);
-            if (branch_id <= 0 || branch_id > 5) {
-                error = "Lỗi khi thêm bể bơi: mã bể bơi không tồn tại!";
-                pool = dao.getPoolByID(pool_id);
-                request.setAttribute("error", error);
-                request.setAttribute("Pool", pool);
-                request.getRequestDispatcher("AdminUpdatePool.jsp").forward(request, response);
-                return;
-            }
-            if (max_slot <= 0) {
-                error = "Số lượng sức chứa của bể bơi không được nhỏ hơn 0!";
-                pool = dao.getPoolByID(pool_id);
-                request.setAttribute("error", error);
-                request.setAttribute("Pool", pool);
-                request.getRequestDispatcher("AdminUpdatePool.jsp").forward(request, response);
-                return;
-            }
             open_time = LocalTime.parse(open);
             close_time = LocalTime.parse(close);
-            if (open_time.compareTo(close_time) >= 0) {
-                error = "Lỗi khi cập nhật bể bơi: Giờ mở cửa phải nhỏ hơn giờ đóng cửa!";
-                pool = dao.getPoolByID(pool_id);
-                request.setAttribute("error", error);
-                request.setAttribute("Pool", pool);
-                request.getRequestDispatcher("AdminUpdatePool.jsp").forward(request, response);
-                return;
-            }
             pool = new Pool(pool_id, pool_name, pool_road, pool_address, max_slot, open_time, close_time, pool_status, pool_image, null, updateDate, pool_desctiprion, branch_id);
             dao.updatePool(pool);
             String success = "Cập nhật bể bơi thành công!";

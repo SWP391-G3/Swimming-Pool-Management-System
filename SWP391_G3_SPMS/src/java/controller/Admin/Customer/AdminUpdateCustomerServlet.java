@@ -4,6 +4,7 @@
  */
 package controller.Admin.Customer;
 
+import com.google.api.client.util.Data;
 import dao.admin.CustomerDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +13,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
 import model.admin.Customer;
 
 /**
@@ -61,11 +65,6 @@ public class AdminUpdateCustomerServlet extends HttpServlet {
             throws ServletException, IOException {
         String userId_Raw = request.getParameter("userId");
 
-        if (userId_Raw == null || userId_Raw.isEmpty()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu userId");
-            return;
-        }
-
         int user_id;
         try {
             user_id = Integer.parseInt(userId_Raw);
@@ -76,11 +75,6 @@ public class AdminUpdateCustomerServlet extends HttpServlet {
 
         CustomerDAO dao = new CustomerDAO();
         Customer customer = dao.getCustomerById(user_id);
-
-        if (customer == null) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Không tìm thấy khách hàng");
-            return;
-        }
 
         request.setAttribute("customer", customer);
         request.getRequestDispatcher("adminUpdateCustomer.jsp").forward(request, response);
@@ -97,7 +91,28 @@ public class AdminUpdateCustomerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        CustomerDAO dao = new CustomerDAO();
+        String userId_Raw = request.getParameter("customer_id");
+        String full_name = request.getParameter("full_name");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+        String dobRaw = request.getParameter("dob");
+        String gender = request.getParameter("gender");
+        String statusRaw = request.getParameter("status");
+        Boolean status;
+        LocalDate dob;
+        int customerID;
+        try {
+            customerID = Integer.parseInt(userId_Raw);
+            status = Boolean.parseBoolean(statusRaw);
+            dob = LocalDate.parse(dobRaw);
+            Customer c = new Customer(customerID, full_name, email, phone, "", 0, dob, gender, null, "", status);
+            dao.updateCustomer(c);
+            response.sendRedirect("adminViewCustomerList"); 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**

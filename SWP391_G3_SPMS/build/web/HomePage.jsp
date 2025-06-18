@@ -55,12 +55,7 @@
 
 
                     <% 
-                        User currentUser = (User) session.getAttribute("currentUser");
-                        String userName = (currentUser != null) ? currentUser.getFull_name() : "";
-                        if(currentUser == null){
-                            response.sendRedirect("LandingPage.jsp");
-                            return;
-                        }
+
                     %>
 
                     <!-- Navigation -->
@@ -71,10 +66,7 @@
                         <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Đánh Giá</a>
                         <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Liên Hệ</a>
                         <a href="my_account" class="flex items-center space-x-2 text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">
-                            <span>Tài khoản <%= !userName.isEmpty() ? ("| " + userName) : "" %></span>
-                            <img src="<%= currentUser != null ? currentUser.getImages() : "default-avatar.png" %>"
-                                 alt="avatar"
-                                 class="w-8 h-8 rounded-full object-cover border border-gray-300" />
+                            <span>Tài khoản </span>
                         </a>
                     </nav>
                 </div>

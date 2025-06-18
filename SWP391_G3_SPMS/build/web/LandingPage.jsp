@@ -56,7 +56,7 @@
             <div class="max-w-2xl mx-auto px-4">
                 <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight animate-fadeIn">Trải nghiệm bơi lý tưởng cùng PoolHub</h1>
                 <p class="text-lg md:text-xl mb-6 animate-fadeIn delay-200">Đặt vé dễ dàng, nhận thông báo nhanh chóng, tham gia ưu đãi hấp dẫn và quản lý lịch bơi của bạn mọi lúc mọi nơi.</p>
-                <a href="login.jsp" class="inline-block bg-white text-primary font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition duration-300 transform hover:scale-105">Khám phá ngay</a>
+                <a href="home" class="inline-block bg-white text-primary font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition duration-300 transform hover:scale-105">Khám phá ngay</a>
             </div>
         </section>
 

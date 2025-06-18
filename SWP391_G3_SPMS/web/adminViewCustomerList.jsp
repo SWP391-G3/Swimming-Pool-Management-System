@@ -54,7 +54,7 @@
                 </div>
                 <!-- Filters Form -->
                 <form action="adminViewCustomerList" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <input type="text" name="keyword" placeholder="Tìm kiếm theo tên, email..." class="px-3 py-2 border rounded" />
+                    <input type="text" name="keyword" placeholder="Tìm kiếm theo tên,email..." class="px-3 py-2 border rounded" />
 
                     <select name="status" class="border rounded px-3 py-2">
                         <option value="">-- Trạng thái tài khoản --</option>
