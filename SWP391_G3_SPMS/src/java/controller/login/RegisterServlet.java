@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import model.User;
-import utils.HashUtils;
-import utils.CheckNewPassword;
-import static utils.CheckNewPassword.validateRegisterPassword;
+import util.HashUtils;
+import util.CheckNewPassword;
+import static util.CheckNewPassword.validateRegisterPassword;
 
 /**
  *

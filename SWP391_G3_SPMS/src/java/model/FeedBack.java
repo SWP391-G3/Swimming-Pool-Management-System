@@ -4,21 +4,54 @@
  */
 package model;
 
+import java.util.Date;
+
 /**
  *
- * @author 84823
+ * @author LAZYVL
  */
-public class FeedBack {
-    private int rating;
-    private String pool_name;
-    private String pool_image;
+public class Feedback {
+    private int feedbackId;
+    private int userId;
+    private int poolId;
+    private int rating; // Giá trị từ 1 đến 5
     private String comment;
+    private Date createdAt;
 
-    public FeedBack(int rating, String pool_name, String pool_image, String comment) {
+    public Feedback() {
+    }
+
+    public Feedback(int feedbackId, int userId, int poolId, int rating, String comment, Date createdAt) {
+        this.feedbackId = feedbackId;
+        this.userId = userId;
+        this.poolId = poolId;
         this.rating = rating;
-        this.pool_name = pool_name;
-        this.pool_image = pool_image;
         this.comment = comment;
+        this.createdAt = createdAt;
+    }
+
+    public int getFeedbackId() {
+        return feedbackId;
+    }
+
+    public void setFeedbackId(int feedbackId) {
+        this.feedbackId = feedbackId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public int getPoolId() {
+        return poolId;
+    }
+
+    public void setPoolId(int poolId) {
+        this.poolId = poolId;
     }
 
     public int getRating() {
@@ -29,22 +62,6 @@ public class FeedBack {
         this.rating = rating;
     }
 
-    public String getPool_name() {
-        return pool_name;
-    }
-
-    public void setPool_name(String pool_name) {
-        this.pool_name = pool_name;
-    }
-
-    public String getPool_image() {
-        return pool_image;
-    }
-
-    public void setPool_image(String pool_image) {
-        this.pool_image = pool_image;
-    }
-
     public String getComment() {
         return comment;
     }
@@ -53,10 +70,13 @@ public class FeedBack {
         this.comment = comment;
     }
 
-    @Override
-    public String toString() {
-        return "FeedBack{" + "rating=" + rating + ", pool_name=" + pool_name + ", pool_image=" + pool_image + ", comment=" + comment + '}';
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+    
     
 }

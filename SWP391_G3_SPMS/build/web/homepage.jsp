@@ -1,6 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.List,model.Pools,model.FeedBack" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page import="java.util.List,model.Pool,model.FeedbackHomepage,model.User" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,13 +16,14 @@
         <!-- bootstrap css -->
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <!-- style css -->
-        <link rel="stylesheet" href="css/poollist.css">
+        <link rel="stylesheet" href="css/style.css">
         <!-- Responsive-->
         <link rel="stylesheet" href="css/responsive.css">
         <!-- fevicon -->
         <link rel="icon" href="images/fevicon.png" type="image/gif" />
         <!-- Scrollbar Custom CSS -->
         <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
+        <script src="https://cdn.tailwindcss.com"></script>
         <!-- Tweaks for older IEs-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
@@ -34,267 +34,380 @@
            <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
     </head>
-    <body>
 
-
-     <header>
-    <div class="header">
-        <div class="container" style="max-width: none !important; padding: 0 24px">
-            <div class="row">
-                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col logo_section">
-                    <div class="full">
-                        <div class="center-desk">
-                            <div class="titlePool">
-                                <a href="#">PoolHub</a>
-                            </div>
+    <body class="main-layout">
+        <!-- loader  -->
+        <!--        <div class="loader_bg">
+                    <div class="loader"><img src="images/loading.gif" alt="#" /></div>
+                </div>-->
+        <!-- end loader -->
+        <!-- header -->
+        <header class="bg-white shadow-md w-full">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between py-4">
+                    <!-- Logo -->
+                    <div class="flex items-center space-x-3">
+                        <div class="h-20 w-20">
+                            <img src="images/logoPool.png" alt="Logo" class="h-full w-full object-contain" />
                         </div>
+                        <a href="home" class="text-3xl md:text-5xl font-bold text-[#33CCFF]">PoolHub</a>
                     </div>
-                </div>
-                <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9">
-                    <nav class="navigation navbar navbar-expand-md navbar-dark">
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04"
-                                aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
 
-                        <div class="collapse navbar-collapse justify-content-between align-items-center" id="navbarsExample04">
-                            <!-- Menu bên trái -->
-                            <ul class="navbar-nav d-flex align-items-center flex-row">
-                                <li class="nav-item active"><a class="nav-link" href="#">TRANG CHỦ</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">GIỚI THIỆU</a></li>
-                                <li class="nav-item"><a class="nav-link" href="homepage">BỂ BƠI</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">ĐÁNH GIÁ</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">LIÊN HỆ</a></li>
-                            </ul>
 
-                            <ul class="navbar-nav ms-auto d-flex align-items-center flex-row">
-                                <c:if test="${not empty sessionScope.currentUser}">
-                                    <li class="nav-item d-flex align-items-center me-3">
-                                        <span class="nav-link text-muted">
-                                            Welcome, <strong>${sessionScope.currentUser.username}</strong>
-                                        </span>
-                                    </li>
-                                    <li class="nav-item">
-                                        <span class="nav-link px-1">|</span>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link text-danger" href="LogoutServlet">Logout</a>
-                                    </li>
-                                </c:if>
-                                <c:if test="${empty sessionScope.currentUser}">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="login.jsp">Đăng nhập</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <span class="nav-link px-1">|</span>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="register.jsp">Đăng ký</a>
-                                    </li>
-                                </c:if>
-                            </ul>
-                        </div>
+                    <% 
+
+                    %>
+
+                    <!-- Navigation -->
+                    <nav class="hidden md:flex space-x-6 text-base font-medium items-center">
+                        <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Trang Chủ</a>
+                        <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Giới Thiệu</a>
+                        <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Bể Bơi</a>
+                        <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Đánh Giá</a>
+                        <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Liên Hệ</a>
+                        <a href="login.jsp" class="flex items-center space-x-2 text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">
+                            <span>Đăng nhập</span>
+                        </a>
                     </nav>
                 </div>
             </div>
-        </div>
-    </div>
-</header>
+        </header>
 
 
-        <section class="banner_main">
-            <div id="myCarousel" class="carousel slide banner" data-ride="carousel">
-                <ol class="carousel-indicators">
-                    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                    <li data-target="#myCarousel" data-slide-to="1"></li>
-                </ol>
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img class="first-slide" src="images/banner2.jpg" alt="Trải nghiệm tuyệt vời">
-                    </div>
-                    <div class="carousel-item">
-                        <img class="second-slide" src="images/banner3.jpg" alt="Thư giãn bên bể bơi">
+
+
+        <!-- end header -->
+
+        <!-- banner -->
+        <section class="relative w-full overflow-hidden">
+            <!-- Carousel Wrapper -->
+            <div class="relative h-[500px] w-full">
+                <div class="absolute inset-0 animate-fade-in-out z-10">
+                    <img src="images/banner2.jpg" alt="Trải nghiệm tuyệt vời" class="w-full h-full object-cover" />
+                </div>
+                <div class="absolute inset-0 animate-fade-in-out delay-5000 z-0">
+                    <img src="images/banner3.jpg" alt="Thư giãn bên bể bơi" class="w-full h-full object-cover" />
+                </div>
+            </div>
+
+            <!-- Nút điều hướng nếu muốn thêm -->
+            <!--
+            <div class="absolute inset-0 flex items-center justify-between px-4 z-20">
+                <button class="bg-white/50 hover:bg-white/80 rounded-full p-2">
+                    <svg class="w-6 h-6 text-gray-800" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.707 14.707a1 1 0 01-1.414 0L7.586 11l3.707-3.707a1 1 0 011.414 1.414L10.414 11l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" /></svg>
+                </button>
+                <button class="bg-white/50 hover:bg-white/80 rounded-full p-2">
+                    <svg class="w-6 h-6 text-gray-800" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 001.414 0L12.414 11 8.707 7.293a1 1 0 10-1.414 1.414L9.586 11l-2.293 2.293a1 1 0 000 1.414z" clip-rule="evenodd" /></svg>
+                </button>
+            </div>
+            -->
+        </section>
+        <style>
+            @keyframes fade-in-out {
+                0%, 100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0;
+                }
+            }
+            .animate-fade-in-out {
+                animation: fade-in-out 10s infinite;
+            }
+            .delay-5000 {
+                animation-delay: 5s;
+            }
+        </style>
+
+        <!-- end banner -->
+
+        <!-- about -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-4 flex flex-col lg:flex-row items-center gap-12">
+                <!-- Nội dung -->
+                <div class="lg:w-5/12 text-center lg:text-left">
+                    <h2 class="text-3xl md:text-4xl font-bold text-[#33CCFF] mb-4">Về Chúng Tôi</h2>
+                    <p class="text-gray-700 mb-6">
+                        PoolHub là hệ thống bể bơi hàng đầu, nơi bạn có thể tận hưởng những giây phút thư giãn tuyệt vời.
+                        Chúng tôi cam kết mang đến cho bạn trải nghiệm tốt nhất với dịch vụ chuyên nghiệp và cơ sở vật chất hiện đại.
+                    </p>
+                    <a href="#" class="inline-block bg-[#33CCFF] text-white px-6 py-2 rounded-full hover:bg-[#1BAFDA] transition">
+                        Đọc Thêm
+                    </a>
+                </div>
+
+                <!-- Hình ảnh với overlay -->
+                <div class="lg:w-7/12 relative group cursor-pointer">
+                    <img src="images/about.png" alt="Về chúng tôi"
+                         class="rounded-2xl shadow-lg w-full max-h-[500px] object-cover group-hover:brightness-75 transition duration-300" />
+                    <div
+                        class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                        <button onclick="openPopup()"
+                                class="bg-black bg-opacity-60 text-white px-6 py-2 rounded-full hover:bg-opacity-80 transition">
+                            Xem Thêm
+                        </button>
                     </div>
                 </div>
-                <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>
+            </div>
+
+            <!-- Popup -->
+            <div id="popupImage"
+                 class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+                <div class="relative">
+                    <img src="images/about.png" class="max-w-full max-h-screen rounded-xl shadow-lg" />
+                    <button onclick="closePopup()"
+                            class="absolute top-2 right-2 text-white text-2xl bg-black bg-opacity-50 rounded-full px-3 hover:bg-opacity-70 transition">
+                        &times;
+                    </button>
+                </div>
             </div>
         </section>
 
-        <div class="about">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-5">
-                        <div class="titlepage">
-                            <h2>Về Chúng Tôi</h2>
-                            <p>PoolHub là hệ thống bể bơi hàng đầu, nơi bạn có thể tận hưởng những giây phút thư giãn tuyệt vời. Chúng tôi cam kết mang đến cho bạn trải nghiệm tốt nhất với dịch vụ chuyên nghiệp và cơ sở vật chất hiện đại.</p>
-                            <a class="read_more" href="#"> Đọc Thêm</a>
-                        </div>
-                    </div>
-                    <div class="col-md-7">
-                        <div class="about_img">
-                            <figure><img src="images/about.png" alt="Về chúng tôi" /></figure>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- Script -->
+        <script>
+            function openPopup() {
+                document.getElementById("popupImage").classList.remove("hidden");
+            }
+            function closePopup() {
+                document.getElementById("popupImage").classList.add("hidden");
+            }
+        </script>
 
-        <div class="our_room">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="titlepage">
-                            <h2>Bể Bơi Của Chúng Tôi</h2>
-                            <p>Khám phá các bể bơi tuyệt đẹp của chúng tôi.</p>
-                        </div>
-                    </div>
+
+        <!-- end about -->
+
+        <!-- our_room -->
+        <div class="py-16 bg-gradient-to-b from-white to-blue-50">
+            <div class="container mx-auto px-4">
+                <!-- Tiêu đề -->
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-extrabold text-[#33CCFF]">Bể Bơi Của Chúng Tôi</h2>
+                    <p class="text-gray-600 mt-2 text-lg">Khám phá các bể bơi tuyệt đẹp của chúng tôi.</p>
                 </div>
-                <div class="row">
+
+                <!-- Danh sách bể bơi -->
+                <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
                     <% 
-                        List<Pools> listPool = (List<Pools>) request.getAttribute("listPool");
+                        List<Pool> listPool = (List<Pool>) request.getAttribute("listPool");
                         int count = 0;
                         if(listPool != null){
-                        for(Pools p : listPool){
-                        
-                        
+                        for(Pool p : listPool){
                     %>
-                    <div class="col-md-4 col-sm-6">
-                        <div id="serv_hover" class="room">
-                            <div class="room_img">
-                                <figure><img src="<%= p.getPool_image() %>" alt="" /></figure>
-                            </div>
-                            <div class="bed_room">
-                                <h3>Bể Bơi <%= ++count%></h3>
-                                <p><%= p.getPool_description() %></p>
-                            </div>
+                    <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group border border-gray-200">
+                        <div class="overflow-hidden">
+                            <img src="<%= p.getPool_image() %>" alt="Pool <%= count+1 %>" 
+                                 class="w-full h-60 object-cover transform group-hover:scale-105 group-hover:brightness-110 transition duration-500" />
                         </div>
-                    </div>
-                    <% }}%>
-                </div>
-            </div>
-        </div>
-
-        <div class="gallery">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="titlepage">
-                            <h2>Thư Viện Hình Ảnh</h2>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- BẮT ĐẦU MỘT ROW DUY NHẤT CHỨA TOÀN BỘ ẢNH -->
-                <div class="row">
-                    <% 
-                        List<Pools> listPool2 = (List<Pools>) request.getAttribute("listPool2");
-                        if(listPool2 != null){
-                            for(Pools p : listPool2){
-                    %>
-                    <div class="col-md-3 col-sm-6 mb-4">
-                        <div class="gallery_img">
-                            <figure><img src="<%= p.getPool_image() %>" alt="" class="img-fluid" /></figure>
+                        <div class="p-5">
+                            <h3 class="text-xl font-bold text-[#33CCFF] mb-2">Bể Bơi <%= ++count %></h3>
+                            <p class="text-gray-700 text-sm leading-relaxed"><%= p.getPool_description() %></p>
                         </div>
                     </div>
                     <% }} %>
                 </div>
-                <!-- KẾT THÚC ROW -->
             </div>
         </div>
 
-        <div class="blog">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="titlepage">
-                            <h2>Đánh Giá</h2>
-                            <p>Dưới đây là những đánh giá và trải nghiệm của khách hàng tại PoolHub.</p>
-                        </div>
-                    </div>
+
+        <!-- end our_room -->
+
+        <!-- gallery -->
+        <div class="py-16 bg-gradient-to-b from-white to-blue-50">
+            <div class="container mx-auto px-4">
+                <!-- Tiêu đề -->
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-extrabold text-[#33CCFF]">Thư Viện Hình Ảnh</h2>
                 </div>
-                <div class="row">
+
+                <!-- Lưới hình ảnh -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     <% 
-                        List<FeedBack> listPool3 = (List<FeedBack>) request.getAttribute("listPool3");
-                        if(listPool3 != null){
-                            for(FeedBack f : listPool3){
+                        List<Pool> listPool2 = (List<Pool>) request.getAttribute("listPool2");
+                        if(listPool2 != null){
+                            for(Pool p : listPool2){
                     %>
-                    <div class="col-md-4 h-100 d-flex mb-4">
-                        <div class="blog_box w-100">
-                            <div class="blog_img">
-                                <figure><img src="<%= f.getPool_image()%>" alt="Đánh giá 1" /></figure>
-                            </div>
-                            <div class="blog_room">
-                                <h3><%= f.getPool_name() %></h3>
-                                <span><%= f.getRating() %> sao</span>
-                                <p><%= f.getComment() %></p>
-                            </div>
+                    <div class="relative group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition duration-300" data-index="<%= listPool2.indexOf(p) %>">
+                        <img src="<%= p.getPool_image() %>" 
+                             alt="Ảnh bể bơi" 
+                             class="w-full h-52 object-cover transform group-hover:scale-110 group-hover:brightness-75 transition duration-500" />
+                        <!-- Overlay -->
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                            <span class="view-image-btn text-white font-semibold text-lg bg-black bg-opacity-50 px-4 py-2 rounded cursor-pointer" data-index="<%= listPool2.indexOf(p) %>">Xem ảnh</span>
                         </div>
                     </div>
-                    <%  }}%>
+                    <!-- Lightbox popup -->
+                    <div id="lightboxModal" class="fixed inset-0 bg-black bg-opacity-80 z-50 hidden flex items-center justify-center">
+                        <button id="lightboxClose" class="absolute top-5 right-5 text-white text-3xl font-bold">&times;</button>
+                        <button id="prevBtn" class="absolute left-4 text-white text-4xl font-bold">&lsaquo;</button>
+                        <img id="lightboxImage" src="" alt="Ảnh lớn" class="max-h-[80vh] max-w-[90vw] rounded shadow-lg" />
+                        <button id="nextBtn" class="absolute right-4 text-white text-4xl font-bold">&rsaquo;</button>
+                    </div>
+
+                    <% }} %>
+                </div>
+                <script>
+                    const images = [...document.querySelectorAll('.view-image-btn')].map(btn =>
+                        btn.closest('.group').querySelector('img').src
+                    );
+
+                    const lightbox = document.getElementById('lightboxModal');
+                    const lightboxImg = document.getElementById('lightboxImage');
+                    const closeBtn = document.getElementById('lightboxClose');
+                    const prevBtn = document.getElementById('prevBtn');
+                    const nextBtn = document.getElementById('nextBtn');
+
+                    let currentIndex = 0;
+
+                    document.querySelectorAll('.view-image-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            currentIndex = parseInt(btn.dataset.index);
+                            lightboxImg.src = images[currentIndex];
+                            lightbox.classList.remove('hidden');
+                        });
+                    });
+
+                    closeBtn.addEventListener('click', () => {
+                        lightbox.classList.add('hidden');
+                    });
+
+                    nextBtn.addEventListener('click', () => {
+                        currentIndex = (currentIndex + 1) % images.length;
+                        lightboxImg.src = images[currentIndex];
+                    });
+
+                    prevBtn.addEventListener('click', () => {
+                        currentIndex = (currentIndex - 1 + images.length) % images.length;
+                        lightboxImg.src = images[currentIndex];
+                    });
+
+                    // Đóng popup khi bấm ngoài ảnh
+                    lightbox.addEventListener('click', (e) => {
+                        if (e.target === lightbox) {
+                            lightbox.classList.add('hidden');
+                        }
+                    });
+                </script>
+
+            </div>
+        </div>
+
+
+
+        <!-- end gallery -->
+
+        <!-- blog -->
+        <div class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <!-- Tiêu đề -->
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-[#33CCFF]">Đánh Giá</h2>
+                    <p class="text-gray-600 mt-3 text-base max-w-xl mx-auto">
+                        Dưới đây là những đánh giá và trải nghiệm chân thực từ khách hàng đã sử dụng dịch vụ tại PoolHub.
+                    </p>
+                </div>
+
+                <!-- Danh sách đánh giá -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <% 
+                        List<FeedbackHomepage> listPool3 = (List<FeedbackHomepage>) request.getAttribute("listPool3");
+                        if(listPool3 != null){
+                            for(FeedbackHomepage f : listPool3){
+                                int rating = f.getRating();
+                    %>
+                    <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 flex flex-col overflow-hidden">
+                        <img src="<%= f.getPool_image() %>" alt="Hình ảnh bể bơi" class="w-full h-48 object-cover rounded-t-2xl" />
+                        <div class="p-5 flex flex-col flex-grow">
+                            <h3 class="text-lg font-semibold text-[#33CCFF] mb-2"><%= f.getPool_name() %></h3>
+                            <!-- Rating -->
+                            <div class="flex items-center mb-3">
+                                <% for(int i = 1; i <= 5; i++) { %>
+                                <svg xmlns="http://www.w3.org/2000/svg" 
+                                     class="h-5 w-5 <%= i <= rating ? "text-yellow-400" : "text-gray-300" %>" 
+                                     viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.956a1 1 0 00.95.69h4.162c.969 0 
+                                      1.371 1.24.588 1.81l-3.37 2.45a1 1 0 00-.364 1.118l1.286 3.957c.3.921-.755 
+                                      1.688-1.54 1.118l-3.371-2.45a1 1 0 00-1.175 0l-3.371 2.45c-.784.57-1.838-.197-1.539-1.118l1.285-3.957a1 
+                                      1 0 00-.364-1.118l-3.37-2.45c-.784-.57-.38-1.81.588-1.81h4.162a1 1 
+                                      0 00.951-.69l1.285-3.956z" />
+                                </svg>
+                                <% } %>
+                            </div>
+                            <!-- Comment -->
+                            <p class="text-gray-600 text-sm flex-grow"><%= f.getComment() %></p>
+                        </div>
+                    </div>
+                    <% }} %>
                 </div>
             </div>
         </div>
-        <footer>
-            <div class="footer">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h3>Liên Hệ Chúng Tôi</h3>
-                            <ul class="conta">
-                                <li><i class="fa fa-map-marker" aria-hidden="true"></i> Địa Chỉ</li>
-                                <li><i class="fa fa-mobile" aria-hidden="true"></i> +01 1234569540</li>
-                                <li><i class="fa fa-envelope" aria-hidden="true"></i><a href="#"> poolhub@gmail.com</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-md-4">
-                            <h3>Liên Kết Menu</h3>
-                            <ul class="link_menu">
-                                <li class="active"><a href="#">Trang Chủ</a></li>
-                                <li><a href="#">Về Chúng Tôi</a></li>
-                                <li><a href="#">Bể Bơi</a></li>
-                                <li><a href="#">Thư Viện Hình Ảnh</a></li>
-                                <li><a href="#">Đánh Giá</a></li>
-                                <li><a href="#">Liên Hệ</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-md-4">
-                            <h3>Bản Tin</h3>
-                            <form class="bottom_form">
-                                <input class="enter" placeholder="Nhập email của bạn" type="text" name="Enter your email">
-                                <button class="sub_btn">Đăng Ký</button>
-                            </form>
-                            <ul class="social_icon">
-                                <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fa fa-youtube-play" aria-hidden="true"></i></a></li>
-                            </ul>
-                        </div>
+
+
+        <!-- end blog -->
+
+        <!-- contact -->
+
+        <!-- end contact -->
+
+        <!-- footer -->
+        <footer class="bg-gray-900 text-white pt-12">
+            <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-10 pb-10">
+                <!-- Liên Hệ -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 text-[#33CCFF]">Liên Hệ Chúng Tôi</h3>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-center gap-2">
+                            <i class="fa fa-map-marker text-[#33CCFF]"></i> Địa chỉ
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fa fa-mobile text-[#33CCFF]"></i> +01 1234569540
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fa fa-envelope text-[#33CCFF]"></i>
+                            <a href="mailto:poolhub@gmail.com" class="hover:underline">poolhub@gmail.com</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Liên Kết Menu -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 text-[#33CCFF]">Liên Kết Menu</h3>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="#" class="hover:text-[#33CCFF] transition">Trang Chủ</a></li>
+                        <li><a href="#" class="hover:text-[#33CCFF] transition">Về Chúng Tôi</a></li>
+                        <li><a href="#" class="hover:text-[#33CCFF] transition">Bể Bơi</a></li>
+                        <li><a href="#" class="hover:text-[#33CCFF] transition">Thư Viện Hình Ảnh</a></li>
+                        <li><a href="#" class="hover:text-[#33CCFF] transition">Đánh Giá</a></li>
+                        <li><a href="#" class="hover:text-[#33CCFF] transition">Liên Hệ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Đăng ký bản tin -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 text-[#33CCFF]">Bản Tin</h3>
+                    <form class="flex flex-col gap-3 mb-4">
+                        <input type="email" placeholder="Nhập email của bạn" 
+                               class="w-full px-4 py-2 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-[#33CCFF]" />
+                        <button type="submit" class="bg-[#33CCFF] text-white px-4 py-2 rounded-lg hover:bg-[#1BAFDA] transition">Đăng Ký</button>
+                    </form>
+
+                    <div class="flex space-x-4">
+                        <a href="#"><i class="fa fa-facebook text-2xl hover:text-[#33CCFF] transition"></i></a>
+                        <a href="#"><i class="fa fa-twitter text-2xl hover:text-[#33CCFF] transition"></i></a>
+                        <a href="#"><i class="fa fa-linkedin text-2xl hover:text-[#33CCFF] transition"></i></a>
+                        <a href="#"><i class="fa fa-youtube-play text-2xl hover:text-[#33CCFF] transition"></i></a>
                     </div>
                 </div>
-                <div class="copyright">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-10 offset-md-1">
-                                <p>
-                                    © 2025 Tất cả quyền được bảo lưu. Thiết kế bởi Hệ thống bể bơi PoolHub</a>
-                                    <br><br>
-                                    Phân phối bởi PoolHub</a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="border-t border-gray-700 py-4 text-center text-gray-400 text-sm">
+                © 2025 Tất cả quyền được bảo lưu. Thiết kế và phân phối bởi <span class="text-[#33CCFF] font-semibold">PoolHub</span>.
             </div>
         </footer>
 
+        <!-- end footer -->
+
+        <!-- Javascript files-->
         <script src="js/jquery.min.js"></script>
         <script src="js/bootstrap.bundle.min.js"></script>
         <script src="js/jquery-3.0.0.min.js"></script>
@@ -302,6 +415,4 @@
         <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
         <script src="js/custom.js"></script>
     </body>
-
-
 </html>

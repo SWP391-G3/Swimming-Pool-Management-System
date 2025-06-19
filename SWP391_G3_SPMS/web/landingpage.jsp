@@ -1,150 +1,145 @@
 <%-- 
-    Document   : landingpage
-    Created on : Jun 4, 2025, 10:53:19 PM
-    Author     : 84823
+    Document   : LandingPage
+    Created on : May 31, 2025, 12:36:09 AM
+    Author     : Lenovo
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Hệ Thống Bể Bơi PoolHub</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="./assets/css/main.css">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: '#33CCFF',
+                            secondary: '#0F172A'
+                        },
+                        animation: {
+                            fadeIn: "fadeIn 1.5s ease-in-out",
+                            slideUp: "slideUp 1s ease-out"
+                        },
+                        keyframes: {
+                            fadeIn: {
+                                '0%': {opacity: '0'},
+                                '100%': {opacity: '1'}
+                            },
+                            slideUp: {
+                                '0%': {transform: 'translateY(20px)', opacity: '0'},
+                                '100%': {transform: 'translateY(0)', opacity: '1'}
+                            }
+                        }
+                    }
+                }
+            };
+        </script>
     </head>
-    <body>
-        <header id="header">
-            <nav class="left">
-                <a href="#menu"><span>Menu</span></a>
-            </nav>
-            <a href="index.html" class="logo">PoolHub</a>
-            <nav class="right">
-                <a href="login.jsp" class="button alt">Đăng nhập</a>
-                <a href="register.jsp" class="button alt">Đăng ký</a>
-            </nav>
+
+    <body class="bg-white text-gray-800 font-sans">
+        <!-- Header -->
+        <header class="bg-white shadow sticky top-0 z-50">
+            <div class="container mx-auto flex justify-between items-center py-4 px-6 animate-fadeIn">
+                <a href="LandingPage.jsp" class="text-3xl font-bold text-primary transition-transform hover:scale-105">PoolHub</a>
+                <nav class="space-x-4">
+                    <a href="login.jsp" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-cyan-400 transition-all duration-300">Đăng nhập</a>
+                </nav>
+            </div>
         </header>
 
-
-        <!-- Menu -->
-        <nav id="menu">
-            <ul class="links">
-                <li><a href="index.html">Trang Chủ</a></li>
-                <li><a href="#">Dịch Vụ</a></li>
-                <li><a href="#">Ưu Đãi</a></li>
-                <li><a href="#">Góp Ý</a></li>
-            </ul>
-            <ul class="actions vertical">
-                <li><a href="login.jsp" class="button fit">Đăng nhập</a></li>
-            </ul>
-
-        </nav>
-
-
-
-
         <!-- Banner -->
-        <section id="banner">
-            <div class="content">
-                <h1>Trải nghiệm bơi lý tưởng cùng PoolHub</h1>
-                <p>Đặt vé dễ dàng, nhận thông báo nhanh chóng, tham gia ưu đãi hấp dẫn và quản lý lịch bơi của bạn mọi lúc mọi nơi.</p>
-                <ul class="actions">
-                    <li><a href="login.jsp" class="button scrolly">Khám phá ngay</a></li>
-                </ul>
+        <section class="bg-gradient-to-r from-primary to-blue-400 text-white text-center py-24 animate-slideUp">
+            <div class="max-w-2xl mx-auto px-4">
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight animate-fadeIn">Trải nghiệm bơi lý tưởng cùng PoolHub</h1>
+                <p class="text-lg md:text-xl mb-6 animate-fadeIn delay-200">Đặt vé dễ dàng, nhận thông báo nhanh chóng, tham gia ưu đãi hấp dẫn và quản lý lịch bơi của bạn mọi lúc mọi nơi.</p>
+                <a href="home" class="inline-block bg-white text-primary font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition duration-300 transform hover:scale-105">Khám phá ngay</a>
             </div>
         </section>
 
-        <section id="features" class="wrapper">
-            <div class="inner flex flex-3">
-                <div class="flex-item left">
+        <!-- Tính năng -->
+        <section class="py-20 bg-gray-50">
+            <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-12 items-center">
+                <div class="space-y-10 animate-slideUp">
                     <div>
-                        <h3>Đặt Vé Bơi</h3>
-                        <p>Chọn khung giờ, loại vé và bể bơi yêu thích. Thanh toán dễ dàng, xác nhận nhanh chóng.</p>
-                    </div>
-                    <div>
-                        <h3>Xem Lịch & Lịch Sử</h3>
-                        <p>Theo dõi lịch đã đặt, xem lại vé cũ và quản lý thông tin cá nhân.</p>
-                    </div>
-                </div>
-                <div class="flex-item image fit round">
-                    <img src="images/banner5_2.jpg" alt="Dịch vụ bơi lội" style="border-radius: 50%" width="330" height="330">
-                </div>
-                <div class="flex-item right">
-                    <div>
-                        <h3>Ưu Đãi Cá Nhân</h3>
-                        <p>Nhận mã giảm giá tự động theo mức độ sử dụng và dịp đặc biệt.</p>
+                        <h3 class="text-xl font-semibold text-secondary mb-2">Đặt Vé Bơi</h3>
+                        <p class="text-gray-600">Chọn khung giờ, loại vé và bể bơi yêu thích. Thanh toán dễ dàng, xác nhận nhanh chóng.</p>
                     </div>
                     <div>
-                        <h3>Góp Ý & Hỗ Trợ</h3>
-                        <p>Gửi đánh giá dịch vụ, yêu cầu hỗ trợ nhanh chóng từ hệ thống.</p>
+                        <h3 class="text-xl font-semibold text-secondary mb-2">Xem Lịch & Lịch Sử</h3>
+                        <p class="text-gray-600">Theo dõi lịch đã đặt, xem lại vé cũ và quản lý thông tin cá nhân.</p>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <section id="two" class="wrapper style1 special">
-            <div class="inner">
-                <h2>Phản hồi từ khách hàng</h2>
-                <figure>
-                    <blockquote>
-                        “Ứng dụng tiện lợi, bơi mỗi tuần mà không cần chờ đợi hay gọi điện. Ưu đãi mỗi tháng đều hấp dẫn!”
-                    </blockquote>
-                    <footer><cite class="author">Trần Minh</cite> <cite class="company">Khách hàng thường xuyên</cite></footer>
-                </figure>
-            </div>
-        </section>
-        <section id="three" class="wrapper">
-            <div class="inner flex flex-3">
-                <div class="flex-item box">
-                    <div class="image fit">
-                        <img src="images/banner4_1.jpg" alt="Vé bơi" width="418" height="200">
-                    </div>
-                    <div class="content">
-                        <h3>Nhiều loại vé</h3>
-                        <p>Vé theo lượt, theo giờ, hoặc vé tháng dành cho cá nhân và gia đình.</p>
-                    </div>
+                <div class="flex justify-center animate-fadeIn">
+                    <img src="images/banner5_2.jpg" alt="Dịch vụ bơi lội" class="rounded-full w-72 h-72 object-cover shadow-lg hover:scale-105 transition duration-300" />
                 </div>
-                <div class="flex-item box">
-                    <div class="image fit">
-                        <img src="images/pic09_1.jpg" alt="Thông báo" width="418" height="200">
+                <div class="space-y-10 animate-slideUp">
+                    <div>
+                        <h3 class="text-xl font-semibold text-secondary mb-2">Ưu Đãi Cá Nhân</h3>
+                        <p class="text-gray-600">Nhận mã giảm giá tự động theo mức độ sử dụng và dịp đặc biệt.</p>
                     </div>
-                    <div class="content">
-                        <h3>Thông báo tức thì</h3>
-                        <p>Nhận cập nhật lịch bơi, thay đổi lịch, khuyến mãi và thông tin bể bơi ngay lập tức.</p>
-                    </div>
-                </div>
-                <div class="flex-item box">
-                    <div class="image fit">
-                        <img src="images/pic06_1.jpg" alt="Chăm sóc khách hàng" width="418" height="200">
-                    </div>
-                    <div class="content">
-                        <h3>Trải nghiệm tuyệt vời</h3>
-                        <p>Bể bơi của chúng tôi luôn mới mẻ vè hấp dẫn, luôn mang đến cho khách hàng trải nghiệm tốt nhất.</p>
+                    <div>
+                        <h3 class="text-xl font-semibold text-secondary mb-2">Góp Ý & Hỗ Trợ</h3>
+                        <p class="text-gray-600">Gửi đánh giá dịch vụ, yêu cầu hỗ trợ nhanh chóng từ hệ thống.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <footer id="footer">
-            <div class="inner">
-                <h2>Liên hệ</h2>
-                <ul class="actions">
-                    <li><span class="icon fa-phone"></span> <a href="#">(084) 123-4567</a></li>
-                    <li><span class="icon fa-envelope"></span> <a href="#">hotro@poolhub.vn</a></li>
-                    <li><span class="icon fa-map-marker"></span> 123 Đường Bơi Lội, TP. Bể Bơi</li>
+        <!-- Feedback -->
+        <section class="bg-white py-16 text-center border-t">
+            <div class="max-w-3xl mx-auto px-4 animate-fadeIn">
+                <h2 class="text-2xl font-bold text-secondary mb-6">Phản hồi từ khách hàng</h2>
+                <blockquote class="italic text-lg text-gray-700">“Ứng dụng tiện lợi, bơi mỗi tuần mà không cần chờ đợi hay gọi điện. Ưu đãi mỗi tháng đều hấp dẫn!”</blockquote>
+                <p class="mt-4 text-gray-600 font-medium">- Trần Minh, Khách hàng thường xuyên</p>
+            </div>
+        </section>
+
+        <!-- Dịch vụ nổi bật -->
+        <section class="py-20 bg-gray-100">
+            <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 px-6">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition duration-300 animate-fadeIn">
+                    <img src="images/banner4_1.jpg" alt="Vé bơi" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-lg font-semibold mb-2 text-secondary">Nhiều loại vé</h3>
+                        <p class="text-gray-600">Vé theo lượt, theo giờ, hoặc vé tháng dành cho cá nhân và gia đình.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition duration-300 animate-fadeIn delay-200">
+                    <img src="images/pic09_1.jpg" alt="Thông báo" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-lg font-semibold mb-2 text-secondary">Thông báo tức thì</h3>
+                        <p class="text-gray-600">Nhận cập nhật lịch bơi, thay đổi lịch, khuyến mãi và thông tin bể bơi ngay lập tức.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition duration-300 animate-fadeIn delay-300">
+                    <img src="images/pic06_1.jpg" alt="Chăm sóc khách hàng" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-lg font-semibold mb-2 text-secondary">Trải nghiệm tuyệt vời</h3>
+                        <p class="text-gray-600">Bể bơi của chúng tôi luôn mới mẻ và hấp dẫn, luôn mang đến cho khách hàng trải nghiệm tốt nhất.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-gradient-to-r from-primary to-blue-400 border-t py-12">
+            <div class="max-w-4xl mx-auto text-center space-y-4 animate-fadeIn">
+                <h2 class="text-xl font-bold text-secondary">Liên hệ</h2>
+                <ul class="space-y-2 text-gray-600">
+                    <li>(084) 123-4567</li>
+                    <li>hotro@poolhub.vn</li>
+                    <li>123 Đường Bơi Lội, TP. Bể Bơi</li>
                 </ul>
             </div>
         </footer>
 
-        <div class="copyright">
-            © 2025 - Bản quyền thuộc <a href="#">PoolHub.vn</a>.
+        <div class="bg-gray-100 text-center py-4 text-sm text-gray-500 animate-fadeIn">
+            © 2025 - Bản quyền thuộc <a href="#" class="text-primary hover:underline">PoolHub.vn</a>
         </div>
-
-        <!-- Scripts -->
-        <script src="assets/js/jquery.min.js"></script>
-        <script src="assets/js/jquery.scrolly.min.js"></script>
-        <script src="assets/js/skel.min.js"></script>
-        <script src="assets/js/util.js"></script>
-        <script src="assets/js/main.js"></script>
     </body>
+
 </html>

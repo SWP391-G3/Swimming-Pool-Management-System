@@ -1,198 +1,157 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
     <head>
         <meta charset="UTF-8" />
         <title>Đăng nhập</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-              integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+        <script src="https://cdn.tailwindcss.com"></script>
         <style>
+            /* Gợn sóng */
             body {
-                background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
-                min-height: 100vh;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                color: #333;
-                margin: 0;
+                background: linear-gradient(180deg, #a0e9ff 0%, #6dd5fa 100%);
+                overflow: hidden;
+                position: relative;
             }
 
-            .login-card {
-                background: #fff;
-                border-radius: 15px;
-                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-                padding: 40px;
-                width: 100%;
-                max-width: 420px;
-                box-sizing: border-box;
-                text-align: center;
+            .wave {
+                position: absolute;
+                bottom: 0;
+                width: 200%;
+                height: 100px;
+                background: rgba(255, 255, 255, 0.3);
+                border-radius: 100% 100% 0 0;
+                animation: wave 8s linear infinite;
+                z-index: 0;
             }
 
-            .login-card h2 {
-                margin-bottom: 30px;
-                font-weight: 700;
-                color: #0072ff;
-                letter-spacing: 1.5px;
+            .wave:nth-child(2) {
+                animation-delay: 2s;
+                opacity: 0.5;
             }
 
-            .back-to-home-link {
-                margin-top: 20px;
-                text-align: center;
-                font-size: 14px;
-                color: #555;
-            }
-            .back-to-home-link a {
-                color: #0072ff;
-                text-decoration: none;
-                font-weight: 600;
-            }
-            .back-to-home-link a:hover {
-                text-decoration: underline;
+            .wave:nth-child(3) {
+                animation-delay: 4s;
+                opacity: 0.3;
             }
 
-            label.form-label {
-                display: block;
-                margin-bottom: 8px;
-                font-weight: 600;
-                text-align: left;
-                color: #333;
+            @keyframes wave {
+                0% {
+                    transform: translateX(0);
+                }
+                100% {
+                    transform: translateX(-50%);
+                }
             }
 
-            .form-control:focus {
-                border-color: #0072ff;
-                box-shadow: 0 0 8px rgba(0, 114, 255, 0.5);
+            /* Bong bóng */
+            .bubble {
+                position: absolute;
+                bottom: -50px;
+                background-color: rgba(255, 255, 255, 0.3);
+                border-radius: 50%;
+                animation: rise 10s infinite ease-in;
+                opacity: 0.7;
+                z-index: 0;
             }
 
-            .btn-primary {
-                background-color: #0072ff;
-                border: none;
-                padding: 12px;
-                font-weight: 600;
-                transition: background-color 0.3s ease;
-                width: 100%;
-                margin-top: 10px;
+            @keyframes rise {
+                0% {
+                    transform: translateY(0) scale(1);
+                    opacity: 0.5;
+                }
+                100% {
+                    transform: translateY(-120vh) scale(0.8);
+                    opacity: 0;
+                }
             }
-
-            .btn-primary:hover {
-                background-color: #005bb5;
-            }
-
-            .error-message {
-                margin-bottom: 15px;
-                padding: 12px;
-                background-color: #f8d7da;
-                color: #842029;
-                border-radius: 8px;
-                font-weight: 600;
-                text-align: center;
-            }
-
-            .register-link {
-                margin-top: 20px;
-                font-size: 14px;
-                color: #555;
-            }
-
-            .register-link a {
-                color: #0072ff;
-                text-decoration: none;
-                font-weight: 600;
-            }
-
-            .register-link a:hover {
-                text-decoration: underline;
-            }
-
-            /* Google Login button */
-            .google-btn {
-                display: inline-flex;
-                align-items: center;
-                background: white;
-                color: #757575;
-                border: 1px solid #dadce0;
-                border-radius: 4px;
-                padding: 10px 15px;
-                font-family: Roboto, Arial, sans-serif;
-                font-weight: 500;
-                font-size: 14px;
-                cursor: pointer;
-                text-decoration: none;
-                user-select: none;
-                transition: box-shadow 0.2s ease-in-out;
-                width: 100%;
-                max-width: 320px;
-                box-sizing: border-box;
-                justify-content: center;
-                margin: 20px auto 0 auto;
-                box-shadow: 0 1px 1px rgb(0 0 0 / 0.1);
-            }
-
-            .google-btn:hover,
-            .google-btn:focus {
-                box-shadow: 0 2px 4px rgb(0 0 0 / 0.2);
-                outline: none;
-                color: #202124;
-            }
-
-            .google-icon {
-                height: 18px;
-                width: 18px;
-                margin-right: 12px;
-            }
-
-            .or-text {
-                margin-top: 10px;
-                margin-bottom: 10px;
-                font-weight: 700;
-                color: #555;
-                font-size: 18px;
-                letter-spacing: 1px;
-            }
-
         </style>
     </head>
-    <body>
-        <div class="login-card">
-            <h2>Đăng nhập</h2>
-            <form action="login" method="POST" autocomplete="off">
-                <c:if test="${not empty error}">
-                    <p class="error-message">${error}</p>
-                </c:if>
+    <body class="min-h-screen flex items-center justify-center">
+        <!-- Sóng -->
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
 
-                <!-- Username Input -->
-                <label for="usernameInput" class="form-label">Tên đăng nhập</label>
-                <input type="text" id="usernameInput" name="username" class="form-control" placeholder="Nhập tên đăng nhập" >
+        <!-- Form đăng nhập -->
+        <div class="relative z-10 bg-white/80 backdrop-blur-xl shadow-2xl rounded-2xl w-full max-w-md p-8 space-y-6">
+            <h2 class="text-2xl font-bold text-center text-blue-600">Đăng nhập</h2>
 
-                <!-- Password Input -->
-                <label for="passwordInput" class="form-label" style="margin-top:15px;">Mật khẩu</label>
-                <input type="password" id="passwordInput" name="password" class="form-control" placeholder="Nhập mật khẩu" >
+            <c:if test="${not empty error}">
+                <p class="bg-red-100 text-red-700 p-3 rounded text-sm font-semibold text-center">${error}</p>
+            </c:if>
 
-                <button type="submit" class="btn btn-primary">Đăng nhập</button>
+            <form action="login" method="POST" class="space-y-4" autocomplete="off">
+                <div>
+                    <label for="usernameInput" class="block text-sm font-medium text-gray-700 mb-1">Tên đăng nhập</label>
+                    <input
+                        type="text"
+                        id="usernameInput"
+                        name="username"
+                        placeholder="Nhập tên đăng nhập"
+                        class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        />
+                </div>
+                <div>
+                    <label for="passwordInput" class="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
+                    <input
+                        type="password"
+                        id="passwordInput"
+                        name="password"
+                        placeholder="Nhập mật khẩu"
+                        class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        />
+                </div>
+                <button
+                    type="submit"
+                    class="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+                    >
+                    Đăng nhập
+                </button>
             </form>
 
-            <div class="register-link">
-                Bạn chưa có tài khoản? <a href="register.jsp">Đăng ký ngay</a>
+            <div class="text-center text-sm text-gray-600">
+                Bạn chưa có tài khoản?
+                <a href="register.jsp" class="text-blue-600 font-medium hover:underline">Đăng ký ngay</a>
             </div>
 
-            <div class="or-text">Hoặc</div>
+            <!-- Divider -->
+            <div class="flex items-center justify-center gap-4 my-4">
+                <hr class="w-full border-gray-300" />
+                <span class="text-gray-400 text-sm font-medium">hoặc</span>
+                <hr class="w-full border-gray-300" />
+            </div>
 
-
-
-            <a href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:8080/SWP391_G3_SPMS/LoginGoogle&response_type=code&client_id=1011626607904-oroog9kq0dj2t481qcqkp39325sgcjvj.apps.googleusercontent.com&approval_prompt=force"
-               class="google-btn" role="button" aria-label="Login with Google">
-                <svg class="google-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 533.5 544.3">
-                <path fill="#4285F4" d="M533.5 278.4c0-17.7-1.6-34.8-4.6-51.4H272v97.5h146.9c-6.3 34.1-25.3 62.9-54 82.1v68h87.2c51-47 80.4-116.1 80.4-195.6z"/>
-                <path fill="#34A853" d="M272 544.3c73.5 0 135.3-24.4 180.4-66.3l-87.2-68c-24 16.1-54.8 25.7-93.2 25.7-71.6 0-132.4-48.3-154.3-113.1H29.5v70.8c45.4 89 138.8 151.9 242.5 151.9z"/>
-                <path fill="#FBBC05" d="M117.7 323.6c-10.4-30.6-10.4-63.5 0-94.1V158.7H29.5c-39.3 76.8-39.3 168.7 0 245.5l88.2-80.6z"/>
-                <path fill="#EA4335" d="M272 107.7c39.8 0 75.5 13.7 103.7 40.8l77.7-77.7C404.9 24.6 343 0 272 0 168.3 0 74.9 62.9 29.5 152.9l88.2 80.8c22-64.8 82.8-113 154.3-113z"/>
-                </svg>
+            <!-- Google login -->
+            <a
+                href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:8080/SWP391_G3_SPMS/LoginGoogle&response_type=code&client_id=1011626607904-oroog9kq0dj2t481qcqkp39325sgcjvj.apps.googleusercontent.com&approval_prompt=force"
+                class="flex items-center justify-center gap-2 border rounded-lg py-2 px-4 bg-white/90 text-gray-700 shadow hover:shadow-md transition"
+                >
+                <img src="https://www.svgrepo.com/show/355037/google.svg" class="w-5 h-5" />
                 Đăng nhập với Google
             </a>
-            <div class="back-to-home-link">
-                <a href="landingpage.jsp">Quay lại trang chủ</a>
+
+            <div class="text-center mt-4">
+                <a href="LandingPage.jsp" class="text-sm text-gray-600 hover:underline">← Quay lại trang chủ</a>
             </div>
         </div>
+
+        <!-- Script tạo bong bóng -->
+        <script>
+            const createBubbles = () => {
+                for (let i = 0; i < 50; i++) {
+                    const bubble = document.createElement("div");
+                    const size = Math.random() * 20 + 10;
+                    bubble.classList.add("bubble");
+                    bubble.style.width = `${size}px`;
+                    bubble.style.height = `${size}px`;
+                    bubble.style.left = `${Math.random() * 100}%`;
+                    bubble.style.animationDuration = `${5 + Math.random() * 5}s`;
+                    bubble.style.animationDelay = `${Math.random() * 5}s`;
+                    document.body.appendChild(bubble);
+                }
+            };
+            window.onload = createBubbles;
+        </script>
     </body>
 </html>

@@ -2,199 +2,174 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8" />
-    <title>Đăng ký</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-    <style>
-        body {
-            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
-        }
-        .register-card {
-            background: #fff;
-            border-radius: 15px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-            padding: 40px 30px;
-            width: 100%;
-            max-width: 720px;
-        }
-        .register-card h2 {
-            margin-bottom: 20px;
-            font-weight: 700;
-            color: #0072ff;
-            text-align: center;
-            letter-spacing: 1.5px;
-        }
-        .form-section-title {
-            font-weight: 600;
-            color: #005bb5;
-            font-size: 17px;
-            margin-bottom: 15px;
-            margin-top: 10px;
-        }
-        .form-control:focus {
-            border-color: #0072ff;
-            box-shadow: 0 0 8px rgba(0, 114, 255, 0.5);
-        }
-        .btn-primary {
-            background-color: #0072ff;
-            border: none;
-            padding: 12px;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
-            width: 100%;
-        }
-        .btn-primary:hover {
-            background-color: #005bb5;
-        }
-        .error-message {
-            margin-bottom: 15px;
-            padding: 12px;
-            background-color: #f8d7da;
-            color: #842029;
-            border-radius: 8px;
-            font-weight: 600;
-            text-align: center;
-        }
-        .sucees_message {
-            margin-bottom: 15px;
-            padding: 12px;
-            background-color: greenyellow;
-            border-radius: 8px;
-            font-weight: 600;
-            text-align: center;
-        }
-        .login-link {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 14px;
-            color: #555;
-        }
-        .login-link a {
-            color: #0072ff;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-        .google-signin {
-            margin-top: 25px;
-            display: flex;
-            justify-content: center;
-        }
-        .g_id_signin {
-            width: 100% !important;
-            max-width: 320px;
-            margin: 0 auto;
-            display: block;
-        }
-        @media (max-width: 991.98px) {
-            .register-card {
-                max-width: 95vw;
-                padding: 28px 10px;
+    <head>
+        <meta charset="UTF-8" />
+        <title>Đăng ký</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: "#0072ff",
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            body {
+                background: linear-gradient(180deg, #87e0fd 0%, #53cbf1 40%, #05abe0 100%);
+                background-size: 300% 300%;
+                animation: backgroundMotion 30s ease-in-out infinite;
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                overflow: hidden;
+                position: relative;
             }
-        }
-        @media (max-width: 767.98px) {
-            .register-card {
-                max-width: 99vw;
-                padding: 10px 2vw;
+
+            @keyframes backgroundMotion {
+                0% {
+                    background-position: 0% 50%;
+                }
+                50% {
+                    background-position: 100% 50%;
+                }
+                100% {
+                    background-position: 0% 50%;
+                }
             }
-        }
-    </style>
-</head>
-<body>
 
-    <div class="register-card">
-        <h2>Đăng ký</h2>
+            .wave-layer {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 200%;
+                height: 200px;
+                background: url("data:image/svg+xml;utf8,<svg viewBox='0 0 1440 320' xmlns='http://www.w3.org/2000/svg'><path fill='%23ffffff' fill-opacity='0.3' d='M0,160L80,149.3C160,139,320,117,480,106.7C640,96,800,96,960,122.7C1120,149,1280,203,1360,229.3L1440,256L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z'></path></svg>") repeat-x;
+                animation: waveMove 20s linear infinite;
+                z-index: -1;
+                background-size: cover;
+            }
 
-        <!-- Hiển thị thông báo lỗi hoặc thành công -->
-        <c:if test="${not empty error}">
-            <p class="error-message">${error}</p>
-        </c:if>
-        <c:if test="${not empty mess}">
-            <p class="sucees_message">${mess}</p>
-        </c:if>
+            @keyframes waveMove {
+                0% {
+                    transform: translateX(0);
+                }
+                100% {
+                    transform: translateX(-25%);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wave-layer"></div>
 
-        <!-- Form đăng ký -->
-        <form action="register" method="POST" autocomplete="off">
-            <div class="row">
-                <div class="col-md-12">
-                    <!-- Full Name -->
-                    <div class="mb-3">
-                        <label for="full_name" class="form-label">Họ và tên</label>
-                        <input type="text" id="full_name" name="full_name" class="form-control" placeholder="Nhập họ và tên"
-                               value="${param.full_name != null ? param.full_name : ''}"
-                               pattern="^(?=.{4,50}$)[A-Za-zÀ-ỹĐđ'\\-]+( [A-Za-zÀ-ỹĐđ'\\-]+)*$"
-                               title="Họ tên phải dài từ 4 đến 50 ký tự, chỉ bao gồm chữ cái và 1 khoảng trắng (không chứa số hoặc ký tự đặc biệt)"
-                               required />
+        <div class="bg-white/90 backdrop-blur-xl shadow-2xl rounded-2xl w-full max-w-4xl p-10">
+            <h2 class="text-3xl font-bold text-center text-primary mb-6">Đăng ký</h2>
+
+            <c:if test="${not empty error}">
+                <p class="bg-red-100 text-red-700 p-3 rounded text-sm font-semibold text-center mb-4">${error}</p>
+            </c:if>
+            <c:if test="${not empty mess}">
+                <p class="bg-green-200 text-green-800 p-3 rounded text-sm font-semibold text-center mb-4">${mess}</p>
+            </c:if>
+
+            <form action="register" method="POST" autocomplete="off">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block mb-1 text-sm font-medium text-gray-700">Họ và tên</label>
+                        <input
+                            type="text"
+                            name="full_name"
+                            placeholder="Nhập họ và tên"
+                            value="${param.full_name != null ? param.full_name : ''}"
+                            pattern="^(?=.{4,50}$)[A-Za-zÀ-ỹĐđ'\\-]+( [A-Za-zÀ-ỹĐđ'\\-]+)*$"
+                            title="Họ tên phải dài từ 4 đến 50 ký tự, chỉ bao gồm chữ cái và 1 khoảng trắng"
+                            required
+                            class="w-full px-4 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary"
+                            />
                     </div>
 
-                    <!-- Email -->
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="email@gmail.com"
-                               value="${param.email != null ? param.email : ''}"
-                             
-                               title="Email không đúng định dạng. Vui lòng thử lại."
-                               required />
+                    <div>
+                        <label class="block mb-1 text-sm font-medium text-gray-700">Email</label>
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="email@gmail.com"
+                            value="${param.email != null ? param.email : ''}"
+                            required
+                            class="w-full px-4 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary"
+                            />
                     </div>
 
-                    <!-- Phone -->
-                    <div class="mb-3">
-                        <label for="phone" class="form-label">Số điện thoại</label>
-                        <input type="tel" id="phone" name="phone" class="form-control" placeholder="Nhập số điện thoại"
-                               value="${param.phone != null ? param.phone : ''}"
-                               pattern="^0\d{9}$"
-                               title="Số điện thoại phải đúng format bắt đầu phải là số 0 và đủ 10 số"
-                               required />
+                    <div>
+                        <label class="block mb-1 text-sm font-medium text-gray-700">Số điện thoại</label>
+                        <input
+                            type="tel"
+                            name="phone"
+                            placeholder="Nhập số điện thoại"
+                            value="${param.phone != null ? param.phone : ''}"
+                            pattern="^0\\d{9}$"
+                            required
+                            class="w-full px-4 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary"
+                            />
                     </div>
 
-                    <!-- Username -->
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Tên đăng nhập</label>
-                        <input type="text" id="username" name="username" class="form-control" placeholder="Tên đăng nhập"
-                               value="${param.username != null ? param.username : ''}"
-                               pattern="^[A-Za-z0-9]{4,50}$"
-                               title="Tên đăng nhập phải dài từ 4-50 ký tự, chỉ bao gồm chữ cái, số, không được chứa dấu cách"
-                               required />
+                    <div>
+                        <label class="block mb-1 text-sm font-medium text-gray-700">Tên đăng nhập</label>
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="Tên đăng nhập"
+                            value="${param.username != null ? param.username : ''}"
+                            pattern="^[A-Za-z0-9]{4,50}$"
+                            required
+                            class="w-full px-4 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary"
+                            />
                     </div>
 
-                    <!-- Password -->
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Nhập mật khẩu</label>
-                        <input type="password" id="password" name="password" class="form-control" placeholder="Nhập mật khẩu" required />
+                    <div>
+                        <label class="block mb-1 text-sm font-medium text-gray-700">Mật khẩu</label>
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Nhập mật khẩu"
+                            required
+                            class="w-full px-4 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary"
+                            />
                     </div>
 
-                    <!-- Confirm Password -->
-                    <div class="mb-3">
-                        <label for="confirm_password" class="form-label">Nhập lại mật khẩu</label>
-                        <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Nhập lại mật khẩu" required />
-                    </div>
-
-                    <!-- Submit Button (aligned bottom) -->
-                    <div class="mb-3 mt-4 pt-2">
-                        <button type="submit" class="btn btn-primary w-100">Đăng ký</button>
+                    <div>
+                        <label class="block mb-1 text-sm font-medium text-gray-700">Nhập lại mật khẩu</label>
+                        <input
+                            type="password"
+                            name="confirm_password"
+                            placeholder="Nhập lại mật khẩu"
+                            required
+                            class="w-full px-4 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary"
+                            />
                     </div>
                 </div>
+
+                <div class="mt-6">
+                    <button
+                        type="submit"
+                        class="w-full bg-primary text-white font-semibold py-3 rounded-lg hover:bg-blue-600 transition duration-300"
+                        >
+                        Đăng ký
+                    </button>
+                </div>
+            </form>
+
+            <div class="text-center mt-6 text-sm text-gray-700">
+                <a href="LandingPage.jsp" class="hover:underline">← Quay lại trang chủ</a>
             </div>
-        </form>
-
-        <!-- Liên kết quay lại trang chủ hoặc đăng nhập -->
-        <div class="login-link">
-            <a href="landingpage.jsp">Quay lại trang chủ</a>
+            <div class="text-center text-sm mt-1 text-gray-700">
+                Đã có tài khoản? <a href="login.jsp" class="text-primary hover:underline font-medium">Đăng nhập</a>
+            </div>
         </div>
-        <div class="login-link">
-            Đã có tài khoản? <a href="login.jsp">Đăng nhập</a>
-        </div>
-    </div>
-
-</body>
+    </body>
 </html>

@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.User;
-import utils.HashUtils;
+import util.HashUtils;
 
 /**
  *
@@ -39,7 +39,7 @@ public class LoginServlet extends HttpServlet {
         UserDAO dao = new UserDAO();
         User user = dao.getUserByUsername(username); // Lấy user theo username
 
-        if (user != null) {
+        if (user != null && user.isStatus()) {
 
             String hashedInputPassword = HashUtils.hashPassword(password);
 
@@ -52,20 +52,19 @@ public class LoginServlet extends HttpServlet {
 
                 switch (roleId) {
                     case 1:
-                        response.sendRedirect("admin.jsp");
+                        response.sendRedirect("adminPoolManagement");
                         break;
                     case 2:
-                        response.sendRedirect("manager.jsp");
+                        response.sendRedirect("managerPanel.jsp"); 
                         break;
                     case 3:
                         response.sendRedirect("staff.jsp");
                         break;
                     case 4:
-                        response.sendRedirect("homepage.jsp");
-                         
+                        response.sendRedirect("customerHome");                     
                         break;
                     default:
-                        response.sendRedirect("index.jsp");
+                        response.sendRedirect("LandingPage.jsp");
                         break;
                 }
             } else {

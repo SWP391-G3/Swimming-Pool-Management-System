@@ -90,7 +90,7 @@ public class LoginGoogle extends HttpServlet {
             HttpSession session = request.getSession();
             session.setAttribute("currentUser", user);
 
-            response.sendRedirect("homepage.jsp");
+            response.sendRedirect("customerHome");
         } catch (GeneralSecurityException e) {
             throw new ServletException(e);
         }
