@@ -17,7 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author Tuan Anh
  */
-@WebServlet(name = "DeleteDeviceServlet", urlPatterns = {"/DeleteDeviceServlet"})
+@WebServlet(name = "DeleteDeviceServlet", urlPatterns = {"/managerDeleteDeviceServlet"})
 public class DeleteDeviceServlet extends HttpServlet {
 
     /**
@@ -62,7 +62,7 @@ public class DeleteDeviceServlet extends HttpServlet {
         String status = request.getParameter("status");
         String page = request.getParameter("page");
 
-        String redirectUrl = "ListDeviceServlet";
+        String redirectUrl = "managerListDeviceServlet";
         boolean first = true;
         if (page != null && !page.isEmpty()) {
             redirectUrl += (first ? "?" : "&") + "page=" + page;

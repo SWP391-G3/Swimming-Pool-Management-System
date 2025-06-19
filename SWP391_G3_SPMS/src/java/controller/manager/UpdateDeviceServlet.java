@@ -12,20 +12,46 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import model.User;
 import model.manager.Device;
 
 /**
  *
  * @author Tuan Anh
  */
-@WebServlet(name = "UpdateDeviceServlet", urlPatterns = {"/UpdateDeviceServlet"})
+@WebServlet(name = "UpdateDeviceServlet", urlPatterns = {"/managerUpdateDeviceServlet"})
 public class UpdateDeviceServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // fix lỗi git
-        int branchId = 1;
+                HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("currentUser");
+        int branchId = 0;
+        if (currentUser != null) {
+            int currentUser_id = currentUser.getUser_id();
+            switch (currentUser_id) {
+                case 2:
+                    branchId = 1; // hà nội
+                    break;
+                case 3:
+                    branchId = 2; // hồ chí minh
+                    break;
+                case 4:
+                    branchId = 3; // đà nẵng
+                    break;
+                case 5:
+                    branchId = 4; // quy nhơn
+                    break;
+                case 6:
+                    branchId = 5; // cần thơ
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+        }
         String idRaw = request.getParameter("id");
         int id = (idRaw != null && !idRaw.trim().isEmpty()) ? Integer.parseInt(idRaw.trim()) : 0;
 
@@ -69,7 +95,7 @@ public class UpdateDeviceServlet extends HttpServlet {
         }
         request.setAttribute("pageSize", pageSize);
 
-        request.getRequestDispatcher("updateDevice.jsp").forward(request, response);
+        request.getRequestDispatcher("managerUpdateDevice.jsp").forward(request, response);
     }
 
     @Override
@@ -134,14 +160,14 @@ public class UpdateDeviceServlet extends HttpServlet {
                 request.setAttribute("status", returnStatus);
                 request.setAttribute("page", returnPage);
                 request.setAttribute("pageSize", pageSize);
-                request.getRequestDispatcher("updateDevice.jsp").forward(request, response);
+                request.getRequestDispatcher("managerUpdateDevice.jsp").forward(request, response);
                 return;
             }
 
             Device d = new Device(id, image, name, poolId, null, quantity, status, notes);
             dao.updateDevice(d);
 
-            String redirectUrl = "ListDeviceServlet?page=" + (returnPage != null ? returnPage : "1");
+            String redirectUrl = "managerListDeviceServlet?page=" + (returnPage != null ? returnPage : "1");
 
             if (returnPoolId != null) {
                 redirectUrl += "&poolId=" + returnPoolId;
@@ -163,7 +189,7 @@ public class UpdateDeviceServlet extends HttpServlet {
             request.setAttribute("status", returnStatus);
             request.setAttribute("page", returnPage);
             request.setAttribute("pageSize", pageSize);
-            request.getRequestDispatcher("updateDevice.jsp").forward(request, response);
+            request.getRequestDispatcher("managerUpdateDevice.jsp").forward(request, response);
         }
     }
 

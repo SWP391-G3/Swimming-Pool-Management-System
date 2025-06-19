@@ -12,7 +12,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import model.User;
 import model.manager.Device;
 import model.manager.Pooldevice;
 
@@ -20,7 +22,7 @@ import model.manager.Pooldevice;
  *
  * @author Tuan Anh
  */
-@WebServlet(name = "ListDeviceServlet", urlPatterns = {"/ListDeviceServlet"})
+@WebServlet(name = "ListDeviceServlet", urlPatterns = {"/managerListDeviceServlet"})
 public class ListDeviceServlet extends HttpServlet {
 
     /**
@@ -49,12 +51,35 @@ public class ListDeviceServlet extends HttpServlet {
         }
     }
 
-    
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("currentUser");
+        int branchId = 0;
+        if (currentUser != null) {
+            int currentUser_id = currentUser.getUser_id();
+            switch (currentUser_id) {
+                case 2:
+                    branchId = 1; // hà nội
+                    break;
+                case 3:
+                    branchId = 2; // hồ chí minh
+                    break;
+                case 4:
+                    branchId = 3; // đà nẵng
+                    break;
+                case 5:
+                    branchId = 4; // quy nhơn
+                    break;
+                case 6:
+                    branchId = 5; // cần thơ
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+        }
         int defaultPageSize = 5;
         int pageSize = defaultPageSize;
         String pageSizeParam = request.getParameter("pageSize");
@@ -70,7 +95,7 @@ public class ListDeviceServlet extends HttpServlet {
         }
 
         DeviceDao deviceDAO = new DeviceDao();
-        int branchId = 1;
+
 
         String keyword = request.getParameter("keyword");
         String status = request.getParameter("status");

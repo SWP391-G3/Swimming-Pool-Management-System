@@ -12,7 +12,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import model.User;
 import model.manager.Device;
 import model.manager.Pooldevice;
 
@@ -20,16 +22,38 @@ import model.manager.Pooldevice;
  *
  * @author Tuan Anh
  */
-@WebServlet(name = "AddDeviceServlet", urlPatterns = {"/AddDeviceServlet"})
+@WebServlet(name = "AddDeviceServlet", urlPatterns = {"/managerAddDeviceServlet"})
 public class AddDeviceServlet extends HttpServlet {
-
-   
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        int branchId = 1;
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("currentUser");
+        int branchId = 0;
+        if (currentUser != null) {
+            int currentUser_id = currentUser.getUser_id();
+            switch (currentUser_id) {
+                case 2:
+                    branchId = 1; // hà nội
+                    break;
+                case 3:
+                    branchId = 2; // hồ chí minh
+                    break;
+                case 4:
+                    branchId = 3; // đà nẵng
+                    break;
+                case 5:
+                    branchId = 4; // quy nhơn
+                    break;
+                case 6:
+                    branchId = 5; // cần thơ
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+        }
         DeviceDao deviceDAO = new DeviceDao();
         List<Pooldevice> poolList = deviceDAO.getPoolsByBranchId(branchId);
         request.setAttribute("poolList", poolList);
@@ -37,39 +61,49 @@ public class AddDeviceServlet extends HttpServlet {
         String poolId = request.getParameter("poolId");
         if (poolId != null) {
             poolId = poolId.trim();
-            if (poolId.isEmpty()) poolId = null;
+            if (poolId.isEmpty()) {
+                poolId = null;
+            }
         }
         request.setAttribute("poolId", poolId);
 
         String keyword = request.getParameter("keyword");
         if (keyword != null) {
             keyword = keyword.trim();
-            if (keyword.isEmpty()) keyword = null;
+            if (keyword.isEmpty()) {
+                keyword = null;
+            }
         }
         request.setAttribute("keyword", keyword);
 
         String status = request.getParameter("status");
         if (status != null) {
             status = status.trim();
-            if (status.isEmpty()) status = null;
+            if (status.isEmpty()) {
+                status = null;
+            }
         }
         request.setAttribute("status", status);
 
         String page = request.getParameter("page");
         if (page != null) {
             page = page.trim();
-            if (page.isEmpty()) page = null;
+            if (page.isEmpty()) {
+                page = null;
+            }
         }
         request.setAttribute("page", page);
 
         String pageSize = request.getParameter("pageSize");
         if (pageSize != null) {
             pageSize = pageSize.trim();
-            if (pageSize.isEmpty()) pageSize = null;
+            if (pageSize.isEmpty()) {
+                pageSize = null;
+            }
         }
         request.setAttribute("pageSize", pageSize);
 
-        request.getRequestDispatcher("addDevice.jsp").forward(request, response);
+        request.getRequestDispatcher("managerAddDevice.jsp").forward(request, response);
     }
 
     @Override
@@ -82,29 +116,37 @@ public class AddDeviceServlet extends HttpServlet {
         String returnPoolId = request.getParameter("returnPoolId");
         if (returnPoolId != null) {
             returnPoolId = returnPoolId.trim();
-            if (returnPoolId.isEmpty()) returnPoolId = null;
+            if (returnPoolId.isEmpty()) {
+                returnPoolId = null;
+            }
         }
 
         String returnKeyword = request.getParameter("returnKeyword");
         if (returnKeyword != null) {
             returnKeyword = returnKeyword.trim();
-            if (returnKeyword.isEmpty()) returnKeyword = null;
+            if (returnKeyword.isEmpty()) {
+                returnKeyword = null;
+            }
         }
 
         String returnStatus = request.getParameter("returnStatus");
         if (returnStatus != null) {
             returnStatus = returnStatus.trim();
-            if (returnStatus.isEmpty()) returnStatus = null;
+            if (returnStatus.isEmpty()) {
+                returnStatus = null;
+            }
         }
 
         String returnPage = request.getParameter("returnPage");
         if (returnPage != null) {
             returnPage = returnPage.trim();
-            if (returnPage.isEmpty()) returnPage = null;
+            if (returnPage.isEmpty()) {
+                returnPage = null;
+            }
         }
 
         String pageSizeParam = request.getParameter("pageSize");
-        int pageSize = 5; 
+        int pageSize = 5;
         if (pageSizeParam != null) {
             try {
                 pageSize = Integer.parseInt(pageSizeParam.trim());
@@ -134,7 +176,7 @@ public class AddDeviceServlet extends HttpServlet {
                 request.setAttribute("status", returnStatus);
                 request.setAttribute("page", returnPage);
                 request.setAttribute("pageSize", pageSize);
-                request.getRequestDispatcher("addDevice.jsp").forward(request, response);
+                request.getRequestDispatcher("managerAddDevice.jsp").forward(request, response);
                 return;
             }
 
@@ -149,7 +191,7 @@ public class AddDeviceServlet extends HttpServlet {
                 endPage++;
             }
 
-            String redirectUrl = "ListDeviceServlet?page=" + endPage;
+            String redirectUrl = "managerListDeviceServlet?page=" + endPage;
 
             if (returnPoolId != null) {
                 redirectUrl += "&poolId=" + returnPoolId;
@@ -172,7 +214,7 @@ public class AddDeviceServlet extends HttpServlet {
             request.setAttribute("status", returnStatus);
             request.setAttribute("page", returnPage);
             request.setAttribute("pageSize", pageSize);
-            request.getRequestDispatcher("addDevice.jsp").forward(request, response);
+            request.getRequestDispatcher("managerAddDevice.jsp").forward(request, response);
         }
     }
 

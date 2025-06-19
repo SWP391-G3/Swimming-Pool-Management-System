@@ -173,7 +173,7 @@ public class DeviceDao extends DBContext {
 
     public static void main(String[] args) {
         DeviceDao dao = new DeviceDao();
-        List<Device> a = dao.getDevicesByPageAndPool("", "", 1, 5, 1, 1);
+        List<Device> a = dao.getDevicesByPageAndPool("", "", 1, 5, 2, 6);
         for (Device device : a) {
             System.out.println(device);
         }

@@ -4,47 +4,57 @@
  */
 package model;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 
 /**
  *
  * @author Lenovo
  */
-
-
 public class User {
-    private int userId;
+
+    private int user_id;
     private String username;
     private String password;
-    private String fullName;
+    private String full_name;
     private String email;
     private String phone;
     private String address;
-    private int roleId;
+    private int role_id;
     private boolean status;
-    private Date createdAt;
-    private Date updatedAt;
+    private Date dob;
+    private String gender;
+    private String images;
+    private LocalDate create_at;
+    private LocalDate update_at;
 
-    public User(int userId, String username, String password, String fullName, String email, String phone, String address, int roleId, boolean status, Date createdAt, Date updatedAt) {
-        this.userId = userId;
+    public User() {
+    }
+
+    public User(int user_id, String username, String password, String full_name, String email, String phone, String address, int role_id, boolean status, Date dob, String gender, String images, LocalDate create_at, LocalDate update_at) {
+        this.user_id = user_id;
         this.username = username;
         this.password = password;
-        this.fullName = fullName;
+        this.full_name = full_name;
         this.email = email;
         this.phone = phone;
         this.address = address;
-        this.roleId = roleId;
+        this.role_id = role_id;
         this.status = status;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.dob = dob;
+        this.gender = gender;
+        this.images = images;
+        this.create_at = create_at;
+        this.update_at = update_at;
     }
 
-    public int getUserId() {
-        return userId;
+    public int getUser_id() {
+        return user_id;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
     public String getUsername() {
@@ -63,12 +73,12 @@ public class User {
         this.password = password;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getFull_name() {
+        return full_name;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setFull_name(String full_name) {
+        this.full_name = full_name;
     }
 
     public String getEmail() {
@@ -95,12 +105,12 @@ public class User {
         this.address = address;
     }
 
-    public int getRoleId() {
-        return roleId;
+    public int getRole_id() {
+        return role_id;
     }
 
-    public void setRoleId(int roleId) {
-        this.roleId = roleId;
+    public void setRole_id(int role_id) {
+        this.role_id = role_id;
     }
 
     public boolean isStatus() {
@@ -111,36 +121,44 @@ public class User {
         this.status = status;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Date getDob() {
+        return dob;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setDob(Date dob) {
+        this.dob = dob;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public String getImages() {
+        return images;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setImages(String images) {
+        this.images = images;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", address='" + address + '\'' +
-                ", roleId=" + roleId +
-                ", status=" + status +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
+    public String getGender() {
+        return gender;
     }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public LocalDate getCreate_at() {
+        return create_at;
+    }
+
+    public void setCreate_at(LocalDate create_at) {
+        this.create_at = create_at;
+    }
+
+    public LocalDate getUpdate_at() {
+        return update_at;
+    }
+
+    public void setUpdate_at(LocalDate update_at) {
+        this.update_at = update_at;
+    }
+
 }
