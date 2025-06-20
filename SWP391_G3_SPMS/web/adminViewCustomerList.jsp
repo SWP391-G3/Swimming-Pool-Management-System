@@ -173,7 +173,7 @@
                             <a id="historyBtn" type="button" href="#" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium">
                                 <i class="fa-solid fa-clock-rotate-left"></i> Xem lịch sử
                             </a>
-                        </div>
+                        </div>  
                     </div>
                 </div>
 

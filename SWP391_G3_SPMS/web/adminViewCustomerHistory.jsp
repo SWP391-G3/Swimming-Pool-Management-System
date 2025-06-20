@@ -130,7 +130,7 @@
                                         <td class="px-4 py-2 border"><%= cusBooking.getStart_time().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))  %> - 
                                             <%= cusBooking.getEnd_time().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))  %></td>
                                     </tr>
-                                    <% }}%>
+                                    <% }}%>      
                                 </tbody>
                             </table>
                         </div>
