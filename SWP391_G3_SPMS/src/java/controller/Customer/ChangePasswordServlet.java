@@ -23,14 +23,14 @@ public class ChangePasswordServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //        HttpSession session = request.getSession();
-        //        User user = (User) session.getAttribute("user");
-        //        if (user == null) {
-        //            response.sendRedirect("login.jsp");
-        //            return;
-        //        }
+              HttpSession session = request.getSession();
+                User user1 = (User) session.getAttribute("currentUser");
+                if (user1 == null) {
+                    response.sendRedirect("login.jsp");
+                    return;
+                }
 
-        int userId = 2;
+        int userId = user1.getUser_id();
         UserDAO userDAO = new UserDAO();
         User user = userDAO.getUserByID(userId);
 

@@ -12,17 +12,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.util.List;
-import model.User;
 import model.admin.Customer;
 
 /**
  *
  * @author Lenovo
  */
-@WebServlet(name = "AdminViewCustomerListServlet", urlPatterns = {"/adminViewCustomerList"})
-public class AdminViewCustomerListServlet extends HttpServlet {
+@WebServlet(name = "AdminFilterCustomerServlet", urlPatterns = {"/adminFilterCustomer"})
+public class AdminFilterCustomerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,10 +39,10 @@ public class AdminViewCustomerListServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AdminViewCustomerListServlet</title>");
+            out.println("<title>Servlet AdminFilterCustomerServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet AdminViewCustomerListServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AdminFilterCustomerServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -62,42 +60,56 @@ public class AdminViewCustomerListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
+
+        String keyword = request.getParameter("keyword");
+        String status = request.getParameter("status");
+        String sortAmount = request.getParameter("sortAmount");
+        String userIdRaw = request.getParameter("userId");
+
         CustomerDAO dao = new CustomerDAO();
-        int totalCustomer = dao.getTotalCustomer();
         int page = 1;
-        int customerContain = 5;
-        int totalPages = (int) Math.ceil(totalCustomer * 1.0 / customerContain);
-        if (totalPages == 0) {
-            totalPages = 1;
-        }
+        int perPage = 5;
+
+        Integer user_id = null;
         try {
-            String pageStr = request.getParameter("page");
-            if (pageStr != null) {
-                page = Integer.parseInt(pageStr);
-                if (page < 1) {
-                    page = 1;
-                } else if (page > totalPages) {
-                    page = totalPages;
-                }
+            if (userIdRaw != null && !userIdRaw.trim().isEmpty()) {
+                user_id = Integer.parseInt(userIdRaw);
             }
         } catch (NumberFormatException e) {
-            page = 1;
+            // user_id sẽ giữ nguyên là null
         }
-        int start = (page - 1) * customerContain;
-        List<Customer> listCustomer = dao.getCustomersAndPage(start, customerContain);
-        request.setAttribute("listCustomer", listCustomer);
+
+        try {
+            String pageParam = request.getParameter("page");
+            if (pageParam != null && !pageParam.trim().isEmpty()) {
+                page = Integer.parseInt(pageParam);
+            }
+        } catch (NumberFormatException e) {
+            // page sẽ giữ mặc định là 1
+        }
+
+        int start = (page - 1) * perPage;
+
+        // Tổng số bản ghi để tính tổng số trang
+        int totalCustomers = dao.countFilteredCustomers(keyword, status);
+        int totalPages = (int) Math.ceil((double) totalCustomers / perPage);
+
+
+        // Lấy danh sách khách hàng phù hợp
+        List<Customer> customers = dao.filterCustomers(keyword, status, sortAmount, user_id, start, perPage);
+
+        // Set thuộc tính để đẩy sang JSP
+        request.setAttribute("listCustomer", customers);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
-        request.setAttribute("totalrecords", totalCustomer);
-        session.setAttribute("currentUser", currentUser);
-        boolean isAjax = "true".equals(request.getParameter("ajax"));
-        if (isAjax) {
-            request.getRequestDispatcher("customerListFragment.jsp").forward(request, response);
-        } else {
-            request.getRequestDispatcher("adminViewCustomerList.jsp").forward(request, response);
-        }
+
+        request.setAttribute("keyword", keyword);
+        request.setAttribute("status", status);
+        request.setAttribute("sortAmount", sortAmount);
+        request.setAttribute("userId", user_id); // nếu cần hiển thị lại khi search
+
+        // Chuyển tiếp đến JSP
+        request.getRequestDispatcher("adminFilterCustomer.jsp").forward(request, response);
     }
 
     /**

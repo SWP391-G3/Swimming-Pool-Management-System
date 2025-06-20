@@ -22,8 +22,9 @@ public class Customer {
     private String images;
     private String role_name;
     private Boolean status;
+    private double total_spent;
 
-    public Customer(int user_id, String full_name, String email, String phone, String address, int role_id, LocalDate dob, String gender, String images, String role_name, Boolean status) {
+    public Customer(int user_id, String full_name, String email, String phone, String address, int role_id, LocalDate dob, String gender, String images, String role_name, Boolean status,double total_spent) {
         this.user_id = user_id;
         this.full_name = full_name;
         this.email = email;
@@ -35,6 +36,7 @@ public class Customer {
         this.images = images;
         this.role_name = role_name;
         this.status = status;
+        this.total_spent = total_spent;
     }
 
     public int getUser_id() {
@@ -125,8 +127,20 @@ public class Customer {
         this.status = status;
     }
 
-    
+    public double getTotal_spent() {
+        return total_spent;
+    }
 
+    public void setTotal_spent(double total_spent) {
+        this.total_spent = total_spent;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" + "user_id=" + user_id + ", full_name=" + full_name + ", email=" + email + ", phone=" + phone + ", address=" + address + ", role_id=" + role_id + ", dob=" + dob + ", gender=" + gender + ", images=" + images + ", role_name=" + role_name + ", status=" + status + ", total_spent=" + total_spent + '}';
+    }
   
+
+    
     
 }

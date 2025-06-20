@@ -32,7 +32,7 @@ public class BookingDetailServlet extends HttpServlet {
             }
 
             // Lấy user hiện tại từ session
-            User user = (User) request.getSession().getAttribute("user");
+            User user = (User) request.getSession().getAttribute("currentUser");
             Feedback userFeedback = null;
             if (user != null) {
                 FeedbackDAO feedbackDAO = new FeedbackDAO();

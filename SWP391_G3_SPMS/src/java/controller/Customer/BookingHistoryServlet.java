@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.User;
 
 public class BookingHistoryServlet extends HttpServlet {
 
@@ -17,14 +18,15 @@ public class BookingHistoryServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession(false);
-            Integer userId = null;
-            if (session != null) {
-                userId = (Integer) session.getAttribute("userId");
+
+            Integer userId;
+            HttpSession session = request.getSession();
+            User currentUser = (User) session.getAttribute("currentUser");
+            if (currentUser == null) {
+                response.sendRedirect("login.jsp");
+                return;
             }
-            if (userId == null) {
-                userId = 2;
-            }
+            userId = currentUser.getUser_id();
 
             String poolName = request.getParameter("poolName");
             String fromDateStr = request.getParameter("fromDate");

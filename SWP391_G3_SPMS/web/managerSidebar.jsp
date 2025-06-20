@@ -6,6 +6,31 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@page import = "model.User" %>
+<% 
+            User currentUser = (User) session.getAttribute("currentUser");
+            String userName;
+            String Location;
+            if(currentUser != null && currentUser.getUser_id() == 2) {
+                userName = currentUser.getFull_name();
+                Location = "Hà Nội";
+            } else if(currentUser != null && currentUser.getUser_id() == 3){
+                userName = currentUser.getFull_name();
+                Location = "Hồ Chí Minh";            
+            } else if(currentUser != null && currentUser.getUser_id() == 4){
+                userName = currentUser.getFull_name();
+                Location = "Đà Nẵng";            
+            } else if(currentUser != null && currentUser.getUser_id() == 5){
+                userName = currentUser.getFull_name();
+                Location = "Cần Thơ";            
+            } else if(currentUser != null && currentUser.getUser_id() == 6){
+                userName = currentUser.getFull_name();
+                Location = "Quy Nhơn";            
+            } else {
+                userName = "";
+                Location = "";
+            }
+%>
 
 <nav class="sidebar">
     <div class="logo">POOL MANAGER</div>
@@ -13,7 +38,8 @@
         <div class="avatar">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M12 14c-5 0-8 2.5-8 5v1h16v-1c0-2.5-3-5-8-5z"/></svg>
         </div>
-        <div class="name"><c:out value="${sessionScope.full_name != null ? sessionScope.full_name : 'Manager'}"/></div>
+        <div class="name">Tên quản lý: <%= userName %></div>
+        <div class="name">Khu vực: <%= Location %></div>
     </div>
     <ul class="menu">
 

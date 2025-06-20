@@ -6,6 +6,17 @@
 
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import = "model.User" %>
+<% 
+            User currentUser1 = (User) session.getAttribute("currentUser");
+            String userName1;
+            if(currentUser1 != null) {
+                userName1 = currentUser1.getFull_name();
+            } else {
+                userName1 = "";
+            }
+%>
+
 <%
     String fullName = (String) session.getAttribute("full_name");
     // Đảm bảo dòng này để sidebar highlight đúng mục
@@ -24,7 +35,7 @@
         <%@ include file="managerSidebar.jsp" %>
         <div class="content-panel">
             <div class="content-header">
-                <h2>Chào mừng, <c:out value="${sessionScope.full_name != null ? sessionScope.full_name : 'Manager'}"/></h2>
+                <h2>Chào mừng, <%= userName %></h2>
                 <p class="desc">Truy cập nhanh các chức năng dành cho quản lý.</p>
             </div>
             <div class="dashboard-cards">

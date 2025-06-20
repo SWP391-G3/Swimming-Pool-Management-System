@@ -32,15 +32,14 @@ public class CustomerAccountInforServlet extends HttpServlet {
 
         if (service.equals("showProfile")) {
             // Thực tế nên lấy từ session
-            // HttpSession session = request.getSession();
-            // User user = (User) session.getAttribute("user");
-            // if (user == null) {
-            //     response.sendRedirect("login.jsp");
-            //     return;
-            // }
-            // int userId = user.getId();
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("currentUser");
+            if (user == null) {
+                response.sendRedirect("login.jsp");
+                return;
+            }
+            int userId = user.getUser_id();
 
-            int userId = 2; // Hardcode để test
             UserDAO userDAO = new UserDAO();
             User userDetails = userDAO.getUserByID(userId);
 
@@ -64,13 +63,13 @@ public class CustomerAccountInforServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Thực tế nên lấy từ session
-        // HttpSession session = request.getSession();
-        // User user = (User) session.getAttribute("user");
-        // if (user == null) {
-        //     response.sendRedirect("login.jsp");
-        //     return;
-        // }
-        // int userId = user.getId();
+        HttpSession session = request.getSession();
+        User user1 = (User) session.getAttribute("currentUser");
+        if (user1 == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+        int userId = user1.getUser_id();
 
         String service = request.getParameter("service");
         if (service == null) {
@@ -79,7 +78,6 @@ public class CustomerAccountInforServlet extends HttpServlet {
 
         if (service.equals("updateProfile")) {
             UserDAO userDAO = new UserDAO();
-            int userId = 2; // Hardcode để test
 
             try {
                 // Lấy thông tin từ form (đã được validate ở client-side)

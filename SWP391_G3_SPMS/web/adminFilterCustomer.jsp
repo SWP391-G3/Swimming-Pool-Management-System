@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.List,model.admin.Customer,model.User" %>
+<%@ page import="java.net.URLEncoder" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -19,6 +20,13 @@
                     User currentUser = (User) session.getAttribute("currentUser");
                     String userName = (currentUser != null) ? currentUser.getFull_name() : "";
                 %>
+
+                <% 
+                    String keyword = request.getAttribute("keyword") != null ? request.getAttribute("keyword").toString() : "";
+                    String status = request.getAttribute("status") != null ? request.getAttribute("status").toString() : "";
+                    String sortAmount = request.getAttribute("sortAmount") != null ? request.getAttribute("sortAmount").toString() : "";
+                    String user_id = request.getAttribute("userId") != null ? request.getAttribute("userId").toString() : "";
+                %>
                 <div class="flex items-center gap-3 mb-6">
                     <img src="https://cdn.kona-blue.com/upload/kona-blue_com/post/images/2024/09/19/465/avatar-trang-1.jpg" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-white object-cover" />
                     <div>
@@ -31,7 +39,7 @@
                 <a href="adminViewCustomerList" class="bg-blue-900 ring-2 ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-user-check"></i> Quản lý khách hàng</a>
                 <a href="#" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-chart-line"></i> Thống kê & Báo cáo</a>
                 <a href="#" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-gear"></i> Cài đặt hệ thống</a>
-                <a href="LogoutServlet" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2 text-red-400"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
+                <a href="#" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2 text-red-400"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
             </nav>
 
             <% 
@@ -53,21 +61,22 @@
                 </div>
                 <!-- Filters Form -->
                 <form action="adminFilterCustomer" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <input type="text" name="keyword" placeholder="Tìm kiếm theo tên,email..." class="px-3 py-2 border rounded" />
+                    <input type="text" name="keyword" value="<%= keyword %>" placeholder="Tìm kiếm theo tên,email..." class="px-3 py-2 border rounded" />
                     <select name="status" class="border rounded px-3 py-2">
                         <option value="">-- Trạng thái tài khoản --</option>
-                        <option value="active">Đang hoạt động</option>
-                        <option value="blocked">Đã khóa</option>
+                        <option value="active" <%= "active".equals(status) ? "selected" : "" %>>Đang hoạt động</option>
+                        <option value="blocked" <%= "blocked".equals(status) ? "selected" : "" %>>Đã khóa</option>
                     </select>
                     <select name="sortAmount" class="border rounded px-3 py-2">
                         <option value="">-- Sắp xếp theo tổng chi tiêu --</option>
-                        <option value="asc">Tăng dần</option>
-                        <option value="desc">Giảm dần</option>
+                        <option value="asc" <%= "asc".equals(sortAmount) ? "selected" : "" %>>Tăng dần</option>
+                        <option value="desc" <%= "desc".equals(sortAmount) ? "selected" : "" %>>Giảm dần</option>
                     </select>
                     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center justify-center gap-2">
                         <i class="fa-solid fa-filter"></i> Tìm kiếm
                     </button>
                 </form>
+
 
                 <!-- Customer Table -->
                 <div class="overflow-x-auto bg-white rounded shadow">
@@ -113,7 +122,6 @@
                                        data-status="<%= c.getStatus() %>">
                                         <i class="fa-solid fa-eye"></i> Xem
                                     </a>
-
                                     <a href="adminUpdateCustomer?userId=<%= c.getUser_id() %>" class="bg-yellow-400 text-black px-2 py-1 rounded hover:bg-yellow-500"><i class="fa-solid fa-pen"></i> Sửa</a>
                                     <a href="adminLockCustomer?userId=<%= c.getUser_id() %>&userStatus=<%= c.getStatus()%>" 
                                        class="toggle-status-btn <%= (c.getStatus() ? "bg-red-500" : "bg-green-500") %> text-white px-2 py-1 rounded"
@@ -170,15 +178,12 @@
                             <a id="updateBtn" href="#" class="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded font-medium">
                                 <i class="fa-solid fa-pen"></i> Cập nhật
                             </a>
-                            <a id="historyBtn" type="button" href="#" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium">
+                            <a id="historyBtn" href="#" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium">
                                 <i class="fa-solid fa-clock-rotate-left"></i> Xem lịch sử
                             </a>
                         </div>
                     </div>
                 </div>
-
-
-
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <script>
                                 $(document).ready(function () {
@@ -225,6 +230,7 @@
                                         });
                                     });
                                 });
+
                                 $('.view-btn').click(function (e) {
                                     e.preventDefault();
 
@@ -267,31 +273,50 @@
                                 function closeModal() {
                                     $('#customerModal').addClass('hidden');
                                 }
-
                 </script>
 
+                <%
+                    String encodedKeyword = URLEncoder.encode(keyword, "UTF-8");
+                    String encodedStatus = URLEncoder.encode(status, "UTF-8");
+                    String encodedSortAmount = URLEncoder.encode(sortAmount, "UTF-8");
+                %>
+
                 <!-- Pagination -->
-                <div class="flex flex-wrap justify-center mt-6 gap-2">
-                    <%
-                        if (currentPage > 1) {
-                    %>
-                    <a class="px-3 py-1 bg-blue-500 text-white rounded" href="adminViewCustomerList?page=<%= currentPage - 1 %>">Trước</a>
-                    <%
-                        }
-                        for (int i = startPage; i <= endPage; i++) {
-                    %>
-                    <a class="px-3 py-1 <%= (i == currentPage ? "bg-green-600 text-white" : "bg-gray-300 text-gray-800") %> rounded" href="adminViewCustomerList?page=<%= i %>"><%= i %></a>
-                    <%
-                        }
-                        if (currentPage < totalPages) {
-                    %>
-                    <a class="px-3 py-1 bg-blue-500 text-white rounded" href="adminViewCustomerList?page=<%= currentPage + 1 %>">Tiếp</a>
-                    <%
-                        }
-                    %>
-                    <form action="adminViewCustomerList" method="get" class="flex items-center gap-2 ml-4">
-                        <input type="number" name="page" min="1" max="<%= totalPages %>" placeholder="Trang..." class="w-20 px-2 py-1 border rounded text-center" required>
-                        <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Đến</button>
+                <div class="flex flex-wrap justify-center items-center gap-2 mt-6">
+                    <!-- Nút Trước -->
+                    <% if (currentPage > 1) { %>
+                    <a href="adminFilterCustomer?page=<%= currentPage - 1 %>&keyword=<%= encodedKeyword %>&status=<%= encodedStatus %>&sortAmount=<%= encodedSortAmount %>"
+                       class="px-3 py-1 bg-blue-500 text-white rounded">
+                        Trước
+                    </a>
+                    <% } %>
+
+                    <!-- Nút số trang -->
+                    <% for (int i = startPage; i <= endPage; i++) { %>
+                    <a href="adminFilterCustomer?page=<%= i %>&keyword=<%= encodedKeyword %>&status=<%= encodedStatus %>&sortAmount=<%= encodedSortAmount %>"
+                       class="px-3 py-1 rounded <%= (i == currentPage ? "bg-green-600 text-white" : "bg-gray-300 text-gray-800") %>">
+                        <%= i %>
+                    </a>
+                    <% } %>
+
+                    <!-- Nút Tiếp -->
+                    <% if (currentPage < totalPages) { %>
+                    <a href="adminFilterCustomer?page=<%= currentPage + 1 %>&keyword=<%= encodedKeyword %>&status=<%= encodedStatus %>&sortAmount=<%= encodedSortAmount %>"
+                       class="px-3 py-1 bg-blue-500 text-white rounded">
+                        Tiếp
+                    </a>
+                    <% } %>
+
+                    <!-- Input nhảy đến trang -->
+                    <form action="adminFilterCustomer" method="GET" class="flex items-center gap-2">
+                        <input type="hidden" name="keyword" value="<%= encodedKeyword %>">
+                        <input type="hidden" name="status" value="<%= encodedStatus %>">
+                        <input type="hidden" name="sortAmount" value="<%= encodedSortAmount %>">
+                        <input type="number" name="page" min="1" max="<%= totalPages %>"
+                               placeholder="Trang..." class="w-20 px-2 py-1 border rounded text-center" required>
+                        <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
+                            Đến
+                        </button>
                     </form>
                 </div>
             </main>

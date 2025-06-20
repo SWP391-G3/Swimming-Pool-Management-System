@@ -2,9 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.Admin.Customer;
+package controller.HomePage;
 
-import dao.admin.CustomerDAO;
+import dao.FeedbackHomepageDAO;
+import dao.PoolDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,15 +15,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import model.FeedbackHomepage;
+import model.Pool;
 import model.User;
-import model.admin.Customer;
 
 /**
  *
  * @author Lenovo
  */
-@WebServlet(name = "AdminViewCustomerListServlet", urlPatterns = {"/adminViewCustomerList"})
-public class AdminViewCustomerListServlet extends HttpServlet {
+@WebServlet(name = "CustomerHomePageServlet", urlPatterns = {"/customerHome"})
+public class CustomerHomePageServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,10 +43,10 @@ public class AdminViewCustomerListServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AdminViewCustomerListServlet</title>");
+            out.println("<title>Servlet CustomerHomePageServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet AdminViewCustomerListServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CustomerHomePageServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,41 +65,17 @@ public class AdminViewCustomerListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
-        CustomerDAO dao = new CustomerDAO();
-        int totalCustomer = dao.getTotalCustomer();
-        int page = 1;
-        int customerContain = 5;
-        int totalPages = (int) Math.ceil(totalCustomer * 1.0 / customerContain);
-        if (totalPages == 0) {
-            totalPages = 1;
-        }
-        try {
-            String pageStr = request.getParameter("page");
-            if (pageStr != null) {
-                page = Integer.parseInt(pageStr);
-                if (page < 1) {
-                    page = 1;
-                } else if (page > totalPages) {
-                    page = totalPages;
-                }
-            }
-        } catch (NumberFormatException e) {
-            page = 1;
-        }
-        int start = (page - 1) * customerContain;
-        List<Customer> listCustomer = dao.getCustomersAndPage(start, customerContain);
-        request.setAttribute("listCustomer", listCustomer);
-        request.setAttribute("currentPage", page);
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("totalrecords", totalCustomer);
-        session.setAttribute("currentUser", currentUser);
-        boolean isAjax = "true".equals(request.getParameter("ajax"));
-        if (isAjax) {
-            request.getRequestDispatcher("customerListFragment.jsp").forward(request, response);
-        } else {
-            request.getRequestDispatcher("adminViewCustomerList.jsp").forward(request, response);
-        }
+        PoolDAO dao = new PoolDAO();
+        FeedbackHomepageDAO fdao = new FeedbackHomepageDAO();
+        List<Pool> list = dao.getTop3();
+        List<Pool> list2 = dao.getPoolImage();
+        List<FeedbackHomepage> listFeedback = fdao.getFeedback();
+        User user = (User) session.getAttribute("currentUser");
+        request.setAttribute("listPool", list);
+        request.setAttribute("listPool2", list2);
+        request.setAttribute("listPool3", listFeedback);
+        session.setAttribute("currentUser", user);
+        request.getRequestDispatcher("CustomerHomePage.jsp").forward(request, response);
     }
 
     /**

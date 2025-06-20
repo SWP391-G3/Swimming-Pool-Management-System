@@ -4,7 +4,9 @@
  */
 package controller.Admin.Customer;
 
-import dao.admin.CustomerDAO;
+import dao.admin.CustomerBookingDAO;
+import dao.admin.CustomerFeedbackDAO;
+import dao.admin.CustomerServiceDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,17 +14,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.util.List;
-import model.User;
-import model.admin.Customer;
+import model.admin.CustomerBooking;
+import model.admin.CustomerFeedback;
+import model.admin.CustomerService;
 
 /**
  *
  * @author Lenovo
  */
-@WebServlet(name = "AdminViewCustomerListServlet", urlPatterns = {"/adminViewCustomerList"})
-public class AdminViewCustomerListServlet extends HttpServlet {
+@WebServlet(name = "AdminViewCustomerHistoryServlet", urlPatterns = {"/adminViewCustomerHistory"})
+public class AdminViewCustomerHistoryServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,10 +43,10 @@ public class AdminViewCustomerListServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AdminViewCustomerListServlet</title>");
+            out.println("<title>Servlet AdminViewCustomerHistoryServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet AdminViewCustomerListServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AdminViewCustomerHistoryServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -62,41 +64,22 @@ public class AdminViewCustomerListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
-        CustomerDAO dao = new CustomerDAO();
-        int totalCustomer = dao.getTotalCustomer();
-        int page = 1;
-        int customerContain = 5;
-        int totalPages = (int) Math.ceil(totalCustomer * 1.0 / customerContain);
-        if (totalPages == 0) {
-            totalPages = 1;
-        }
+        String userIdRaw = request.getParameter("userId");
+        CustomerBookingDAO cbdao = new CustomerBookingDAO();
+        CustomerServiceDAO csdao = new CustomerServiceDAO();
+        CustomerFeedbackDAO cfdao = new CustomerFeedbackDAO();
+        int user_id;
         try {
-            String pageStr = request.getParameter("page");
-            if (pageStr != null) {
-                page = Integer.parseInt(pageStr);
-                if (page < 1) {
-                    page = 1;
-                } else if (page > totalPages) {
-                    page = totalPages;
-                }
-            }
+            user_id = Integer.parseInt(userIdRaw);
+            CustomerBooking cb = cbdao.getLastBooking(user_id);
+            List<CustomerService> cs = csdao.getLastService(user_id);
+            CustomerFeedback cf = cfdao.getLastFeedback(user_id);
+            request.setAttribute("customerBooking", cb);
+            request.setAttribute("customerService", cs);
+            request.setAttribute("customerFeedback", cf);
+            request.getRequestDispatcher("adminViewCustomerHistory.jsp").forward(request, response);
         } catch (NumberFormatException e) {
-            page = 1;
-        }
-        int start = (page - 1) * customerContain;
-        List<Customer> listCustomer = dao.getCustomersAndPage(start, customerContain);
-        request.setAttribute("listCustomer", listCustomer);
-        request.setAttribute("currentPage", page);
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("totalrecords", totalCustomer);
-        session.setAttribute("currentUser", currentUser);
-        boolean isAjax = "true".equals(request.getParameter("ajax"));
-        if (isAjax) {
-            request.getRequestDispatcher("customerListFragment.jsp").forward(request, response);
-        } else {
-            request.getRequestDispatcher("adminViewCustomerList.jsp").forward(request, response);
+            
         }
     }
 
