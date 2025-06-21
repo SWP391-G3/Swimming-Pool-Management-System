@@ -1,13 +1,12 @@
 package controller.Customer;
 
-import dao.UserDAO;
-import model.User;
+import dao.customer.UserDAO;
+import model.customer.User;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import util.CheckCustomerInfor;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -25,121 +24,133 @@ public class CustomerAccountInforServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        User user = (User) session.getAttribute("user");
-//        int userId = user.getId();
-//        if (user == null) {
-//            response.sendRedirect("login.jsp");
-//            return;
-//        }
-//        int userId = user.getId();
 
-        int userId = 2;
-        UserDAO userDAO = new UserDAO();
-        User userDetails = userDAO.getUserByID(userId);
-        if (userDetails != null) {
+        String service = request.getParameter("service");
+        if (service == null) {
+            service = "showProfile";
+        }
+
+        if (service.equals("showProfile")) {
+            // Thực tế nên lấy từ session
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("currentUser");
+            if (user == null) {
+                response.sendRedirect("login.jsp");
+                return;
+            }
+            int userId = user.getUser_id();
+
+            UserDAO userDAO = new UserDAO();
+            User userDetails = userDAO.getUserByID(userId);
+
+            if (userDetails != null) {
+                request.setAttribute("user", userDetails);
+                request.getRequestDispatcher("EditAccountInfo.jsp").forward(request, response);
+            } else {
+                response.getWriter().println("Không tìm thấy người dùng trong cơ sở dữ liệu!");
+            }
+        } else if (service.equals("changePassword")) {
+            HttpSession session = request.getSession();
+            User currentUser = (User) session.getAttribute("currentUser");
+            if (currentUser == null) {
+                response.sendRedirect("login.jsp");
+                return;
+            }
+
+            UserDAO userDAO = new UserDAO();
+            User userDetails = userDAO.getUserByID(currentUser.getUser_id());
             request.setAttribute("user", userDetails);
-            request.getRequestDispatcher("EditAccountInfo.jsp").forward(request, response);
-        } else {
-            response.getWriter().println("Không tìm thấy người dùng trong cơ sở dữ liệu!");
+            request.getRequestDispatcher("ChangePassword.jsp").forward(request, response);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        UserDAO userDAO = new UserDAO();
-
-//        User user = (User) session.getAttribute("user");
-//        int userId = user.getId();
-//        if (user == null) {
-//            response.sendRedirect("login.jsp");
-//            return;
-//        }
-//        int userId = user.getId();
-        int userId = 2;
-
-        // Lấy thông tin từ form
-        String fullName = request.getParameter("full_name");
-        String email = request.getParameter("email");
-        String phone = request.getParameter("phone");
-        String address = request.getParameter("address");
-        String dobStr = request.getParameter("dob");
-        String gender = request.getParameter("gender");
-
-        StringBuilder error = new StringBuilder();
-
-        // Validate họ tên:
-        String fullNameError = CheckCustomerInfor.validateFullName(fullName);
-        if (!fullNameError.isEmpty()) {
-            error.append(fullNameError);
-        }
-
-        // Validate email
-        String emailError = CheckCustomerInfor.validateEmail(email);
-        if (!emailError.isEmpty()) {
-            error.append(emailError);
-        }
-
-        // Validate số điện thoại
-        String phoneError = CheckCustomerInfor.validatePhone(phone);
-        if (!phoneError.isEmpty()) {
-            error.append(phoneError);
-        }
-
-        // Validate ngày sinh
-        Date[] dobHolder = new Date[1];
-        String dobError = CheckCustomerInfor.validateDob(dobStr, dobHolder);
-        if (!dobError.isEmpty()) {
-            error.append(dobError);
-        }
-
-        if (error.length() > 0) {
-            // Có lỗi, trả lại form và thông báo
-            User user = userDAO.getUserByID(userId);
-            request.setAttribute("user", user);
-            request.setAttribute("error", error.toString());
-            request.getRequestDispatcher("EditAccountInfo.jsp").forward(request, response);
+        // Thực tế nên lấy từ session
+        HttpSession session = request.getSession();
+        User user1 = (User) session.getAttribute("currentUser");
+        if (user1 == null) {
+            response.sendRedirect("login.jsp");
             return;
         }
-        // Nếu không lỗi, lấy dob từ dobHolder
-        Date dob = dobHolder[0];
-
-        Part filePart = request.getPart("images");
-        String images = null;
-        String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
-        File uploadDir = new File(uploadPath);
-
-        if (!uploadDir.exists()) {
-            uploadDir.mkdir();
+        int userId = user1.getUser_id();
+        String service = request.getParameter("service");
+        if (service == null) {
+            service = "updateProfile";
         }
 
-        if (filePart != null && filePart.getSize() > 0 && filePart.getSubmittedFileName() != null && !filePart.getSubmittedFileName().isEmpty()) {
-            String fileName = System.currentTimeMillis() + "_" + filePart.getSubmittedFileName();
-            String filePath = uploadPath + File.separator + fileName;
-            filePart.write(filePath);
-            images = "uploads/" + fileName;
-        }
+        if (service.equals("updateProfile")) {
+            UserDAO userDAO = new UserDAO();
 
-        User user = userDAO.getUserByID(userId);
-        if (user != null) {
-            user.setFullName(fullName);
-            user.setEmail(email);
-            user.setPhone(phone);
-            user.setAddress(address);
-            user.setDob(dob);
-            user.setGender(gender);
+            try {
+                // Lấy thông tin từ form
+                String fullName = request.getParameter("full_name");
+                String email = request.getParameter("email");
+                String phone = request.getParameter("phone");
+                String address = request.getParameter("address");
+                String dobStr = request.getParameter("dob");
+                String gender = request.getParameter("gender");
 
-            if (images != null) {
-                user.setImages(images);
+                // Chuyển đổi ngày sinh
+                Date dob = null;
+                if (dobStr != null && !dobStr.trim().isEmpty()) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    dob = dateFormat.parse(dobStr);
+                }
+
+                // Xử lý upload ảnh
+                Part filePart = request.getPart("images");
+                String images = null;
+
+                String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
+                File uploadDir = new File(uploadPath);
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdir();
+                }
+
+                if (filePart != null && filePart.getSize() > 0
+                        && filePart.getSubmittedFileName() != null
+                        && !filePart.getSubmittedFileName().isEmpty()) {
+
+                    String fileName = System.currentTimeMillis() + "_" + filePart.getSubmittedFileName();
+                    String filePath = uploadPath + File.separator + fileName;
+                    filePart.write(filePath);
+                    images = "uploads/" + fileName;
+                }
+
+                // Cập nhật thông tin user
+                User userFromDb = userDAO.getUserByID(userId);
+                if (userFromDb != null) {
+                    userFromDb.setFull_name(fullName);
+                    userFromDb.setEmail(email);
+                    userFromDb.setPhone(phone);
+                    userFromDb.setAddress(address);
+                    userFromDb.setDob(dob);
+                    userFromDb.setGender(gender);
+
+                    if (images != null) {
+                        userFromDb.setImages(images);
+                    }
+
+                    userDAO.updateUser(userFromDb);
+
+                    // Cập nhật lại session
+                    session.setAttribute("currentUser", userFromDb);
+
+                    request.setAttribute("updateSuccess", "Cập nhật thông tin thành công!");
+                    request.setAttribute("user", userFromDb);
+                    request.getRequestDispatcher("EditAccountInfo.jsp").forward(request, response);
+                } else {
+                    response.getWriter().println("Không tìm thấy người dùng trong cơ sở dữ liệu!");
+                }
+
+            } catch (Exception e) {
+                User userFromDb = userDAO.getUserByID(userId);
+                request.setAttribute("user", userFromDb);
+                request.setAttribute("error", "Có lỗi xảy ra khi cập nhật thông tin: " + e.getMessage());
+                request.getRequestDispatcher("EditAccountInfo.jsp").forward(request, response);
             }
-
-            userDAO.updateUser(user);
-
-            request.setAttribute("updateSuccess", "Cập nhật thông tin thành công!");
-            request.setAttribute("user", userDAO.getUserByID(userId));
-            request.getRequestDispatcher("EditAccountInfo.jsp").forward(request, response);
-        } else {
-            response.getWriter().println("Không tìm thấy người dùng trong cơ sở dữ liệu!");
         }
     }
 }

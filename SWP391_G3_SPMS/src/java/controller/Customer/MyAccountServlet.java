@@ -1,11 +1,12 @@
 package controller.Customer;
 
-import dao.BookingDetailDAO;
-import dao.DiscountDetailDAO;
-import dao.UserDAO;
-import model.BookingDetails;
-import model.DiscountDetail;
-import model.User;
+import dao.customer.BookingDetailDAO;
+import dao.customer.DiscountDetailDAO;
+import dao.customer.UserDAO;
+import model.customer.BookingDetails;
+import model.customer.DiscountDetail;
+import model.customer.User;
+
 
 import java.util.List;
 import java.io.IOException;
@@ -21,14 +22,14 @@ public class MyAccountServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-//        HttpSession session = request.getSession();
-//        User user = (User) session.getAttribute("user");
-//        if (user == null) {
-//            response.sendRedirect("login.jsp");
-//            return;
-//        }
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
 
-        int userId = 2; // Gan tam userId = 2
+        int userId = currentUser.getUser_id(); // Gan tam userId = 2
 
         UserDAO userDAO = new UserDAO();
         BookingDetailDAO bookingDetailDAO = new BookingDetailDAO();
@@ -52,7 +53,6 @@ public class MyAccountServlet extends HttpServlet {
             List<DiscountDetail> allUsed = discountDetailDAO.getDiscountByUserIDAndStatus(userId, false);
             vouchersUsed = allUsed.size() > 3 ? allUsed.subList(0, 3) : allUsed;
 
-            // Count total quantity
             request.setAttribute("voucherActiveCount", allActive.size());
             request.setAttribute("voucherUsedCount", allUsed.size());
         } catch (Exception e) {

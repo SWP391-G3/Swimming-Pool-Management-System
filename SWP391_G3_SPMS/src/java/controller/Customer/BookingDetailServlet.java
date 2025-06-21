@@ -1,11 +1,11 @@
 package controller.Customer;
 
-import dao.BookingDetailDAO;
-import dao.FeedbackDAO;
-import dao.UserDAO;
-import model.BookingDetails;
-import model.Feedback;
-import model.User;
+import dao.customer.BookingDetailDAO;
+import dao.customer.FeedbackDAO;
+import dao.customer.UserDAO;
+import model.customer.BookingDetails;
+import model.customer.Feedback;
+import model.customer.User;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import java.io.IOException;
@@ -32,11 +32,11 @@ public class BookingDetailServlet extends HttpServlet {
             }
 
             // Lấy user hiện tại từ session
-            User user = (User) request.getSession().getAttribute("user");
+            User user = (User) request.getSession().getAttribute("currentUser");
             Feedback userFeedback = null;
             if (user != null) {
                 FeedbackDAO feedbackDAO = new FeedbackDAO();
-                List<Feedback> feedbackList = feedbackDAO.getFeedbackByUserId(user.getUserId());
+                List<Feedback> feedbackList = feedbackDAO.getFeedbackByUserId(user.getUser_id());
                 for (Feedback fb : feedbackList) {
                     // Nếu user đã feedback cho pool này
                     if (fb.getPoolId() == bookingDetail.getPoolId()) {
@@ -83,14 +83,14 @@ public class BookingDetailServlet extends HttpServlet {
             // Kiểm tra quyền feedback
             BookingDetailDAO bookingDetailDAO = new BookingDetailDAO();
             BookingDetails bookingDetail = bookingDetailDAO.getBookingDetailById(bookingId);
-            if (bookingDetail == null || bookingDetail.getUserId() != user.getUserId()) {
+            if (bookingDetail == null || bookingDetail.getUserId() != user.getUser_id()) {
                 response.sendRedirect("booking_history");
                 return;
             }
 
             // Đảm bảo user chỉ feedback 1 lần cho hồ bơi này
             FeedbackDAO feedbackDAO = new FeedbackDAO();
-            List<Feedback> feedbackList = feedbackDAO.getFeedbackByUserId(user.getUserId());
+            List<Feedback> feedbackList = feedbackDAO.getFeedbackByUserId(user.getUser_id());
             boolean alreadyFeedback = false;
             for (Feedback fb : feedbackList) {
                 if (fb.getPoolId() == poolId) {
