@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
 import java.time.LocalDate;
+import model.admin.Branch;
 import model.admin.Manager;
 
 /**
@@ -188,6 +189,93 @@ public class ManagerDAO extends DBContext {
             e.printStackTrace(); // hoặc log ra logger nếu có
             return false;
         }
+    }
+
+    public boolean updateManager(Manager manager) {
+        String updateUserSQL = "UPDATE Users SET full_name = ?, email = ?, phone = ?, address = ?, status = ?, updated_at = GETDATE() WHERE user_id = ?";
+        String resetOldBranchSQL = "UPDATE Branchs SET manager_id = NULL WHERE manager_id = ?";
+        String updateBranchSQL = "UPDATE Branchs SET manager_id = ? WHERE branch_id = ?";
+
+        try (
+                PreparedStatement psUser = connection.prepareStatement(updateUserSQL); PreparedStatement psReset = connection.prepareStatement(resetOldBranchSQL); PreparedStatement psBranch = connection.prepareStatement(updateBranchSQL)) {
+            // Update Users
+            psUser.setString(1, manager.getFull_name());
+            psUser.setString(2, manager.getEmail());
+            psUser.setString(3, manager.getPhone());
+            psUser.setString(4, manager.getAddress());
+            psUser.setBoolean(5, manager.getStatus());
+            psUser.setInt(6, manager.getManager_id());
+            psUser.executeUpdate();
+
+            // Gỡ liên kết cũ
+            psReset.setInt(1, manager.getManager_id());
+            psReset.executeUpdate();
+
+            // Gán manager mới cho chi nhánh
+            psBranch.setInt(1, manager.getManager_id());
+            psBranch.setInt(2, manager.getBranch_id());
+            psBranch.executeUpdate();
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Manager getManagerById(int id) {
+        String sql = """
+        SELECT u.user_id, u.full_name, u.email, u.phone, u.address, 
+               u.status, u.created_at, b.branch_id, b.branch_name
+        FROM Users u
+        LEFT JOIN Branchs b ON u.user_id = b.manager_id
+        WHERE u.user_id = ?
+    """;
+
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, id);
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    Manager m = new Manager();
+                    m.setManager_id(rs.getInt("user_id"));
+                    m.setFull_name(rs.getString("full_name"));
+                    m.setEmail(rs.getString("email"));
+                    m.setPhone(rs.getString("phone"));
+                    m.setAddress(rs.getString("address"));
+                    m.setStatus(rs.getBoolean("status"));
+                    m.setCreate_at(rs.getDate("created_at").toLocalDate());
+
+                    // Có thể NULL nên phải check
+                    int branchId = rs.getInt("branch_id");
+                    if (!rs.wasNull()) {
+                        m.setBranch_id(branchId);
+                        m.setBranch_name(rs.getString("branch_name"));
+                    }
+
+                    return m;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Branch> getAllBranches() {
+        List<Branch> list = new ArrayList<>();
+        String sql = "SELECT branch_id, branch_name FROM Branchs";
+
+        try (PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
+            while (rs.next()) {
+                Branch b = new Branch();
+                b.setBranch_id(rs.getInt("branch_id"));
+                b.setBranch_name(rs.getString("branch_name"));
+                list.add(b);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     public static void main(String[] args) {
