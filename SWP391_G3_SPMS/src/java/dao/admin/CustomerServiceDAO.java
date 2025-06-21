@@ -20,7 +20,7 @@ public class CustomerServiceDAO extends DBContext {
 
     public List<CustomerService> getLastService(int user_id) {
         List<CustomerService> list = new ArrayList<>();
-        String sql = "SELECT  \n"
+        String sql = "SELECT top 1 \n"
                 + "    u.full_name AS customer_name,\n"
                 + "    b.booking_id,\n"
                 + "    ps.service_name,\n"
