@@ -1,0 +1,83 @@
+<%-- 
+    Document   : managerEditTicket
+    Created on : Jun 21, 2025, 9:58:07 PM
+    Author     : Tuan Anh
+--%>
+
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <title>Cập nhật loại vé</title>
+        <link rel="stylesheet" href="./manager-css/managerEditTicket.css">
+    </head>
+    <body>
+        <div class="form-add-ticket">
+            <h2 style="text-align:center; margin-bottom:20px;">Cập nhật loại vé</h2>
+            <c:if test="${not empty error}">
+                <div class="error-message">${error}</div>
+            </c:if>
+            <form method="post" action="editTicket">
+                <input type="hidden" name="id" value="${ticket.id}" />
+                <input type="hidden" name="page" value="${param.page}" />
+                <input type="hidden" name="pageSize" value="${param.pageSize}" />
+                <input type="hidden" name="keyword" value="${fn:escapeXml(param.keyword)}" />
+                <input type="hidden" name="status" value="${fn:escapeXml(param.status)}" />
+                <input type="hidden" name="poolId" value="${fn:escapeXml(param.poolId)}" />
+
+                <div class="form-row">
+                    <label>Mã loại vé:</label>
+                    <input type="text" name="typeCode" required value="${ticket.code}" readonly />
+                </div>
+                <div class="form-row">
+                    <label>Tên loại vé:<span class="note">*</span></label>
+                    <input type="text" name="typeName" required value="${ticket.name}">
+                </div>
+                <div class="form-row">
+                    <label>Giá vé:<span class="note">*</span></label>
+                    <input type="number" name="basePrice" required min="0" value="${ticket.basePrice}">
+                </div>
+                <div class="form-row">
+                    <label>Mô tả:</label>
+                    <textarea name="description" rows="2">${ticket.description}</textarea>
+                </div>
+                <div class="form-row">
+                    <label>Combo:</label>
+                    <input type="checkbox" name="isCombo" value="1" <c:if test="${ticket.isCombo}">checked</c:if> /> Vé combo
+                    </div>
+                    <div class="form-row multiselect">
+                        <label for="poolIds">Áp dụng tại hồ bơi:<span class="note">*</span></label>
+                        <select name="poolIds" id="poolIds" multiple required style="height: 90px;">
+                        <c:forEach items="${poolList}" var="pool">
+                            <c:choose>
+                                
+                                <c:when test="${not empty param.poolIds}">
+                                    <option value="${pool.id}" <c:if test="${fn:contains(param.poolIds, pool.id)}">selected</c:if>>${pool.name}</option>
+                                </c:when>
+                                
+                                <c:otherwise>
+                                    <option value="${pool.id}" <c:if test="${fn:contains(poolIdsString, pool.id)}">selected</c:if>>${pool.name}</option>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                    </select>
+                    <span class="note" style="margin-left:12px;">Giữ Ctrl (Windows) hoặc Cmd (Mac) để chọn nhiều hồ bơi</span>
+                </div>
+                <div class="form-row">
+                    <label>Trạng thái:</label>
+                    <select name="statusF">
+                        <option value="active" <c:if test="${ticket.active}">selected</c:if>>Đang bán</option>
+                        <option value="inactive" <c:if test="${!ticket.active}">selected</c:if>>Ngừng bán</option>
+                        </select>
+                    </div>
+                    <div class="action-buttons">
+                        <button type="submit" class="btn">Lưu thay đổi</button>
+                        <a href="managerTicketServlet?page=${param.page}&pageSize=${param.pageSize}&keyword=${fn:escapeXml(param.keyword)}&status=${fn:escapeXml(param.status)}&poolId=${fn:escapeXml(param.poolId)}" class="btn btn-cancel">Hủy</a>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
