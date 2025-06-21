@@ -105,7 +105,7 @@
                                 class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded shadow">
                             <i class="fa-solid fa-magnifying-glass mr-1"></i> Tìm kiếm
                         </button>
-                        <a href="managers"
+                        <a href="#" type="reset"
                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded shadow">
                             <i class="fa-solid fa-rotate-left mr-1"></i> Đặt lại
                         </a>
@@ -124,7 +124,6 @@
                                 <th class="p-3 border">Địa chỉ</th>
                                 <th class="p-3 border">Chi nhánh</th>
                                 <th class="p-3 border">Trạng thái</th>
-                                <th class="p-3 border">Ngày tạo</th>
                                 <th class="p-3 border">Hành động</th>
                             </tr>
                         </thead>
@@ -143,7 +142,6 @@
                                         <%= m.getStatus() ? "Đang hoạt động" : "Đã khóa" %>
                                     </span>
                                 </td>
-                                <td class="p-3 border"><%= m.getCreate_at() %></td>
                                 <td class="p-3 border space-x-2">
                                     <a href="adminUpdateManager?id=<%= m.getManager_id() %>" class="bg-yellow-400 text-black px-2 py-1 rounded hover:bg-yellow-500"><i class="fa-solid fa-pen-to-square"></i> Sửa</a>
                                     <a href="adminDeleteManager?id=<%= m.getManager_id() %>" class="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"><i class="fa-solid fa-lock"></i> Khóa</a>
@@ -178,7 +176,6 @@
                     </form>
                 </div>
             </main>
-
         </div>
 
 
