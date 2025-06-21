@@ -626,7 +626,17 @@ INSERT INTO Discounts (discount_code, description, discount_percent, quantity, v
 ('SUMMER20', N'Ưu đãi hè lên đến 20%', 20.00, 20, '2025-06-01', '2025-08-31', 1, GETDATE(), NULL),
 ('LOYALTY15', N'Khuyến mãi cho khách hàng thân thiết', 15.00, 20, '2025-01-01', '2025-12-31', 1, GETDATE(), NULL),
 ('FAMILY5', N'Ưu đãi nhóm gia đình 5%', 5.00, 20, '2025-06-01', '2025-12-31', 1, GETDATE(), NULL),
-('BLACKFRIDAY25', N'Siêu giảm giá Black Friday', 25.00, 20, '2025-11-20', '2025-11-30', 1, GETDATE(), NULL);
+('BLACKFRIDAY25', N'Siêu giảm giá Black Friday', 25.00, 20, '2025-11-20', '2025-11-30', 1, GETDATE(), NULL),
+('NEWUSER5', N'Giảm 5% cho khách hàng đăng ký lần đầu', 5.00, 30, '2025-06-01', '2025-12-31', 1, GETDATE(), NULL),
+('FLASH30', N'Flash Sale - Giảm 30% trong 2 ngày', 30.00, 10, '2025-07-01', '2025-07-02', 1, GETDATE(), NULL),
+('WEEKEND15', N'Ưu đãi cuối tuần 15%', 15.00, 25, '2025-06-28', '2025-12-31', 1, GETDATE(), NULL),
+('EARLYBIRD10', N'Giảm 10% cho đặt chỗ sớm', 10.00, 20, '2025-06-01', '2025-10-31', 1, GETDATE(), NULL),
+('FREESHIP', N'Giảm giá cho đơn hàng có giao hàng miễn phí', 7.00, 15, '2025-06-01', '2025-12-31', 1, GETDATE(), NULL),
+('BIRTHDAY20', N'Ưu đãi 20% mừng sinh nhật', 20.00, 10, '2025-06-01', '2025-12-31', 1, GETDATE(), NULL),
+('STUDENT10', N'Giảm giá 10% cho sinh viên', 10.00, 20, '2025-06-01', '2025-12-31', 1, GETDATE(), NULL),
+('VIP30', N'Ưu đãi VIP - Giảm giá 30%', 30.00, 5, '2025-06-01', '2025-12-31', 1, GETDATE(), NULL),
+('REFERRAL5', N'Giảm 5% khi giới thiệu bạn bè', 5.00, 20, '2025-06-01', '2025-12-31', 1, GETDATE(), NULL),
+('HOLIDAY25', N'Ưu đãi lễ hội - Giảm 25%', 25.00, 15, '2025-12-20', '2026-01-05', 1, GETDATE(), NULL);
 
 --Thêm bảng Customer_Discount
 INSERT INTO Customer_Discount (user_id, discount_id, used_discount) VALUES

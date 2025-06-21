@@ -106,7 +106,7 @@ CREATE TABLE Booking (
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
     slot_count INT NOT NULL CHECK (slot_count > 0),
-    booking_status NVARCHAR(20) NOT NULL DEFAULT 'pending',
+    booking_status NVARCHAR(20) NOT NULL DEFAULT 'pending', --pending/comfirmed/canceled
     created_at DATETIME NOT NULL DEFAULT GETDATE(),
     updated_at DATETIME,
     CONSTRAINT FK_Booking_User FOREIGN KEY (user_id) REFERENCES Users(user_id),
