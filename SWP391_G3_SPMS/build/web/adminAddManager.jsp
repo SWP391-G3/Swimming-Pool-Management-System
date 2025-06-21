@@ -15,39 +15,25 @@
     <body class="bg-gray-50 text-gray-800 font-sans">
 
         <!-- Sidebar -->
-        <nav id="sidebar" class="w-64 bg-[#001F3F] text-white p-6 flex flex-col space-y-5 fixed h-full z-40">
-            <div class="text-center mb-4">
-                <h1 class="text-2xl font-bold tracking-wide">Admin Panel</h1>
-                <p class="text-sm text-gray-300">Swimming Pool System</p>
-            </div>
-
-            <div class="flex items-center gap-4 mb-6">
-                <img src="https://cdn.kona-blue.com/upload/kona-blue_com/post/images/2024/09/19/465/avatar-trang-1.jpg" class="w-12 h-12 rounded-full border-2 border-white object-cover">
-                <div>
-                    <p class="font-semibold text-lg"><%= userName %></p>
-                    <a href="#" class="text-sm text-blue-300 hover:underline">Xem chi tiết</a>
+            <nav id="sidebar" class="w-64 bg-[#000033] text-white p-6 flex flex-col space-y-4 fixed h-full transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-40">
+                <div class="mb-6 text-center"> 
+                    <h1 class="text-2xl font-bold">Admin Panel</h1>
+                    <p class="text-sm text-gray-300">Swimming Pool System</p>
                 </div>
-            </div>
-
-            <a href="adminPoolManagement" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-blue-800 transition">
-                <i class="fa-solid fa-water"></i> Quản lý bể bơi
-            </a>
-            <a href="adminViewStaffCategory.jsp" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-blue-800 transition">
-                <i class="fa-solid fa-user-tie"></i> Quản lý nhân viên
-            </a>
-            <a href="adminViewCustomerList" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-blue-800 transition">
-                <i class="fa-solid fa-user-check"></i> Quản lý khách hàng
-            </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-blue-800 transition">
-                <i class="fa-solid fa-chart-line"></i> Thống kê & Báo cáo
-            </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-blue-800 transition">
-                <i class="fa-solid fa-gear"></i> Cài đặt hệ thống
-            </a>
-            <a href="LogoutServlet" class="flex items-center gap-3 px-4 py-2 rounded-lg text-red-400 hover:bg-blue-800 transition">
-                <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
-            </a>
-        </nav>
+                <div class="flex items-center gap-3 mb-6">
+                    <img src="https://cdn.kona-blue.com/upload/kona-blue_com/post/images/2024/09/19/465/avatar-trang-1.jpg" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-white object-cover" />
+                    <div>
+                        <h4 class="text-base font-semibold"><%= userName %></h4>
+                        <a href="#" class="text-sm text-blue-300 hover:underline">Xem chi tiết</a>
+                    </div>
+                </div>
+                <a href="adminPoolManagement" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-water"></i> Quản lý bể bơi</a>
+                <a href="adminViewManagerList" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2 bg-blue-900 ring-2 ring-white"><i class="fa-solid fa-user-tie"></i> Quản lý nhân viên</a>
+                <a href="adminViewCustomerList" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-user-check"></i> Quản lý khách hàng</a>
+                <a href="#" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-chart-line"></i> Thống kê & Báo cáo</a>
+                <a href="#" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-gear"></i> Cài đặt hệ thống</a>
+                <a href="LogoutServlet" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2 text-red-400"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
+            </nav>
 
         <!-- Form content -->
         <main class="ml-0 md:ml-64 p-8">
