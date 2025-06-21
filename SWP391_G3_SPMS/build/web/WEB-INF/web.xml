@@ -20,6 +20,10 @@
         <servlet-name>BookingDetailServlet</servlet-name>
         <servlet-class>controller.Customer.BookingDetailServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>managerTicketServlet</servlet-name>
+        <servlet-class>controller.manager.managerTicketServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>CustomerAccountInfor</servlet-name>
         <url-pattern>/CustomerAccountInfor</url-pattern>
@@ -40,9 +44,8 @@
         <servlet-name>BookingDetailServlet</servlet-name>
         <url-pattern>/booking_detail</url-pattern>
     </servlet-mapping>
-    
     <!-- Servlet Login.Register -->
-        <servlet>
+    <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>controller.login.LoginServlet</servlet-class>
     </servlet>
@@ -66,8 +69,11 @@
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/register</url-pattern>
     </servlet-mapping>
-    
     <!-- Start Page -->
+    <servlet-mapping>
+        <servlet-name>managerTicketServlet</servlet-name>
+        <url-pattern>/managerTicketServlet</url-pattern>
+    </servlet-mapping>
     <welcome-file-list>
         <welcome-file>LandingPage.jsp</welcome-file>
     </welcome-file-list>

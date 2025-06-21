@@ -47,7 +47,7 @@
                     <div class="dashboard-card-title">Nhân Viên</div>
                     <div class="dashboard-card-desc">Xem danh sách nhân viên khu vực, thông tin nhân viên.</div>
                 </a>
-                <a href="managerTicket.jsp" class="dashboard-card">
+                <a href="managerTicketServlet" class="dashboard-card">
                     <div class="dashboard-card-title">Quản lý vé</div>
                     <div class="dashboard-card-desc">Trang quản lý vé hỗ trợ các chức năng từ xem, tìm kiếm, lọc, đến thêm/sửa/xóa vé trong phạm vi chi nhánh quản lý.</div>
                 </a>

@@ -55,6 +55,8 @@ public class ListDeviceServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        
+        
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("currentUser");
         int branchId = 0;

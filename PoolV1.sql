@@ -396,3 +396,5 @@ END;
 
 
 
+-- Tuấn Anh
+ALTER TABLE Pool_Ticket_Types ADD status NVARCHAR(20) DEFAULT 'active';

@@ -63,7 +63,7 @@
                 </a>
             </li>
             <li>
-                <a href="managerTicket.jsp"
+                <a href="managerTicketServlet"
                 <c:if test="${activeMenu eq 'ticket'}">class="active"</c:if>>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                          viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"

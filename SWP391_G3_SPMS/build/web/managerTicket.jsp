@@ -1,187 +1,165 @@
-<%-- 
-    Document   : managerTicket
-    Created on : Jun 19, 2025, 2:53:03 AM
-    Author     : Tuan Anh
---%>
 
 
-<%@ page contentType="text/html; charset=UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
     request.setAttribute("activeMenu", "ticket");
 %>
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Quản lý Ticket</title>
-    <link rel="stylesheet" href="./manager-css/managerTicket.css">
-    <link rel="stylesheet" href="./manager-css/manager-panel.css">
-</head>
-<body>
-    <div class="layout">
-        <div class="sidebar">
-            <!-- Sidebar content -->
-            <%@ include file="../managerSidebar.jsp" %>
-            
-        </div>
-
-        <div class="content-panel">
-            <div class="content-header">
-                <h2>Quản lý Ticket</h2>
-                <p class="desc">Quản lý và theo dõi các vé đã phát hành tại chi nhánh</p>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Quản lý Loại vé</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+        <link rel="stylesheet" href="./manager-css/manager-panel.css">
+        <link rel="stylesheet" href="./manager-css/managerTicket-v1.css">
+    </head>
+    <body>
+        <div class="layout">
+            <div class="sidebar">
+                <%@ include file="../managerSidebar.jsp" %>
             </div>
-
-            <div class="ticket-controls">
-                <div class="search-filter">
-                    
-                    <div class="search-box">
-                        <input type="text" id="searchInput" placeholder="Tìm kiếm mã vé, khách hàng...">
-                        <button>Tìm kiếm</button>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <label for="poolFilter">Hồ bơi:</label>
-                        <select id="poolFilter">
-                            <option value="all">Tất cả hồ bơi</option>
-                            <option value="1">Hồ bơi Quận 1</option>
-                            <option value="2">Hồ bơi Quận 3</option>
-                            <option value="3">Hồ bơi Quận 5</option>
+            <div class="content-panel">
+                <div class="header">
+                    <h2>Quản lý Loại vé</h2>
+                    <form class="search-form" method="get" action="managerTicketServlet" id="searchForm">
+                        <input type="text" name="keyword" placeholder="Tìm kiếm loại vé..." value="${fn:escapeXml(keyword)}">
+                        <select name="poolId">
+                            <option value="all" <c:if test="${poolId == 'all'}">selected</c:if>>-- Tất cả hồ bơi --</option>
+                            <c:forEach var="pool" items="${poolList}">
+                                <option value="${pool.id}" <c:if test="${pool.id.toString() == poolId}">selected</c:if>>${pool.name}</option>
+                            </c:forEach>
                         </select>
+                        <select name="status">
+                            <option value="all" <c:if test="${status == 'all'}">selected</c:if>>Tất cả</option>
+                            <option value="active" <c:if test="${status == 'active'}">selected</c:if>>Đang bán</option>
+                            <option value="inactive" <c:if test="${status == 'inactive'}">selected</c:if>>Ngừng bán</option>
+                            </select>
+                            <select name="pageSize" id="pageSizeSelect" onchange="document.getElementById('searchForm').submit();">
+                                <option value="5" <c:if test="${pageSize == 5}">selected</c:if>>5/Trang</option>
+                            <option value="10" <c:if test="${pageSize == 10}">selected</c:if>>10/Trang</option>
+                            <option value="15" <c:if test="${pageSize == 15}">selected</c:if>>15/Trang</option>
+                            <option value="25" <c:if test="${pageSize == 25}">selected</c:if>>25/Trang</option>
+                            </select>
+                            <input type="hidden" name="page" value="${page}">
+                        <button type="submit"><i class="fas fa-search"></i></button>
+                    </form>
+                    <div class="action-buttons">
+                        <a href="add-ticket.jsp?page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" class="btn-add"><i class="fas fa-plus"></i> Thêm loại vé</a>
+                        <a href="copyTicket.jsp?page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" class="btn-copy"><i class="fas fa-copy"></i> Copy loại vé</a>
                     </div>
-
-                    <div class="filter-group">
-                        <label for="statusFilter">Trạng thái:</label>
-                        <select id="statusFilter">
-                            <option value="all">Tất cả</option>
-                            <option value="pending">Chưa thanh toán</option>
-                            <option value="completed">Đã thanh toán</option>
-                            <option value="canceled">Đã hủy</option>
-                        </select>
-                    </div>
-
-                    
                 </div>
+                <div class="ticket-list">
+                    <table class="equipment-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Mã loại</th>
+                                <th>Tên loại vé</th>
+                                <th>Giá vé</th>
+                                <th>Áp dụng tại</th>
+                                <th>Ngày tạo</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:choose>
+                                <c:when test="${empty ticketList}">
+                                    <tr>
+                                        <td colspan="7" style="text-align: center; color: gray; font-style: italic;">
+                                            Không tìm thấy loại vé nào phù hợp.
+                                        </td>
+                                    </tr>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:forEach var="ticket" items="${ticketList}" varStatus="status">
+                                        <tr>
+                                            <td>${ticket.id}</td>
+                                            <td>${ticket.code}</td>
+                                            <td>${ticket.name}</td>
+                                            <td><fmt:formatNumber value="${ticket.basePrice}" type="currency" currencySymbol="₫"/></td>
+                                            <td>
+                                                <div class="pool-tags">
+                                                    <c:forEach var="pool" items="${ticket.pools}">
+                                                        <span class="pool-tag">${pool}</span>
+                                                    </c:forEach>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <fmt:formatDate value="${ticket.createdAt}" pattern="dd/MM/yyyy HH:mm:ss"/>
+                                            </td>
+                                            <td>
+                                                <span class="status ${ticket.active ? 'available' : 'broken'}">
+                                                    ${ticket.active ? 'Đang bán' : 'Ngừng bán'}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="action-buttons-cell">
+                                                    <a href="viewTicket.jsp?id=${ticket.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" class="btn-edit btn-view" title="Xem chi tiết">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a href="editTicket.jsp?id=${ticket.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" class="btn-edit" title="Cập nhật">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <form action="toggleTicketStatus" method="post" style="display:inline;">
+                                                        <input type="hidden" name="id" value="${ticket.id}">
+                                                        <input type="hidden" name="page" value="${page}">
+                                                        <input type="hidden" name="pageSize" value="${pageSize}">
+                                                        <input type="hidden" name="keyword" value="${fn:escapeXml(keyword)}">
+                                                        <input type="hidden" name="status" value="${fn:escapeXml(status)}">
+                                                        <input type="hidden" name="poolId" value="${fn:escapeXml(poolId)}">
+                                                        <button type="submit" class="btn-delete ${ticket.active ? 'btn-disable' : 'btn-enable'}" 
+                                                                title="${ticket.active ? 'Ngừng bán' : 'Kích hoạt'}"
+                                                                onclick="return confirm('Bạn có chắc chắn muốn thay đổi trạng thái vé này?')">
+                                                            <i class="fas ${ticket.active ? 'fa-ban' : 'fa-check'}"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </c:otherwise>
+                            </c:choose>
+                        </tbody>
+                    </table>
 
-                <div class="action-buttons">
-                    <button class="btn-add">
-                        <svg viewBox="0 0 24 24" width="18" height="18" fill="white">
-                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-                        </svg>
-                        Thêm vé mới
-                    </button>
-                    <button class="btn-copy">
-                        <svg viewBox="0 0 24 24" width="18" height="18" fill="white">
-                            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-                        </svg>
-                        Copy loại vé
-                    </button>
-                </div>
-            </div>
 
-            <div class="ticket-list">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>STT</th>
-                            <th>Mã vé</th>
-                            <th>Loại vé</th>
-                            <th>Khách hàng</th>
-                            <th>Hồ bơi</th>
-                            <th>Ngày sử dụng</th>
-                            <th>Giá vé</th>
-                            <th>Trạng thái</th>
-                            <th>Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>ADULT-TICKET-0012</td>
-                            <td>Vé người lớn</td>
-                            <td>Nguyễn Văn A</td>
-                            <td>Hồ bơi Quận 1</td>
-                            <td>15/06/2025</td>
-                            <td>100,000 VND</td>
-                            <td><span class="status-badge completed">Đã thanh toán</span></td>
-                            <td>
-                                <div class="action-buttons-cell">
-                                    <button class="btn-detail">Chi tiết</button>
-                                    <button class="btn-update">Cập nhật</button>
-                                    <button class="btn-delete">Xóa</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>CHILD-TICKET-0045</td>
-                            <td>Vé trẻ em</td>
-                            <td>Trần Thị B</td>
-                            <td>Hồ bơi Quận 1</td>
-                            <td>16/06/2025</td>
-                            <td>70,000 VND</td>
-                            <td><span class="status-badge pending">Chưa thanh toán</span></td>
-                            <td>
-                                <div class="action-buttons-cell">
-                                    <button class="btn-detail">Chi tiết</button>
-                                    <button class="btn-update">Cập nhật</button>
-                                    <button class="btn-delete">Xóa</button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div class="pagination">
-                    <a href="#">&laquo;</a>
-                    <a href="#" class="active">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#">&raquo;</a>
+                    <!-- PHÂN TRANG CHUẨN -->
+                    <c:if test="${endP > 1}">
+                        <div class="pagination">
+                            <c:if test="${page > 1}">
+                                <a href="managerTicketServlet?page=${page-1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}&pageSize=${pageSize}">«</a>
+                            </c:if>
+                            <c:forEach begin="1" end="${endP}" var="i">
+                                <a href="managerTicketServlet?page=${i}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}&pageSize=${pageSize}" class="${i == page ? 'active' : ''}">${i}</a>
+                            </c:forEach>
+                            <c:if test="${page < endP}">
+                                <a href="managerTicketServlet?page=${page+1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}&pageSize=${pageSize}">»</a>
+                            </c:if>
+                        </div>
+                    </c:if>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal Copy loại vé -->
-    <div id="copyTicketModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>Sao chép loại vé giữa các hồ bơi</h3>
+        <script>
+            const searchInput = document.querySelector('input[name="keyword"]');
+            const searchForm = document.getElementById('searchForm');
+            let timeout = null;
 
-            <div class="form-group">
-                <label for="sourcePool">Hồ bơi nguồn:</label>
-                <select id="sourcePool">
-                    <option value="">Chọn hồ bơi nguồn</option>
-                    <option value="1">Hồ bơi Quận 1</option>
-                    <option value="2">Hồ bơi Quận 3</option>
-                    <option value="3">Hồ bơi Quận 5</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="targetPool">Hồ bơi đích:</label>
-                <select id="targetPool">
-                    <option value="">Chọn hồ bơi đích</option>
-                    <option value="1">Hồ bơi Quận 1</option>
-                    <option value="2">Hồ bơi Quận 3</option>
-                    <option value="3">Hồ bơi Quận 5</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="overwriteExisting" checked>
-                    Ghi đè loại vé đã tồn tại
-                </label>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn-confirm">Xác nhận sao chép</button>
-                <button class="btn-cancel">Hủy</button>
-            </div>
-        </div>
-    </div>
-</body>
+            searchInput.addEventListener('input', function () {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    document.querySelector('input[name="page"]').value = 1; // reset về trang 1
+                    searchForm.submit();
+                }, 400);
+            });
+        </script>
+    </body>
 </html>
