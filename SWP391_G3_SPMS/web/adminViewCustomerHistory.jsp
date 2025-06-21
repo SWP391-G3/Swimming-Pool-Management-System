@@ -46,7 +46,7 @@
                 <a href="#" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2">
                     <i class="fa-solid fa-gear"></i> Cài đặt hệ thống
                 </a>
-                <a href="#" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2 text-red-400">
+                <a href="LogoutServlet" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2 text-red-400">
                     <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
                 </a>
             </nav>
