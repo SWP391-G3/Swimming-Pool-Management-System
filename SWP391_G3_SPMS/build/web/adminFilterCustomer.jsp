@@ -275,17 +275,12 @@
                                 }
                 </script>
 
-                <%
-                    String encodedKeyword = URLEncoder.encode(keyword, "UTF-8");
-                    String encodedStatus = URLEncoder.encode(status, "UTF-8");
-                    String encodedSortAmount = URLEncoder.encode(sortAmount, "UTF-8");
-                %>
 
                 <!-- Pagination -->
                 <div class="flex flex-wrap justify-center items-center gap-2 mt-6">
                     <!-- Nút Trước -->
                     <% if (currentPage > 1) { %>
-                    <a href="adminFilterCustomer?page=<%= currentPage - 1 %>&keyword=<%= encodedKeyword %>&status=<%= encodedStatus %>&sortAmount=<%= encodedSortAmount %>"
+                    <a href="adminFilterCustomer?page=<%= currentPage - 1 %>&keyword=<%= keyword %>&status=<%= status %>&sortAmount=<%= sortAmount %>"
                        class="px-3 py-1 bg-blue-500 text-white rounded">
                         Trước
                     </a>
@@ -293,7 +288,7 @@
 
                     <!-- Nút số trang -->
                     <% for (int i = startPage; i <= endPage; i++) { %>
-                    <a href="adminFilterCustomer?page=<%= i %>&keyword=<%= encodedKeyword %>&status=<%= encodedStatus %>&sortAmount=<%= encodedSortAmount %>"
+                    <a href="adminFilterCustomer?page=<%= i %>&keyword=<%= keyword %>&status=<%= status %>&sortAmount=<%= sortAmount %>"
                        class="px-3 py-1 rounded <%= (i == currentPage ? "bg-green-600 text-white" : "bg-gray-300 text-gray-800") %>">
                         <%= i %>
                     </a>
@@ -301,7 +296,7 @@
 
                     <!-- Nút Tiếp -->
                     <% if (currentPage < totalPages) { %>
-                    <a href="adminFilterCustomer?page=<%= currentPage + 1 %>&keyword=<%= encodedKeyword %>&status=<%= encodedStatus %>&sortAmount=<%= encodedSortAmount %>"
+                    <a href="adminFilterCustomer?page=<%= currentPage + 1 %>&keyword=<%= keyword %>&status=<%= status %>&sortAmount=<%= sortAmount %>"
                        class="px-3 py-1 bg-blue-500 text-white rounded">
                         Tiếp
                     </a>
@@ -309,9 +304,9 @@
 
                     <!-- Input nhảy đến trang -->
                     <form action="adminFilterCustomer" method="GET" class="flex items-center gap-2">
-                        <input type="hidden" name="keyword" value="<%= encodedKeyword %>">
-                        <input type="hidden" name="status" value="<%= encodedStatus %>">
-                        <input type="hidden" name="sortAmount" value="<%= encodedSortAmount %>">
+                        <input type="hidden" name="keyword" value="<%= keyword %>">
+                        <input type="hidden" name="status" value="<%= status %>">
+                        <input type="hidden" name="sortAmount" value="<%= sortAmount %>">
                         <input type="number" name="page" min="1" max="<%= totalPages %>"
                                placeholder="Trang..." class="w-20 px-2 py-1 border rounded text-center" required>
                         <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">

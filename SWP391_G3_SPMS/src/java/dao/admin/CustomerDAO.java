@@ -248,12 +248,12 @@ public class CustomerDAO extends DBContext {
 
     public int countFilteredCustomers(String keyword, String status) {
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT COUNT(DISTINCT u.user_id) FROM Users u WHERE u.role_id = 4 ");
+        sql.append("SELECT COUNT(*) FROM Users u WHERE u.role_id = 4 ");
 
         List<Object> params = new ArrayList<>();
 
         if (keyword != null && !keyword.trim().isEmpty()) {
-            sql.append(" (LOWER(u.full_name) LIKE LOWER(?) OR LOWER(u.email) LIKE LOWER(?)) ");
+            sql.append("AND (LOWER(u.full_name) LIKE LOWER(?) OR LOWER(u.email) LIKE LOWER(?)) ");
             params.add("%" + keyword.trim() + "%");
             params.add("%" + keyword.trim() + "%");
         }
