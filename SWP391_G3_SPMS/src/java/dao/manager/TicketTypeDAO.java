@@ -163,6 +163,117 @@ public class TicketTypeDAO extends DBContext {
         }
     }
 
+    // Cập nhập
+    public TicketType getTicketTypeById(int ticketTypeId) throws SQLException {
+        TicketType ticket = null;
+        String sql = "SELECT ticket_type_id, type_code, type_name, description, base_price, is_combo, created_at "
+                + "FROM Ticket_Types WHERE ticket_type_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, ticketTypeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    ticket = new TicketType();
+                    ticket.setId(rs.getInt("ticket_type_id"));
+                    ticket.setCode(rs.getString("type_code"));
+                    ticket.setName(rs.getString("type_name"));
+                    ticket.setDescription(rs.getString("description"));
+                    ticket.setBasePrice(rs.getDouble("base_price"));
+                    ticket.setIsCombo(rs.getBoolean("is_combo"));
+                    ticket.setCreatedAt(rs.getTimestamp("created_at"));
+                    // Lấy danh sách tên hồ bơi áp dụng cho vé này
+                    ticket.setPools(getPoolNamesOfTicketType(ticketTypeId));
+                }
+            }
+        }
+        return ticket;
+    }
+
+    public void updateTicketType(int id, String typeName, String description, double basePrice, boolean isCombo) throws SQLException {
+        String sql = "UPDATE Ticket_Types SET type_name=?, description=?, base_price=?, is_combo=? WHERE ticket_type_id=?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setString(1, typeName);
+            st.setString(2, description);
+            st.setDouble(3, basePrice);
+            st.setBoolean(4, isCombo);
+            st.setInt(5, id);
+            st.executeUpdate();
+        }
+    }
+
+// Xóa và cập nhật lại danh sách pool áp dụng cho loại vé
+    public void updateTicketTypePools(int ticketTypeId, List<Integer> poolIds, String status) throws SQLException {
+        // Xóa cũ
+        String deleteSql = "DELETE FROM Pool_Ticket_Types WHERE ticket_type_id = ?";
+        try (PreparedStatement del = connection.prepareStatement(deleteSql)) {
+            del.setInt(1, ticketTypeId);
+            del.executeUpdate();
+        }
+        // Thêm mới
+        String insertSql = "INSERT INTO Pool_Ticket_Types (pool_id, ticket_type_id, price, status) VALUES (?, ?, 0, ?)";
+        try (PreparedStatement ins = connection.prepareStatement(insertSql)) {
+            for (Integer poolId : poolIds) {
+                ins.setInt(1, poolId);
+                ins.setInt(2, ticketTypeId);
+                ins.setString(3, status);
+                ins.addBatch();
+            }
+            ins.executeBatch();
+        }
+    }
+
+    public List<String> getPoolIdsOfTicketType(int ticketTypeId) throws SQLException {
+        List<String> poolIds = new ArrayList<>();
+        String sql = "SELECT pool_id FROM Pool_Ticket_Types WHERE ticket_type_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, ticketTypeId);
+            try (ResultSet rs = st.executeQuery()) {
+                while (rs.next()) {
+                    poolIds.add(String.valueOf(rs.getInt("pool_id")));
+                }
+            }
+        }
+        return poolIds;
+    }
+
+// Lấy danh sách tên hồ bơi theo id loại vé (cho model TicketType)
+    public List<String> getPoolNamesOfTicketType(int ticketTypeId) throws SQLException {
+        List<String> poolNames = new ArrayList<>();
+        String sql = "SELECT p.pool_name FROM Pools p JOIN Pool_Ticket_Types ptt ON p.pool_id = ptt.pool_id WHERE ptt.ticket_type_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, ticketTypeId);
+            try (ResultSet rs = st.executeQuery()) {
+                while (rs.next()) {
+                    poolNames.add(rs.getString("pool_name"));
+                }
+            }
+        }
+        return poolNames;
+    }
+
+    // Hết phần Cập nhập
+    
+    
+  
+  //Xóa loại vé và toàn bộ mapping với hồ bơi
+ 
+public void deleteTicketType(int ticketTypeId) throws SQLException {
+    // Xóa mapping với các hồ bơi trước
+    String deletePoolMapping = "DELETE FROM Pool_Ticket_Types WHERE ticket_type_id = ?";
+    try (PreparedStatement st = connection.prepareStatement(deletePoolMapping)) {
+        st.setInt(1, ticketTypeId);
+        st.executeUpdate();
+    }
+    // Xóa loại vé chính
+    String deleteTicketType = "DELETE FROM Ticket_Types WHERE ticket_type_id = ?";
+    try (PreparedStatement st = connection.prepareStatement(deleteTicketType)) {
+        st.setInt(1, ticketTypeId);
+        st.executeUpdate();
+    }
+}
+    
+    
+    
+    
     public static void main(String[] args) {
         int branchId = 1; // ví dụ branch id
 //        String poolId = "all";
@@ -199,18 +310,12 @@ public class TicketTypeDAO extends DBContext {
         TicketTypeDAO dao = new TicketTypeDAO();
         try {
             List<PoolTicket> list = dao.getPoolsByBranch(branchId);
-             for (PoolTicket poolTicket : list) {
-            System.out.println(poolTicket);
-        }
+            for (PoolTicket poolTicket : list) {
+                System.out.println(poolTicket);
+            }
         } catch (Exception e) {
         }
-      
-      
-       
-
 
     }
 
-
 }
-

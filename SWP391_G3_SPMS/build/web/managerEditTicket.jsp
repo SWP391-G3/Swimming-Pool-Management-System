@@ -20,13 +20,15 @@
             <c:if test="${not empty error}">
                 <div class="error-message">${error}</div>
             </c:if>
-            <form method="post" action="editTicket">
+            <form method="post" action="managerEditTicket">
                 <input type="hidden" name="id" value="${ticket.id}" />
-                <input type="hidden" name="page" value="${param.page}" />
-                <input type="hidden" name="pageSize" value="${param.pageSize}" />
-                <input type="hidden" name="keyword" value="${fn:escapeXml(param.keyword)}" />
-                <input type="hidden" name="status" value="${fn:escapeXml(param.status)}" />
-                <input type="hidden" name="poolId" value="${fn:escapeXml(param.poolId)}" />
+                <input type="hidden" name="page" value="${param.page != null ? param.page : page}" />
+                <input type="hidden" name="pageSize" value="${param.pageSize != null ? param.pageSize : pageSize}" />
+                <input type="hidden" name="keyword" value="${param.keyword != null ? fn:escapeXml(param.keyword) : fn:escapeXml(keyword)}" />
+                <input type="hidden" name="status" value="${param.status != null ? fn:escapeXml(param.status) : fn:escapeXml(status)}" />
+                <input type="hidden" name="poolId" value="${param.poolId != null ? fn:escapeXml(param.poolId) : fn:escapeXml(poolId)}" />
+
+
 
                 <div class="form-row">
                     <label>Mã loại vé:</label>
@@ -53,11 +55,11 @@
                         <select name="poolIds" id="poolIds" multiple required style="height: 90px;">
                         <c:forEach items="${poolList}" var="pool">
                             <c:choose>
-                                
+
                                 <c:when test="${not empty param.poolIds}">
                                     <option value="${pool.id}" <c:if test="${fn:contains(param.poolIds, pool.id)}">selected</c:if>>${pool.name}</option>
                                 </c:when>
-                                
+
                                 <c:otherwise>
                                     <option value="${pool.id}" <c:if test="${fn:contains(poolIdsString, pool.id)}">selected</c:if>>${pool.name}</option>
                                 </c:otherwise>
@@ -75,7 +77,7 @@
                     </div>
                     <div class="action-buttons">
                         <button type="submit" class="btn">Lưu thay đổi</button>
-                        <a href="managerTicketServlet?page=${param.page}&pageSize=${param.pageSize}&keyword=${fn:escapeXml(param.keyword)}&status=${fn:escapeXml(param.status)}&poolId=${fn:escapeXml(param.poolId)}" class="btn btn-cancel">Hủy</a>
+                        <a href="managerTicketServlet?page=${param.page != null ? param.page : page}&pageSize=${param.pageSize != null ? param.pageSize : pageSize}&keyword=${param.keyword != null ? fn:escapeXml(param.keyword) : fn:escapeXml(keyword)}&status=${param.status != null ? fn:escapeXml(param.status) : fn:escapeXml(status)}&poolId=${param.poolId != null ? fn:escapeXml(param.poolId) : fn:escapeXml(poolId)}" class="btn btn-cancel">Hủy</a>
                 </div>
             </form>
         </div>

@@ -40,9 +40,6 @@
             <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/web/manager-css/managerAddUpdate-device.css</file>
             <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/src/java/dao/manager/DeviceDao.java</file>
         </group>
-        <group name="SWP_ITER1">
-            <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/web/managerSidebar.jsp</file>
-            <file>file:/E:/HK_5_SU2025/SWP391_Manager/SWP391_G3_SPMS/web/managerPanel.jsp</file>
-        </group>
+        <group name="SWP_ITER1"/>
     </open-files>
 </project-private>

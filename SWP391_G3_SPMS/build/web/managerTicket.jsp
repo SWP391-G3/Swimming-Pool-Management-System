@@ -1,6 +1,8 @@
-
-
-
+<%-- 
+    Document   : managerTicket
+    Created on : Jun 21, 2025, 9:58:07 PM
+    Author     : Tuan Anh
+--%>
 
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -91,7 +93,7 @@
                                     </tr>
                                 </c:when>
                                 <c:otherwise>
-                                    <c:forEach var="ticket" items="${ticketList}" varStatus="status">
+                                    <c:forEach var="ticket" items="${ticketList}" varStatus="i">
                                         <tr>
                                             <td>${ticket.id}</td>
                                             <td>${ticket.code}</td>
@@ -116,10 +118,15 @@
                                                  <a href="viewTicket.jsp?id=${ticket.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" class="btn-edit btn-view" title="Xem chi tiết">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    <a href="editTicket.jsp?id=${ticket.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" 
+                                                    <a href="managerEditTicket?id=${ticket.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" 
                                                        class="btn-edit" 
                                                        title="Cập nhật">
                                                         Cập nhật
+                                                    </a>
+                                                       <a href="###?id=${ticket.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" 
+                                                       class="btn-disable" 
+                                                       title="Cập nhật">
+                                                        Xóa
                                                     </a>
                                                 </div>
                                             </td>

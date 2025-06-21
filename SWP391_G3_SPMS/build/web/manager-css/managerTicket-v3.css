@@ -237,7 +237,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     justify-content: center;
 }
 
-.btn-edit, .btn-delete, .btn-view, .btn-disable, .btn-enable {
+.btn-edit,.btn-delete, .btn-view, .btn-disable, .btn-enable {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -251,6 +251,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     transition: background 0.14s, color 0.14s, box-shadow 0.14s, transform 0.13s;
     box-shadow: 0 1px 6px #bae6fd14;
 }
+
+
 
 .btn-view {
     background: #bae6fd;
