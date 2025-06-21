@@ -15,7 +15,7 @@ public class FeedbackDAO extends DBContext {
     // Get feedback by userId
     public List<Feedback> getFeedbackByUserId(int uid) throws SQLException {
         List<Feedback> list = new ArrayList<>();
-        String sql = "SELECT * FROM Feedback WHERE user_id = ? ORDER BY created_at DESC";
+        String sql = "SELECT * FROM Feedbacks WHERE user_id = ? ORDER BY created_at DESC";
         PreparedStatement st = connection.prepareStatement(sql);
         st.setInt(1, uid);
         ResultSet rs = st.executeQuery();
@@ -35,7 +35,7 @@ public class FeedbackDAO extends DBContext {
 
     // Send feedback by user
     public boolean sendFeedback(User user, int poolId, int rating, String comment) throws SQLException {
-        String sql = "INSERT INTO Feedback (user_id, pool_id, rating, comment, created_at) VALUES (?, ?, ?, ?, GETDATE())";
+        String sql = "INSERT INTO Feedbacks (user_id, pool_id, rating, comment, created_at) VALUES (?, ?, ?, ?, GETDATE())";
         PreparedStatement st = connection.prepareStatement(sql);
         st.setInt(1, user.getUser_id());
         st.setInt(2, poolId);

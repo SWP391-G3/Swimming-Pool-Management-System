@@ -21,12 +21,12 @@ public class BookingDetails {
     private int slotCount;
     private BigDecimal amount;
     private String bookingStatus;
-    private int rating;
+    private Integer rating;
     private String comment;
 
     public BookingDetails() {}
 
-    public BookingDetails(int bookingId, int userId, int poolId, String poolName, String poolAddressDetail, Date bookingDate, int slotCount, BigDecimal amount, String bookingStatus, int rating, String comment) {
+    public BookingDetails(int bookingId, int userId, int poolId, String poolName, String poolAddressDetail, Date bookingDate, int slotCount, BigDecimal amount, String bookingStatus, Integer rating, String comment) {
         this.bookingId = bookingId;
         this.userId = userId;
         this.poolId = poolId;
@@ -40,7 +40,6 @@ public class BookingDetails {
         this.comment = comment;
     }
 
-    // Getter & Setter
     public int getBookingId() {
         return bookingId;
     }
@@ -113,11 +112,11 @@ public class BookingDetails {
         this.bookingStatus = bookingStatus;
     }
 
-    public int getRating() {
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
 
@@ -128,4 +127,6 @@ public class BookingDetails {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    
 }

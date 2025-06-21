@@ -59,13 +59,40 @@ public class BookingDetailServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //User user = (User) request.getSession().getAttribute("user");
-        //int userId = user.getUserId();
-        
-        int userId = 2;
+        String action = request.getParameter("action");
+
+        // ----------- Xử lý huỷ đặt bể -----------
+        if ("cancelBooking".equals(action)) {
+            String bookingIdStr = request.getParameter("bookingId");
+            User currentUser = (User) request.getSession().getAttribute("currentUser");
+            int userId = currentUser.getUser_id();
+            try {
+                int bookingId = Integer.parseInt(bookingIdStr);
+                BookingDetailDAO bookingDetailDAO = new BookingDetailDAO();
+                BookingDetails bookingDetail = bookingDetailDAO.getBookingDetailById(bookingId);
+                // Kiểm tra quyền huỷ
+                if (bookingDetail == null || bookingDetail.getUserId() != userId) {
+                    response.sendRedirect("booking_history");
+                    return;
+                }
+                // Huỷ đặt bể
+                bookingDetailDAO.cancelBooking(bookingId);
+                response.sendRedirect("booking_detail?bookingId=" + bookingId);
+                return;
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.sendRedirect("booking_detail?bookingId=" + bookingIdStr + "&error=1");
+                return;
+            }
+        }
+
+        // ----------- Xử lý gửi feedback -----------
+        User currentUser = (User) request.getSession().getAttribute("currentUser");
+        int userId = currentUser.getUser_id();
+
         UserDAO userDAO = new UserDAO();
         User user = userDAO.getUserByID(userId);
-        
+
         if (user == null) {
             response.sendRedirect("login.jsp");
             return;
@@ -102,7 +129,6 @@ public class BookingDetailServlet extends HttpServlet {
                 feedbackDAO.sendFeedback(user, poolId, rating, comment);
                 response.sendRedirect("booking_detail?bookingId=" + bookingId + "&success=1");
             } else {
-                // Thong bao da feedback
                 response.sendRedirect("booking_detail?bookingId=" + bookingId + "&error=1");
             }
         } catch (Exception e) {

@@ -14,14 +14,14 @@ public class Feedback {
     private int feedbackId;
     private int userId;
     private int poolId;
-    private int rating; // Giá trị từ 1 đến 5
+    private Integer rating; // Giá trị từ 1 đến 5
     private String comment;
     private Date createdAt;
 
     public Feedback() {
     }
 
-    public Feedback(int feedbackId, int userId, int poolId, int rating, String comment, Date createdAt) {
+    public Feedback(int feedbackId, int userId, int poolId, Integer rating, String comment, Date createdAt) {
         this.feedbackId = feedbackId;
         this.userId = userId;
         this.poolId = poolId;
@@ -54,11 +54,11 @@ public class Feedback {
         this.poolId = poolId;
     }
 
-    public int getRating() {
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
 
@@ -77,6 +77,8 @@ public class Feedback {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
+
+    
     
     
 }

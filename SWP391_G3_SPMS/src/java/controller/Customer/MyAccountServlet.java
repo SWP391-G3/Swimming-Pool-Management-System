@@ -29,7 +29,7 @@ public class MyAccountServlet extends HttpServlet {
             return;
         }
 
-        int userId = currentUser.getUser_id(); // Gan tam userId = 2
+        int userId = currentUser.getUser_id();
 
         UserDAO userDAO = new UserDAO();
         BookingDetailDAO bookingDetailDAO = new BookingDetailDAO();

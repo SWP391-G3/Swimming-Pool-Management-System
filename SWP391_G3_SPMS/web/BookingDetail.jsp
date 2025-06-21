@@ -1,11 +1,13 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="model.customer.BookingDetails" %>
 <%@ page import="model.customer.Feedback" %>
+<%@ page import="java.text.NumberFormat,java.util.Locale" %>
 <%
     BookingDetails bookingDetail = (BookingDetails) request.getAttribute("bookingDetail");
     Feedback userFeedback = (Feedback) request.getAttribute("userFeedback");
     String successMsg = (String) request.getAttribute("successMsg");
     String errorMsg = (String) request.getAttribute("errorMsg");
+    NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
     if (bookingDetail == null) {
 %>
 <div class="text-red-600 font-bold">Không tìm thấy thông tin booking!</div>
@@ -40,7 +42,25 @@
                     CHI TIẾT ĐẶT BỂ
                 </h1>
             </div>
-            <section class="bg-white border border-gray-200 rounded-lg p-8 shadow-sm w-full">
+            <section class="bg-white border border-gray-200 rounded-lg p-8 shadow-sm w-full relative">
+                <!-- Nút Huỷ đặt bể -->
+                <%
+                    String statusRaw = bookingDetail.getBookingStatus();
+                    boolean canCancel = "pending".equalsIgnoreCase(statusRaw) || "confirmed".equalsIgnoreCase(statusRaw)
+                        || "Đã xác nhận".equalsIgnoreCase(statusRaw) || "Chờ xác nhận".equalsIgnoreCase(statusRaw);
+                    if (canCancel) {
+                %>
+                <form method="post" action="booking_detail"
+                      onsubmit="return confirm('Bạn chắc chắn muốn huỷ đặt bể này?');"
+                      class="absolute top-8 right-8">
+                    <input type="hidden" name="bookingId" value="<%= bookingDetail.getBookingId() %>"/>
+                    <input type="hidden" name="action" value="cancelBooking"/>
+                    <button type="submit"
+                            class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-md shadow transition-colors">
+                        Huỷ đặt bể
+                    </button>
+                </form>
+                <% } %>
                 <h2 class="text-xl font-bold mb-6 text-blue-700">Thông tin đặt bể</h2>
                 <div class="mb-6 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-2 gap-4">
                     <div>
@@ -59,7 +79,6 @@
                         <div class="text-gray-500 text-sm">Trạng thái</div>
                         <div>
                             <%
-                            String statusRaw = bookingDetail.getBookingStatus();
                             String statusLabel = "Chưa xác nhận";
                             String badgeClass = "bg-yellow-100 text-yellow-800";
                             if ("confirmed".equalsIgnoreCase(statusRaw) || "Đã xác nhận".equalsIgnoreCase(statusRaw)) {
@@ -90,7 +109,7 @@
                     <div class="text-right">
                         <div class="text-gray-500 text-base font-medium">Tổng tiền</div>
                         <div class="text-3xl md:text-4xl font-extrabold text-blue-700 mt-1 mb-2">
-                            <%= bookingDetail.getAmount() %>₫
+                            <%= bookingDetail.getAmount() != null ? currencyFormat.format(bookingDetail.getAmount()) : "" %>
                         </div>
                     </div>
                 </div>

@@ -339,4 +339,11 @@ public class BookingDetailDAO extends DBContext {
         PreparedStatement st = connection.prepareStatement(sql);
         st.executeUpdate();
     }
+
+    public void cancelBooking(int bookingId) throws SQLException {
+        String sql = "UPDATE Booking SET booking_status = 'cancelled', updated_at = GETDATE() WHERE booking_id = ?";
+        PreparedStatement st = connection.prepareStatement(sql);
+        st.setInt(1, bookingId);
+        st.executeUpdate();
+    }
 }
