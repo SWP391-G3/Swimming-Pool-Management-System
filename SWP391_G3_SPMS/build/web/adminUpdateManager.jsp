@@ -49,7 +49,7 @@
                 <div class="bg-white rounded-lg shadow p-6">
                     <h2 class="text-2xl font-bold text-blue-700 mb-4"><i class="fa-solid fa-pen-to-square mr-2"></i> Cập nhật người quản lý</h2>
 
-                    <form action="adminUpdateManager" method="post" class="space-y-4">
+                    <form id="adminUpdateManager" action="adminUpdateManager" method="post" class="space-y-4">
                         <input type="hidden" name="manager_id" value="<%= manager.getManager_id() %>">
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -100,6 +100,64 @@
                     </form>
                 </div>
             </main>
+            <!-- Modal thông báo lỗi -->
+            <div id="errorModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+                <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 animate-fade-in-down">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-red-600">Lỗi</h2>
+                        <button onclick="closeErrorModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                    </div>
+                    <div class="mb-4">
+                        <p id="errorMessage" class="text-gray-700"></p>
+                    </div>
+                    <div class="text-right">
+                        <button onclick="closeErrorModal()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
+                            Đóng
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+            <script>
+                function closeErrorModal() {
+                    document.getElementById("errorModal").classList.add("hidden");
+                    document.getElementById("errorMessage").textContent = "";
+                }
+
+                document.getElementById("adminUpdateManager").addEventListener("submit", function (event) {
+                    const fullName = document.getElementsByName("full_name")[0].value.trim();
+                    const email = document.getElementsByName("email")[0].value.trim();
+                    const phone = document.getElementsByName("phone")[0].value.trim();
+                    const address = document.getElementsByName("address")[0].value.trim();
+
+                    let errorMsg = "";
+
+                    const nameRegex = /^[a-zA-ZÀ-ỹ\s]+$/;
+                    const emailRegex = /^[\w\.-]+@[\w\.-]+\.\w{2,}$/;
+                    const phoneRegex = /^0\d{9}$/;
+
+                    if (fullName.length < 2 || !nameRegex.test(fullName)) {
+                        errorMsg = "Họ tên không hợp lệ. Phải ít nhất 2 ký tự và chỉ chứa chữ.";
+                    } else if (!emailRegex.test(email)) {
+                        errorMsg = "Email không hợp lệ.";
+                    } else if (!phoneRegex.test(phone)) {
+                        errorMsg = "Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số.";
+                    } else if (address.length < 5) {
+                        errorMsg = "Địa chỉ phải có ít nhất 5 ký tự.";
+                    }
+
+                    if (errorMsg !== "") {
+                        event.preventDefault();
+                        document.getElementById('errorMessage').textContent = errorMsg;
+                        document.getElementById('errorModal').classList.remove('hidden');
+                    }
+                });
+            </script>
+
+
+
+
         </div>
     </body>
 </html>
