@@ -17,7 +17,7 @@ import model.admin.Manager;
  */
 public class ManagerDAO extends DBContext {
 
-    public List<Manager> getAllManager() {
+    public List<Manager> getAllManagersWithPaging(int page, int pageSize) {
         List<Manager> list = new ArrayList<>();
         String sql = "SELECT \n"
                 + "    u.user_id, \n"
@@ -27,14 +27,21 @@ public class ManagerDAO extends DBContext {
                 + "    u.address, \n"
                 + "    u.status, \n"
                 + "    u.created_at, \n"
-                + "    u.updated_at,\n"
+                + "    u.updated_at, \n"
                 + "    b.branch_id, \n"
                 + "    b.branch_name \n"
-                + "FROM Users u\n"
-                + "JOIN Roles r ON u.role_id = r.role_id\n"
-                + "LEFT JOIN Branchs b ON b.manager_id = u.user_id\n"
-                + "WHERE r.role_name = 'Manager';";
+                + "FROM Users u \n"
+                + "JOIN Roles r ON u.role_id = r.role_id \n"
+                + "LEFT JOIN Branchs b ON b.manager_id = u.user_id \n"
+                + "WHERE r.role_name = 'Manager' \n"
+                + "ORDER BY u.created_at DESC \n"
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;";
+
         try (PreparedStatement st = connection.prepareStatement(sql)) {
+            int offset = (page - 1) * pageSize;
+            st.setInt(1, offset);
+            st.setInt(2, pageSize);
+
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 int manager_id = rs.getInt("user_id");
@@ -50,11 +57,10 @@ public class ManagerDAO extends DBContext {
                 Manager manager = new Manager(manager_id, full_name, email, phone, address, status, created_at, branch_id, branch_name);
                 list.add(manager);
             }
-            return list;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return list;
     }
 
     public int countTotalManagers() {
@@ -69,8 +75,7 @@ public class ManagerDAO extends DBContext {
         }
         return 0;
     }
-    
-    
+
     public static void main(String[] args) {
         ManagerDAO dao = new ManagerDAO();
         int count = dao.countTotalManagers();
