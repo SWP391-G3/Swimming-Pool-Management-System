@@ -115,19 +115,20 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                 <a href="viewTicket.jsp?id=${ticket.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" class="btn-edit btn-view" title="Xem chi tiết">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <a href="managerEditTicket?id=${ticket.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" 
-                                                       class="btn-edit" 
-                                                       title="Cập nhật">
-                                                        Cập nhật
-                                                    </a>
-                                                       <a href="###?id=${ticket.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" 
-                                                       class="btn-disable" 
-                                                       title="Cập nhật">
-                                                        Xóa
-                                                    </a>
+                                                <a href="viewTicket.jsp?id=${ticket.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" class="btn-edit btn-view" title="Xem chi tiết">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="managerEditTicket?id=${ticket.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" 
+                                                   class="btn-edit" 
+                                                   title="Cập nhật">
+                                                    Cập nhật
+                                                </a>
+                                                <a href="managerDeleteTicket?id=${ticket.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}"
+                                                   class="btn-disable"
+                                                   title="Xóa"
+                                                   onclick="return confirm('Bạn có chắc chắn muốn xóa loại vé này?');">
+                                                    Xóa
+                                                </a>
                                                 </div>
                                             </td>
                                         </tr>
