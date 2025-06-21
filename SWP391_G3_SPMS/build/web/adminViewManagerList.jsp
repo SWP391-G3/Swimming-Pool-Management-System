@@ -179,7 +179,7 @@
                     <a class="px-3 py-1 bg-blue-500 text-white rounded" href="managers?page=<%= currentPage + 1 %>">Tiếp</a>
                     <% } %>
 
-                    <form action="managers" method="get" class="flex items-center gap-2 ml-4">
+                    <form action="adminViewManagerList" method="get" class="flex items-center gap-2 ml-4">
                         <input type="number" name="page" min="1" max="<%= totalPages %>" placeholder="Trang..."
                                class="w-20 px-2 py-1 border rounded text-center focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
                         <button type="submit"
