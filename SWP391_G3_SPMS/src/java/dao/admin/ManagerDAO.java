@@ -76,9 +76,111 @@ public class ManagerDAO extends DBContext {
         return 0;
     }
 
+    public int countManagers(String keyword, String branch, String status) {
+        StringBuilder sql = new StringBuilder(
+                "SELECT COUNT(*) "
+                + "FROM Users u "
+                + "JOIN Roles r ON u.role_id = r.role_id "
+                + "LEFT JOIN Branchs b ON u.user_id = b.manager_id "
+                + "WHERE r.role_name = 'Manager' ");
+
+        List<Object> params = new ArrayList<>();
+
+        if (keyword != null && !keyword.isEmpty()) {
+            sql.append(" AND (u.full_name LIKE ? OR u.email LIKE ?) ");
+            params.add("%" + keyword + "%");
+            params.add("%" + keyword + "%");
+        }
+        if (branch != null && !branch.isEmpty()) {
+            sql.append(" AND b.branch_name = ? ");
+            params.add(branch);
+        }
+        if (status != null && !status.isEmpty()) {
+            sql.append(" AND u.status = ? ");
+            params.add(Boolean.parseBoolean(status));
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public List<Manager> searchManagers(String keyword, String branch, String status, int offset, int limit) {
+        List<Manager> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+                "SELECT u.user_id, u.full_name, u.email, u.phone, u.address, u.status, u.created_at, "
+                + "b.branch_id, b.branch_name "
+                + "FROM Users u "
+                + "JOIN Roles r ON u.role_id = r.role_id "
+                + "LEFT JOIN Branchs b ON u.user_id = b.manager_id "
+                + "WHERE r.role_name = 'Manager' ");
+
+        List<Object> params = new ArrayList<>();
+
+        if (keyword != null && !keyword.isEmpty()) {
+            sql.append(" AND (u.full_name LIKE ? OR u.email LIKE ?) ");
+            params.add("%" + keyword + "%");
+            params.add("%" + keyword + "%");
+        }
+        if (branch != null && !branch.isEmpty()) {
+            sql.append(" AND b.branch_name = ? ");
+            params.add(branch);
+        }
+        if (status != null && !status.isEmpty()) {
+            sql.append(" AND u.status = ? ");
+            params.add(Boolean.parseBoolean(status));
+        }
+
+        sql.append(" ORDER BY u.created_at DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ");
+        params.add(offset);
+        params.add(limit);
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Manager m = new Manager();
+                m.setManager_id(rs.getInt("user_id"));
+                m.setFull_name(rs.getString("full_name"));
+                m.setEmail(rs.getString("email"));
+                m.setPhone(rs.getString("phone"));
+                m.setAddress(rs.getString("address"));
+                m.setStatus(rs.getBoolean("status"));
+                m.setCreate_at(rs.getDate("created_at").toLocalDate());
+
+                int branchId = rs.getInt("branch_id");
+                m.setBranch_id(rs.wasNull() ? -1 : branchId);
+
+                String branchName = rs.getString("branch_name");
+                m.setBranch_name(branchName != null ? branchName : "Chưa phân công");
+
+                list.add(m);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public static void main(String[] args) {
         ManagerDAO dao = new ManagerDAO();
         int count = dao.countTotalManagers();
         System.out.println(count);
     }
+
 }

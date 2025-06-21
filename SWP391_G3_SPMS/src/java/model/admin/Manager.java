@@ -22,6 +22,11 @@ public class Manager {
     private int branch_id;
     private String branch_name;
 
+    public Manager() {
+    }
+    
+    
+
     public Manager(int manager_id, String full_name, String email, String phone, String address, Boolean status, LocalDate create_at, int branch_id, String branch_name) {
         this.manager_id = manager_id;
         this.full_name = full_name;
