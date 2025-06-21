@@ -1,32 +1,44 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model.customer;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-/**
- *
- * @author LAZYVL
- */
-public class DiscountDetail{
+public class DiscountDetail {
 
     private int discountId;
     private int userId;
     private String discountCode;
     private String description;
     private BigDecimal discountPercent;
+    private Integer quantity; // tổng số lượng voucher
     private LocalDateTime validFrom;
     private LocalDateTime validTo;
     private boolean status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Boolean usedDiscount;
+    private Double usedPercent;
 
     public DiscountDetail() {
     }
 
+    public DiscountDetail(int discountId, int userId, String discountCode, String description, BigDecimal discountPercent, Integer quantity, LocalDateTime validFrom, LocalDateTime validTo, boolean status, LocalDateTime createdAt, LocalDateTime updatedAt, Boolean usedDiscount, Double usedPercent) {
+        this.discountId = discountId;
+        this.userId = userId;
+        this.discountCode = discountCode;
+        this.description = description;
+        this.discountPercent = discountPercent;
+        this.quantity = quantity;
+        this.validFrom = validFrom;
+        this.validTo = validTo;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.usedDiscount = usedDiscount;
+        this.usedPercent = usedPercent;
+    }
+
+    // Các constructor cũ nếu cần
     public DiscountDetail(int discountId, int userId, String discountCode, String description, BigDecimal discountPercent, LocalDateTime validFrom, LocalDateTime validTo, boolean status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.discountId = discountId;
         this.userId = userId;
@@ -91,6 +103,14 @@ public class DiscountDetail{
         this.discountPercent = discountPercent;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
     public LocalDateTime getValidFrom() {
         return validFrom;
     }
@@ -130,6 +150,20 @@ public class DiscountDetail{
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-    
-    
+
+    public Boolean getUsedDiscount() {
+        return usedDiscount;
+    }
+
+    public void setUsedDiscount(Boolean usedDiscount) {
+        this.usedDiscount = usedDiscount;
+    }
+
+    public Double getUsedPercent() {
+        return usedPercent;
+    }
+
+    public void setUsedPercent(Double usedPercent) {
+        this.usedPercent = usedPercent;
+    }
 }
