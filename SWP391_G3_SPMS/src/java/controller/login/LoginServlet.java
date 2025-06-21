@@ -39,6 +39,12 @@ public class LoginServlet extends HttpServlet {
         UserDAO dao = new UserDAO();
         User user = dao.getUserByUsername(username); // Lấy user theo username
 
+        if (user.isStatus() == false) {
+            request.setAttribute("error", "Tài khoản của bạn đã bị khóa, liên hệ admin để được mở khóa!");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
+        }
+
         if (user != null && user.isStatus()) {
 
             String hashedInputPassword = HashUtils.hashPassword(password);
@@ -55,13 +61,13 @@ public class LoginServlet extends HttpServlet {
                         response.sendRedirect("adminPoolManagement");
                         break;
                     case 2:
-                        response.sendRedirect("managerPanel.jsp"); 
+                        response.sendRedirect("managerPanel.jsp");
                         break;
                     case 3:
                         response.sendRedirect("staff.jsp");
                         break;
                     case 4:
-                        response.sendRedirect("customerHome");                     
+                        response.sendRedirect("customerHome");
                         break;
                     default:
                         response.sendRedirect("LandingPage.jsp");
