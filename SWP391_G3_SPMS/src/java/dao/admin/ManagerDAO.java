@@ -56,4 +56,24 @@ public class ManagerDAO extends DBContext {
         }
         return null;
     }
+
+    public int countTotalManagers() {
+        String sql = "SELECT COUNT(*) FROM Users u JOIN Roles r ON u.role_id = r.role_id WHERE r.role_name = 'Manager'";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
+    
+    public static void main(String[] args) {
+        ManagerDAO dao = new ManagerDAO();
+        int count = dao.countTotalManagers();
+        System.out.println(count);
+    }
 }
