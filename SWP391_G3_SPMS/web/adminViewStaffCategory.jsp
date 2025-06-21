@@ -80,7 +80,7 @@
                         </a>
 
                         <!-- Quản lý bể bơi -->
-                        <a href="adminManagerPool"
+                        <a href="adminViewManagerList"
                            class="bg-white border border-green-500 rounded-xl p-6 text-center hover:shadow-lg transition">
                             <i class="fa-solid fa-user-shield text-4xl text-green-600 mb-4"></i>
                             <h3 class="text-lg font-semibold text-green-700">Quản lý bể bơi</h3>
