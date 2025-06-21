@@ -148,7 +148,13 @@
                                 </td>
                                 <td class="p-3 border space-x-2">
                                     <a href="adminUpdateManager?id=<%= m.getManager_id() %>" class="bg-yellow-400 text-black px-2 py-1 rounded hover:bg-yellow-500"><i class="fa-solid fa-pen-to-square"></i> Sửa</a>
-                                    <a href="adminDeleteManager?id=<%= m.getManager_id() %>" class="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"><i class="fa-solid fa-lock"></i> Khóa</a>
+                                    <button 
+                                        class="lock-btn <%= m.getStatus() ? "bg-red-600 text-white" : "bg-green-600 text-white" %> px-2 py-1 rounded hover:bg-red-700" 
+                                        data-id="<%= m.getManager_id() %>" 
+                                        data-status="<%= m.getStatus() %>">
+                                        <i class="fa-solid <%= m.getStatus() ? "fa-lock" : "fa-unlock" %>"></i> <%= m.getStatus() ? "Khóa" : "Mở" %>
+                                    </button>
+
                                 </td>
                             </tr>
                             <% } } else { %>
@@ -159,6 +165,7 @@
                         </tbody>
                     </table>
                 </div>
+
 
                 <!-- Pagination -->
                 <div class="flex flex-wrap justify-center mt-6 gap-2">
@@ -181,6 +188,61 @@
                 </div>
             </main>
         </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.lock-btn').click(function () {
+                    var button = $(this);
+                    var id = button.data('id');
+                    var currentStatus = button.data('status'); // true: đang hoạt động, false: đã khóa
+                    var newStatus = !currentStatus; // Đảo trạng thái
+
+                    $.ajax({
+                        url: 'adminLockManager',
+                        type: 'POST',
+                        data: {
+                            id: id,
+                            status: newStatus // Gửi trạng thái mới muốn set
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                // Cập nhật lại data-status
+                                button.data('status', newStatus);
+
+                                // Đổi text, màu, icon
+                                if (newStatus) {
+                                    // Đang hoạt động => hiện nút "Khóa"
+                                    button
+                                            .removeClass('bg-green-600 hover:bg-green-700')
+                                            .addClass('bg-red-600 hover:bg-red-700')
+                                            .html('<i class="fa-solid fa-lock"></i> Khóa');
+                                    // Đổi màu trạng thái trong bảng (nếu muốn)
+                                    button.closest('tr').find('td:eq(6) span')
+                                            .removeClass('bg-red-100 text-red-700')
+                                            .addClass('bg-green-100 text-green-700')
+                                            .text('Đang hoạt động');
+                                } else {
+                                    // Đã khóa => hiện nút "Mở"
+                                    button
+                                            .removeClass('bg-red-600 hover:bg-red-700')
+                                            .addClass('bg-green-600 hover:bg-green-700')
+                                            .html('<i class="fa-solid fa-unlock"></i> Mở');
+                                    button.closest('tr').find('td:eq(6) span')
+                                            .removeClass('bg-green-100 text-green-700')
+                                            .addClass('bg-red-100 text-red-700')
+                                            .text('Đã khóa');
+                                }
+                            } else {
+                                alert('Thao tác thất bại!');
+                            }
+                        },
+                        error: function () {
+                            alert('Có lỗi xảy ra!');
+                        }
+                    });
+                });
+            });
+        </script>
 
 
     </body>

@@ -177,6 +177,19 @@ public class ManagerDAO extends DBContext {
         return list;
     }
 
+    public boolean updateManagerStatus(int id, boolean status) {
+        String sql = "UPDATE Users SET status = ? WHERE user_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setBoolean(1, status);
+            st.setInt(2, id);
+            int rowsUpdated = st.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (Exception e) {
+            e.printStackTrace(); // hoặc log ra logger nếu có
+            return false;
+        }
+    }
+
     public static void main(String[] args) {
         ManagerDAO dao = new ManagerDAO();
         int count = dao.countManagers("manager", "Hà Nội", "true");
