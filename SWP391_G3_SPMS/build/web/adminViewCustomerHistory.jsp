@@ -34,7 +34,7 @@
                 <a href="adminPoolManagement" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2">
                     <i class="fa-solid fa-water"></i> Quản lý bể bơi
                 </a>
-                <a href="#" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2">
+                <a href="adminViewStaffCategory.jsp" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2">
                     <i class="fa-solid fa-user-tie"></i> Quản lý nhân viên
                 </a>
                 <a href="adminViewCustomerList" class="bg-blue-900 ring-2 ring-white px-3 py-2 rounded flex items-center gap-2">
