@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <a href="adminPoolManagement" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-water"></i> Quản lý bể bơi</a>
-                <a href="managers" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2 bg-blue-900 ring-2 ring-white"><i class="fa-solid fa-user-tie"></i> Quản lý nhân viên</a>
+                <a href="adminViewManagerList" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2 bg-blue-900 ring-2 ring-white"><i class="fa-solid fa-user-tie"></i> Quản lý nhân viên</a>
                 <a href="adminViewCustomerList" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-user-check"></i> Quản lý khách hàng</a>
                 <a href="#" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-chart-line"></i> Thống kê & Báo cáo</a>
                 <a href="#" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-gear"></i> Cài đặt hệ thống</a>
@@ -64,13 +64,15 @@
                 </div>
 
                 <!-- Search & Filter Form -->
-                <form action="#" method="get" class="bg-white p-6 rounded-lg shadow space-y-4">
+                <form action="adminFilterManager" method="get" class="bg-white p-6 rounded-lg shadow space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <!-- Keyword -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Tìm theo tên hoặc email</label>
                             <input type="text" name="keyword" placeholder="Nhập tên hoặc email"
+                                   value="<%= request.getAttribute("keyword") != null ? request.getAttribute("keyword") : "" %>"
                                    class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+
                         </div>
 
                         <!-- Branch -->
@@ -79,12 +81,13 @@
                             <select name="branch"
                                     class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                                 <option value="">-- Chọn chi nhánh --</option>
-                                <option value="Hà Nội">Hà Nội</option>
-                                <option value="Hồ Chí Minh">Hồ Chí Minh</option>
-                                <option value="Đà Nẵng">Đà Nẵng</option>
-                                <option value="Cần Thơ">Cần Thơ</option>
-                                <option value="Quy Nhơn">Quy Nhơn</option>
+                                <option value="Chi nhánh Hà Nội" <%= "Chi nhánh Hà Nội".equals(request.getAttribute("branch")) ? "selected" : "" %>>Hà Nội</option>
+                                <option value="Chi nhánh Hồ Chí Minh" <%= "Chi nhánh Hồ Chí Minh".equals(request.getAttribute("branch")) ? "selected" : "" %>>Hồ Chí Minh</option>
+                                <option value="Chi nhánh Đà Nẵng" <%= "Chi nhánh Đà Nẵng".equals(request.getAttribute("branch")) ? "selected" : "" %>>Đà Nẵng</option>
+                                <option value="Chi nhánh Cần Thơ" <%= "Chi nhánh Cần Thơ".equals(request.getAttribute("branch")) ? "selected" : "" %>>Cần Thơ</option>
+                                <option value="Chi nhánh Quy Nhơn" <%= "Chi nhánh Quy Nhơn".equals(request.getAttribute("branch")) ? "selected" : "" %>>Quy Nhơn</option>
                             </select>
+
                         </div>
 
                         <!-- Status -->
@@ -93,9 +96,10 @@
                             <select name="status"
                                     class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                                 <option value="">-- Trạng thái --</option>
-                                <option value="true">Đang hoạt động</option>
-                                <option value="false">Đã khóa</option>
+                                <option value="true" <%= "true".equals(request.getAttribute("status")) ? "selected" : "" %>>Đang hoạt động</option>
+                                <option value="false" <%= "false".equals(request.getAttribute("status")) ? "selected" : "" %>>Đã khóa</option>
                             </select>
+
                         </div>
                     </div>
 

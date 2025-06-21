@@ -42,7 +42,7 @@
     </servlet-mapping>
     
     <!-- Servlet Login.Register -->
-        <servlet>
+    <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>controller.login.LoginServlet</servlet-class>
     </servlet>

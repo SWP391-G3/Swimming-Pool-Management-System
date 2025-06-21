@@ -179,7 +179,7 @@ public class ManagerDAO extends DBContext {
 
     public static void main(String[] args) {
         ManagerDAO dao = new ManagerDAO();
-        int count = dao.countTotalManagers();
+        int count = dao.countManagers("manager", "Hà Nội", "true");
         System.out.println(count);
     }
 
