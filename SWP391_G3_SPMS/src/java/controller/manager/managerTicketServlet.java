@@ -59,7 +59,7 @@ public class managerTicketServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-     @Override
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -72,11 +72,21 @@ public class managerTicketServlet extends HttpServlet {
 
         int branchId = 0;
         switch (currentUser.getUser_id()) {
-            case 2: branchId = 1; break; // Hà Nội
-            case 3: branchId = 2; break; // Hồ Chí Minh
-            case 4: branchId = 3; break; // Đà Nẵng
-            case 5: branchId = 4; break; // Quy Nhơn
-            case 6: branchId = 5; break; // Cần Thơ
+            case 2:
+                branchId = 1;
+                break; // Hà Nội
+            case 3:
+                branchId = 2;
+                break; // Hồ Chí Minh
+            case 4:
+                branchId = 3;
+                break; // Đà Nẵng
+            case 5:
+                branchId = 4;
+                break; // Quy Nhơn
+            case 6:
+                branchId = 5;
+                break; // Cần Thơ
             default:
                 response.sendRedirect("login.jsp");
                 return;
@@ -88,6 +98,11 @@ public class managerTicketServlet extends HttpServlet {
         String poolIdRaw = Optional.ofNullable(request.getParameter("poolId")).orElse("all");
         String pageParam = request.getParameter("page");
         String pageSizeParam = request.getParameter("pageSize");
+
+        String success = request.getParameter("success");
+        if ("1".equals(success)) {
+            request.setAttribute("success", "Thêm loại vé thành công!");
+        }
 
         // Xử lý phân trang
         int defaultPageSize = 5;
@@ -110,7 +125,9 @@ public class managerTicketServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             page = 1;
         }
-        if (page < 1) page = 1;
+        if (page < 1) {
+            page = 1;
+        }
         int offset = (page - 1) * pageSize;
 
         try {

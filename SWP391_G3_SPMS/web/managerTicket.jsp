@@ -17,9 +17,22 @@
         <title>Quản lý Loại vé</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <link rel="stylesheet" href="./manager-css/manager-panel.css">
-        <link rel="stylesheet" href="./manager-css/managerTicket-v1.css">
+        <link rel="stylesheet" href="./manager-css/managerTicket-v3.css">
     </head>
+
     <body>
+
+        <c:if test="${not empty success}">
+            <div class="success-message" id="successMsg">${success}</div>
+            <script>
+                setTimeout(function () {
+                    var msg = document.getElementById('successMsg');
+                    if (msg)
+                        msg.style.display = 'none';
+                }, 3000); // 3000 ms = 3 giây
+            </script>
+        </c:if>
+
         <div class="layout">
             <div class="sidebar">
                 <%@ include file="../managerSidebar.jsp" %>
@@ -50,7 +63,7 @@
                         <button type="submit"><i class="fas fa-search"></i></button>
                     </form>
                     <div class="action-buttons">
-                        <a href="add-ticket.jsp?page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" class="btn-add"><i class="fas fa-plus"></i> Thêm loại vé</a>
+                        <a href="managerAddTicket?page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" class="btn-add"><i class="fas fa-plus"></i> Thêm loại vé</a>
                         <a href="copyTicket.jsp?page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" class="btn-copy"><i class="fas fa-copy"></i> Copy loại vé</a>
                     </div>
                 </div>
@@ -100,26 +113,14 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <div class="action-buttons-cell">
-                                                    <a href="viewTicket.jsp?id=${ticket.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" class="btn-edit btn-view" title="Xem chi tiết">
+                                                 <a href="viewTicket.jsp?id=${ticket.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" class="btn-edit btn-view" title="Xem chi tiết">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    <a href="editTicket.jsp?id=${ticket.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" class="btn-edit" title="Cập nhật">
-                                                        <i class="fas fa-edit"></i>
+                                                    <a href="editTicket.jsp?id=${ticket.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" 
+                                                       class="btn-edit" 
+                                                       title="Cập nhật">
+                                                        Cập nhật
                                                     </a>
-                                                    <form action="toggleTicketStatus" method="post" style="display:inline;">
-                                                        <input type="hidden" name="id" value="${ticket.id}">
-                                                        <input type="hidden" name="page" value="${page}">
-                                                        <input type="hidden" name="pageSize" value="${pageSize}">
-                                                        <input type="hidden" name="keyword" value="${fn:escapeXml(keyword)}">
-                                                        <input type="hidden" name="status" value="${fn:escapeXml(status)}">
-                                                        <input type="hidden" name="poolId" value="${fn:escapeXml(poolId)}">
-                                                        <button type="submit" class="btn-delete ${ticket.active ? 'btn-disable' : 'btn-enable'}" 
-                                                                title="${ticket.active ? 'Ngừng bán' : 'Kích hoạt'}"
-                                                                onclick="return confirm('Bạn có chắc chắn muốn thay đổi trạng thái vé này?')">
-                                                            <i class="fas ${ticket.active ? 'fa-ban' : 'fa-check'}"></i>
-                                                        </button>
-                                                    </form>
                                                 </div>
                                             </td>
                                         </tr>
