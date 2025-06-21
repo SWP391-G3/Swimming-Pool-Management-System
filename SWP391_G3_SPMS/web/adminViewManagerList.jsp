@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <a href="adminPoolManagement" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-water"></i> Quản lý bể bơi</a>
-                <a href="managers" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2 bg-blue-900 ring-2 ring-white"><i class="fa-solid fa-user-tie"></i> Quản lý quản lý</a>
+                <a href="managers" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2 bg-blue-900 ring-2 ring-white"><i class="fa-solid fa-user-tie"></i> Quản lý nhân viên</a>
                 <a href="adminViewCustomerList" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-user-check"></i> Quản lý khách hàng</a>
                 <a href="#" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-chart-line"></i> Thống kê & Báo cáo</a>
                 <a href="#" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-gear"></i> Cài đặt hệ thống</a>
@@ -53,16 +53,68 @@
             </nav>
 
             <!-- Main Content -->
-            <main class="md:ml-64 w-full p-4 sm:p-6 md:p-8">
-                <div class="flex justify-between items-center bg-white p-4 rounded shadow mb-6">
-                    <h2 class="text-xl font-bold text-blue-700"><i class="fa-solid fa-user-tie mr-2"></i> Danh sách người quản lý</h2>
-                    <a href="AdminAddManager.jsp" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+            <main class="md:ml-64 w-full p-4 sm:p-6 md:p-8 space-y-6">
+                <!-- Header -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold text-blue-700 mb-4 md:mb-0"><i class="fa-solid fa-user-tie mr-2"></i> Danh sách người quản lý</h2>
+                    <a href="AdminAddManager.jsp"
+                       class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow transition duration-200">
                         <i class="fa-solid fa-square-plus"></i> Thêm mới
                     </a>
                 </div>
 
-                <div class="overflow-x-auto bg-white rounded shadow">
-                    <table class="min-w-full text-sm text-left">
+                <!-- Search & Filter Form -->
+                <form action="#" method="get" class="bg-white p-6 rounded-lg shadow space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Keyword -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tìm theo tên hoặc email</label>
+                            <input type="text" name="keyword" placeholder="Nhập tên hoặc email"
+                                   class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+
+                        <!-- Branch -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Lọc theo chi nhánh</label>
+                            <select name="branch"
+                                    class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                <option value="">-- Chọn chi nhánh --</option>
+                                <option value="Hà Nội">Hà Nội</option>
+                                <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                                <option value="Đà Nẵng">Đà Nẵng</option>
+                                <option value="Cần Thơ">Cần Thơ</option>
+                                <option value="Quy Nhơn">Quy Nhơn</option>
+                            </select>
+                        </div>
+
+                        <!-- Status -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Lọc theo trạng thái</label>
+                            <select name="status"
+                                    class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                <option value="">-- Trạng thái --</option>
+                                <option value="true">Đang hoạt động</option>
+                                <option value="false">Đã khóa</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <button type="submit"
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded shadow">
+                            <i class="fa-solid fa-magnifying-glass mr-1"></i> Tìm kiếm
+                        </button>
+                        <a href="managers"
+                           class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded shadow">
+                            <i class="fa-solid fa-rotate-left mr-1"></i> Đặt lại
+                        </a>
+                    </div>
+                </form>
+
+                <!-- Table -->
+                <div class="overflow-x-auto bg-white rounded-lg shadow">
+                    <table class="min-w-full text-sm text-left table-auto border">
                         <thead class="bg-gray-200 text-gray-700">
                             <tr>
                                 <th class="p-3 border">ID</th>
@@ -77,10 +129,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <%
-                                if (managers != null && !managers.isEmpty()) {
-                                    for (Manager m : managers) {
-                            %>
+                            <% if (managers != null && !managers.isEmpty()) {
+                                        for (Manager m : managers) { %>
                             <tr class="hover:bg-gray-100">
                                 <td class="p-3 border"><%= m.getManager_id() %></td>
                                 <td class="p-3 border"><%= m.getFull_name() %></td>
@@ -95,54 +145,40 @@
                                 </td>
                                 <td class="p-3 border"><%= m.getCreate_at() %></td>
                                 <td class="p-3 border space-x-2">
-                                    <a href="adminUpdateManager?id=<%= m.getManager_id() %>" class="bg-yellow-400 text-black px-2 py-1 rounded hover:bg-yellow-500">
-                                        <i class="fa-solid fa-pen-to-square"></i> Sửa
-                                    </a>
-                                    <a href="adminDeleteManager?id=<%= m.getManager_id() %>" class="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700">
-                                        <i class="fa-solid fa-trash"></i> Xóa
-                                    </a>
+                                    <a href="adminUpdateManager?id=<%= m.getManager_id() %>" class="bg-yellow-400 text-black px-2 py-1 rounded hover:bg-yellow-500"><i class="fa-solid fa-pen-to-square"></i> Sửa</a>
+                                    <a href="adminDeleteManager?id=<%= m.getManager_id() %>" class="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"><i class="fa-solid fa-lock"></i> Khóa</a>
                                 </td>
                             </tr>
-                            <%
-                                    }
-                                } else {
-                            %>
+                            <% } } else { %>
                             <tr>
                                 <td colspan="9" class="text-center py-6 text-gray-500 italic">Không tìm thấy người quản lý nào.</td>
                             </tr>
-                            <%
-                                }
-                            %>
+                            <% } %>
                         </tbody>
                     </table>
                 </div>
 
                 <!-- Pagination -->
                 <div class="flex flex-wrap justify-center mt-6 gap-2">
-                    <%
-                        if (currentPage > 1) {
-                    %>
+                    <% if (currentPage > 1) { %>
                     <a class="px-3 py-1 bg-blue-500 text-white rounded" href="managers?page=<%= currentPage - 1 %>">Trước</a>
-                    <%
-                        }
-                        for (int i = startPage; i <= endPage; i++) {
-                    %>
+                    <% }
+                        for (int i = startPage; i <= endPage; i++) { %>
                     <a class="px-3 py-1 <%= (i == currentPage ? "bg-green-600 text-white" : "bg-gray-300 text-gray-800") %> rounded" href="managers?page=<%= i %>"><%= i %></a>
-                    <%
-                        }
-                        if (currentPage < totalPages) {
-                    %>
+                    <% }
+                            if (currentPage < totalPages) { %>
                     <a class="px-3 py-1 bg-blue-500 text-white rounded" href="managers?page=<%= currentPage + 1 %>">Tiếp</a>
-                    <%
-                        }
-                    %>
+                    <% } %>
 
                     <form action="managers" method="get" class="flex items-center gap-2 ml-4">
-                        <input type="number" name="page" min="1" max="<%= totalPages %>" placeholder="Trang..." class="w-20 px-2 py-1 border rounded text-center" required>
-                        <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Đến</button>
+                        <input type="number" name="page" min="1" max="<%= totalPages %>" placeholder="Trang..."
+                               class="w-20 px-2 py-1 border rounded text-center focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                        <button type="submit"
+                                class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition">Đến</button>
                     </form>
                 </div>
             </main>
+
         </div>
 
 
