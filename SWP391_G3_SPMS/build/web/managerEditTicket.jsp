@@ -12,7 +12,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Cập nhật loại vé</title>
-        <link rel="stylesheet" href="./manager-css/managerEditTicket.css">
+        <link rel="stylesheet" href="./manager-css/managerEditTicket-v1.css">
     </head>
     <body>
         <div class="form-add-ticket">
@@ -47,9 +47,13 @@
                     <textarea name="description" rows="2">${ticket.description}</textarea>
                 </div>
                 <div class="form-row">
-                    <label>Combo:</label>
-                    <input type="checkbox" name="isCombo" value="1" <c:if test="${ticket.isCombo}">checked</c:if> /> Vé combo
+                    <label for="isCombo">Có phải vé combo?</label>
+                    <select name="isCombo" id="isCombo">
+                        <option value="0" <c:if test="${not ticket.isCombo}">selected</c:if>>Không</option>
+                        <option value="1" <c:if test="${ticket.isCombo}">selected</c:if>>Có</option>
+                        </select>
                     </div>
+
                     <div class="form-row multiselect">
                         <label for="poolIds">Áp dụng tại hồ bơi:<span class="note">*</span></label>
                         <select name="poolIds" id="poolIds" multiple required style="height: 90px;">

@@ -13,7 +13,7 @@
         <meta charset="UTF-8">
         <title>Thêm loại vé mới</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-        <link rel="stylesheet" href="./manager-css/managerAddTicket.css">
+        <link rel="stylesheet" href="./manager-css/managerAddTicket-v1.css">
     </head>
     <body>
         <div class="layout">
