@@ -398,3 +398,7 @@ END;
 
 -- Tuấn Anh
 ALTER TABLE Pool_Ticket_Types ADD status NVARCHAR(20) DEFAULT 'active';
+
+ALTER TABLE Staffs ADD pool_id INT;
+
+

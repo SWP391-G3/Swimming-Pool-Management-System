@@ -43,7 +43,7 @@
                     <div class="dashboard-card-title">Quản lý thiết bị</div>
                     <div class="dashboard-card-desc">Theo dõi, thêm thiết bị, bảo trì thiết bị bể bơi.</div>
                 </a>
-                <a href="managerStaffInfo.jsp" class="dashboard-card">
+                <a href="managerStaff" class="dashboard-card">
                     <div class="dashboard-card-title">Nhân Viên</div>
                     <div class="dashboard-card-desc">Xem danh sách nhân viên khu vực, thông tin nhân viên.</div>
                 </a>
