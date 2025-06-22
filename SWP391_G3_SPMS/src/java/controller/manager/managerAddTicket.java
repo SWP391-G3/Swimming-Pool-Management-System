@@ -197,7 +197,6 @@ public class managerAddTicket extends HttpServlet {
             if (endP < 1) {
                 endP = 1;
             }
-            
 
             String redirectUrl = String.format(
                     "managerTicketServlet?page=%d&pageSize=%d&keyword=%s&status=%s&poolId=%s&success=1",

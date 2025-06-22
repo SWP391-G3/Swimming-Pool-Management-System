@@ -13,12 +13,12 @@
         <meta charset="UTF-8">
         <title>Thêm loại vé mới</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-        <link rel="stylesheet" href="./manager-css/managerAddTicket-v1.css">
+        <link rel="stylesheet" href="./manager-css/managerAddTicket-v2.css">
     </head>
     <body>
         <div class="layout">
             <div class="content-panel">
-                
+
                 <h2 style="text-align:center;">Thêm loại vé mới</h2>
                 <form class="form-add-ticket" method="post" action="managerAddTicket">
                     <input type="hidden" name="page" value="${param.page}" />
@@ -42,13 +42,14 @@
                         <input type="text" name="typeName" id="typeName" required maxlength="100" value="${fn:escapeXml(param.typeName)}"/>
                     </div>
                     <div class="form-row">
-                        <label for="description">Mô tả</label>
-                        <textarea name="description" id="description" rows="2" maxlength="255">${fn:escapeXml(param.description)}</textarea>
-                    </div>
-                    <div class="form-row">
                         <label for="basePrice">Giá vé cơ bản <span style="color:red">*</span></label>
                         <input type="number" name="basePrice" id="basePrice" min="0" step="1000" required value="${fn:escapeXml(param.basePrice)}"/>
                     </div>
+                    <div class="form-row">
+                        <label for="description">Mô tả</label>
+                        <textarea name="description" id="description" rows="2" maxlength="255">${fn:escapeXml(param.description)}</textarea>
+                    </div>
+
                     <div class="form-row">
                         <label for="isCombo">Có phải vé combo?</label>
                         <select name="isCombo" id="isCombo">
@@ -56,7 +57,7 @@
                             <option value="1" ${param.isCombo == "1" ? "selected" : ""}>Có</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-row multiselect">
                         <label for="poolIds">Áp dụng tại hồ bơi <span style="color:red">*</span></label>
                         <select name="poolIds" id="poolIds" multiple required style="height: 80px;">

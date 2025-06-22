@@ -10,6 +10,8 @@
         <group name="SWP_ITER1">
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/model/manager/TicketType.java</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/controller/manager/managerEditTicket.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/manager-css/managerAddTicket-v1.css</file>
+            <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/manager-css/managerPopupTicket.css</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/controller/manager/DeleteDeviceServlet.java</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/managerSidebar.jsp</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/managerDevice.jsp</file>
@@ -27,13 +29,19 @@
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/controller/manager/ListDeviceServlet.java</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/managerPanel.jsp</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/managerUpdateDevice.jsp</file>
+            <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/controller/manager/managerDeleteTicket.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/managerAddDevice.jsp</file>
+            <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/manager-css/managerEditTicket.css</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/controller/manager/UpdateDeviceServlet.java</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/manager-css/manager-device-v3.css</file>
+            <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/manager-css/managerEditTicket-v1.css</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/model/manager/Branch.java</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/model/manager/PoolTicket.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/manager-css/managerAddTicket-v2.css</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/dal/DBContext.java</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/managerTicket.jsp</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/dao/manager/TicketTypeDAO.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/controller/manager/managerDetailTicketAjax.java</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/managerAddTicket.jsp</file>
         </group>
     </open-files>

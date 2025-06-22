@@ -166,8 +166,9 @@ public class TicketTypeDAO extends DBContext {
     // Cập nhập
     public TicketType getTicketTypeById(int ticketTypeId) throws SQLException {
         TicketType ticket = null;
-        String sql = "SELECT ticket_type_id, type_code, type_name, description, base_price, is_combo, created_at "
-                + "FROM Ticket_Types WHERE ticket_type_id = ?";
+        String sql = "SELECT tt.ticket_type_id, tt.type_code, tt.type_name, tt.description, tt.base_price, tt.is_combo, tt.created_at, "
+                + "       (SELECT COUNT(*) FROM Pool_Ticket_Types WHERE ticket_type_id = tt.ticket_type_id AND status = 'active') AS active_count "
+                + "FROM Ticket_Types tt WHERE tt.ticket_type_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, ticketTypeId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -180,8 +181,9 @@ public class TicketTypeDAO extends DBContext {
                     ticket.setBasePrice(rs.getDouble("base_price"));
                     ticket.setIsCombo(rs.getBoolean("is_combo"));
                     ticket.setCreatedAt(rs.getTimestamp("created_at"));
-                    // Lấy danh sách tên hồ bơi áp dụng cho vé này
                     ticket.setPools(getPoolNamesOfTicketType(ticketTypeId));
+                    int activeCount = rs.getInt("active_count");
+                    ticket.setActive(activeCount > 0); // Nếu còn ít nhất một pool active
                 }
             }
         }
@@ -251,29 +253,22 @@ public class TicketTypeDAO extends DBContext {
     }
 
     // Hết phần Cập nhập
-    
-    
-  
-  //Xóa loại vé và toàn bộ mapping với hồ bơi
- 
-public void deleteTicketType(int ticketTypeId) throws SQLException {
-    // Xóa mapping với các hồ bơi trước
-    String deletePoolMapping = "DELETE FROM Pool_Ticket_Types WHERE ticket_type_id = ?";
-    try (PreparedStatement st = connection.prepareStatement(deletePoolMapping)) {
-        st.setInt(1, ticketTypeId);
-        st.executeUpdate();
+    //Xóa loại vé và toàn bộ mapping với hồ bơi
+    public void deleteTicketType(int ticketTypeId) throws SQLException {
+        // Xóa mapping với các hồ bơi trước
+        String deletePoolMapping = "DELETE FROM Pool_Ticket_Types WHERE ticket_type_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(deletePoolMapping)) {
+            st.setInt(1, ticketTypeId);
+            st.executeUpdate();
+        }
+        // Xóa loại vé chính
+        String deleteTicketType = "DELETE FROM Ticket_Types WHERE ticket_type_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(deleteTicketType)) {
+            st.setInt(1, ticketTypeId);
+            st.executeUpdate();
+        }
     }
-    // Xóa loại vé chính
-    String deleteTicketType = "DELETE FROM Ticket_Types WHERE ticket_type_id = ?";
-    try (PreparedStatement st = connection.prepareStatement(deleteTicketType)) {
-        st.setInt(1, ticketTypeId);
-        st.executeUpdate();
-    }
-}
-    
-    
-    
-    
+
     public static void main(String[] args) {
         int branchId = 1; // ví dụ branch id
 //        String poolId = "all";

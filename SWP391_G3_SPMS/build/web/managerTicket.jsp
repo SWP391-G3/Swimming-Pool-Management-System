@@ -115,7 +115,8 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <a href="viewTicket.jsp?id=${ticket.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" class="btn-edit btn-view" title="Xem chi tiết">
+                                                <a href="javascript:void(0);" class="btn-edit btn-view" title="Xem chi tiết"
+                                                   onclick="showTicketDetail(${ticket.id})">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                                 <a href="managerEditTicket?id=${ticket.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" 
@@ -157,6 +158,7 @@
             </div>
         </div>
 
+
         <script>
             const searchInput = document.querySelector('input[name="keyword"]');
             const searchForm = document.getElementById('searchForm');
@@ -172,3 +174,58 @@
         </script>
     </body>
 </html>
+
+
+
+<link rel="stylesheet" href="./manager-css/managerPopupTicket.css">
+<div id="ticketDetailModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeTicketModal()">&times;</span>
+        <div id="ticketDetailBody">
+            <!-- Nội dung sẽ được load ở đây -->
+        </div>
+    </div>
+</div>
+<script>
+    function showTicketDetail(ticketId) {
+        var modal = document.getElementById('ticketDetailModal');
+        var body = document.getElementById('ticketDetailBody');
+        body.innerHTML = `
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading ticket details...</p>
+        </div>
+    `;
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('show'), 10);
+
+        var params = new URLSearchParams({id: ticketId});
+        fetch("managerDetailTicketAjax", {
+            method: "POST",
+            headers: {"Content-Type": "application/x-www-form-urlencoded"},
+            body: params
+        })
+                .then(res => res.text())
+                .then(html => {
+                    body.innerHTML = html;
+                })
+                .catch(error => {
+                    body.innerHTML = `
+            <div class="error-message">
+                <h3>Error</h3>
+                <p>Failed to load ticket details. Please try again.</p>
+            </div>
+        `;
+                });
+    }
+
+    function closeTicketModal() {
+        var modal = document.getElementById('ticketDetailModal');
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+            document.getElementById('ticketDetailBody').innerHTML = '';
+        }, 300);
+    }
+</script>
+
