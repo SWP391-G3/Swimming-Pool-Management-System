@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
 import java.time.LocalDate;
+import model.User;
 import model.admin.Branch;
 import model.admin.Manager;
 
@@ -266,6 +267,66 @@ public class ManagerDAO extends DBContext {
         String sql = "SELECT branch_id, branch_name FROM Branchs";
 
         try (PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
+            while (rs.next()) {
+                Branch b = new Branch();
+                b.setBranch_id(rs.getInt("branch_id"));
+                b.setBranch_name(rs.getString("branch_name"));
+                list.add(b);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public int insertManagerUser(User user) {
+        int userId = -1;
+        String sql = """
+        INSERT INTO Users (username, password, full_name, email, phone, address, dob, gender, role_id, status, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 
+                (SELECT role_id FROM Roles WHERE role_name = 'Manager'), 1, GETDATE())
+    """;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getFull_name());
+            ps.setString(4, user.getEmail());
+            ps.setString(5, user.getPhone());
+            ps.setString(6, user.getAddress());
+            Date dobDate = (Date) user.getDob();
+            ps.setDate(7, dobDate); // dob
+            ps.setString(8, user.getGender());           // gender
+
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                userId = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return userId;
+    }
+
+    public boolean assignManagerToBranch(int userId, int branchId) {
+        String sql = "UPDATE Branchs SET manager_id = ? WHERE branch_id = ? AND manager_id IS NULL";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, branchId);
+            int rows = ps.executeUpdate();
+            return rows > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<Branch> getAvailableBranches() {
+        List<Branch> list = new ArrayList<>();
+        String sql = "SELECT branch_id, branch_name FROM Branchs WHERE manager_id IS NULL";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Branch b = new Branch();
                 b.setBranch_id(rs.getInt("branch_id"));

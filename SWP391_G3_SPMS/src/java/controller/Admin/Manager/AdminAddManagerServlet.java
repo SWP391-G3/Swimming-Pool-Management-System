@@ -12,16 +12,19 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
+import model.User;
 import model.admin.Branch;
-import model.admin.Manager;
+import util.PasswordEncryption;
 
 /**
  *
  * @author Lenovo
  */
-@WebServlet(name = "AdminViewManagerListServlet", urlPatterns = {"/adminViewManagerList"})
-public class AdminViewManagerListServlet extends HttpServlet {
+@WebServlet(name = "AdminAddManagerServlet", urlPatterns = {"/adminAddManager"})
+public class AdminAddManagerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +43,10 @@ public class AdminViewManagerListServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AdminViewManagerListServlet</title>");
+            out.println("<title>Servlet AdminAddManagerServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet AdminViewManagerListServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AdminAddManagerServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,28 +64,11 @@ public class AdminViewManagerListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ManagerDAO dao = new ManagerDAO();
-        String pageParam = request.getParameter("page");
-        int page = (pageParam != null) ? Integer.parseInt(pageParam) : 1;
-        int pageSize = 5;
+        ManagerDAO managerDAO = new ManagerDAO();
+        List<Branch> availableBranchs = managerDAO.getAvailableBranches();
 
-        // Lấy danh sách manager phân trang
-        List<Manager> managers = dao.getAllManagersWithPaging(page, pageSize);
-        List<Branch> branchs = dao.getAllBranches();
-        List<Branch> availableBranchs = dao.getAvailableBranches();
-
-        // Lấy tổng số bản ghi để tính tổng số trang
-        int totalManagers = dao.countTotalManagers();
-        int totalPages = (int) Math.ceil((double) totalManagers / pageSize);
-
-        // Gửi dữ liệu qua JSP
-        request.setAttribute("managers", managers);
-        request.setAttribute("branchs", branchs);
         request.setAttribute("availableBranchs", availableBranchs);
-        request.setAttribute("currentPage", page);
-        request.setAttribute("totalPages", totalPages);
-        
-        request.getRequestDispatcher("adminViewManagerList.jsp").forward(request, response);
+        request.getRequestDispatcher("adminAddManager.jsp").forward(request, response);
     }
 
     /**
@@ -96,7 +82,58 @@ public class AdminViewManagerListServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        request.setCharacterEncoding("UTF-8");
+
+        // Lấy dữ liệu từ form
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String fullName = request.getParameter("full_name");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+        String address = request.getParameter("address");
+        String dobStr = request.getParameter("dob"); // yyyy-MM-dd
+        String gender = request.getParameter("gender");
+        int branchId = Integer.parseInt(request.getParameter("branch_id"));
+
+        // Parse dob -> java.sql.Date
+        java.sql.Date dob = null;
+        try {
+            if (dobStr != null && !dobStr.isEmpty()) {
+                dob = java.sql.Date.valueOf(dobStr); // convert từ chuỗi yyyy-MM-dd
+            }
+        } catch (IllegalArgumentException e) {
+            dob = null;
+        }
+
+        // Tạo đối tượng User
+        User managerUser = new User();
+        managerUser.setUsername(username);
+        managerUser.setPassword(PasswordEncryption.hashPassword(password));
+        managerUser.setFull_name(fullName);
+        managerUser.setEmail(email);
+        managerUser.setPhone(phone);
+        managerUser.setAddress(address);
+        managerUser.setDob(dob);
+        managerUser.setGender(gender);
+
+        // Gọi DAO
+        ManagerDAO dao = new ManagerDAO();
+        int userId = dao.insertManagerUser(managerUser);
+
+        boolean success = false;
+        if (userId > 0) {
+            success = dao.assignManagerToBranch(userId, branchId);
+        }
+
+        // Điều hướng
+        if (success) {
+            response.sendRedirect("adminViewManagerList");
+        } else {
+            List<Branch> availableBranches = dao.getAvailableBranches();
+            request.setAttribute("availableBranches", availableBranches);
+            request.setAttribute("error", "Thêm mới thất bại! Có thể chi nhánh đã có người quản lý hoặc lỗi dữ liệu.");
+            request.getRequestDispatcher("adminAddManager.jsp").forward(request, response);
+        }
     }
 
     /**

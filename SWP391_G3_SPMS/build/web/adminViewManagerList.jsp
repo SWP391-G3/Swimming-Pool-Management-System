@@ -1,5 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.List, model.admin.Manager, model.User"%>
+<%@page import="java.util.List, model.admin.Manager, model.User,model.admin.Branch"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,6 +14,9 @@
             String userName = currentUser != null ? currentUser.getFull_name() : "";
 
             List<Manager> managers = (List<Manager>) request.getAttribute("managers");
+            List<Branch> branchs = (List<Branch>) request.getAttribute("branchs");
+            List<Branch> availableBranchs = (List<Branch>) request.getAttribute("availableBranchs");
+
             int currentPage = (Integer) request.getAttribute("currentPage");
             int totalPages = (Integer) request.getAttribute("totalPages");
 
@@ -57,7 +60,7 @@
                 <!-- Header -->
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-6 rounded-lg shadow">
                     <h2 class="text-2xl font-bold text-blue-700 mb-4 md:mb-0"><i class="fa-solid fa-user-tie mr-2"></i> Danh sách người quản lý</h2>
-                    <a href="AdminAddManager.jsp"
+                    <a href="adminAddManager"
                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow transition duration-200">
                         <i class="fa-solid fa-square-plus"></i> Thêm mới
                     </a>
@@ -81,12 +84,17 @@
                             <select name="branch"
                                     class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                                 <option value="">-- Chọn chi nhánh --</option>
-                                <option value="Chi nhánh Hà Nội" <%= "Chi nhánh Hà Nội".equals(request.getAttribute("branch")) ? "selected" : "" %>>Hà Nội</option>
-                                <option value="Chi nhánh Hồ Chí Minh" <%= "Chi nhánh Hồ Chí Minh".equals(request.getAttribute("branch")) ? "selected" : "" %>>Hồ Chí Minh</option>
-                                <option value="Chi nhánh Đà Nẵng" <%= "Chi nhánh Đà Nẵng".equals(request.getAttribute("branch")) ? "selected" : "" %>>Đà Nẵng</option>
-                                <option value="Chi nhánh Cần Thơ" <%= "Chi nhánh Cần Thơ".equals(request.getAttribute("branch")) ? "selected" : "" %>>Cần Thơ</option>
-                                <option value="Chi nhánh Quy Nhơn" <%= "Chi nhánh Quy Nhơn".equals(request.getAttribute("branch")) ? "selected" : "" %>>Quy Nhơn</option>
+                                <% 
+                                    String selectedBranch = (String) request.getAttribute("branch");
+                                    for (Branch b : branchs) {
+                                        String branchName = b.getBranch_name();
+                                %>
+                                <option value="<%= branchName %>" <%= branchName.equals(selectedBranch) ? "selected" : "" %>>
+                                    <%= branchName.replace("Chi nhánh ", "") %>
+                                </option>
+                                <% } %>
                             </select>
+
 
                         </div>
 

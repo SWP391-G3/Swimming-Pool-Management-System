@@ -1,8 +1,10 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="model.User"%>
+<%@page import="java.util.List, model.admin.Branch"%>
 <%
     User currentUser = (User) session.getAttribute("currentUser");
     String userName = currentUser != null ? currentUser.getFull_name() : "Admin";
+    List<Branch> availableBranchs = (List<Branch>) request.getAttribute("availableBranchs");
 %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -15,28 +17,38 @@
     <body class="bg-gray-50 text-gray-800 font-sans">
 
         <!-- Sidebar -->
-            <nav id="sidebar" class="w-64 bg-[#000033] text-white p-6 flex flex-col space-y-4 fixed h-full transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-40">
-                <div class="mb-6 text-center"> 
-                    <h1 class="text-2xl font-bold">Admin Panel</h1>
-                    <p class="text-sm text-gray-300">Swimming Pool System</p>
+        <nav id="sidebar" class="w-64 bg-[#000033] text-white p-6 flex flex-col space-y-4 fixed h-full transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-40">
+            <div class="mb-6 text-center"> 
+                <h1 class="text-2xl font-bold">Admin Panel</h1>
+                <p class="text-sm text-gray-300">Swimming Pool System</p>
+            </div>
+            <div class="flex items-center gap-3 mb-6">
+                <img src="https://cdn.kona-blue.com/upload/kona-blue_com/post/images/2024/09/19/465/avatar-trang-1.jpg" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-white object-cover" />
+                <div>
+                    <h4 class="text-base font-semibold"><%= userName %></h4>
+                    <a href="#" class="text-sm text-blue-300 hover:underline">Xem chi tiết</a>
                 </div>
-                <div class="flex items-center gap-3 mb-6">
-                    <img src="https://cdn.kona-blue.com/upload/kona-blue_com/post/images/2024/09/19/465/avatar-trang-1.jpg" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-white object-cover" />
-                    <div>
-                        <h4 class="text-base font-semibold"><%= userName %></h4>
-                        <a href="#" class="text-sm text-blue-300 hover:underline">Xem chi tiết</a>
-                    </div>
-                </div>
-                <a href="adminPoolManagement" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-water"></i> Quản lý bể bơi</a>
-                <a href="adminViewManagerList" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2 bg-blue-900 ring-2 ring-white"><i class="fa-solid fa-user-tie"></i> Quản lý nhân viên</a>
-                <a href="adminViewCustomerList" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-user-check"></i> Quản lý khách hàng</a>
-                <a href="#" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-chart-line"></i> Thống kê & Báo cáo</a>
-                <a href="#" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-gear"></i> Cài đặt hệ thống</a>
-                <a href="LogoutServlet" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2 text-red-400"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
-            </nav>
+            </div>
+            <a href="adminPoolManagement" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-water"></i> Quản lý bể bơi</a>
+            <a href="adminViewManagerList" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2 bg-blue-900 ring-2 ring-white"><i class="fa-solid fa-user-tie"></i> Quản lý nhân viên</a>
+            <a href="adminViewCustomerList" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-user-check"></i> Quản lý khách hàng</a>
+            <a href="#" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-chart-line"></i> Thống kê & Báo cáo</a>
+            <a href="#" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-gear"></i> Cài đặt hệ thống</a>
+            <a href="LogoutServlet" class="hover:bg-blue-900 hover:ring-2 hover:ring-white px-3 py-2 rounded flex items-center gap-2 text-red-400"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
+        </nav>
 
         <!-- Form content -->
         <main class="ml-0 md:ml-64 p-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-6 rounded-2xl shadow mb-6 border border-blue-100">
+                <h2 class="text-3xl font-extrabold text-blue-800 tracking-wide flex items-center gap-3">
+                    <i class="fa-solid fa-user-tie text-blue-600 text-2xl"></i> Thêm người quản lý
+                </h2>
+                <a href="adminViewManagerList"
+                   class="mt-4 md:mt-0 inline-flex items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow transition duration-300">
+                    <i class="fa-solid fa-arrow-left"></i> Quay lại
+                </a>
+            </div>
+
             <div class="max-w-4xl mx-auto bg-white p-10 rounded-3xl shadow-xl space-y-6">
                 <h2 class="text-3xl font-bold text-blue-700 text-center">Tạo tài khoản Quản Lý</h2>
 
@@ -94,19 +106,18 @@
 
                     <div class="md:col-span-2">
                         <label class="block text-sm font-semibold mb-1">Chi nhánh quản lý</label>
-                        <select name="branch_name" required class="w-full p-3 rounded-xl border border-gray-300">
+                        <select name="branch_id" ...>
                             <option value="">-- Chọn chi nhánh --</option>
-                            <option value="Chi nhánh Hà Nội">Chi nhánh Hà Nội</option>
-                            <option value="Chi nhánh Hồ Chí Minh">Chi nhánh Hồ Chí Minh</option>
-                            <option value="Chi nhánh Đà Nẵng">Chi nhánh Đà Nẵng</option>
-                            <option value="Chi nhánh Cần Thơ">Chi nhánh Cần Thơ</option>
-                            <option value="Chi nhánh Quy Nhơn">Chi nhánh Quy Nhơn</option>
+                            <% for (Branch b : availableBranchs) { %>
+                            <option value="<%= b.getBranch_id() %>"><%= b.getBranch_name() %></option>
+                            <% } %>
                         </select>
+
                     </div>
 
                     <div class="md:col-span-2 text-center pt-4">
                         <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white text-lg font-bold py-3 px-8 rounded-2xl shadow transition duration-300">
-                            <i class="fa-solid fa-plus mr-2"></i> Tạo Quản Lý
+                            <i class="fa-solid fa-plus mr-2"></i> Thêm Quản Lý
                         </button>
                     </div>
                 </form>

@@ -57,7 +57,7 @@
                 <!-- Header -->
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-6 rounded-lg shadow">
                     <h2 class="text-2xl font-bold text-blue-700 mb-4 md:mb-0"><i class="fa-solid fa-user-tie mr-2"></i> Danh sách người quản lý</h2>
-                    <a href="AdminAddManager.jsp"
+                    <a href="adminAddManager"
                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow transition duration-200">
                         <i class="fa-solid fa-square-plus"></i> Thêm mới
                     </a>
