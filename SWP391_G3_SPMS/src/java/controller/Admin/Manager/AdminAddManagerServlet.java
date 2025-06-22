@@ -93,7 +93,18 @@ public class AdminAddManagerServlet extends HttpServlet {
         String address = request.getParameter("address");
         String dobStr = request.getParameter("dob"); // yyyy-MM-dd
         String gender = request.getParameter("gender");
-        int branchId = Integer.parseInt(request.getParameter("branch_id"));
+        String branchIdRaw = request.getParameter("branchId");
+
+        if (branchIdRaw == null || branchIdRaw.isEmpty()) {
+            request.setAttribute("error", "Vui lòng chọn chi nhánh quản lý.");
+            ManagerDAO dao = new ManagerDAO();
+            List<Branch> availableBranchs = dao.getAvailableBranches();
+            request.setAttribute("availableBranchs", availableBranchs); // đúng tên như JSP
+            request.getRequestDispatcher("adminAddManager.jsp").forward(request, response);
+            return;
+        }
+
+        int branchId = Integer.parseInt(branchIdRaw);
 
         // Parse dob -> java.sql.Date
         java.sql.Date dob = null;
@@ -129,8 +140,8 @@ public class AdminAddManagerServlet extends HttpServlet {
         if (success) {
             response.sendRedirect("adminViewManagerList");
         } else {
-            List<Branch> availableBranches = dao.getAvailableBranches();
-            request.setAttribute("availableBranches", availableBranches);
+            List<Branch> availableBranchs = dao.getAvailableBranches();
+            request.setAttribute("availableBranchs", availableBranchs);
             request.setAttribute("error", "Thêm mới thất bại! Có thể chi nhánh đã có người quản lý hoặc lỗi dữ liệu.");
             request.getRequestDispatcher("adminAddManager.jsp").forward(request, response);
         }

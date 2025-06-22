@@ -178,13 +178,13 @@
                 <!-- Pagination -->
                 <div class="flex flex-wrap justify-center mt-6 gap-2">
                     <% if (currentPage > 1) { %>
-                    <a class="px-3 py-1 bg-blue-500 text-white rounded" href="managers?page=<%= currentPage - 1 %>">Trước</a>
+                    <a class="px-3 py-1 bg-blue-500 text-white rounded" href="adminViewManagerList?page=<%= currentPage - 1 %>">Trước</a>
                     <% }
                         for (int i = startPage; i <= endPage; i++) { %>
-                    <a class="px-3 py-1 <%= (i == currentPage ? "bg-green-600 text-white" : "bg-gray-300 text-gray-800") %> rounded" href="managers?page=<%= i %>"><%= i %></a>
+                    <a class="px-3 py-1 <%= (i == currentPage ? "bg-green-600 text-white" : "bg-gray-300 text-gray-800") %> rounded" href="adminViewManagerList?page=<%= i %>"><%= i %></a>
                     <% }
                             if (currentPage < totalPages) { %>
-                    <a class="px-3 py-1 bg-blue-500 text-white rounded" href="managers?page=<%= currentPage + 1 %>">Tiếp</a>
+                    <a class="px-3 py-1 bg-blue-500 text-white rounded" href="adminViewManagerList?page=<%= currentPage + 1 %>">Tiếp</a>
                     <% } %>
 
                     <form action="adminViewManagerList" method="get" class="flex items-center gap-2 ml-4">

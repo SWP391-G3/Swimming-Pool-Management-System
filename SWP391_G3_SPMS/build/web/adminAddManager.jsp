@@ -52,7 +52,7 @@
             <div class="max-w-4xl mx-auto bg-white p-10 rounded-3xl shadow-xl space-y-6">
                 <h2 class="text-3xl font-bold text-blue-700 text-center">Tạo tài khoản Quản Lý</h2>
 
-                <form action="adminAddManager" method="post" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <form action="adminAddManager" method="post"  class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-semibold mb-1">Tên đăng nhập</label>
                         <input name="username" required type="text" class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-400">
@@ -106,7 +106,7 @@
 
                     <div class="md:col-span-2">
                         <label class="block text-sm font-semibold mb-1">Chi nhánh quản lý</label>
-                        <select name="branch_id" ...>
+                        <select name="branchId" required>
                             <option value="">-- Chọn chi nhánh --</option>
                             <% for (Branch b : availableBranchs) { %>
                             <option value="<%= b.getBranch_id() %>"><%= b.getBranch_name() %></option>
@@ -123,5 +123,94 @@
                 </form>
             </div>
         </main>
+        <!-- Popup thông báo lỗi -->
+        <div id="errorPopup" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+            <div class="relative bg-white border border-red-400 text-red-700 px-6 py-5 rounded-lg shadow-xl max-w-md w-full">
+                <!-- Nút X đóng -->
+                <button onclick="closeErrorPopup()" class="absolute top-2 right-2 text-red-500 hover:text-red-700 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+                <h3 class="text-xl font-bold text-red-600 mb-3 text-left">Lỗi dữ liệu!</h3>
+                <div id="errorMessage" class="text-sm text-red-700 leading-relaxed"></div>
+
+                <div class="text-center mt-5">
+                    <button onclick="closeErrorPopup()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function closeErrorPopup() {
+                document.getElementById("errorPopup").classList.add("hidden");
+            }
+
+            document.querySelector("form").addEventListener("submit", function (e) {
+                let errorMsg = "";
+
+                const username = document.querySelector("input[name='username']").value.trim();
+                const password = document.querySelector("input[name='password']").value.trim();
+                const fullName = document.querySelector("input[name='full_name']").value.trim();
+                const email = document.querySelector("input[name='email']").value.trim();
+                const phone = document.querySelector("input[name='phone']").value.trim();
+                const address = document.querySelector("input[name='address']").value.trim();
+                const dob = document.querySelector("input[name='dob']").value;
+                const gender = document.querySelector("select[name='gender']").value;
+                const branch = document.querySelector("select[name='branchId']").value;
+
+                if (username.length < 4) {
+                    errorMsg += "Tên đăng nhập phải có ít nhất 4 ký tự.<br/>";
+                }
+                if (password.length < 6) {
+                    errorMsg += "Mật khẩu phải có ít nhất 9 ký tự.<br/>";
+                }
+                if (fullName.length < 2) {
+                    errorMsg += "Họ và tên phải có ít nhất 2 ký tự.<br/>";
+                }
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!emailRegex.test(email)) {
+                    errorMsg += "Email không đúng định dạng. Định dạng hợp lệ như: ten@example.com<br/>";
+                }
+                const phoneRegex = /^0\d{9}$/;
+                if (!phoneRegex.test(phone)) {
+                    errorMsg += "Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số.<br/>";
+                }
+                if (dob) {
+                    const today = new Date();
+                    const inputDate = new Date(dob);
+
+                    // Tính tuổi
+                    let age = today.getFullYear() - inputDate.getFullYear();
+                    const m = today.getMonth() - inputDate.getMonth();
+                    if (m < 0 || (m === 0 && today.getDate() < inputDate.getDate())) {
+                        age--; // Chưa tới sinh nhật trong năm nay
+                    }
+
+                    if (age < 14) {
+                        errorMsg += "Tuổi phải từ 14 tuổi trở lên.<br/>";
+                    }
+
+                    if (inputDate > today) {
+                        errorMsg += "Ngày sinh không hợp lệ (sau ngày hiện tại).<br/>";
+                    }
+                }
+
+                if (gender === "") {
+                    errorMsg += "Vui lòng chọn giới tính.<br/>";
+                }
+                if (branch === "") {
+                    errorMsg += "Vui lòng chọn chi nhánh quản lý.<br/>";
+                }
+
+                if (errorMsg !== "") {
+                    e.preventDefault();
+                    document.getElementById("errorMessage").innerHTML = errorMsg;
+                    document.getElementById("errorPopup").classList.remove("hidden");
+                }
+            });
+        </script>
+
     </body>
 </html>
