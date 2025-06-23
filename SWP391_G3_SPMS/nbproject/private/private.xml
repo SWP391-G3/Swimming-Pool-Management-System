@@ -21,6 +21,7 @@
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/SWP391_G3_SPMS/web/managerStaffInfo.jsp</file>
         </group>
         <group>
+            <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/controller/login/ResetPasswordServlet.java</file>
             <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/dao/DiscountDetailDAO.java</file>
             <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/dao/FeedbackHomepageDAO.java</file>
             <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/controller/manager/PoolServiceServlet.java</file>
