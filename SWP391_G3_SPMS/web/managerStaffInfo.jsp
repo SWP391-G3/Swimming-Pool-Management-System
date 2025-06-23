@@ -106,7 +106,7 @@
                         </tbody>
                     </table>
 
-                    <c:if test="${endP > 1}">
+                    <c:if test="${endP >= 1}">
                         <div class="pagination">
                             <c:if test="${page > 1}">
                                 <a href="managerStaff?page=${page-1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}&pageSize=${pageSize}">«</a>

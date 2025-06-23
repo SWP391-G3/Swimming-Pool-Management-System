@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,7 +27,6 @@ import org.apache.tomcat.jni.Pool;
 public class TicketTypeDAO extends DBContext {
 
     // lấy danh sách các loại vé (TicketType) thuộc về các hồ bơi trong một chi nhánh cụ thể, kèm theo các điều kiện lọc và phân trang. 
-    
     public List<TicketType> filterTicketsByBranch(int branchId, String poolId, String status, String keyword, int offset, int pageSize) throws SQLException {
         List<TicketType> tickets = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
@@ -165,7 +165,7 @@ public class TicketTypeDAO extends DBContext {
             st.executeBatch();
         }
     }
-    
+
 //    public void addTicketTypeToPools(int ticketTypeId, List<Integer> poolIds, String status) throws SQLException {
 //    String sql = "INSERT INTO Pool_Ticket_Types (pool_id, ticket_type_id, price, status) VALUES (?, ?, 0, ?)";
 //    try (PreparedStatement st = connection.prepareStatement(sql)) {
@@ -185,9 +185,6 @@ public class TicketTypeDAO extends DBContext {
 //        st.executeBatch();
 //    }
 //}
-    
-    
-
     // Cập nhập
     public TicketType getTicketTypeById(int ticketTypeId) throws SQLException {
         TicketType ticket = null;
@@ -198,6 +195,7 @@ public class TicketTypeDAO extends DBContext {
             ps.setInt(1, ticketTypeId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
+                    System.out.println("DEBUG: Đã lấy được vé id=" + ticketTypeId + ", code=" + rs.getString("type_code") + ", is_combo=" + rs.getBoolean("is_combo"));
                     ticket = new TicketType();
                     ticket.setId(rs.getInt("ticket_type_id"));
                     ticket.setCode(rs.getString("type_code"));
@@ -208,7 +206,9 @@ public class TicketTypeDAO extends DBContext {
                     ticket.setCreatedAt(rs.getTimestamp("created_at"));
                     ticket.setPools(getPoolNamesOfTicketType(ticketTypeId));
                     int activeCount = rs.getInt("active_count");
-                    ticket.setActive(activeCount > 0); // Nếu còn ít nhất một pool active
+                    ticket.setActive(activeCount > 0);
+                } else {
+                    System.out.println("DEBUG: Không tìm thấy vé với id=" + ticketTypeId);
                 }
             }
         }
@@ -278,101 +278,150 @@ public class TicketTypeDAO extends DBContext {
     }
 
     // Hết phần Cập nhập
-    //Xóa loại vé và toàn bộ mapping với hồ bơi
-    public void deleteTicketType(int ticketTypeId) throws SQLException {
-        // Xóa mapping với các hồ bơi trước
-        String deletePoolMapping = "DELETE FROM Pool_Ticket_Types WHERE ticket_type_id = ?";
-        try (PreparedStatement st = connection.prepareStatement(deletePoolMapping)) {
-            st.setInt(1, ticketTypeId);
-            st.executeUpdate();
-        }
-        // Xóa loại vé chính
-        String deleteTicketType = "DELETE FROM Ticket_Types WHERE ticket_type_id = ?";
-        try (PreparedStatement st = connection.prepareStatement(deleteTicketType)) {
-            st.setInt(1, ticketTypeId);
-            st.executeUpdate();
-        }
-    }
-    
-    
-    // Phần Add thêm combo 
-    
-public List<TicketType> getAllSingleTypes() throws SQLException {
-    List<TicketType> list = new ArrayList<>();
-    String sql = "SELECT ticket_type_id, type_code, type_name, base_price FROM Ticket_Types WHERE is_combo = 0";
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-        try (ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                TicketType t = new TicketType();
-                t.setId(rs.getInt("ticket_type_id"));
-                t.setCode(rs.getString("type_code"));
-                t.setName(rs.getString("type_name"));
-                t.setBasePrice(rs.getDouble("base_price"));
-                list.add(t);
-            }
-        }
-    }
-    return list;
-}
-
-public void addComboDetail(int comboTypeId, Map<Integer, Integer> comboMap) throws SQLException {
-    String sql = "INSERT INTO Combo_Detail (combo_type_id, included_type_id, quantity) VALUES (?, ?, ?)";
+    public void deleteTicketTypeFromPool(int ticketTypeId, int poolId) throws SQLException {
+    String sql = "DELETE FROM Pool_Ticket_Types WHERE ticket_type_id = ? AND pool_id = ?";
     try (PreparedStatement st = connection.prepareStatement(sql)) {
-        for (Map.Entry<Integer, Integer> entry : comboMap.entrySet()) {
-            st.setInt(1, comboTypeId);
-            st.setInt(2, entry.getKey());
-            st.setInt(3, entry.getValue());
-            st.addBatch();
-        }
-        st.executeBatch();
+        st.setInt(1, ticketTypeId);
+        st.setInt(2, poolId);
+        st.executeUpdate();
     }
 }
-    
-    
-    
 
-    public static void main(String[] args) {
-        int branchId = 1; // ví dụ branch id
-        String poolId = "all";
-        String status = "active";
-        String keyword = "";
-        int page = 1; // trang bạn muốn test
-        int pageSize = 25; // số dòng mỗi trang
-        int offset = (page - 1) * pageSize;
-
-        TicketTypeDAO dao = new TicketTypeDAO();
-
-        try {
-            // Dùng hàm phân trang
-            List<TicketType> tickets = dao.filterTicketsByBranch(branchId, poolId, status, keyword, offset, pageSize);
-
-            if (tickets.isEmpty()) {
-                System.out.println("Không tìm thấy loại vé nào phù hợp.");
-            } else {
-                for (TicketType t : tickets) {
-                    System.out.println("ID: " + t.getId());
-                    System.out.println("Mã: " + t.getCode());
-                    System.out.println("Tên: " + t.getName());
-                    System.out.println("Giá: " + t.getBasePrice());
-                    System.out.println("Trạng thái: " + (t.isActive() ? "Đang bán" : "Ngừng bán"));
-                    System.out.println("Áp dụng tại: " + String.join(", ", t.getPools()));
-                    System.out.println("--------------");
+    // Phần Add thêm combo 
+    public List<TicketType> getAllSingleTypes() throws SQLException {
+        List<TicketType> list = new ArrayList<>();
+        String sql = "SELECT ticket_type_id, type_code, type_name, base_price FROM Ticket_Types WHERE is_combo = 0";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    TicketType t = new TicketType();
+                    t.setId(rs.getInt("ticket_type_id"));
+                    t.setCode(rs.getString("type_code"));
+                    t.setName(rs.getString("type_name"));
+                    t.setBasePrice(rs.getDouble("base_price"));
+                    list.add(t);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public void addComboDetail(int comboTypeId, Map<Integer, Integer> comboMap) throws SQLException {
+        String sql = "INSERT INTO Combo_Detail (combo_type_id, included_type_id, quantity) VALUES (?, ?, ?)";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            for (Map.Entry<Integer, Integer> entry : comboMap.entrySet()) {
+                st.setInt(1, comboTypeId);
+                st.setInt(2, entry.getKey());
+                st.setInt(3, entry.getValue());
+                st.addBatch();
+            }
+            st.executeBatch();
         }
     }
 
+    // Phần cập nhập khi sửa combo
+    // Lấy thành phần combo
+    public Map<Integer, Integer> getComboDetail(int comboTypeId) throws SQLException {
+        Map<Integer, Integer> comboDetail = new HashMap<>();
+        String sql = "SELECT included_type_id, quantity FROM Combo_Detail WHERE combo_type_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, comboTypeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    comboDetail.put(rs.getInt("included_type_id"), rs.getInt("quantity"));
+                }
+            }
+        }
+        return comboDetail;
+    }
+// Xóa thành phần combo cũ
+
+    public void deleteComboDetail(int comboTypeId) throws SQLException {
+        String sql = "DELETE FROM Combo_Detail WHERE combo_type_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, comboTypeId);
+            ps.executeUpdate();
+        }
+    }
+// Thêm lại thành phần combo mới
+//public void addComboDetail(int comboTypeId, Map<Integer, Integer> comboMap) throws SQLException {
+//    String sql = "INSERT INTO Combo_Detail (combo_type_id, included_type_id, quantity) VALUES (?, ?, ?)";
+//    try (PreparedStatement st = connection.prepareStatement(sql)) {
+//        for (Map.Entry<Integer, Integer> entry : comboMap.entrySet()) {
+//            st.setInt(1, comboTypeId);
+//            st.setInt(2, entry.getKey());
+//            st.setInt(3, entry.getValue());
+//            st.addBatch();
+//        }
+//        st.executeBatch();
+//    }
+//}
+
+    public static void main(String[] args) {
+//        int branchId = 1; // ví dụ branch id
+//        String poolId = "all";
+//        String status = "active";
+//        String keyword = "";
+//        int page = 1; // trang bạn muốn test
+//        int pageSize = 25; // số dòng mỗi trang
+//        int offset = (page - 1) * pageSize;
+//
 //        TicketTypeDAO dao = new TicketTypeDAO();
+//
+////        try {
+////            // Dùng hàm phân trang
+////            List<TicketType> tickets = dao.filterTicketsByBranch(branchId, poolId, status, keyword, offset, pageSize);
+////
+////            if (tickets.isEmpty()) {
+////                System.out.println("Không tìm thấy loại vé nào phù hợp.");
+////            } else {
+////                for (TicketType t : tickets) {
+////                    System.out.println("ID: " + t.getId());
+////                    System.out.println("Mã: " + t.getCode());
+////                    System.out.println("Tên: " + t.getName());
+////                    System.out.println("Giá: " + t.getBasePrice());
+////                    System.out.println("Trạng thái: " + (t.isActive() ? "Đang bán" : "Ngừng bán"));
+////                    System.out.println("Áp dụng tại: " + String.join(", ", t.getPools()));
+////                    System.out.println("--------------");
+////                }
+////            }
+////        } catch (Exception e) {
+////            e.printStackTrace();
+////        }
+////    }
+////        TicketTypeDAO dao = new TicketTypeDAO();
+////        try {
+////            List<PoolTicket> list = dao.getPoolsByBranch(branchId);
+////            for (PoolTicket poolTicket : list) {
+////                System.out.println(poolTicket);
+////            }
+////        } catch (Exception e) {
+////        }
 //        try {
-//            List<PoolTicket> list = dao.getPoolsByBranch(branchId);
-//            for (PoolTicket poolTicket : list) {
-//                System.out.println(poolTicket);
-//            }
+//            TicketType a = dao.getTicketTypeById(8);
+//            System.out.println(a);
 //        } catch (Exception e) {
+//            System.out.println("Vé này combo mà đéo thấy");
 //        }
 
+
+TicketTypeDAO dao = new TicketTypeDAO();
+    try {
+        int comboTypeId = 5; // Thay bằng ID vé combo bạn muốn test
+        Map<Integer, Integer> comboDetail = dao.getComboDetail(comboTypeId);
+        System.out.println("Combo Detail for comboTypeId=" + comboTypeId + ":");
+        if (comboDetail.isEmpty()) {
+            System.out.println("Không có thành phần combo nào.");
+        } else {
+            for (Map.Entry<Integer, Integer> entry : comboDetail.entrySet()) {
+                System.out.println("Included type id: " + entry.getKey() + ", Quantity: " + entry.getValue());
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
     }
 
 
+    }
+
+}

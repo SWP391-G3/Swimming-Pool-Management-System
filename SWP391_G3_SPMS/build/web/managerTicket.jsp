@@ -23,6 +23,14 @@
     </head>
 
     <body>
+        
+        
+              <c:if test="${not empty error}">
+    <div class="error-message" style="color:red; background:#fff0f0; padding:10px;">
+        ${error}
+    </div>
+</c:if>
+        
 
         <c:if test="${not empty success}">
             <div class="success-message" id="successMsg">${success}</div>

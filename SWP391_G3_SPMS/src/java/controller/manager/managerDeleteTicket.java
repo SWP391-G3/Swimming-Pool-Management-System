@@ -59,24 +59,27 @@ public class managerDeleteTicket extends HttpServlet {
         }
 
         String idRaw = request.getParameter("id");
+        String poolIdRaw = request.getParameter("poolId"); // Lấy poolId từ request
         String page = request.getParameter("page");
         String pageSize = request.getParameter("pageSize");
         String keyword = request.getParameter("keyword");
         String status = request.getParameter("status");
         String poolId = request.getParameter("poolId");
 
-        if (idRaw == null) {
-            // Không có id, về lại danh sách
-            response.sendRedirect("managerTicketServlet");
+        // Kiểm tra đủ tham số
+        if (idRaw == null || idRaw.isEmpty() || poolIdRaw == null || poolIdRaw.isEmpty()) {
+            request.setAttribute("error", "Thiếu tham số id hoặc poolId khi xóa vé!");
+            request.getRequestDispatcher("managerTicket.jsp").forward(request, response);
             return;
         }
 
         try {
             int id = Integer.parseInt(idRaw);
-            TicketTypeDAO dao = new TicketTypeDAO();
-            dao.deleteTicketType(id);
+            int poolIdInt = Integer.parseInt(poolIdRaw);
 
-            // redirect về lại danh sách với filter cũ
+            TicketTypeDAO dao = new TicketTypeDAO();
+            dao.deleteTicketTypeFromPool(id, poolIdInt);
+
             response.sendRedirect("managerTicketServlet?page=" + (page == null ? "" : page)
                     + "&pageSize=" + (pageSize == null ? "" : pageSize)
                     + "&keyword=" + (keyword == null ? "" : java.net.URLEncoder.encode(keyword, "UTF-8"))
@@ -85,8 +88,10 @@ public class managerDeleteTicket extends HttpServlet {
                     + "&success=3");
         } catch (Exception e) {
             e.printStackTrace();
-            // Xảy ra lỗi thì về lại danh sách
-            response.sendRedirect("managerTicketServlet");
+            request.setAttribute("error", "Lỗi khi xóa vé: " + e.getMessage());
+// Forward về lại trang danh sách (hoặc trang hiện tại của bạn)
+            request.getRequestDispatcher("managerTicket.jsp").forward(request, response);
+            return;
         }
     }
 

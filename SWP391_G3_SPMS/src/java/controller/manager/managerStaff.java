@@ -79,7 +79,7 @@ public class managerStaff extends HttpServlet {
         String poolId = request.getParameter("poolId") != null ? request.getParameter("poolId") : "all";
 
         int page = 1;
-        int pageSize = 2;
+        int pageSize = 5;
         if (request.getParameter("page") != null) {
             try {
                 page = Integer.parseInt(request.getParameter("page"));

@@ -142,7 +142,7 @@
                         </div>
                         <div class="form-row">
                             <label>Ưu đãi (%)</label>
-                            <input type="number" id="discountPercent" name="discountPercent" min="0" max="100" value="0" onchange="updateComboPrice()" /> %
+                            <input type="number" id="discountPercent" name="discountPercent" min="0" max="100" value="0" onchange="updateComboPrice()" />%
                         </div>
                         <div class="form-row combo-summary">
                             <label>Giá gốc:</label>

@@ -21,6 +21,7 @@ public class TicketType {
     private java.sql.Timestamp createdAt;
     private boolean active;
     private List<String> pools; // Tên các hồ bơi áp dụng
+    private Double discountPercent;
 
     public TicketType() {
     }
@@ -34,6 +35,15 @@ public class TicketType {
         this.isCombo = isCombo;
         this.active = active;
         this.pools = pools;
+    }
+
+    // 2 tiếng fixx
+    public Double getDiscountPercent() {
+        return discountPercent;
+    }
+
+    public void setDiscountPercent(Double discountPercent) {
+        this.discountPercent = discountPercent;
     }
 
     public int getId() {
