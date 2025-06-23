@@ -1,4 +1,4 @@
-﻿--CREATE DATABASE PoolsDB
+﻿--CREATE DATABASE PoolV1
 
 CREATE TABLE Roles (
     role_id INT IDENTITY(1,1) PRIMARY KEY,
@@ -401,4 +401,6 @@ ALTER TABLE Pool_Ticket_Types ADD status NVARCHAR(20) DEFAULT 'active';
 
 ALTER TABLE Staffs ADD pool_id INT;
 
+ALTER TABLE Ticket_Types
+ADD created_at DATETIME DEFAULT GETDATE();
 

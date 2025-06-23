@@ -66,7 +66,7 @@
                     </form>
                     <div class="action-buttons">
                         <a href="managerAddTicket?page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" class="btn-add"><i class="fas fa-plus"></i> Thêm loại vé</a>
-                        <a href="copyTicket.jsp?page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" class="btn-copy"><i class="fas fa-copy"></i> Copy loại vé</a>
+                        <!-- comment   <a href="copyTicket.jsp?page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" class="btn-copy"><i class="fas fa-copy"></i> Copy loại vé</a> -->
                     </div>
                 </div>
                 <div class="ticket-list">

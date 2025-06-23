@@ -51,8 +51,8 @@
                     <div class="dashboard-card-title">Quản lý vé</div>
                     <div class="dashboard-card-desc">Trang quản lý vé hỗ trợ các chức năng từ xem, tìm kiếm, lọc, đến thêm/sửa/xóa vé trong phạm vi chi nhánh quản lý.</div>
                 </a>
-                <a href="voucher-management.jsp" class="dashboard-card">
-                    <div class="dashboard-card-title">Quản lý voucher</div>
+                <a href="managerDiscount.jsp" class="dashboard-card">
+                    <div class="dashboard-card-title">Quản lý Voucher</div>
                     <div class="dashboard-card-desc">Tạo, xem, cập nhật, xóa mã giảm giá/voucher.</div>
                 </a>
                 <a href="area-revenue.jsp" class="dashboard-card">

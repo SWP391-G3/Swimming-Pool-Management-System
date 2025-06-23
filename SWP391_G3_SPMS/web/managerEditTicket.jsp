@@ -87,3 +87,22 @@
         </div>
     </body>
 </html>
+
+
+<script>
+    document.querySelector("form").addEventListener("submit", function (e) {
+        const typeName = document.querySelector('input[name="typeName"]').value.trim();
+        let errorMsg = "";
+
+
+     
+        if (typeName.length < 2) {
+            errorMsg += "Tên loại vé phải có ít nhất 2 ký tự hợp lệ (không tính khoảng trắng).\n";
+        }
+
+        if (errorMsg) {
+            alert(errorMsg);
+            e.preventDefault(); // Ngăn form submit nếu có lỗi
+        }
+    });
+</script>

@@ -921,7 +921,7 @@ INSERT INTO Payment_RentItem (payment_id, service_id, amount, quantity) VALUES
 
 -- Tuấn Anh insert vào bẳng Ticket_Type để set lại tất cả hồ bơi vé đều đang hoạt động
 INSERT INTO Pool_Ticket_Types (pool_id, ticket_type_id, price, status)
-SELECT p.pool_id, t.ticket_type_id, t.base_price, 1
+SELECT p.pool_id, t.ticket_type_id, t.base_price, 'active'
 FROM Pools p
 CROSS JOIN Ticket_Types t;
 

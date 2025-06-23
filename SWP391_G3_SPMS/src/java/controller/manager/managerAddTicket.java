@@ -15,11 +15,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.User;
 import model.manager.PoolTicket;
+import model.manager.TicketType;
 
 /**
  *
@@ -78,17 +82,17 @@ public class managerAddTicket extends HttpServlet {
                 return;
         }
 
-        List<PoolTicket> poolList = new ArrayList<>();
         try {
             TicketTypeDAO dao = new TicketTypeDAO();
-            poolList = dao.getPoolsByBranch(branchId);
+            List<PoolTicket> poolList = dao.getPoolsByBranch(branchId);
+            List<TicketType> singleTypes = dao.getAllSingleTypes();
+            request.setAttribute("poolList", poolList);
+            request.setAttribute("singleTypes", singleTypes);
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            request.setAttribute("error", "Lỗi truy vấn hồ bơi: " + ex.getMessage());
+            request.setAttribute("error", "Lỗi truy vấn dữ liệu: " + ex.getMessage());
         }
-
-        request.setAttribute("poolList", poolList);
         request.getRequestDispatcher("managerAddTicket.jsp").forward(request, response);
+
     }
 
     @Override
@@ -124,63 +128,71 @@ public class managerAddTicket extends HttpServlet {
                 return;
         }
 
-        // Lấy dữ liệu từ form
-        String typeCode = request.getParameter("typeCode");
-        String typeName = request.getParameter("typeName");
-        String description = request.getParameter("description");
-        String basePriceRaw = request.getParameter("basePrice");
-        String isComboRaw = request.getParameter("isCombo");
+        String ticketKind = request.getParameter("ticketKind");
         String[] poolIdsRaw = request.getParameterValues("poolIds");
-        String status = "active"; // mặc định
-
-        // Validate dữ liệu
-        String error = null;
-        double basePrice = 0;
-        boolean isCombo = "1".equals(isComboRaw);
-        List<Integer> poolIds = new ArrayList<>();
-        if (typeCode == null || typeCode.trim().isEmpty()
-                || typeName == null || typeName.trim().isEmpty()
-                || basePriceRaw == null || basePriceRaw.trim().isEmpty()
-                || poolIdsRaw == null || poolIdsRaw.length == 0) {
-            error = "Vui lòng nhập đầy đủ các trường bắt buộc!";
-        } else {
-            try {
-                basePrice = Double.parseDouble(basePriceRaw);
-                if (basePrice < 0) {
-                    error = "Giá vé không được âm!";
-                }
-                for (String pid : poolIdsRaw) {
-                    poolIds.add(Integer.parseInt(pid));
-                }
-            } catch (Exception e) {
-                error = "Dữ liệu không hợp lệ!";
-            }
-        }
-
-        if (error != null) {
-            List<PoolTicket> poolList = new ArrayList<>();
-            try {
-                poolList = new TicketTypeDAO().getPoolsByBranch(branchId);
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                request.setAttribute("error", "Lỗi truy vấn hồ bơi: " + ex.getMessage());
-            }
-            request.setAttribute("poolList", poolList);
-            request.setAttribute("error", error);
-            request.getRequestDispatcher("managerAddTicket.jsp").forward(request, response);
+        if (poolIdsRaw == null || poolIdsRaw.length == 0) {
+            setErrorAndForward(request, response, branchId, "Vui lòng chọn ít nhất một hồ bơi!");
             return;
         }
-
+        List<Integer> poolIds = new ArrayList<>();
+        for (String pid : poolIdsRaw) {
+            poolIds.add(Integer.parseInt(pid));
+        }
+        String error = null;
         try {
             TicketTypeDAO dao = new TicketTypeDAO();
-            int ticketTypeId = dao.addTicketType(typeCode, typeName, description, basePrice, isCombo);
-            dao.addTicketTypeToPools(ticketTypeId, poolIds, status);
+            if ("single".equals(ticketKind)) {
+                // Vé đơn
+                String typeCode = request.getParameter("typeCode");
+                String typeName = request.getParameter("typeName");
+                String description = request.getParameter("description");
+                String basePriceRaw = request.getParameter("basePrice");
+                double basePrice = basePriceRaw != null ? Double.parseDouble(basePriceRaw) : 0;
+                if (typeCode == null || typeCode.trim().isEmpty()
+                        || typeName == null || typeName.trim().isEmpty()) {
+                    setErrorAndForward(request, response, branchId, "Vui lòng nhập đủ thông tin vé đơn!");
+                    return;
+                }
+                int ticketTypeId = dao.addTicketType(typeCode, typeName, description, basePrice, false);
+                dao.addTicketTypeToPools(ticketTypeId, poolIds, "active");
+            } else if ("combo".equals(ticketKind)) {
+                // Vé combo
+                String typeCode = request.getParameter("typeCode");
+                String typeName = request.getParameter("typeName");
+                String description = request.getParameter("description");
+                double discountPercent = Double.parseDouble(Optional.ofNullable(request.getParameter("discountPercent")).orElse("0"));
+                double finalComboPrice = Double.parseDouble(Optional.ofNullable(request.getParameter("finalComboPrice")).orElse("0"));
+                Map<Integer, Integer> comboMap = new HashMap<>();
+                List<TicketType> singleTypes = new TicketTypeDAO().getAllSingleTypes();
+                for (TicketType single : singleTypes) {
+                    String qtyStr = request.getParameter("comboQty_" + single.getId());
+                    int qty = qtyStr == null ? 0 : Integer.parseInt(qtyStr);
+                    if (qty > 0) {
+                        comboMap.put(single.getId(), qty);
+                    }
+                }
+                if (typeCode == null || typeCode.trim().isEmpty()
+                        || typeName == null || typeName.trim().isEmpty()
+                        || comboMap.isEmpty()) {
+                    setErrorAndForward(request, response, branchId, "Vui lòng nhập đủ thông tin combo!");
+                    return;
+                }
+                int comboTypeId = dao.addTicketType(typeCode, typeName, description, finalComboPrice, true);
+                dao.addTicketTypeToPools(comboTypeId, poolIds, "active");
+                // Thêm vào Combo_Detail (combo_type_id, included_type_id, quantity)
+                dao.addComboDetail(comboTypeId, comboMap);
+                // Có thể lưu thêm ưu đãi nếu bạn thêm cột vào Ticket_Types
+            } else {
+                setErrorAndForward(request, response, branchId, "Loại vé không hợp lệ!");
+                return;
+            }
 
-            // Lấy lại filter từ form
-            String poolId = request.getParameter("poolId") != null ? request.getParameter("poolId") : "all";
-            String statusF = request.getParameter("status") != null ? request.getParameter("status") : "all";
-            String keyword = request.getParameter("keyword") != null ? request.getParameter("keyword") : "";
-            String pageSizeRaw = request.getParameter("pageSize");
+            // Lấy lại filter và đưa về trang cuối khi thêm thành công
+            String keyword = Optional.ofNullable(request.getParameter("keyword")).orElse("");
+            String status = Optional.ofNullable(request.getParameter("status")).orElse("all");
+            String poolId = Optional.ofNullable(request.getParameter("poolId")).orElse("all");
+            String pageSizeRaw = Optional.ofNullable(request.getParameter("pageSize")).orElse("5");
+
             int pageSize = 5;
             try {
                 pageSize = Integer.parseInt(pageSizeRaw);
@@ -188,35 +200,60 @@ public class managerAddTicket extends HttpServlet {
                 pageSize = 5;
             }
 
-            int total = dao.countTicketsByBranch(branchId, poolId, statusF, keyword);
-
-            int endP = total / pageSize;
+            int total = dao.countTicketsByBranch(branchId, poolId, status, keyword);
+            int endPage = total / pageSize;
             if (total % pageSize != 0) {
-                endP++;
+                endPage++;
             }
-            if (endP < 1) {
-                endP = 1;
+            if (endPage < 1) {
+                endPage = 1;
             }
 
             String redirectUrl = String.format(
                     "managerTicketServlet?page=%d&pageSize=%d&keyword=%s&status=%s&poolId=%s&success=1",
-                    endP, pageSize, java.net.URLEncoder.encode(keyword, "UTF-8"), statusF, poolId
+                    endPage, pageSize, java.net.URLEncoder.encode(keyword, "UTF-8"), status, poolId
             );
+            // Chuyển về danh sách vé với thông báo thành công
             response.sendRedirect(redirectUrl);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            List<PoolTicket> poolList = new ArrayList<>();
-            try {
-                poolList = new TicketTypeDAO().getPoolsByBranch(branchId);
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                request.setAttribute("error", "Lỗi truy vấn hồ bơi: " + ex.getMessage());
+        } catch (Exception ex) {
+
+            String msg = ex.getMessage();
+            if (msg != null && msg.contains("UNIQUE") && msg.contains("Ticket_Types")) {
+                setErrorAndForward(request, response, branchId, "Mã loại vé này đã tồn tại. Vui lòng chọn mã khác!");
+                return;
             }
-            request.setAttribute("poolList", poolList);
-            request.setAttribute("error", "Lỗi khi thêm loại vé: " + e.getMessage());
-            request.getRequestDispatcher("managerAddTicket.jsp").forward(request, response);
+            setErrorAndForward(request, response, branchId, "Lỗi: " + ex.getMessage());
         }
+    }
+
+    private int getBranchId(int userId) {
+        switch (userId) {
+            case 2:
+                return 1;
+            case 3:
+                return 2;
+            case 4:
+                return 3;
+            case 5:
+                return 4;
+            case 6:
+                return 5;
+            default:
+                return 0;
+        }
+    }
+
+    private void setErrorAndForward(HttpServletRequest request, HttpServletResponse response, int branchId, String error)
+            throws ServletException, IOException {
+        try {
+            TicketTypeDAO dao = new TicketTypeDAO();
+            request.setAttribute("poolList", dao.getPoolsByBranch(branchId));
+            request.setAttribute("singleTypes", dao.getAllSingleTypes());
+        } catch (SQLException ex) {
+        }
+        request.setAttribute("error", error);
+        request.getRequestDispatcher("managerAddTicket.jsp").forward(request, response);
 
     }
 

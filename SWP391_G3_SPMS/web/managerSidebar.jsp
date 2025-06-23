@@ -76,7 +76,7 @@
 
             </li>
             <li>
-                <a href="voucher-management.jsp"
+                <a href="managerDiscount.jsp"
                 <c:if test="${activeMenu eq 'voucher'}">class="active"</c:if>>
                     <svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="2" /><circle cx="8" cy="12" r="2" /><circle cx="16" cy="12" r="2" /></svg>
                     Quản lý voucher

@@ -7,12 +7,14 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-
+<%
+    request.setAttribute("activeMenu", "staff");
+%>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
-        <title>Quản lý Nhân Viên</title>
+        <title> Nhân Viên</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="./manager-css/managerStaffInfo-v2.css">
         <link rel="stylesheet" href="./manager-css/manager-panel.css">
@@ -22,7 +24,7 @@
             <%@ include file="./managerSidebar.jsp" %>
             <div class="content-panel">
                 <div class="content-header">
-                    <h2>Quản lý Nhân Viên</h2>
+                    <h2>Nhân Viên</h2>
                     <div class="desc">Danh sách nhân viên thuộc chi nhánh bạn quản lý</div>
                 </div>
                 <!-- Thanh tìm kiếm với lọc trạng thái -->
