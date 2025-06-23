@@ -108,6 +108,12 @@
 
                         <!-- Button -->
                         <div class="flex flex-wrap gap-4">
+
+                            <button id="voucherBtn"
+                                    class="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-md text-sm font-medium flex items-center gap-2 shadow">
+                                <i class="fa-solid fa-ticket"></i> Voucher
+                            </button>
+
                             <a href="adminUpdateCustomer?userId=<%= cus.getUser_id() %>"
                                class="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded-md text-sm font-medium flex items-center gap-2 shadow">
                                 <i class="fa-solid fa-pen-to-square"></i> Cập nhật
