@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="model.admin.CustomerBooking,model.admin.CustomerService,model.admin.CustomerFeedback" %>
+<%@page import="model.admin.CustomerBooking,model.admin.CustomerService,model.admin.CustomerFeedback,model.admin.Customer" %>
 <%@page import="java.util.List" %>
 <!DOCTYPE html>
 <html>
@@ -60,6 +60,114 @@
                             <i class="fa-solid fa-arrow-left mr-1"></i> Quay lại
                         </a>
                     </div>
+                    <% 
+                        Customer cus = (Customer) request.getAttribute("customer");
+                    %>
+                    <!-- Thông tin khách hàng -->
+                    <div class="mb-10 bg-white p-6 rounded-xl shadow border border-gray-200">
+                        <h2 class="text-xl font-semibold text-blue-800 mb-6">Thông tin khách hàng</h2>
+
+                        <!-- Avatar + Tên + Trạng thái -->
+                        <div class="flex flex-wrap items-center gap-6 mb-6">
+                            <img src="https://via.placeholder.com/100" alt="Avatar"
+                                 class="w-24 h-24 rounded-full border-4 border-blue-300 object-cover shadow-sm" />
+
+                            <div class="flex-1">
+                                <h3 class="text-xl font-semibold text-gray-800"><%= cus.getFull_name() %></h3>
+                                <span class="inline-block mt-2 px-3 py-1 text-sm font-medium rounded-full
+                                      <%= cus.getStatus() ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"%>
+                                      border border-green-300">
+                                    <%= cus.getStatus() ? "Đang hoạt động" : "Bị khóa" %>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Thông tin khác -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4 mb-6">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Email</p>
+                                <p class="text-base font-semibold text-gray-800"><%= cus.getEmail() %></p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Số điện thoại</p>
+                                <p class="text-base font-semibold text-gray-800"><%= cus.getPhone() %></p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Địa chỉ</p>
+                                <p class="text-base font-semibold text-gray-800"><%= cus.getAddress() %></p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Giới tính</p>
+                                <p class="text-base font-semibold text-gray-800"><%= "male".equals(cus.getGender()) ? "Nam" : "female".equals(cus.getGender()) ? "Nữ" : "Khác"%></p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Ngày sinh</p>
+                                <p class="text-base font-semibold text-gray-800"><%= cus.getDob() %></p>
+                            </div>
+                        </div>
+
+                        <!-- Button -->
+                        <div class="flex flex-wrap gap-4">
+                            <a href="adminUpdateCustomer?userId=<%= cus.getUser_id() %>"
+                               class="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded-md text-sm font-medium flex items-center gap-2 shadow">
+                                <i class="fa-solid fa-pen-to-square"></i> Cập nhật
+                            </a>
+
+                            <a href="adminLockCustomer?userId=<%= cus.getUser_id() %>&userStatus=<%= cus.getStatus() %>"
+                               class="toggle-status-btn <%= cus.getStatus() ? "bg-red-500" : "bg-green-500" %> text-white px-5 py-2 rounded-md text-sm font-medium flex items-center gap-2 shadow"
+                               data-user-id="<%= cus.getUser_id() %>"
+                               data-user-status="<%= cus.getStatus() %>">
+                                <i class="fa-solid <%= cus.getStatus() ? "fa-lock" : "fa-lock-open" %>"></i>
+                                <%= cus.getStatus() ? "Khóa" : "Mở" %>
+                            </a>
+
+                        </div>
+                    </div>
+                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                    <script>
+                        $(document).ready(function () {
+                            $('.toggle-status-btn').click(function (e) {
+                                e.preventDefault();
+                                const $btn = $(this);
+                                const userId = $btn.data('user-id');
+                                const userStatus = $btn.data('user-status');
+                                $.ajax({
+                                    url: 'adminLockCustomer',
+                                    type: 'GET',
+                                    data: {
+                                        userId: userId,
+                                        userStatus: userStatus
+                                    },
+                                    success: function () {
+                                        const newStatus = !userStatus;
+                                        $btn.data('user-status', newStatus);
+                                        if (newStatus) {
+                                            $btn.removeClass('bg-green-500').addClass('bg-red-500');
+                                            $btn.find('i').removeClass('fa-lock-open').addClass('fa-lock');
+                                            $btn.html('<i class="fa-solid fa-lock"></i> Khóa');
+                                            $btn.closest('.mb-10').find('span')
+                                                    .removeClass('bg-red-100 text-red-700')
+                                                    .addClass('bg-green-100 text-green-700')
+                                                    .text('Đang hoạt động');
+                                        } else {
+                                            $btn.removeClass('bg-red-500').addClass('bg-green-500');
+                                            $btn.find('i').removeClass('fa-lock').addClass('fa-lock-open');
+                                            $btn.html('<i class="fa-solid fa-lock-open"></i> Mở');
+                                            $btn.closest('.mb-10').find('span')
+                                                    .removeClass('bg-green-100 text-green-700')
+                                                    .addClass('bg-red-100 text-red-700')
+                                                    .text('Bị khóa');
+                                        }
+                                    },
+                                    error: function () {
+                                        alert('Có lỗi xảy ra, vui lòng thử lại!');
+                                    }
+                                });
+                            });
+                        });
+                    </script>
+
+
 
 
 
@@ -155,11 +263,11 @@
                                     <% 
                                         int stars = cf.getRating(); 
                                         for(int i = 0; i < stars; i++) { 
-                                                                    %>
+                                    %>
                                     <i class="fa-solid fa-star"></i>
                                     <% } %>
                                 </div>
-                           </div>
+                            </div>
                             <%  }%>
                         </div>
                     </div>

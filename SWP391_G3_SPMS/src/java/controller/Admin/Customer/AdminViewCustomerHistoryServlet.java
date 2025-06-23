@@ -5,6 +5,7 @@
 package controller.Admin.Customer;
 
 import dao.admin.CustomerBookingDAO;
+import dao.admin.CustomerDAO;
 import dao.admin.CustomerFeedbackDAO;
 import dao.admin.CustomerServiceDAO;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import model.admin.Customer;
 import model.admin.CustomerBooking;
 import model.admin.CustomerFeedback;
 import model.admin.CustomerService;
@@ -68,15 +70,18 @@ public class AdminViewCustomerHistoryServlet extends HttpServlet {
         CustomerBookingDAO cbdao = new CustomerBookingDAO();
         CustomerServiceDAO csdao = new CustomerServiceDAO();
         CustomerFeedbackDAO cfdao = new CustomerFeedbackDAO();
+        CustomerDAO dao = new CustomerDAO();
         int user_id;
         try {
             user_id = Integer.parseInt(userIdRaw);
+            Customer cus = dao.getCustomerById(user_id);
             CustomerBooking cb = cbdao.getLastBooking(user_id);
             List<CustomerService> cs = csdao.getLastService(user_id);
             CustomerFeedback cf = cfdao.getLastFeedback(user_id);
             request.setAttribute("customerBooking", cb);
             request.setAttribute("customerService", cs);
             request.setAttribute("customerFeedback", cf);
+            request.setAttribute("customer", cus);
             request.getRequestDispatcher("adminViewCustomerHistory.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             
