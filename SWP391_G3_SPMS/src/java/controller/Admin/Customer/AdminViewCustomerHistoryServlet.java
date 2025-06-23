@@ -8,6 +8,7 @@ import dao.admin.CustomerBookingDAO;
 import dao.admin.CustomerDAO;
 import dao.admin.CustomerFeedbackDAO;
 import dao.admin.CustomerServiceDAO;
+import dao.admin.CustomerVoucherDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -20,6 +21,7 @@ import model.admin.Customer;
 import model.admin.CustomerBooking;
 import model.admin.CustomerFeedback;
 import model.admin.CustomerService;
+import model.admin.CustomerVoucher;
 
 /**
  *
@@ -71,6 +73,7 @@ public class AdminViewCustomerHistoryServlet extends HttpServlet {
         CustomerServiceDAO csdao = new CustomerServiceDAO();
         CustomerFeedbackDAO cfdao = new CustomerFeedbackDAO();
         CustomerDAO dao = new CustomerDAO();
+        CustomerVoucherDAO cvdao = new CustomerVoucherDAO();
         int user_id;
         try {
             user_id = Integer.parseInt(userIdRaw);
@@ -78,10 +81,12 @@ public class AdminViewCustomerHistoryServlet extends HttpServlet {
             CustomerBooking cb = cbdao.getLastBooking(user_id);
             List<CustomerService> cs = csdao.getLastService(user_id);
             CustomerFeedback cf = cfdao.getLastFeedback(user_id);
+            CustomerVoucher cv = cvdao.getCustomerVoucher(user_id);
             request.setAttribute("customerBooking", cb);
             request.setAttribute("customerService", cs);
             request.setAttribute("customerFeedback", cf);
             request.setAttribute("customer", cus);
+            request.setAttribute("customerVoucher", cv);
             request.getRequestDispatcher("adminViewCustomerHistory.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             

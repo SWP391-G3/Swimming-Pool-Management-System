@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="model.admin.CustomerBooking,model.admin.CustomerService,model.admin.CustomerFeedback,model.admin.Customer" %>
+<%@page import="model.admin.CustomerVoucher" %>
 <%@page import="java.util.List" %>
 <!DOCTYPE html>
 <html>
@@ -174,6 +175,74 @@
                     </script>
 
 
+
+                    <!-- Popup Overlay -->
+                    <div id="voucherPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+                        <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-3xl relative">
+                            <button id="closePopup" class="absolute top-3 right-4 text-gray-500 hover:text-red-500 text-xl font-bold">&times;</button>
+                            <h2 class="text-xl font-semibold text-indigo-700 mb-4"><i class="fa-solid fa-ticket"></i> Danh sách Voucher & Ticket đã sử dụng</h2>
+
+                            <!-- VOUCHER -->
+                            <div class="mb-6">
+                                <h3 class="font-semibold text-gray-700 mb-2">Voucher</h3>
+                                <table class="w-full table-auto border text-sm bg-indigo-50 border-indigo-200 rounded shadow">
+                                    <thead class="bg-indigo-100 text-indigo-900">
+                                        <tr>
+                                            <th class="px-3 py-2 border">Tên Voucher</th>
+                                            <th class="px-3 py-2 border">Giảm giá</th>
+                                            <th class="px-3 py-2 border">Ngày áp dụng</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%-- Giả sử bạn có List<CustomerVoucher> vouchers --%>
+                                        <%
+                                            CustomerVoucher vouchers = (CustomerVoucher) request.getAttribute("customerVoucher");
+                                            if(vouchers != null){
+                                                for(CustomerVoucher v : vouchers)
+                                        %>
+                                        <tr>
+                                            <td class="px-3 py-2 border"><%= v.getVoucher_name() %></td>
+                                            <td class="px-3 py-2 border"><%= v.getDesciption() %> %</td>
+                                            <td class="px-3 py-2 border"><%= v.getApplied_date() %></td>
+                                        </tr>
+                                        <% } else { %>
+                                        <tr><td colspan="3" class="px-3 py-2 text-center">Chưa có voucher nào được sử dụng</td></tr>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- TICKET -->
+                            <div>
+                                <h3 class="font-semibold text-gray-700 mb-2">Ticket</h3>
+                                <table class="w-full table-auto border text-sm bg-yellow-50 border-yellow-200 rounded shadow">
+                                    <thead class="bg-yellow-100 text-yellow-900">
+                                        <tr>
+                                            <th class="px-3 py-2 border">Loại vé</th>
+                                            <th class="px-3 py-2 border">Số lượng</th>
+                                            <th class="px-3 py-2 border">Tổng tiền</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%-- Giả sử bạn có List<CustomerTicket> tickets --%>
+                                        <%
+                                            List<CustomerTicket> tickets = (List<CustomerTicket>) request.getAttribute("customerTickets");
+                                            if(tickets != null){
+                                                for(CustomerTicket t : tickets){
+                                        %>
+                                        <tr>
+                                            <td class="px-3 py-2 border"><%= t.getTicket_type() %></td>
+                                            <td class="px-3 py-2 border"><%= t.getQuantity() %></td>
+                                            <td class="px-3 py-2 border"><%= t.getTotal_amount() %> vnđ</td>
+                                        </tr>
+                                        <% }} else { %>
+                                        <tr><td colspan="3" class="px-3 py-2 text-center">Chưa có vé nào được sử dụng</td></tr>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
 
 
 
