@@ -21,19 +21,20 @@
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/SWP391_G3_SPMS/web/managerStaffInfo.jsp</file>
         </group>
         <group>
-            <file>file:/D:/SWP/SWP391_G3_SPMS%20(1)%20(1)/web/register.jsp</file>
-            <file>file:/D:/SWP/SWP391_G3_SPMS%20(1)%20(1)/web/ResetPassword.jsp</file>
-            <file>file:/D:/SWP/SWP391_G3_SPMS%20(1)%20(1)/src/java/util/EmailUtil.java</file>
-            <file>file:/D:/SWP/SWP391_G3_SPMS%20(1)%20(1)/src/java/dal/DBContext.java</file>
-            <file>file:/D:/SWP/SWP391_G3_SPMS%20(1)%20(1)/src/java/controller/manager/AddDeviceServlet.java</file>
-            <file>file:/D:/SWP/SWP391_G3_SPMS%20(1)%20(1)/web/pool_service_list.jsp</file>
-            <file>file:/D:/SWP/SWP391_G3_SPMS%20(1)%20(1)/web/adminUpdateCustomer.jsp</file>
-            <file>file:/D:/SWP/SWP391_G3_SPMS%20(1)%20(1)/src/java/controller/manager/BookingServiceServlet.java</file>
-            <file>file:/D:/SWP/SWP391_G3_SPMS%20(1)%20(1)/src/java/util/CheckNewPassword.java</file>
-            <file>file:/D:/SWP/SWP391_G3_SPMS%20(1)%20(1)/src/java/controller/manager/PoolServiceServlet.java</file>
-            <file>file:/D:/SWP/SWP391_G3_SPMS%20(1)%20(1)/src/java/controller/manager/DeleteDeviceServlet.java</file>
-            <file>file:/D:/SWP/SWP391_G3_SPMS%20(1)%20(1)/web/pool_service_form.jsp</file>
-            <file>file:/D:/SWP/SWP391_G3_SPMS%20(1)%20(1)/src/java/controller/login/ResetPasswordServlet.java</file>
+            <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/dao/DiscountDetailDAO.java</file>
+            <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/dao/FeedbackHomepageDAO.java</file>
+            <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/controller/manager/PoolServiceServlet.java</file>
+            <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/controller/manager/ListDeviceServlet.java</file>
+            <file>file:/D:/SWP/SWP391_G3_SPMS/web/ResetPassword.jsp</file>
+            <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/dao/DiscountDAO.java</file>
+            <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/controller/manager/UpdateDeviceServlet.java</file>
+            <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/dao/PoolDAO.java</file>
+            <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/controller/manager/AddDeviceServlet.java</file>
+            <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/controller/login/RegisterServlet.java</file>
+            <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/dao/PoolServiceDAO.java</file>
+            <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/controller/manager/DeleteDeviceServlet.java</file>
+            <file>file:/D:/SWP/SWP391_G3_SPMS/web/pool_service_list.jsp</file>
+            <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/controller/manager/BookingServiceServlet.java</file>
         </group>
     </open-files>
 </project-private>

@@ -84,7 +84,7 @@ public class ResetPasswordServlet extends HttpServlet {
         long millisPassed = new Date().getTime() - otpCreatedAt.getTime();
         long secondsPassed = millisPassed / 1000;
 
-        if (secondsPassed > 120) {
+        if (secondsPassed > 60) {
             session.setAttribute("error", "Mã OTP đã hết hạn sau " + secondsPassed + " giây.");
             response.sendRedirect("ResetPassword.jsp?step=otp");
             return;
