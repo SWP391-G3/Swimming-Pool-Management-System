@@ -65,9 +65,19 @@ public class AdminViewCustomerListServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("currentUser");
         CustomerDAO dao = new CustomerDAO();
+        String pageSize = request.getParameter("pageSize");
         int totalCustomer = dao.getTotalCustomer();
         int page = 1;
-        int customerContain = 5;
+        int customerContain;
+        if (pageSize == null) {
+            customerContain = 5;
+        } else {
+            try {
+                customerContain = Integer.parseInt(pageSize);
+            } catch (NumberFormatException e) {
+                customerContain = 5;
+            }
+        }
         int totalPages = (int) Math.ceil(totalCustomer * 1.0 / customerContain);
         if (totalPages == 0) {
             totalPages = 1;
