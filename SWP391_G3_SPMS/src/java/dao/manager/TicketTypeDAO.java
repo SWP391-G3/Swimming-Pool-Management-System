@@ -86,6 +86,8 @@ public class TicketTypeDAO extends DBContext {
         return tickets;
     }
 
+    
+    // Đếm số lượng loại vé phù hợp với bộ lọc được chọn (chi nhánh, hồ bơi, trạng thái, từ khóa)
     public int countTicketsByBranch(int branchId, String poolId, String status, String keyword) throws SQLException {
         StringBuilder sql = new StringBuilder(
                 "SELECT COUNT(*) AS total "
@@ -278,6 +280,8 @@ public class TicketTypeDAO extends DBContext {
     }
 
     // Hết phần Cập nhập
+    
+    // Xóa vé
     public void deleteTicketTypeFromPool(int ticketTypeId, int poolId) throws SQLException {
     String sql = "DELETE FROM Pool_Ticket_Types WHERE ticket_type_id = ? AND pool_id = ?";
     try (PreparedStatement st = connection.prepareStatement(sql)) {
@@ -357,6 +361,24 @@ public class TicketTypeDAO extends DBContext {
 //    }
 //}
 
+    
+    public String getTicketStatus(int ticketTypeId, int poolId) throws SQLException {
+    String sql = "SELECT status FROM Pool_Ticket_Types WHERE ticket_type_id = ? AND pool_id = ?";
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setInt(1, ticketTypeId);
+        ps.setInt(2, poolId);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getString("status"); // "active" hoặc "inactive"
+            }
+        }
+    }
+    return null;
+}
+    
+    
+    
+    
     public static void main(String[] args) {
 //        int branchId = 1; // ví dụ branch id
 //        String poolId = "all";

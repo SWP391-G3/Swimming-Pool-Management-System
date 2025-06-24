@@ -24,15 +24,6 @@ import model.manager.TicketType;
  */
 public class managerTicketServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -50,15 +41,6 @@ public class managerTicketServlet extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -99,6 +81,14 @@ public class managerTicketServlet extends HttpServlet {
         String pageParam = request.getParameter("page");
         String pageSizeParam = request.getParameter("pageSize");
 
+        // Lấy lõi bên delete
+        
+        String error = request.getParameter("error");
+        if (error != null && !error.isEmpty()) {
+            request.setAttribute("error", error);
+        }
+        // Xử lý filter, lấy ticketList, forward về managerTicket.jsp như bình thường
+
         String success = request.getParameter("success");
         if ("1".equals(success)) {
             request.setAttribute("success", "Thêm loại vé thành công!");
@@ -117,7 +107,7 @@ public class managerTicketServlet extends HttpServlet {
                 pageSize = defaultPageSize;
             }
         }
-        int page = 1;
+        int page = 1;  // Trang
         try {
             if (pageParam != null) {
                 page = Integer.parseInt(pageParam);
@@ -172,25 +162,12 @@ public class managerTicketServlet extends HttpServlet {
         }
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";
