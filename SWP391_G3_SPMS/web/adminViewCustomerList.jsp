@@ -273,7 +273,7 @@
                 <!-- Pagination -->
                 <div class="flex flex-wrap justify-center mt-6 gap-2">
                     <form action="adminViewCustomerList" method="get" class="flex items-center gap-2 ml-4">
-                        <input type="number" name="pageSize" min="1" placeholder="Số lượng/trang" class="w-28 px-2 py-1 border rounded text-center" value="">
+                        <input type="number" name="pageSize" min="1" placeholder="Số lượng/trang" class="w-30 px-2 py-1 border rounded text-center" value="">
                         <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Đến</button>
                     </form>
 
