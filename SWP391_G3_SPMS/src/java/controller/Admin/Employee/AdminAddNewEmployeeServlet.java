@@ -84,7 +84,7 @@ public class AdminAddNewEmployeeServlet extends HttpServlet {
                     Pool pool = pools.get(i);
                     json.append("{")
                             .append("\"pool_id\":").append(pool.getPool_id())
-                            .append(",\"pool_name\":\"").append(pool.getPool_name().replace("\"", "\\\"")) // Escape quotes
+                            .append(",\"pool_name\":\"").append(pool.getPool_name().replace("\"", "\\\"")) 
                             .append("\"}");
                     if (i < pools.size() - 1) {
                         json.append(",");

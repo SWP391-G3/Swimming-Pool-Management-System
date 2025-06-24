@@ -156,5 +156,59 @@
             });
         </script>
 
+        <script>
+            document.querySelector('form').addEventListener('submit', function (e) {
+                let isValid = true;
+                let errorMsg = "";
+
+                const username = document.querySelector('[name="username"]').value.trim();
+                const password = document.querySelector('[name="password"]').value.trim();
+                const fullName = document.querySelector('[name="fullName"]').value.trim();
+                const address = document.querySelector('[name="address"]').value.trim();
+                const dob = document.querySelector('[name="dob"]').value;
+
+                // Validate Tên đăng nhập: ít nhất 2 ký tự, không chứa ký tự đặc biệt
+                const usernameRegex = /^[a-zA-Z0-9]{2,}$/;
+                if (!usernameRegex.test(username)) {
+                    errorMsg += "- Tên đăng nhập phải từ 2 ký tự trở lên và không chứa ký tự đặc biệt.\n";
+                    isValid = false;
+                }
+                
+                const addressRegex = /^[a-zA-Z0-9]{5,}$/;
+                if (!addressRegex.test(address)) {
+                    errorMsg += "- Địa chỉ phải từ 5 ký tự trở lên và không chứa ký tự đặc biệt.\n";
+                    isValid = false;
+                }
+
+                // Validate Mật khẩu: đúng 9 chữ số
+                const passwordRegex = /^\d{9}$/;
+                if (!passwordRegex.test(password)) {
+                    errorMsg += "- Mật khẩu phải đúng 9 chữ số.\n";
+                    isValid = false;
+                }
+
+                // Validate Họ và tên: chỉ chứa chữ cái (kể cả tiếng Việt, có dấu)
+                const fullNameRegex = /^[A-Za-zÀ-ỹ\s]+$/;
+                if (!fullNameRegex.test(fullName) || fullName.length < 2) {
+                    errorMsg += "- Họ và tên chỉ được chứa chữ cái và phải từ 2 ký tự trở lên.\n";
+                    isValid = false;
+                }
+
+                // Validate Ngày sinh: không được lớn hơn ngày hiện tại
+                const today = new Date().toISOString().split("T")[0];
+                if (dob === "" || dob > today) {
+                    errorMsg += "- Ngày sinh không được lớn hơn ngày hiện tại.\n";
+                    isValid = false;
+                }
+
+                // Nếu có lỗi
+                if (!isValid) {
+                    alert("Lỗi nhập liệu:\n" + errorMsg);
+                    e.preventDefault(); // Ngăn form submit
+                }
+            });
+        </script>
+
+
     </body>
 </html>
