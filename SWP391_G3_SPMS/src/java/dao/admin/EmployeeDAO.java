@@ -52,7 +52,7 @@ public class EmployeeDAO extends DBContext {
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setInt(1, start);
             st.setInt(2, perRecordEmployee);
-            ResultSet rs = st.executeQuery(); 
+            ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 Employee emp = new Employee();
                 emp.setStaffId(rs.getInt("staff_id"));
@@ -86,9 +86,22 @@ public class EmployeeDAO extends DBContext {
                 list.add(emp);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
         }
         return list;
+    }
+
+    public int getTotalEmployeeCount() {
+        String sql = "SELECT COUNT(*) FROM Staffs";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
 }
