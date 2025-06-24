@@ -2,6 +2,7 @@
 <%@ page import="model.customer.BookingDetails" %>
 <%@ page import="model.customer.Feedback" %>
 <%@ page import="java.text.NumberFormat,java.util.Locale" %>
+<%@ page import="java.time.LocalDate" %>
 <%
     BookingDetails bookingDetail = (BookingDetails) request.getAttribute("bookingDetail");
     Feedback userFeedback = (Feedback) request.getAttribute("userFeedback");
@@ -14,6 +15,25 @@
 <%
         return;
     }
+
+    // Kiểm tra điều kiện hủy đặt bể: phải còn trạng thái có thể hủy và ngày đặt còn lớn hơn hôm nay
+    String statusRaw = bookingDetail.getBookingStatus();
+    boolean canCancelStatus = "pending".equalsIgnoreCase(statusRaw) || "confirmed".equalsIgnoreCase(statusRaw)
+        || "Đã xác nhận".equalsIgnoreCase(statusRaw) || "Chờ xác nhận".equalsIgnoreCase(statusRaw);
+
+    boolean canCancelDate = false;
+    try {
+        // bookingDate là java.sql.Date
+        java.sql.Date sqlDate = bookingDetail.getBookingDate();
+        if (sqlDate != null) {
+            LocalDate bookingDate = sqlDate.toLocalDate();
+            LocalDate today = LocalDate.now();
+            canCancelDate = bookingDate.isAfter(today);
+        }
+    } catch (Exception e) {
+        canCancelDate = false;
+    }
+    boolean canCancel = canCancelStatus && canCancelDate;
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,12 +64,7 @@
             </div>
             <section class="bg-white border border-gray-200 rounded-lg p-8 shadow-sm w-full relative">
                 <!-- Nút Huỷ đặt bể -->
-                <%
-                    String statusRaw = bookingDetail.getBookingStatus();
-                    boolean canCancel = "pending".equalsIgnoreCase(statusRaw) || "confirmed".equalsIgnoreCase(statusRaw)
-                        || "Đã xác nhận".equalsIgnoreCase(statusRaw) || "Chờ xác nhận".equalsIgnoreCase(statusRaw);
-                    if (canCancel) {
-                %>
+                <% if (canCancel) { %>
                 <form method="post" action="booking_detail"
                       onsubmit="return confirm('Bạn chắc chắn muốn huỷ đặt bể này?');"
                       class="absolute top-8 right-8">

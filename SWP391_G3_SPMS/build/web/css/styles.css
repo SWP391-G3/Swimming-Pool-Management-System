@@ -138,6 +138,18 @@ footer {
         width: 80px;
         height: 80px;
     }
+    .sticky-pay-btn {
+        position: fixed !important;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        z-index: 50;
+        border-radius: 0 !important;
+    }
+    .balance-grid {
+        display: flex !important;
+        flex-direction: column !important;
+    }
 }
 
 /* Custom styles to complement Tailwind */
@@ -153,4 +165,39 @@ footer {
 /* Custom hover effects */
 .hover\:shadow-lg:hover {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #e5e7eb;
+    border-radius: 8px;
+}
+.calendar-day.selected {
+    background: #2563eb;
+    color: #fff !important;
+    border-radius: 50%;
+}
+.calendar-day.today {
+    border: 2px solid #2563eb;
+    border-radius: 50%;
+}
+.calendar-day:hover {
+    background: #e0e7ff;
+    color: #2563eb;
+    cursor: pointer;
+    border-radius: 50%;
+}
+.calendar-day.disabled {
+    color: #d1d5db !important;
+    pointer-events: none;
+}
+.slot-item.selected {
+    border-color: #2563eb;
+    background: #eff6ff;
+}
+.slot-item:hover {
+    border-color: #2563eb;
+    background: #f0f8ff;
 }

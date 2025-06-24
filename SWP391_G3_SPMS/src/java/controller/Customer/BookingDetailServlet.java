@@ -11,6 +11,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.time.LocalDate; // Thêm import này
 
 public class BookingDetailServlet extends HttpServlet {
 
@@ -46,10 +47,15 @@ public class BookingDetailServlet extends HttpServlet {
                 }
             }
 
+            // Kiểm tra có cho phép huỷ không (nếu ngày đặt < hôm nay thì không cho huỷ)
+            LocalDate today = LocalDate.now();
+            boolean canCancel = bookingDetail.getBookingDate().toLocalDate().isAfter(today);
+
             request.setAttribute("bookingDetail", bookingDetail);
             request.setAttribute("userFeedback", userFeedback);
             request.setAttribute("successMsg", request.getParameter("success"));
             request.setAttribute("errorMsg", request.getParameter("error"));
+            request.setAttribute("canCancel", canCancel); // Truyền biến này sang JSP
             request.getRequestDispatcher("BookingDetail.jsp").forward(request, response);
         } catch (SQLException e) {
             throw new ServletException(e);
@@ -73,6 +79,12 @@ public class BookingDetailServlet extends HttpServlet {
                 // Kiểm tra quyền huỷ
                 if (bookingDetail == null || bookingDetail.getUserId() != userId) {
                     response.sendRedirect("booking_history");
+                    return;
+                }
+                // Kiểm tra ngày đặt để không cho huỷ nếu đã quá hoặc bằng hôm nay
+                LocalDate today = LocalDate.now();
+                if (!bookingDetail.getBookingDate().toLocalDate().isAfter(today)) {
+                    response.sendRedirect("booking_detail?bookingId=" + bookingId + "&error=1");
                     return;
                 }
                 // Huỷ đặt bể
