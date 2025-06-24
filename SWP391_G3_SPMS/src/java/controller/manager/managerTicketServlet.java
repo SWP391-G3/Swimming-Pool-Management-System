@@ -98,9 +98,13 @@ public class managerTicketServlet extends HttpServlet {
         if ("2".equals(success)) {
             request.setAttribute("success", "Cập nhập vé thành công!");
         }
+        
+        if ("3".equals(success)) {
+            request.setAttribute("success", "Xóa vé thành công!");
+        }
 
         // Xử lý phân trang
-        int defaultPageSize = 5;
+        int defaultPageSize = 5;   // Hiển thị 5 dữ liệu
         int pageSize = defaultPageSize;
         if (pageSizeParam != null) {
             try {
@@ -112,7 +116,7 @@ public class managerTicketServlet extends HttpServlet {
                 pageSize = defaultPageSize;
             }
         }
-        int page = 1;  // Trang
+        int page = 1;  // Trang hiện tại
         try {
             if (pageParam != null) {
                 page = Integer.parseInt(pageParam);
@@ -135,11 +139,11 @@ public class managerTicketServlet extends HttpServlet {
                 endP++;
             }
 
-            // Lấy danh sách vé cho trang hiện tại
+            // lấy danh sách các loại vé (TicketType) thuộc về các hồ bơi trong một chi nhánh cụ thể, kèm theo các điều kiện lọc và phân trang. 
             List<TicketType> ticketList = dao.filterTicketsByBranch(branchId, poolIdRaw, status, keyword, offset, pageSize);
             List<PoolTicket> poolList = dao.getPoolsByBranch(branchId);
 
-            // Truyền dữ liệu xuống JSP
+            // Đẩy dữ liệu sang jsp
             request.setAttribute("ticketList", ticketList);
             request.setAttribute("poolList", poolList);
             request.setAttribute("keyword", keyword);

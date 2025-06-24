@@ -141,8 +141,8 @@ public class managerAddTicket extends HttpServlet {
         String error = null;
         try {
             TicketTypeDAO dao = new TicketTypeDAO();
-            if ("single".equals(ticketKind)) {
-                // Vé đơn
+            if ("single".equals(ticketKind)) {  // Vé đơn
+                
                 String typeCode = request.getParameter("typeCode");
                 String typeName = request.getParameter("typeName");
                 String description = request.getParameter("description");
@@ -153,17 +153,21 @@ public class managerAddTicket extends HttpServlet {
                     setErrorAndForward(request, response, branchId, "Vui lòng nhập đủ thông tin vé đơn!");
                     return;
                 }
+                
                 int ticketTypeId = dao.addTicketType(typeCode, typeName, description, basePrice, false);
                 dao.addTicketTypeToPools(ticketTypeId, poolIds, "active");
-            } else if ("combo".equals(ticketKind)) {
-                // Vé combo
+                
+            } else if ("combo".equals(ticketKind)) {   // Vé combo
+                
                 String typeCode = request.getParameter("typeCode");
                 String typeName = request.getParameter("typeName");
                 String description = request.getParameter("description");
                 double discountPercent = Double.parseDouble(Optional.ofNullable(request.getParameter("discountPercent")).orElse("0"));
                 double finalComboPrice = Double.parseDouble(Optional.ofNullable(request.getParameter("finalComboPrice")).orElse("0"));
+                
                 Map<Integer, Integer> comboMap = new HashMap<>();
                 List<TicketType> singleTypes = new TicketTypeDAO().getAllSingleTypes();
+                
                 for (TicketType single : singleTypes) {
                     String qtyStr = request.getParameter("comboQty_" + single.getId());
                     int qty = qtyStr == null ? 0 : Integer.parseInt(qtyStr);
@@ -181,7 +185,7 @@ public class managerAddTicket extends HttpServlet {
                 dao.addTicketTypeToPools(comboTypeId, poolIds, "active");
                 // Thêm vào Combo_Detail (combo_type_id, included_type_id, quantity)
                 dao.addComboDetail(comboTypeId, comboMap);
-                // Có thể lưu thêm ưu đãi nếu bạn thêm cột vào Ticket_Types
+                
             } else {
                 setErrorAndForward(request, response, branchId, "Loại vé không hợp lệ!");
                 return;

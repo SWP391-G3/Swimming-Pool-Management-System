@@ -321,6 +321,7 @@ public class TicketTypeDAO extends DBContext {
         }
     }
 
+    // Trả về danh sách của các hồ bơi đang áp dụng một loại vé 
     public List<String> getPoolIdsOfTicketType(int ticketTypeId) throws SQLException {
         List<String> poolIds = new ArrayList<>();
         String sql = "SELECT pool_id FROM Pool_Ticket_Types WHERE ticket_type_id = ?";
@@ -362,7 +363,7 @@ public class TicketTypeDAO extends DBContext {
     }
 }
 
-    // Phần Add thêm combo 
+    // Phần Add Ticket lấy vé đơn 
     public List<TicketType> getAllSingleTypes() throws SQLException {
         List<TicketType> list = new ArrayList<>();
         String sql = "SELECT ticket_type_id, type_code, type_name, base_price FROM Ticket_Types WHERE is_combo = 0";

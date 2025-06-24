@@ -69,8 +69,8 @@ public class managerEditTicket extends HttpServlet {
             }
             List<PoolTicket> poolList = dao.getPoolsByBranch(branchId);
             List<TicketType> singleTypes = dao.getAllSingleTypes();
-            List<String> selectedPoolIds = dao.getPoolIdsOfTicketType(ticket.getId());
-            String poolIdsString = "," + String.join(",", selectedPoolIds) + ",";
+            List<String> selectedPoolIds = dao.getPoolIdsOfTicketType(ticket.getId());  // Danh sách các hồ bơi đang áp dụng vé này
+            String poolIdsString = "," + String.join(",", selectedPoolIds) + ",";   // chuỗi để xử lý trong Javascript, JSTL
 
             // Nếu là combo, lấy thành phần combo
             Map<Integer, Integer> comboDetail = new HashMap<>();
@@ -79,18 +79,14 @@ public class managerEditTicket extends HttpServlet {
                 request.setAttribute("comboDetail", comboDetail);
             }
 
-            System.out.println("DEBUG: ticket=" + ticket);
-            System.out.println("DEBUG: poolList=" + poolList);
-            System.out.println("DEBUG: singleTypes=" + singleTypes);
-            System.out.println("DEBUG: selectedPoolIds=" + selectedPoolIds);
-            System.out.println("DEBUG: comboDetail=" + comboDetail);
+            
 
             request.setAttribute("ticket", ticket);
             request.setAttribute("poolList", poolList);
             request.setAttribute("poolIdsString", poolIdsString);
             request.setAttribute("singleTypes", singleTypes);
 
-            // Truyền lại filter nếu có
+            // Truyền lại filter 
             request.setAttribute("page", request.getParameter("page"));
             request.setAttribute("pageSize", request.getParameter("pageSize"));
             request.setAttribute("keyword", request.getParameter("keyword"));
@@ -98,6 +94,7 @@ public class managerEditTicket extends HttpServlet {
             request.setAttribute("poolId", request.getParameter("poolId"));
 
             request.getRequestDispatcher("managerEditTicket.jsp").forward(request, response);
+            
         } catch (Exception ex) {
 
             ex.printStackTrace();
@@ -266,11 +263,12 @@ public class managerEditTicket extends HttpServlet {
                     discountPercent = Double.parseDouble(discountPercentRaw);
                 } catch (Exception ignored) {
                 }
-                // Nếu bạn có cột discount_percent trong DB thì update thêm, nếu không thì bỏ qua
+               
                 dao.updateTicketType(id, typeName, description, basePrice, true, discountPercent);
-                // 2. Cập nhật thành phần combo (xóa cũ, thêm mới)
+                //  Cập nhật thành phần combo (xóa cũ, thêm mới)
                 Map<Integer, Integer> comboMap = new HashMap<>();
                 List<TicketType> singleTypesList = dao.getAllSingleTypes();
+                
                 for (TicketType single : singleTypesList) {
                     String qtyStr = request.getParameter("comboQty_" + single.getId());
                     int qty = qtyStr == null ? 0 : Integer.parseInt(qtyStr);

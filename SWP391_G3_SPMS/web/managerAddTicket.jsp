@@ -79,7 +79,9 @@
                         <div class="form-row">
                             <label for="description">Mô tả</label>
                             <textarea name="description" id="description" rows="2" maxlength="255">${fn:escapeXml(param.description)}</textarea>
+                            <div id="descErrorSingle" style="color:red; font-size: 0.9rem;"></div>
                         </div>
+
                         <div class="form-row multiselect">
                             <label for="poolIds">Áp dụng tại hồ bơi <span style="color:red">*</span></label>
                             <select name="poolIds" id="poolIds" multiple required style="height: 80px;">
@@ -103,7 +105,10 @@
                         <div class="form-row">
                             <label for="descriptionCombo">Mô tả</label>
                             <textarea name="description" id="descriptionCombo" rows="2" maxlength="255"></textarea>
+                            <div id="descErrorCombo" style="color:red; font-size: 0.9rem;"></div>
                         </div>
+
+
                         <div class="form-row multiselect">
                             <label for="poolIdsCombo">Áp dụng tại hồ bơi <span style="color:red">*</span></label>
                             <select name="poolIds" id="poolIdsCombo" multiple style="height: 80px;">
@@ -142,7 +147,7 @@
                         </div>
                         <div class="form-row">
                             <label>Ưu đãi (%)</label>
-                            <input type="number" id="discountPercent" name="discountPercent" min="0" max="100" value="0" onchange="updateComboPrice()" />%
+                            <input type="number" id="discountPercent" name="discountPercent" min="0" max="100" value="0" onchange="updateComboPrice()" />
                         </div>
                         <div class="form-row combo-summary">
                             <label>Giá gốc:</label>
@@ -162,16 +167,35 @@
                 </form>
             </div>
         </div>
+
         <script>
             function toggleCombo() {
                 var isCombo = document.querySelector('input[name="ticketKind"]:checked').value === 'combo';
                 document.getElementById('singleTicketSection').style.display = isCombo ? 'none' : '';
                 document.getElementById('comboTicketSection').style.display = isCombo ? '' : 'none';
             }
+            
+            function toggleCombo() {   // ẩn hiện vé đơn và combo tương ứng
+                var isCombo = document.querySelector('input[name="ticketKind"]:checked').value === 'combo';
+                document.getElementById('singleTicketSection').style.display = isCombo ? 'none' : '';
+                document.getElementById('comboTicketSection').style.display = isCombo ? '' : 'none';
+                // Disable các field không dùng để tránh lỗi khi submit
+                document.querySelectorAll('#singleTicketSection input, #singleTicketSection textarea, #singleTicketSection select').forEach(el => {
+                    el.disabled = isCombo;
+                });
+                document.querySelectorAll('#comboTicketSection input, #comboTicketSection textarea, #comboTicketSection select').forEach(el => {
+                    el.disabled = !isCombo;
+                });
+            }
+            
+            
+            
             function updateComboPrice() {
                 var base = 0;
+                //Khởi tạo biến base để lưu tổng giá gốc của combo (chưa áp dụng giảm giá)
+                
                 document.querySelectorAll("#comboTicketSection .combo-qty").forEach(function (input) {
-                    var qty = parseInt(input.value) || 0;
+                    var qty = parseInt(input.value) || 0; //  số lượng vé thành phần
                     var price = parseFloat(input.closest("tr").querySelector('input[name="comboPrice"]').value);
                     base += qty * price;
                 });
@@ -187,23 +211,73 @@
                     el.addEventListener("input", updateComboPrice);
                 });
             });
-
-            function toggleCombo() {
-                var isCombo = document.querySelector('input[name="ticketKind"]:checked').value === 'combo';
-                document.getElementById('singleTicketSection').style.display = isCombo ? 'none' : '';
-                document.getElementById('comboTicketSection').style.display = isCombo ? '' : 'none';
-
-                // Disable các field không dùng để tránh lỗi khi submit
-                document.querySelectorAll('#singleTicketSection input, #singleTicketSection textarea, #singleTicketSection select').forEach(el => {
-                    el.disabled = isCombo;
-                });
-                document.querySelectorAll('#comboTicketSection input, #comboTicketSection textarea, #comboTicketSection select').forEach(el => {
-                    el.disabled = !isCombo;
-                });
-            }
+            
             document.addEventListener('DOMContentLoaded', toggleCombo);
+        </script>
 
+
+
+
+
+        <script>
+            document.getElementById("addTicketForm").addEventListener("submit", function (e) {
+                const isCombo = document.querySelector('input[name="ticketKind"]:checked').value === 'combo';
+
+                // Kiểm tra hồ bơi
+                if (isCombo) {
+                    let hasValidQty = false;
+                    document.querySelectorAll(".combo-qty").forEach(input => {
+                        if (parseInt(input.value) > 0) {
+                            hasValidQty = true;
+                        }
+                    });
+                    if (!hasValidQty) {
+                        alert("Vui lòng chọn ít nhất 1 vé thành phần cho combo.");
+                        e.preventDefault();
+                        return;
+                    }
+
+                    const comboPools = document.getElementById("poolIdsCombo");
+                    if (comboPools.selectedOptions.length === 0) {
+                        alert("Vui lòng chọn ít nhất 1 hồ bơi áp dụng cho vé combo.");
+                        e.preventDefault();
+                        return;
+                    }
+                } else {
+                    const poolIds = document.getElementById("poolIds");
+                    if (poolIds.selectedOptions.length === 0) {
+                        alert("Vui lòng chọn ít nhất 1 hồ bơi áp dụng cho vé đơn.");
+                        e.preventDefault();
+                        return;
+                    }
+                }
+
+                // ✅ Validate mô tả
+                const desc = isCombo ? document.getElementById("descriptionCombo").value.trim()
+                        : document.getElementById("description").value.trim();
+                const descError = isCombo ? document.getElementById("descErrorCombo")
+                        : document.getElementById("descErrorSingle");
+                const descPattern = /[<>"]/;
+                descError.innerText = "";
+
+                if (desc.length > 200) {
+                    descError.innerText = "Mô tả không được vượt quá 200 ký tự.";
+                    e.preventDefault();
+                    return;
+                }
+
+                if (descPattern.test(desc)) {
+                    descError.innerText = "Mô tả không được chứa ký tự đặc biệt như <, > hoặc \".";
+                    e.preventDefault();
+                    return;
+                }
+            });
 
         </script>
+
+
+
+
+
     </body>
 </html>
