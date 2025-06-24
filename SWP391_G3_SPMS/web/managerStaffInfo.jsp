@@ -50,12 +50,11 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Ảnh</th>
                                 <th>Họ tên</th>
                                 <th>Email</th>
-                                <th>Điện thoại</th>
                                 <th>Chi nhánh</th>
                                 <th>Làm việc tại</th>         <!-- Thêm cột này -->
+                                <th>Tên Công việc</th>
                                 <th>Trạng thái</th>
                                 <th>Chức năng</th>
                             </tr>
@@ -64,12 +63,8 @@
                             <c:forEach var="staff" items="${staffList}">
                                 <tr>
                                     <td>${staff.userId}</td>
-                                    <td>
-                                        <img class="staff-avatar" src="${staff.images != null ? staff.images : 'default-avatar.png'}" alt="avatar">
-                                    </td>
                                     <td>${staff.fullName}</td>
                                     <td>${staff.email}</td>
-                                    <td>${staff.phone}</td>
                                     <td>${staff.branchName}</td>
                                     <td>
                                         <c:choose>
@@ -80,6 +75,9 @@
                                                 <span style="color:#aaa;">Chưa phân</span>
                                             </c:otherwise>
                                         </c:choose>
+                                    </td>
+                                    <td>
+                                        ${staff.typeName}
                                     </td>
                                     <td>
                                         <c:choose>
@@ -143,37 +141,37 @@
         <script>
 
             function showStaffDetail(userId) {
-    const modalBg = document.getElementById('staffDetailModalBg');
+                const modalBg = document.getElementById('staffDetailModalBg');
 
-    // Show loading spinner
-    document.getElementById('staffDetailContent').innerHTML = `
-        <div class="loading-spinner">
-            <div class="spinner"></div>
-            <p>Đang tải thông tin nhân viên...</p>
-        </div>
-    `;
+                // Show loading spinner
+                document.getElementById('staffDetailContent').innerHTML = `
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Đang tải thông tin nhân viên...</p>
+                </div>
+            `;
 
-    modalBg.classList.add('show');
+                modalBg.classList.add('show');
 
-    fetch('managerStaffDetail?userId=' + userId)
-        .then(res => res.text())
-        .then(html => {
-            document.getElementById('staffDetailContent').innerHTML = html;
-        })
-        .catch(() => {
-            document.getElementById('staffDetailContent').innerHTML = `
+                fetch('managerStaffDetail?userId=' + userId)
+                        .then(res => res.text())
+                        .then(html => {
+                            document.getElementById('staffDetailContent').innerHTML = html;
+                        })
+                        .catch(() => {
+                            document.getElementById('staffDetailContent').innerHTML = `
                 <div class="error-message">
                     <h3>Lỗi</h3>
                     <p>Không thể tải thông tin nhân viên. Vui lòng thử lại.</p>
                 </div>
             `;
-        });
-}
+                        });
+            }
 
-function closeStaffModal() {
-    const modalBg = document.getElementById('staffDetailModalBg');
-    modalBg.classList.remove('show');
-}
+            function closeStaffModal() {
+                const modalBg = document.getElementById('staffDetailModalBg');
+                modalBg.classList.remove('show');
+            }
 
 
         </script>

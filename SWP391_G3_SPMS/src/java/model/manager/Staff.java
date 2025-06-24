@@ -19,13 +19,14 @@ public class Staff {
     private int status;
     private String branchName; // tên chi nhánh
     private String poolName;   // tên hồ bơi (nếu cần)
+    private String typeName;
     private int branchId;
     
 
     public Staff() {
     }
 
-    public Staff(int userId, String fullName, String email, String phone, String images, int status, String branchName, String poolName, int branchId) {
+    public Staff(int userId, String fullName, String email, String phone, String images, int status, String branchName, String poolName, String typeName, int branchId) {
         this.userId = userId;
         this.fullName = fullName;
         this.email = email;
@@ -34,9 +35,12 @@ public class Staff {
         this.status = status;
         this.branchName = branchName;
         this.poolName = poolName;
+        this.typeName = typeName;
         this.branchId = branchId;
     }
 
+    
+    
     public int getUserId() {
         return userId;
     }
@@ -101,6 +105,14 @@ public class Staff {
         this.poolName = poolName;
     }
 
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
     public int getBranchId() {
         return branchId;
     }
@@ -109,10 +121,8 @@ public class Staff {
         this.branchId = branchId;
     }
 
-    @Override
-    public String toString() {
-        return "Staff{" + "userId=" + userId + ", fullName=" + fullName + ", email=" + email + ", phone=" + phone + ", images=" + images + ", status=" + status + ", branchName=" + branchName + ", poolName=" + poolName + ", branchId=" + branchId + '}';
-    }
+    
+
     
     
 }

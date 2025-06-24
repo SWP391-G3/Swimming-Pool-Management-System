@@ -56,13 +56,17 @@ public class StaffDAO extends DBContext {
     }
 
     public Staff getStaffById(int userId) {
-        String sql = "SELECT s.*, u.full_name, u.email, u.phone, u.images, u.status, b.branch_name, "
-                + "p.pool_name "
-                + "FROM Staffs s "
-                + "JOIN Users u ON s.user_id = u.user_id "
-                + "JOIN Branchs b ON s.branch_id = b.branch_id "
-                + "LEFT JOIN Pools p ON s.pool_id = p.pool_id "
-                + "WHERE s.user_id = ?";
+        String sql = """
+            SELECT s.*, u.full_name, u.email, u.phone, u.images, u.status, b.branch_name,
+                   p.pool_name, st.type_name
+            FROM Staffs s
+            JOIN Staff_Types st ON st.staff_type_id = s.staff_type_id
+            JOIN Users u ON s.user_id = u.user_id
+            JOIN Branchs b ON s.branch_id = b.branch_id
+            LEFT JOIN Pools p ON s.pool_id = p.pool_id
+            WHERE s.user_id = ?
+        """;
+
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
@@ -76,6 +80,7 @@ public class StaffDAO extends DBContext {
                 staff.setStatus(rs.getInt("status"));
                 staff.setBranchName(rs.getString("branch_name"));
                 staff.setPoolName(rs.getString("pool_name")); // lấy tên hồ bơi
+                staff.setTypeName(rs.getString("type_name"));
                 staff.setBranchId(rs.getInt("branch_id"));
                 return staff;
             }
@@ -89,12 +94,13 @@ public class StaffDAO extends DBContext {
             int managerId, String keyword, String status, String poolId, int offset, int limit
     ) throws SQLException {
         StringBuilder sql = new StringBuilder(
-                "SELECT u.user_id, u.full_name, u.email, u.phone, u.images, u.status, b.branch_name, b.branch_id, "
-                + "p.pool_id, p.pool_name "
-                + "FROM Staffs s "
-                + "JOIN Users u ON s.user_id = u.user_id "
-                + "JOIN Branchs b ON s.branch_id = b.branch_id "
-                + "LEFT JOIN Pools p ON s.pool_id = p.pool_id "
+                "SELECT u.user_id, u.full_name, u.email, u.phone, u.images, u.status, b.branch_name, b.branch_id, \n"
+                + "       p.pool_id, p.pool_name, st.type_name \n"
+                + "FROM Staffs s \n"
+                + "JOIN Staff_Types st ON s.staff_type_id = st.staff_type_id\n"
+                + "JOIN Users u ON s.user_id = u.user_id \n"
+                + "JOIN Branchs b ON s.branch_id = b.branch_id \n"
+                + "LEFT JOIN Pools p ON s.pool_id = p.pool_id \n"
                 + "WHERE b.manager_id = ?"
         );
         List<Object> params = new ArrayList<>();
@@ -136,6 +142,7 @@ public class StaffDAO extends DBContext {
             s.setBranchName(rs.getString("branch_name"));
             s.setBranchId(rs.getInt("branch_id"));
             s.setPoolName(rs.getString("pool_name")); // <<< Lấy tên bể bơi
+            s.setTypeName(rs.getString("type_name"));
             list.add(s);
         }
         return list;

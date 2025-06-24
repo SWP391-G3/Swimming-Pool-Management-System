@@ -1,4 +1,4 @@
-﻿--CREATE DATABASE PoolV1
+﻿--CREATE DATABASE PoolV2
 
 CREATE TABLE Roles (
     role_id INT IDENTITY(1,1) PRIMARY KEY,
@@ -403,4 +403,31 @@ ALTER TABLE Staffs ADD pool_id INT;
 
 ALTER TABLE Ticket_Types
 ADD created_at DATETIME DEFAULT GETDATE();
+
+
+
+
+
+--Huy gửi database của Staff
+ALTER TABLE Staffs ADD CONSTRAINT FK_Staffs_Pool FOREIGN KEY (pool_id) REFERENCES Pools(pool_id);
+
+-- bổ xung khi làm quản lý nhân viên dành cho admin
+ALTER TABLE Branchs ALTER COLUMN manager_id INT NULL;
+
+CREATE TABLE Staff_Types (
+    staff_type_id INT IDENTITY(1,1) PRIMARY KEY,
+    type_name NVARCHAR(100) NOT NULL UNIQUE, -- VD: Kỹ thuật, Xoát vé, Kiểm tra thiết bị, Hỗ trợ dịch vụ
+    description NVARCHAR(255)
+);
+
+
+ALTER TABLE Staffs
+ADD staff_type_id INT;
+
+ALTER TABLE Staffs
+ADD CONSTRAINT FK_Staffs_StaffType FOREIGN KEY (staff_type_id) REFERENCES Staff_Types(staff_type_id);
+
+
+ALTER TABLE Ticket_Types
+ADD discount_percent DECIMAL DEFAULT 0;
 

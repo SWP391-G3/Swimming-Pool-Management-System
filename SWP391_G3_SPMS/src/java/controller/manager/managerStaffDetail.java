@@ -74,6 +74,7 @@ public class managerStaffDetail extends HttpServlet {
         out.println("<div><strong>Điện thoại:</strong> " + staff.getPhone() + "</div>");
         out.println("<div><strong>Chi nhánh:</strong> " + staff.getBranchName() + "</div>");
         out.println("<div><strong>Hồ bơi:</strong> " + (staff.getPoolName() != null ? staff.getPoolName() : "Chưa phân vào hồ bơi") + "</div>");
+        out.println("<div><strong>Tên công việc:</strong> " + staff.getTypeName() + "</div>");
         out.println("<div><strong>Trạng thái:</strong> " + (staff.getStatus() == 1 ? "Đang hoạt động" : "Đã khóa") + "</div>");
         // Thêm các thông tin cần thiết khác ở đây
         out.println("</div>");
