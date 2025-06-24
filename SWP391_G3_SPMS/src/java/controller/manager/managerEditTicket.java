@@ -259,7 +259,7 @@ public class managerEditTicket extends HttpServlet {
         try {
             // 1. Cập nhật Ticket_Types
             if (!isCombo) {
-                dao.updateTicketType(id, typeName, description, basePrice, false);
+                dao.updateTicketType(id, typeName, description, basePrice, false,0);
             } else {
                 double discountPercent = 0;
                 try {
@@ -267,7 +267,7 @@ public class managerEditTicket extends HttpServlet {
                 } catch (Exception ignored) {
                 }
                 // Nếu bạn có cột discount_percent trong DB thì update thêm, nếu không thì bỏ qua
-                dao.updateTicketType(id, typeName, description, basePrice, true);
+                dao.updateTicketType(id, typeName, description, basePrice, true, discountPercent);
                 // 2. Cập nhật thành phần combo (xóa cũ, thêm mới)
                 Map<Integer, Integer> comboMap = new HashMap<>();
                 List<TicketType> singleTypesList = dao.getAllSingleTypes();

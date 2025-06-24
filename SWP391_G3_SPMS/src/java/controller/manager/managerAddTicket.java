@@ -177,7 +177,7 @@ public class managerAddTicket extends HttpServlet {
                     setErrorAndForward(request, response, branchId, "Vui lòng nhập đủ thông tin combo!");
                     return;
                 }
-                int comboTypeId = dao.addTicketType(typeCode, typeName, description, finalComboPrice, true);
+                int comboTypeId = dao.addTicketType(typeCode, typeName, description, finalComboPrice, true, discountPercent);
                 dao.addTicketTypeToPools(comboTypeId, poolIds, "active");
                 // Thêm vào Combo_Detail (combo_type_id, included_type_id, quantity)
                 dao.addComboDetail(comboTypeId, comboMap);

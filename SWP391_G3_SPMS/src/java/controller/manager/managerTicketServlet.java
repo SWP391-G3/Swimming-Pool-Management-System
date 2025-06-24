@@ -87,11 +87,16 @@ public class managerTicketServlet extends HttpServlet {
         if (error != null && !error.isEmpty()) {
             request.setAttribute("error", error);
         }
+        
         // Xử lý filter, lấy ticketList, forward về managerTicket.jsp như bình thường
 
         String success = request.getParameter("success");
         if ("1".equals(success)) {
             request.setAttribute("success", "Thêm loại vé thành công!");
+        }
+        
+        if ("2".equals(success)) {
+            request.setAttribute("success", "Cập nhập vé thành công!");
         }
 
         // Xử lý phân trang
@@ -123,7 +128,7 @@ public class managerTicketServlet extends HttpServlet {
         try {
             TicketTypeDAO dao = new TicketTypeDAO();
 
-            // Đếm tổng số vé phù hợp filter để tính tổng số trang
+            //Đếm số lượng loại vé phù hợp với bộ lọc được chọn (chi nhánh, hồ bơi, trạng thái, từ khóa)
             int total = dao.countTicketsByBranch(branchId, poolIdRaw, status, keyword);
             int endP = total / pageSize;
             if (total % pageSize != 0) {

@@ -26,11 +26,8 @@
     </head>
 
     <body>
- 
-        
-        
-        
-        
+
+
 
         <c:if test="${not empty error}">
             <div class="error-message" style="color:red; background:#fff0f0; padding:10px;">

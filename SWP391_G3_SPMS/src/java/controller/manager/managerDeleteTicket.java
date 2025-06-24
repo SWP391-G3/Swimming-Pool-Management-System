@@ -53,6 +53,7 @@ public class managerDeleteTicket extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser == null) {
@@ -71,7 +72,7 @@ public class managerDeleteTicket extends HttpServlet {
             // Validate poolId
             if (idRaw == null || idRaw.isEmpty() || poolIdRaw == null || poolIdRaw.isEmpty() || "all".equals(poolIdRaw)) {
                 // REDIRECT với error và filter!
-                response.sendRedirect("managerTicketServlet?error=" + URLEncoder.encode("Vui lòng chọn hồ bơi cụ thể để xóa vé!", "UTF-8")
+                response.sendRedirect("managerTicketServlet?error=" + URLEncoder.encode("Vui lòng vào danh sách vé hồ bơi cụ thể để xóa vé!", "UTF-8")
                         + "&keyword=" + (keyword == null ? "" : URLEncoder.encode(keyword, "UTF-8"))
                         + "&poolId=" + (poolIdRaw == null ? "" : poolIdRaw)
                         + "&status=" + (status == null ? "" : status)
@@ -88,7 +89,7 @@ public class managerDeleteTicket extends HttpServlet {
             // Lấy trạng thái vé ở pool này
             String ticketStatus = dao.getTicketStatus(id, poolIdInt); // "active" hoặc "inactive"
             if ("active".equalsIgnoreCase(ticketStatus)) {
-                response.sendRedirect("managerTicketServlet?error=" + URLEncoder.encode("Chỉ được xóa vé khi trạng thái là 'Ngừng bán' (inactive)!", "UTF-8")
+                response.sendRedirect("managerTicketServlet?error=" + URLEncoder.encode("Chỉ được xóa vé khi trạng thái là 'Ngừng bán'!", "UTF-8")
                         + "&keyword=" + (keyword == null ? "" : URLEncoder.encode(keyword, "UTF-8"))
                         + "&poolId=" + (poolIdRaw == null ? "" : poolIdRaw)
                         + "&status=" + (status == null ? "" : status)

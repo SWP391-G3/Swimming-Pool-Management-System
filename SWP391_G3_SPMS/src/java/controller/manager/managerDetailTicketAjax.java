@@ -12,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Map;
 import model.manager.TicketType;
 
 /**
@@ -62,14 +63,6 @@ public class managerDetailTicketAjax extends HttpServlet {
         processRequest(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -94,6 +87,42 @@ public class managerDetailTicketAjax extends HttpServlet {
             out.println("<tr><th style='text-align:left;'>Giá vé:</th><td>" + String.format("%,.0f₫", ticket.getBasePrice()) + "</td></tr>");
             out.println("<tr><th style='text-align:left;'>Mô tả:</th><td>" + (ticket.getDescription() == null ? "" : ticket.getDescription()) + "</td></tr>");
             out.println("<tr><th style='text-align:left;'>Combo:</th><td>" + (ticket.isIsCombo() ? "Có" : "Không") + "</td></tr>");
+            // Nếu là combo thì hiển thị chi tiết thành phần combo
+            if (ticket.isIsCombo()) {
+                Map<Integer, Integer> comboDetail = dao.getComboDetail(id);
+                double discountPercent = ticket.getDiscountPercent();
+                if (comboDetail != null && !comboDetail.isEmpty()) {
+                    out.println("<tr><th style='text-align:left;vertical-align:top;'>Thành phần combo:</th><td>");
+                    out.println("<table style='width:100%;border:1px solid #eee;background:#fafbfc;margin-bottom:8px;'>");
+                    out.println("<tr><th style='text-align:left'>Tên vé</th><th style='text-align:right'>Đơn giá</th><th style='text-align:right'>Số lượng</th><th style='text-align:right'>Thành tiền</th></tr>");
+                    double total = 0;
+                    for (Map.Entry<Integer, Integer> entry : comboDetail.entrySet()) {
+                        int singleId = entry.getKey();
+                        int qty = entry.getValue();
+                        TicketType single = dao.getTicketTypeById(singleId);
+                        if (single == null) {
+                            continue;
+                        }
+                        double sub = single.getBasePrice() * qty;
+                        total += sub;
+                        out.println("<tr>");
+                        out.println("<td>" + single.getName() + "</td>");
+                        out.println("<td style='text-align:right'>" + String.format("%,.0f₫", single.getBasePrice()) + "</td>");
+                        out.println("<td style='text-align:right'>" + qty + "</td>");
+                        out.println("<td style='text-align:right'>" + String.format("%,.0f₫", sub) + "</td>");
+                        out.println("</tr>");
+                    }
+                    out.println("<tr><td colspan='3' style='text-align:right;font-weight:bold;'>Tổng:</td><td style='text-align:right;font-weight:bold;'>" + String.format("%,.0f₫", total) + "</td></tr>");
+                    out.println("</table>");
+                    // Hiển thị discount
+                    out.println("<div style='margin:5px 0;'>Ưu đãi: <b>" + discountPercent + "%</b></div>");
+                    double finalPrice = total * (1 - discountPercent / 100.0);
+                    out.println("<div style='margin:5px 0;'>Giá sau ưu đãi: <b style='color:#d9534f;'>" + String.format("%,.0f₫", finalPrice) + "</b></div>");
+                    out.println("</td></tr>");
+                } else {
+                    out.println("<tr><th style='text-align:left;vertical-align:top;'>Thành phần combo:</th><td>Không có thành phần.</td></tr>");
+                }
+            }
             out.println("<tr><th style='text-align:left;'>Áp dụng tại:</th><td>");
             for (String pool : ticket.getPools()) {
                 out.print("<span class='tag' style='background:#4dc3ff;color:#fff;border-radius:8px;padding:4px 10px;margin:2px 6px 2px 0;display:inline-block;'>" + pool + "</span>");
