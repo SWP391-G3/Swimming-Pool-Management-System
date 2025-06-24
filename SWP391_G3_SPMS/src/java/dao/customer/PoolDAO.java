@@ -26,6 +26,29 @@ public class PoolDAO extends DBContext {
 
     private List<Pool> list;
 
+    public Pool getPoolByID(int pool_id) {
+        String sql = "select * from Pools where pool_id = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, pool_id);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                Date createdDate = rs.getDate(10);
+                Date updatedDate = rs.getDate(11);
+
+                LocalDate createdAt = (createdDate != null) ? createdDate.toLocalDate() : null;
+                LocalDate updatedAt = (updatedDate != null) ? updatedDate.toLocalDate() : null;
+                return new Pool(rs.getInt(1), rs.getString(2), rs.getString(3),
+                        rs.getString(4), rs.getInt(5), rs.getTime(6).toLocalTime(), rs.getTime(7).toLocalTime(),
+                        rs.getBoolean(8), rs.getString(9), createdAt, updatedAt,
+                        rs.getString(12), rs.getInt(13));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public int getTotalRecord() {
         String sql = "SELECT COUNT(*) FROM Pools";
         int totalRecord = 0;
@@ -132,29 +155,6 @@ public class PoolDAO extends DBContext {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public Pool getPoolByID(int pool_id) {
-        String sql = "select * from Pools where pool_id = ?";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, pool_id);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                Date createdDate = rs.getDate(10);
-                Date updatedDate = rs.getDate(11);
-
-                LocalDate createdAt = (createdDate != null) ? createdDate.toLocalDate() : null;
-                LocalDate updatedAt = (updatedDate != null) ? updatedDate.toLocalDate() : null;
-                return new Pool(rs.getInt(1), rs.getString(2), rs.getString(3),
-                        rs.getString(4), rs.getInt(5), rs.getTime(6).toLocalTime(), rs.getTime(7).toLocalTime(),
-                        rs.getBoolean(8), rs.getString(9), createdAt, updatedAt,
-                        rs.getString(12), rs.getInt(13));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public void updatePool(Pool p) {
@@ -311,6 +311,22 @@ public class PoolDAO extends DBContext {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public int getBranchIdByPoolId(int poolId) {
+        int branchId = 0;
+        String sql = "SELECT branch_id FROM Pools WHERE pool_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, poolId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                branchId = rs.getInt("branch_id");
+            }
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return branchId;
     }
 
 }

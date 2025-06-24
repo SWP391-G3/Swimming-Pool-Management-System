@@ -50,7 +50,7 @@
                         <div class="h-20 w-20">
                             <img src="images/logoPool.png" alt="Logo" class="h-full w-full object-contain" />
                         </div>
-                        <a href="home" class="text-3xl md:text-5xl font-bold text-[#33CCFF]">PoolHub</a>
+                        <a href="customerHome" class="text-3xl md:text-5xl font-bold text-[#33CCFF]">PoolHub</a>
                     </div>
 
 
@@ -67,7 +67,7 @@
                     <nav class="hidden md:flex space-x-6 text-base font-medium items-center">
                         <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Trang Chủ</a>
                         <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Giới Thiệu</a>
-                        <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Bể Bơi</a>
+                        <a href="booking?service=showBookingPage&poolId=2" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Bể Bơi</a>
                         <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Đánh Giá</a>
                         <a href="contact" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Liên Hệ</a>
                         <a href="my_account" class="flex items-center space-x-2 text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">
@@ -80,10 +80,6 @@
                 </div>
             </div>
         </header>
-
-
-
-
         <!-- end header -->
 
         <!-- banner -->

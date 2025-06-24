@@ -18,6 +18,102 @@ public class UserDAO extends DBContext {
 
     public List<User> list;
 
+    public User getUserByID(int userId) {
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        String sql = "SELECT * FROM Users WHERE user_id = ?";
+        try {
+            stm = connection.prepareStatement(sql);
+            stm.setInt(1, userId);
+            rs = stm.executeQuery();
+            if (rs.next()) {
+                User u = new User();
+                u.setUser_id(rs.getInt("user_id"));
+                u.setUsername(rs.getString("username"));
+                u.setPassword(rs.getString("password"));
+                u.setFull_name(rs.getString("full_name"));
+                u.setEmail(rs.getString("email"));
+                u.setPhone(rs.getString("phone"));
+                u.setAddress(rs.getString("address"));
+                u.setRole_id(rs.getInt("role_id"));
+                u.setStatus(rs.getBoolean("status"));
+                u.setDob(rs.getDate("dob"));
+                u.setGender(rs.getString("gender"));
+                u.setImages(rs.getString("images"));
+
+                // Xử lý an toàn created_at
+                java.sql.Date createdDate = rs.getDate("created_at");
+                if (createdDate != null) {
+                    u.setCreate_at(createdDate.toLocalDate());
+                } else {
+                    u.setCreate_at(null);
+                }
+
+                // Xử lý an toàn updated_at
+                java.sql.Date updatedDate = rs.getDate("updated_at");
+                if (updatedDate != null) {
+                    u.setUpdate_at(updatedDate.toLocalDate());
+                } else {
+                    u.setUpdate_at(null);
+                }
+
+                return u;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public Vector<User> getCustomerByName(String name) {
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        Vector<User> customers = new Vector<>();
+        String sql = "SELECT * FROM Users WHERE role_id = 4 AND full_name LIKE ?";
+        try {
+            stm = connection.prepareStatement(sql);
+            stm.setString(1, "%" + name + "%");
+            rs = stm.executeQuery();
+            while (rs.next()) {
+                User u = new User();
+                u.setUser_id(rs.getInt("user_id"));
+                u.setUsername(rs.getString("username"));
+                u.setPassword(rs.getString("password"));
+                u.setFull_name(rs.getString("full_name"));
+                u.setEmail(rs.getString("email"));
+                u.setPhone(rs.getString("phone"));
+                u.setAddress(rs.getString("address"));
+                u.setRole_id(rs.getInt("role_id"));
+                u.setStatus(rs.getBoolean("status"));
+                u.setDob(rs.getDate("dob"));
+                u.setGender(rs.getString("gender"));
+                u.setImages(rs.getString("images"));
+
+                // Xử lý an toàn created_at
+                java.sql.Date createdDate = rs.getDate("created_at");
+                if (createdDate != null) {
+                    u.setCreate_at(createdDate.toLocalDate());
+                } else {
+                    u.setCreate_at(null);
+                }
+
+                // Xử lý an toàn updated_at
+                java.sql.Date updatedDate = rs.getDate("updated_at");
+                if (updatedDate != null) {
+                    u.setUpdate_at(updatedDate.toLocalDate());
+                } else {
+                    u.setUpdate_at(null);
+                }
+
+                customers.add(u);
+            }
+            return customers;
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
     public User getUserByEmail(String email) {
         String sql = "SELECT * FROM Users WHERE email = ?";
         try (PreparedStatement st = connection.prepareStatement(sql)) {
@@ -260,53 +356,6 @@ public class UserDAO extends DBContext {
         return null;
     }
 
-    public User getUserByID(int userId) {
-        PreparedStatement stm = null;
-        ResultSet rs = null;
-        String sql = "SELECT * FROM Users WHERE user_id = ?";
-        try {
-            stm = connection.prepareStatement(sql);
-            stm.setInt(1, userId);
-            rs = stm.executeQuery();
-            if (rs.next()) {
-                User u = new User();
-                u.setUser_id(rs.getInt("user_id"));
-                u.setUsername(rs.getString("username"));
-                u.setPassword(rs.getString("password"));
-                u.setFull_name(rs.getString("full_name"));
-                u.setEmail(rs.getString("email"));
-                u.setPhone(rs.getString("phone"));
-                u.setAddress(rs.getString("address"));
-                u.setRole_id(rs.getInt("role_id"));
-                u.setStatus(rs.getBoolean("status"));
-                u.setDob(rs.getDate("dob"));
-                u.setGender(rs.getString("gender"));
-                u.setImages(rs.getString("images"));
-
-                // Xử lý an toàn created_at
-                java.sql.Date createdDate = rs.getDate("created_at");
-                if (createdDate != null) {
-                    u.setCreate_at(createdDate.toLocalDate());
-                } else {
-                    u.setCreate_at(null);
-                }
-
-                // Xử lý an toàn updated_at
-                java.sql.Date updatedDate = rs.getDate("updated_at");
-                if (updatedDate != null) {
-                    u.setUpdate_at(updatedDate.toLocalDate());
-                } else {
-                    u.setUpdate_at(null);
-                }
-
-                return u;
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-
     public Vector<User> getUserByName(String name) {
         PreparedStatement stm = null;
         ResultSet rs = null;
@@ -404,55 +453,6 @@ public class UserDAO extends DBContext {
         return null;
     }
 
-    public Vector<User> getCustomerByName(String name) {
-        PreparedStatement stm = null;
-        ResultSet rs = null;
-        Vector<User> customers = new Vector<>();
-        String sql = "SELECT * FROM Users WHERE role_id = 4 AND full_name LIKE ?";
-        try {
-            stm = connection.prepareStatement(sql);
-            stm.setString(1, "%" + name + "%");
-            rs = stm.executeQuery();
-            while (rs.next()) {
-                User u = new User();
-                u.setUser_id(rs.getInt("user_id"));
-                u.setUsername(rs.getString("username"));
-                u.setPassword(rs.getString("password"));
-                u.setFull_name(rs.getString("full_name"));
-                u.setEmail(rs.getString("email"));
-                u.setPhone(rs.getString("phone"));
-                u.setAddress(rs.getString("address"));
-                u.setRole_id(rs.getInt("role_id"));
-                u.setStatus(rs.getBoolean("status"));
-                u.setDob(rs.getDate("dob"));
-                u.setGender(rs.getString("gender"));
-                u.setImages(rs.getString("images"));
-
-                // Xử lý an toàn created_at
-                java.sql.Date createdDate = rs.getDate("created_at");
-                if (createdDate != null) {
-                    u.setCreate_at(createdDate.toLocalDate());
-                } else {
-                    u.setCreate_at(null);
-                }
-
-                // Xử lý an toàn updated_at
-                java.sql.Date updatedDate = rs.getDate("updated_at");
-                if (updatedDate != null) {
-                    u.setUpdate_at(updatedDate.toLocalDate());
-                } else {
-                    u.setUpdate_at(null);
-                }
-
-                customers.add(u);
-            }
-            return customers;
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-
     public void updateUser(User user) {
         String sql = "UPDATE Users SET full_name = ?, email = ?, phone = ?, address = ?, dob = ?, gender = ?, images = ?, updated_at = GETDATE() WHERE user_id = ?";
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
@@ -512,9 +512,6 @@ public class UserDAO extends DBContext {
         }
         return false;
     }
-
-
-
 
     public boolean updateUserInfo(int userId, String fullName, String email, String phone, String address) {
         try (

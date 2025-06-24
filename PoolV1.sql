@@ -106,7 +106,7 @@ CREATE TABLE Booking (
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
     slot_count INT NOT NULL CHECK (slot_count > 0),
-    booking_status NVARCHAR(20) NOT NULL DEFAULT 'pending', --pending/comfirmed/canceled
+    booking_status NVARCHAR(20) NOT NULL DEFAULT 'pending', --pending/comfirmed/c
     created_at DATETIME NOT NULL DEFAULT GETDATE(),
     updated_at DATETIME,
     CONSTRAINT FK_Booking_User FOREIGN KEY (user_id) REFERENCES Users(user_id),
@@ -188,6 +188,15 @@ CREATE TABLE Combo_Detail (
     FOREIGN KEY (included_type_id) REFERENCES Ticket_Types(ticket_type_id)
 );
 
+--Tạo bảng Pool_Ticket_Type (Quản lý ticket theo bể)
+CREATE TABLE Pool_Ticket_Type (
+    pool_id INT NOT NULL,
+    ticket_type_id INT NOT NULL,
+    PRIMARY KEY (pool_id, ticket_type_id),
+    CONSTRAINT FK_Pool_Ticket_Type_Pool FOREIGN KEY (pool_id) REFERENCES Pools(pool_id),
+    CONSTRAINT FK_Pool_Ticket_Types FOREIGN KEY (ticket_type_id) REFERENCES Ticket_Types(ticket_type_id)
+);
+
 -- Tạo bảng Ticket
 CREATE TABLE Ticket (
     ticket_id INT IDENTITY(1,1) PRIMARY KEY,
@@ -201,6 +210,7 @@ CREATE TABLE Ticket (
     CONSTRAINT FK_Ticket_IssuedBy FOREIGN KEY (issued_by) REFERENCES Users(user_id),
     CONSTRAINT FK_Ticket_TicketType FOREIGN KEY (ticket_type_id) REFERENCES Ticket_Types(ticket_type_id)
 );
+
 -- Bảng Payment_Ticket
 CREATE TABLE Payment_Ticket (
     payment_ticket_id INT IDENTITY(1,1) PRIMARY KEY,
