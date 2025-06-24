@@ -190,7 +190,7 @@
                                 value="${isEdit ? fn:escapeXml(poolService.serviceName) : ''}"
                             required
                             maxlength="100"
-                            title="Tên dịch vụ không được chứa ký tự đặc biệt!"/>
+                            title="Tên dịch vụ không được chứa ký tự đặc biệt hoặc khoảng trắng!"/>
                     </div>
 
                     <!-- Row: Giá & Số lượng -->
@@ -239,24 +239,32 @@
                 imgPreview.style.display = 'flex';
             }
         </script>
-        
-    <script>
-    document.querySelector("form").addEventListener("submit", function(e) {
-        const nameInput = document.getElementById("service_name");
-        const name = nameInput.value.trim();
+        <script>
+            document.querySelector("form").addEventListener("submit", function (e) {
+                const nameInput = document.getElementById("service_name");
+                const name = nameInput.value;
+                const trimmedName = name.trim();
 
-        // Regex đầy đủ: cho chữ cái, số, khoảng trắng, dấu tiếng Việt, và - _ , . ( )
-        const regex = /^[a-zA-Z0-9À-Ỹà-ỹđĐ\s\-_,.()]+$/;
+                // ✅ Cho phép chữ có dấu, số, khoảng trắng (không ký tự đặc biệt)
+                const regex = /^[a-zA-ZÀ-ỹĐđ0-9 ]+$/;
 
-        if (!regex.test(name)) {
-            nameInput.setCustomValidity("Tên dịch vụ không được chứa ký tự đặc biệt!");
-            nameInput.reportValidity();
-            e.preventDefault();
-        } else {
-            nameInput.setCustomValidity("");
-        }
-    });
-</script>
+                nameInput.setCustomValidity(""); // reset
+
+                if (trimmedName === "") {
+                    nameInput.setCustomValidity("Tên dịch vụ không được để trống hoặc chỉ chứa khoảng trắng!");
+                    nameInput.reportValidity();
+                    e.preventDefault();
+                } else if (!regex.test(name)) {
+                    nameInput.setCustomValidity("Tên dịch vụ chỉ được chứa chữ cái, số và không chứa ký tự đặc biệt!");
+                    nameInput.reportValidity();
+                    e.preventDefault();
+                }
+            });
+        </script>
+
+
+
+
 
 
 

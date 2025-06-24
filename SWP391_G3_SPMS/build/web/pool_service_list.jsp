@@ -174,8 +174,16 @@
                 cursor: pointer;
                 font-weight: 500;
             }
+
+            .btn-delete:disabled {
+                background: #f0f0f0;
+                color: #999;
+                cursor: not-allowed;
+            }
         </style>
     </head>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <body>
         <div class="layout">
             <%@ include file="../managerSidebar.jsp" %>
@@ -238,14 +246,21 @@
                                                 <c:when test="${ps.serviceStatus eq 'available'}">
                                                     <span class="status-badge status-active">Hoạt động</span>
                                                 </c:when>
+                                                <c:when test="${ps.serviceStatus eq 'maintenance'}">
+                                                    <span class="status-badge" style="background:#f9a825;">Bảo trì</span>
+                                                </c:when>
                                                 <c:otherwise>
                                                     <span class="status-badge status-inactive">Ngưng</span>
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>
+
                                         <td style="white-space:nowrap;">
                                             <button class="btn-edit" onclick="event.stopPropagation(); window.location.href = 'pool-service?action=edit&id=${ps.poolServiceId}'">Chỉnh sửa</button>
-                                            <button class="btn-delete" onclick="event.stopPropagation(); deleteService(${ps.poolServiceId})">Xóa</button>
+                                            <button class="btn-delete"
+                                                    onclick="event.stopPropagation(); deleteService(${ps.poolServiceId}, '${ps.serviceStatus}')">
+                                                Xóa
+                                            </button>
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -286,27 +301,69 @@
                 </div>
             </div>
         </div>
+
+
+        <c:if test="${not empty sessionScope.errorMessage}">
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                                                        Swal.fire({
+                                                            icon: 'error',
+                                                            title: 'Lỗi',
+                                                            text: '${sessionScope.errorMessage}',
+                                                            confirmButtonText: 'Đã hiểu'
+                                                        });
+            </script>
+            <c:remove var="errorMessage" scope="session"/>
+        </c:if>
         <script>
-            function deleteService(id) {
-                if (confirm('Xác nhận xóa dịch vụ?')) {
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = 'pool-service';
+            function deleteService(id, status) {
+                if (status === 'available' || status === 'maintenance') {
+                    let reasonText = status === 'available' ? 'đang hoạt động' : 'đang bảo trì';
 
-                    const actionInput = document.createElement('input');
-                    actionInput.name = 'action';
-                    actionInput.value = 'delete';
-                    form.appendChild(actionInput);
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Không thể xóa dịch vụ ' + reasonText,
+                        text: 'Vui lòng ngưng dịch vụ trước khi xóa.',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#7c4dff'
+                    });
 
-                    const idInput = document.createElement('input');
-                    idInput.name = 'id';
-                    idInput.value = id;
-                    form.appendChild(idInput);
-
-                    document.body.appendChild(form);
-                    form.submit();
+                    return; // Dừng lại, không thực hiện xóa
                 }
+
+                // Nếu status là "unavailable", tiếp tục cho phép xóa
+                Swal.fire({
+                    title: 'Xác nhận xóa dịch vụ?',
+                    text: 'Bạn sẽ không thể hoàn tác thao tác này!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Xóa',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = 'pool-service';
+
+                        const actionInput = document.createElement('input');
+                        actionInput.name = 'action';
+                        actionInput.value = 'delete';
+                        form.appendChild(actionInput);
+
+                        const idInput = document.createElement('input');
+                        idInput.name = 'id';
+                        idInput.value = id;
+                        form.appendChild(idInput);
+
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
+                });
             }
+
         </script>
+
     </body>
 </html>

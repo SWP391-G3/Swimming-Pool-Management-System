@@ -225,6 +225,7 @@ public class PoolServiceServlet extends HttpServlet {
                     response.sendRedirect("pool-service");
                     return;
                 }
+
                 String serviceName = request.getParameter("service_name");
                 String description = request.getParameter("description");
                 double price = Double.parseDouble(request.getParameter("price"));
@@ -247,14 +248,25 @@ public class PoolServiceServlet extends HttpServlet {
                     ps.setPoolServiceId(Integer.parseInt(request.getParameter("pool_service_id")));
                     dao.update(ps);
                 }
+
                 response.sendRedirect("pool-service");
+                return;
             } else if ("delete".equals(action)) {
                 int id = Integer.parseInt(request.getParameter("id"));
                 PoolService ps = dao.getById(id);
+
                 if (ps != null && poolIds.contains(ps.getPoolId())) {
-                    dao.delete(id);
+                    if ("unavailable".equalsIgnoreCase(ps.getServiceStatus())) {
+                        dao.delete(id);
+                    } else {
+                        session.setAttribute("errorMessage", "Không thể xóa dịch vụ đang hoạt động. Vui lòng ngưng trước khi xóa.");
+                    }
+                } else {
+                    session.setAttribute("errorMessage", "Dịch vụ không hợp lệ hoặc bạn không có quyền xóa.");
                 }
+
                 response.sendRedirect("pool-service");
+                return;
             }
         } catch (SQLException | NumberFormatException e) {
             e.printStackTrace();

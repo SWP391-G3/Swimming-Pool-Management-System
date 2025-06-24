@@ -92,7 +92,7 @@ public class ResetPasswordServlet extends HttpServlet {
         }
 
         if (expectedOtp.equals(userInputOtp)) {
-            session.setAttribute("message", "Mã OTP chính xác. Vui lòng đặt lại mật khẩu.");
+            session.setAttribute("message", "Hoàn tất mã OTP.Vui lòng đặt lại mật khẩu.");
             response.sendRedirect("ResetPassword.jsp?step=newpass");
         } else {
             session.setAttribute("error", "Mã OTP không chính xác.");
