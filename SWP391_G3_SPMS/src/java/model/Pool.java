@@ -27,6 +27,11 @@ public class Pool {
     private String pool_description;
     private int branch_id;
 
+    public Pool() {
+    }
+    
+    
+
     public Pool(int pool_id, String pool_name, String pool_road, String pool_address, int max_slot, LocalTime open_time, LocalTime close_time, boolean pool_status, String pool_image, LocalDate created_at, LocalDate updated_at, String pool_description, int branch_id) {
         this.pool_id = pool_id;
         this.pool_name = pool_name;

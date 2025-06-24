@@ -105,15 +105,6 @@ public class PoolDAO extends DBContext {
         return list;
     }
 
-    public static void main(String[] args) {
-        PoolDAO dao = new PoolDAO();
-        List<Pool> list = new ArrayList<>();
-        list = dao.getPoolByPage(0, 4);
-        for (Pool pool : list) {
-            System.out.println(pool);
-        }
-    }
-
     public void insertPool(Pool pool) {
         String sql = "INSERT INTO Pools (pool_name, pool_road, pool_address, max_slot, open_time, close_time,created_at,pool_image,branch_id,pool_description) VALUES (?,?,?,?,?,?,?,?,?,?)";
         try {
@@ -313,4 +304,36 @@ public class PoolDAO extends DBContext {
         return list;
     }
 
+    public List<Pool> getPoolsByBranchId(int branch_id) {
+        list = new ArrayList<>();
+        String sql = "SELECT * FROM Pools WHERE branch_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, branch_id);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Date createdDate = rs.getDate(10);
+                Date updatedDate = rs.getDate(11);
+
+                LocalDate createdAt = (createdDate != null) ? createdDate.toLocalDate() : null;
+                LocalDate updatedAt = (updatedDate != null) ? updatedDate.toLocalDate() : null;
+                list.add(new Pool(rs.getInt(1), rs.getString(2), rs.getString(3),
+                        rs.getString(4), rs.getInt(5), rs.getTime(6).toLocalTime(), rs.getTime(7).toLocalTime(),
+                        rs.getBoolean(8), rs.getString(9), createdAt, updatedAt,
+                        rs.getString(12), rs.getInt(13)));
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        PoolDAO dao = new PoolDAO();
+        List<Pool> list = new ArrayList<>();
+        list = dao.getPoolsByBranchId(1);
+        for (Pool pool : list) {
+            System.out.println(pool);
+        }
+    }
 }

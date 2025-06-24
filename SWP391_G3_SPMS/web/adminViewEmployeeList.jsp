@@ -138,7 +138,7 @@
                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded shadow">
                             <i class="fa-solid fa-rotate-left mr-1"></i> Đặt lại
                         </a>
-                        <a href="adminAddEmployee"
+                        <a href="adminAddNewEmployee"
                            class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2.5 rounded-lg shadow transition">
                             <i class="fa-solid fa-user-plus"></i> Thêm nhân viên
                         </a>
