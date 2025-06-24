@@ -134,8 +134,9 @@
 
                 let errorMsg = "";
 
-                if (fullName.length < 2) {
-                    errorMsg += "Họ và tên phải có ít nhất 2 ký tự.<br/>";
+                const fullNameRegex = /^[A-Za-zÀ-Ỹà-ỹ\s]+$/;
+                if (fullName.length < 2 || !fullNameRegex.test(fullName)) {
+                    errorMsg += "Họ và tên phải có ít nhất 2 ký tự và không chứa số hoặc ký tự đặc biệt.<br/>";
                 }
 
                 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
