@@ -187,51 +187,56 @@ public class PoolServiceServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String action = request.getParameter("action");
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
-        String location = "";
-        if (currentUser != null) {
-            switch (currentUser.getUser_id()) {
-                case 2:
-                    location = "Hà Nội";
-                    break;
-                case 3:
-                    location = "Hồ Chí Minh";
-                    break;
-                case 4:
-                    location = "Đà Nẵng";
-                    break;
-                case 5:
-                    location = "Cần Thơ";
-                    break;
-                case 6:
-                    location = "Quy Nhơn";
-                    break;
-            }
+         String action = request.getParameter("action");
+    HttpSession session = request.getSession();
+    User currentUser = (User) session.getAttribute("currentUser");
+    String location = "";
+    if (currentUser != null) {
+        switch (currentUser.getUser_id()) {
+            case 2:
+                location = "Hà Nội";
+                break;
+            case 3:
+                location = "Hồ Chí Minh";
+                break;
+            case 4:
+                location = "Đà Nẵng";
+                break;
+            case 5:
+                location = "Cần Thơ";
+                break;
+            case 6:
+                location = "Quy Nhơn";
+                break;
+        }
+    }
+
+    try {
+        PoolDAO poolDAO = new PoolDAO();
+        List<Pool> poolList = poolDAO.searchPoolByAddress(location);
+        List<Integer> poolIds = new ArrayList<>();
+        for (Pool pool : poolList) {
+            poolIds.add(pool.getPool_id());
         }
 
-        try {
-            PoolDAO poolDAO = new PoolDAO();
-            List<Pool> poolList = poolDAO.searchPoolByAddress(location);
-            List<Integer> poolIds = new ArrayList<>();
-            for (Pool pool : poolList) {
-                poolIds.add(pool.getPool_id());
+        if ("add".equals(action)) {
+            String[] poolIdsParam = request.getParameterValues("pool_ids");
+            if (poolIdsParam == null || poolIdsParam.length == 0) {
+                session.setAttribute("errorMessage", "Vui lòng chọn ít nhất một hồ bơi.");
+                response.sendRedirect("pool-service");
+                return;
             }
 
-            if ("add".equals(action) || "update".equals(action)) {
-                int poolId = Integer.parseInt(request.getParameter("pool_id"));
-                if (!poolIds.contains(poolId)) {
-                    response.sendRedirect("pool-service");
-                    return;
-                }
+            String serviceName = request.getParameter("service_name");
+            String description = request.getParameter("description");
+            double price = Double.parseDouble(request.getParameter("price"));
+            String serviceImage = request.getParameter("service_image");
+            int quantity = Integer.parseInt(request.getParameter("quantity"));
+            String serviceStatus = request.getParameter("service_status");
 
-                String serviceName = request.getParameter("service_name");
-                String description = request.getParameter("description");
-                double price = Double.parseDouble(request.getParameter("price"));
-                String serviceImage = request.getParameter("service_image");
-                int quantity = Integer.parseInt(request.getParameter("quantity"));
-                String serviceStatus = request.getParameter("service_status");
+            for (String poolIdStr : poolIdsParam) {
+                int poolId = Integer.parseInt(poolIdStr.trim());
+                if (!poolIds.contains(poolId)) continue;
 
                 PoolService ps = new PoolService();
                 ps.setPoolId(poolId);
@@ -242,35 +247,60 @@ public class PoolServiceServlet extends HttpServlet {
                 ps.setQuantity(quantity);
                 ps.setServiceStatus(serviceStatus);
 
-                if ("add".equals(action)) {
-                    dao.add(ps);
-                } else {
-                    ps.setPoolServiceId(Integer.parseInt(request.getParameter("pool_service_id")));
-                    dao.update(ps);
-                }
+                dao.add(ps);
+            }
 
-                response.sendRedirect("pool-service");
-                return;
-            } else if ("delete".equals(action)) {
-                int id = Integer.parseInt(request.getParameter("id"));
-                PoolService ps = dao.getById(id);
+            response.sendRedirect("pool-service");
+            return;
 
-                if (ps != null && poolIds.contains(ps.getPoolId())) {
-                    if ("unavailable".equalsIgnoreCase(ps.getServiceStatus())) {
-                        dao.delete(id);
-                    } else {
-                        session.setAttribute("errorMessage", "Không thể xóa dịch vụ đang hoạt động. Vui lòng ngưng trước khi xóa.");
-                    }
-                } else {
-                    session.setAttribute("errorMessage", "Dịch vụ không hợp lệ hoặc bạn không có quyền xóa.");
-                }
-
+        } else if ("update".equals(action)) {
+            int poolId = Integer.parseInt(request.getParameter("pool_id"));
+            if (!poolIds.contains(poolId)) {
                 response.sendRedirect("pool-service");
                 return;
             }
-        } catch (SQLException | NumberFormatException e) {
-            e.printStackTrace();
-            response.sendRedirect("error.jsp");
+
+            String serviceName = request.getParameter("service_name");
+            String description = request.getParameter("description");
+            double price = Double.parseDouble(request.getParameter("price"));
+            String serviceImage = request.getParameter("service_image");
+            int quantity = Integer.parseInt(request.getParameter("quantity"));
+            String serviceStatus = request.getParameter("service_status");
+
+            PoolService ps = new PoolService();
+            ps.setPoolId(poolId);
+            ps.setServiceName(serviceName);
+            ps.setDescription(description);
+            ps.setPrice(price);
+            ps.setServiceImage(serviceImage);
+            ps.setQuantity(quantity);
+            ps.setServiceStatus(serviceStatus);
+            ps.setPoolServiceId(Integer.parseInt(request.getParameter("pool_service_id")));
+
+            dao.update(ps);
+            response.sendRedirect("pool-service");
+            return;
+
+        } else if ("delete".equals(action)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            PoolService ps = dao.getById(id);
+
+            if (ps != null && poolIds.contains(ps.getPoolId())) {
+                if ("unavailable".equalsIgnoreCase(ps.getServiceStatus())) {
+                    dao.delete(id);
+                } else {
+                    session.setAttribute("errorMessage", "Không thể xóa dịch vụ đang hoạt động. Vui lòng ngưng trước khi xóa.");
+                }
+            } else {
+                session.setAttribute("errorMessage", "Dịch vụ không hợp lệ hoặc bạn không có quyền xóa.");
+            }
+
+            response.sendRedirect("pool-service");
         }
+
+    } catch (SQLException | NumberFormatException e) {
+        e.printStackTrace();
+        response.sendRedirect("error.jsp");
+    }
     }
 }
