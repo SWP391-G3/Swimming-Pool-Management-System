@@ -70,7 +70,7 @@
 
                     <div class="grid grid-cols-2 gap-6">
                         <!-- Nhân viên bể bơi -->
-                        <a href="adminStaffPool"
+                        <a href="adminViewEmployeeList"
                            class="bg-white border border-blue-500 rounded-xl p-6 text-center hover:shadow-lg transition">
                             <i class="fa-solid fa-users-gear text-4xl text-blue-600 mb-4"></i>
                             <h3 class="text-lg font-semibold text-blue-700">Nhân viên bể bơi</h3>

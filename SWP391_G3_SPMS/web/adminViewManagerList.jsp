@@ -94,8 +94,6 @@
                                 </option>
                                 <% } %>
                             </select>
-
-
                         </div>
 
                         <!-- Status -->

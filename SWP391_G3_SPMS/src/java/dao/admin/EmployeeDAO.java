@@ -8,6 +8,7 @@ import dal.DBContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
+import model.admin.Branch;
 import model.admin.Employee;
 
 /**
@@ -102,6 +103,23 @@ public class EmployeeDAO extends DBContext {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public List<Branch> getAllBranches() {
+        List<Branch> list = new ArrayList<>();
+        String sql = "SELECT branch_id, branch_name FROM Branchs";
+
+        try (PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
+            while (rs.next()) {
+                Branch b = new Branch();
+                b.setBranch_id(rs.getInt("branch_id"));
+                b.setBranch_name(rs.getString("branch_name"));
+                list.add(b);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
 }
