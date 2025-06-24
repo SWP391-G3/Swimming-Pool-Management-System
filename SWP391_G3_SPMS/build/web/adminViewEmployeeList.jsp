@@ -1,11 +1,12 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
 <%@ page import="model.admin.Employee,model.admin.Branch" %>
-<%@ page import="model.User" %>
+<%@ page import="model.User,model.admin.StaffType" %>
 
 <%
     List<Employee> employees = (List<Employee>) request.getAttribute("employees");
     List<Branch> branchs = (List<Branch>) request.getAttribute("branchs");
+    List<StaffType> staffTypes = (List<StaffType>) request.getAttribute("staffTypes");
     int currentPage = (int) request.getAttribute("currentPage");
     int totalPages = (int) request.getAttribute("totalPages");
 
@@ -67,8 +68,8 @@
                 </div>
 
                 <!-- Search & Filter Form -->
-                <form action="adminFilterManager" method="get" class="bg-white p-6 rounded-lg shadow space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <form action="adminFilterEmployee" method="get" class="bg-white p-6 rounded-lg shadow space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <!-- Keyword -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Tìm theo tên hoặc email</label>
@@ -95,6 +96,24 @@
                             </select>
                         </div>
 
+                        <!-- StaffTypes -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Lọc theo loại nhân viên</label>
+                            <select name="staffType"
+                                    class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                <option value="">-- Chọn loại nhân viên --</option>
+                                <%
+                                    String selectedStaffType = (String) request.getAttribute("selectedStaffType");
+                                    for (StaffType s : staffTypes) {
+                                        String typeName = s.getType_name();
+                                %>
+                                <option value="<%= typeName %>" <%= typeName.equals(selectedStaffType) ? "selected" : "" %>>
+                                    <%= typeName %>
+                                </option>
+                                <% } %>
+                            </select>
+                        </div>
+
                         <!-- Status -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Lọc theo trạng thái</label>
@@ -106,6 +125,7 @@
                             </select>
 
                         </div>
+
                     </div>
 
                     <!-- Buttons -->

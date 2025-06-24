@@ -10,6 +10,7 @@ import java.util.List;
 import java.sql.*;
 import model.admin.Branch;
 import model.admin.Employee;
+import model.admin.StaffType;
 
 /**
  *
@@ -106,7 +107,7 @@ public class EmployeeDAO extends DBContext {
     }
 
     public List<Branch> getAllBranches() {
-        List<Branch> list = new ArrayList<>();
+        List<Branch> listBranch = new ArrayList<>();
         String sql = "SELECT branch_id, branch_name FROM Branchs";
 
         try (PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
@@ -114,12 +115,170 @@ public class EmployeeDAO extends DBContext {
                 Branch b = new Branch();
                 b.setBranch_id(rs.getInt("branch_id"));
                 b.setBranch_name(rs.getString("branch_name"));
-                list.add(b);
+                listBranch.add(b);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return listBranch;
+    }
+
+    public List<StaffType> getAllStaffTypes() {
+        List<StaffType> listStaffTypes = new ArrayList<>();
+        String sql = "SELECT Distinct\n"
+                + "    st.staff_type_id,\n"
+                + "    st.type_name\n"
+                + "FROM Staff_Types st\n"
+                + "LEFT JOIN Staffs s ON st.staff_type_id = s.staff_type_id\n"
+                + "order by st.staff_type_id";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                StaffType s = new StaffType();
+                s.setStaffTypeID(rs.getInt(1));
+                s.setType_name(rs.getString(2));
+                listStaffTypes.add(s);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listStaffTypes;
+    }
+
+    public List<Employee> getFilteredEmployeesByPage(String keyword, String branchName, String staffTypeName, String status, int start, int perPage) {
+        StringBuilder sql = new StringBuilder(
+                "SELECT s.staff_id, u.full_name, u.email, u.phone, u.address, u.dob, u.gender, u.images, u.status, \n"
+                + "b.branch_id, b.branch_name, p.pool_id, p.pool_name, st.staff_type_id, st.type_name AS staff_type_name, st.description AS staff_type_description \n"
+                + "FROM Staffs s \n"
+                + "JOIN Users u ON s.user_id = u.user_id \n"
+                + "LEFT JOIN Branchs b ON s.branch_id = b.branch_id \n"
+                + "LEFT JOIN Pools p ON s.pool_id = p.pool_id \n"
+                + "LEFT JOIN Staff_Types st ON s.staff_type_id = st.staff_type_id \n"
+                + "WHERE 1=1 "
+        );
+
+        List<Object> params = new ArrayList<>();
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append("AND (u.full_name LIKE ? OR u.email LIKE ?) ");
+            String kw = "%" + keyword.trim() + "%";
+            params.add(kw);
+            params.add(kw);
+        }
+
+        if (branchName != null && !branchName.trim().isEmpty()) {
+            sql.append("AND b.branch_name = ? ");
+            params.add(branchName.trim());
+        }
+
+        if (staffTypeName != null && !staffTypeName.trim().isEmpty()) {
+            sql.append("AND st.type_name = ? ");
+            params.add(staffTypeName.trim());
+        }
+
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append("AND u.status = ? ");
+            params.add(Boolean.parseBoolean(status.trim()));
+        }
+
+        sql.append("ORDER BY s.staff_id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        params.add(start);
+        params.add(perPage);
+
+        try (PreparedStatement st = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                st.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Employee emp = new Employee();
+                emp.setStaffId(rs.getInt("staff_id"));
+                emp.setFullName(rs.getString("full_name"));
+                emp.setEmail(rs.getString("email"));
+                emp.setPhone(rs.getString("phone"));
+                emp.setAddress(rs.getString("address"));
+
+                Date dob = rs.getDate("dob");
+                if (dob != null) {
+                    emp.setDob(dob.toLocalDate());
+                }
+
+                emp.setGender(rs.getString("gender"));
+                emp.setImages(rs.getString("images"));
+                emp.setStatus(rs.getBoolean("status"));
+
+                int branchId = rs.getInt("branch_id");
+                emp.setBranchId(rs.wasNull() ? null : branchId);
+                emp.setBranchName(rs.getString("branch_name"));
+
+                int poolId = rs.getInt("pool_id");
+                emp.setPoolId(rs.wasNull() ? null : poolId);
+                emp.setPoolName(rs.getString("pool_name"));
+
+                int staffTypeId = rs.getInt("staff_type_id");
+                emp.setStaffTypeId(rs.wasNull() ? null : staffTypeId);
+                emp.setStaffTypeName(rs.getString("staff_type_name"));
+                emp.setStaffTypeDescription(rs.getString("staff_type_description"));
+
+                list.add(emp);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return list;
+    }
+
+    public int getFilteredEmployeeCount(String keyword, String branchName, String staffTypeName, String status) {
+        int count = 0;
+        StringBuilder sql = new StringBuilder(
+                "SELECT COUNT(*) \n"
+                + "FROM Staffs s \n"
+                + "JOIN Users u ON s.user_id = u.user_id \n"
+                + "LEFT JOIN Branchs b ON s.branch_id = b.branch_id \n"
+                + "LEFT JOIN Staff_Types st ON s.staff_type_id = st.staff_type_id \n"
+                + "WHERE 1=1 "
+        );
+
+        List<Object> params = new ArrayList<>();
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append("AND (u.full_name LIKE ? OR u.email LIKE ?) ");
+            String kw = "%" + keyword.trim() + "%";
+            params.add(kw);
+            params.add(kw);
+        }
+
+        if (branchName != null && !branchName.trim().isEmpty()) {
+            sql.append("AND b.branch_name = ? ");
+            params.add(branchName.trim());
+        }
+
+        if (staffTypeName != null && !staffTypeName.trim().isEmpty()) {
+            sql.append("AND st.type_name = ? ");
+            params.add(staffTypeName.trim());
+        }
+
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append("AND u.status = ? ");
+            params.add(Boolean.parseBoolean(status.trim()));
+        }
+
+        try (PreparedStatement st = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                st.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return count;
     }
 
 }

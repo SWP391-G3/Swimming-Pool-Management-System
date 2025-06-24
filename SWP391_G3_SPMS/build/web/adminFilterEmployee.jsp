@@ -19,7 +19,14 @@
 
     User currentUser = (User) session.getAttribute("currentUser");
     String userName = currentUser != null ? currentUser.getFull_name() : "";
+    
+    String keyword = request.getAttribute("keyword") != null ? request.getAttribute("keyword").toString() : "";
+    String branch = request.getAttribute("branch") != null ? request.getAttribute("branch").toString() : "";
+    String selectedStaffType = request.getAttribute("selectedStaffType") != null ? request.getAttribute("selectedStaffType").toString() : "";
+    String selectedStatus = request.getAttribute("status") != null ? request.getAttribute("status").toString() : "";
 %>
+
+
 
 <!DOCTYPE html>
 <html>
@@ -85,11 +92,10 @@
                                     class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                                 <option value="">-- Chọn chi nhánh --</option>
                                 <% 
-                                    String selectedBranch = (String) request.getAttribute("branch");
                                     for (Branch b : branchs) {
                                         String branchName = b.getBranch_name();
                                 %>
-                                <option value="<%= branchName %>" <%= branchName.equals(selectedBranch) ? "selected" : "" %>>
+                                <option value="<%= branchName %>" <%= branchName.equals(branch) ? "selected" : "" %>>
                                     <%= branchName.replace("Chi nhánh ", "") %>
                                 </option>
                                 <% } %>
@@ -103,7 +109,6 @@
                                     class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                                 <option value="">-- Chọn loại nhân viên --</option>
                                 <%
-                                    String selectedStaffType = (String) request.getAttribute("selectedStaffType");
                                     for (StaffType s : staffTypes) {
                                         String typeName = s.getType_name();
                                 %>
@@ -189,22 +194,35 @@
                 <!-- Pagination -->
                 <div class="flex flex-wrap justify-center mt-8 gap-2 text-sm">
                     <% if (currentPage > 1) { %>
-                    <a class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" href="adminViewEmployeeList?page=<%= currentPage - 1 %>">← Trước</a>
+                    <%-- Link trang trước --%>
+                    <a class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                       href="adminFilterEmployee?page=<%= currentPage - 1 %>&keyword=<%= keyword %>&branch=<%= branch %>&staffType=<%= selectedStaffType %>&status=<%= selectedStatus %>">← Trước</a>
+
                     <% }
                         for (int i = startPage; i <= endPage; i++) {
                     %>
-                    <a href="adminViewEmployeeList?page=<%= i %>" class="px-3 py-2 rounded <%= i == currentPage ? "bg-green-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300" %>"><%= i %></a>
+                    <a href="adminFilterEmployee?page=<%= i %>&keyword=<%= keyword %>&branch=<%= branch %>&staffType=<%= selectedStaffType %>&status=<%= selectedStatus %>"
+                       class="px-3 py-2 rounded <%= i == currentPage ? "bg-green-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300" %>"><%= i %></a>
+
                     <% }
                         if (currentPage < totalPages) {
                     %>
-                    <a class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" href="adminViewEmployeeList?page=<%= currentPage + 1 %>">Tiếp →</a>
+                    <a class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                       href="adminFilterEmployee?page=<%= currentPage + 1 %>&keyword=<%= keyword %>&branch=<%= branch %>&staffType=<%= selectedStaffType %>&status=<%= selectedStatus %>">Tiếp →</a>
+
                     <% } %>
 
-                    <form action="adminViewEmployeeList" method="get" class="flex items-center gap-2 ml-4">
+                    <form action="adminFilterEmployee" method="get" class="flex items-center gap-2 ml-4">
+                        <input type="hidden" name="keyword" value="<%= keyword %>">
+                        <input type="hidden" name="branch" value="<%= branch %>">
+                        <input type="hidden" name="staffType" value="<%= selectedStaffType %>">
+                        <input type="hidden" name="status" value="<%= selectedStatus %>">
+
                         <input type="number" name="page" min="1" max="<%= totalPages %>" placeholder="Trang..."
                                class="w-24 px-2 py-2 border rounded-lg text-center focus:ring-2 focus:ring-blue-500" required>
                         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Đến</button>
                     </form>
+
                 </div>
             </div>
         </div>
