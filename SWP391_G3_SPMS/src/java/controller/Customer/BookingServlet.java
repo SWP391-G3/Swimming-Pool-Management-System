@@ -36,6 +36,7 @@ public class BookingServlet extends HttpServlet {
 //                return;
 //            }
 //            int poolId = Integer.parseInt(poolIdRaw);
+
                 int poolId = 2; //Hardcode để tsst
 
                 // Lấy thông tin pool
@@ -177,13 +178,28 @@ public class BookingServlet extends HttpServlet {
             e.printStackTrace();
         }
 
+        //Tinh TicketSlot
+        List<TicketSlot> ts = new ArrayList<>();
+
+        for (int i = 0; i < ticketTypeIds.length; i++) {
+            TicketTypeDAO ttDAO = new TicketTypeDAO();
+            int ticketTypeId = Integer.parseInt(ticketTypeIds[i]);
+            TicketSlot tts = ttDAO.getTicketSlotByTicketTypeId(ticketTypeId);
+            ts.add(tts);
+        }
+
+        int countTicketSlot = 0;
+        for (TicketSlot t : ts) {
+            countTicketSlot += t.getTicketSlot();
+        }
+
         // Build BookingPageData
         BookingPageData pageData = new BookingPageData(
                 user, pool, null, null, null,
                 bookingDate,
                 startTime,
                 endTime,
-                slotCount,
+                countTicketSlot,
                 selectedTickets,
                 selectedRents,
                 selectedDiscount,

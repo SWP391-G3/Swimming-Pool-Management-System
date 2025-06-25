@@ -19,7 +19,6 @@
             <div class="container mx-auto px-4">
                 <div class="flex items-center justify-between py-4">
                     <%
-                        // Kiểm tra session để xác định người dùng đã đăng nhập hay chưa
                         User currentUser = (User) session.getAttribute("currentUser");
                         String userName = (currentUser != null) ? currentUser.getFull_name() : "";
                         String avatar = (currentUser != null && currentUser.getImages() != null && !currentUser.getImages().isEmpty())
@@ -89,8 +88,7 @@
                         <%= success %>
                     </div>
                     <% } %>
-
-                    <form action="contact" method="POST" class="flex flex-col gap-6">
+                    <form id="contactForm" action="contact" method="POST" class="flex flex-col gap-6" novalidate>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div>
                                 <label for="name" class="block mb-1 font-medium text-gray-700">Họ và tên<span class="text-red-500">*</span></label>
@@ -99,10 +97,14 @@
                                     id="name"
                                     name="name"
                                     required
+                                    minlength="2"
+                                    maxlength="50"
+                                    pattern="^[\p{L} ]+$"
                                     placeholder="Nhập họ và tên của bạn"
                                     value="<%= userName %>"
                                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
                                     />
+                                <span class="text-red-500 text-sm hidden" id="errName"></span>
                             </div>
                             <div>
                                 <label for="email" class="block mb-1 font-medium text-gray-700">Email<span class="text-red-500">*</span></label>
@@ -111,10 +113,13 @@
                                     id="email"
                                     name="email"
                                     required
+                                    maxlength="100"
+                                    pattern="^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$"
                                     placeholder="Nhập email của bạn"
                                     value="<%= userEmail %>"
                                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
                                     />
+                                <span class="text-red-500 text-sm hidden" id="errEmail"></span>
                             </div>
                             <div>
                                 <label for="subject" class="block mb-1 font-medium text-gray-700">Chủ đề</label>
@@ -130,6 +135,7 @@
                                     <option value="Cơ sở vật chất">Cơ sở vật chất</option>
                                     <option value="Góp ý khác">Góp ý khác</option>
                                 </select>
+                                <span class="text-red-500 text-sm hidden" id="errSubject"></span>
                             </div>
                         </div>
                         <div>
@@ -139,27 +145,20 @@
                                 name="message"
                                 required
                                 rows="5"
+                                minlength="10"
+                                maxlength="1000"
                                 placeholder="Nhập nội dung liên hệ..."
                                 class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition resize-none"
                                 ></textarea>
+                            <span class="text-red-500 text-sm hidden" id="errMessage"></span>
                         </div>
                         <div class="flex justify-end">
                             <button
                                 type="submit"
                                 class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-2 rounded-lg shadow transition text-lg active:scale-95"
                                 >
-                                <svg
-                                    class="w-5 h-5"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                    >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M5 13l4 4L19 7"
-                                    />
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                 </svg>
                                 Gửi
                             </button>
@@ -226,4 +225,90 @@
         </footer>
         <!-- end footer -->
     </body>
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
+            let valid = true;
+
+            // Validate name
+            let name = document.getElementById('name').value.trim();
+            let errName = document.getElementById('errName');
+            if (!name) {
+                errName.innerText = "Vui lòng nhập họ và tên";
+                errName.classList.remove('hidden');
+                valid = false;
+            } else if (name.length < 2) {
+                errName.innerText = "Họ và tên quá ngắn";
+                errName.classList.remove('hidden');
+                valid = false;
+            } else if (name.length > 50) {
+                errName.innerText = "Họ và tên quá dài";
+                errName.classList.remove('hidden');
+                valid = false;
+            } else if (!/^[\p{L} ]+$/u.test(name)) {
+                errName.innerText = "Họ và tên chỉ được chứa chữ cái";
+                errName.classList.remove('hidden');
+                valid = false;
+            } else if (/ {2,}/.test(name)) { // Kiểm tra có nhiều hơn 1 khoảng trắng liên tiếp
+                errName.innerText = "Không chứa hơn một khoảng trắng liên tiếp";
+                errName.classList.remove('hidden');
+                valid = false;
+            } else {
+                errName.classList.add('hidden');
+            }
+
+            // Validate email
+            let email = document.getElementById('email').value.trim();
+            let errEmail = document.getElementById('errEmail');
+            let emailRegex = /^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/;
+            if (!email) {
+                errEmail.innerText = "Vui lòng nhập email";
+                errEmail.classList.remove('hidden');
+                valid = false;
+            } else if (email.length > 100) {
+                errEmail.innerText = "Email quá dài";
+                errEmail.classList.remove('hidden');
+                valid = false;
+            } else if (!emailRegex.test(email)) {
+                errEmail.innerText = "Email không đúng định dạng";
+                errEmail.classList.remove('hidden');
+                valid = false;
+            } else {
+                errEmail.classList.add('hidden');
+            }
+
+            // Validate subject
+            let subject = document.getElementById('subject').value;
+            let errSubject = document.getElementById('errSubject');
+            if (!subject) {
+                errSubject.innerText = "Vui lòng chọn chủ đề";
+                errSubject.classList.remove('hidden');
+                valid = false;
+            } else {
+                errSubject.classList.add('hidden');
+            }
+
+            // Validate message
+            let message = document.getElementById('message').value;
+            let errMessage = document.getElementById('errMessage');
+            if (!message.trim()) {
+                errMessage.innerText = "Vui lòng nhập nội dung";
+                errMessage.classList.remove('hidden');
+                valid = false;
+            } else if (message.trim().length < 10) {
+                errMessage.innerText = "Nội dung phải chứa ít nhất 10 ký tự";
+                errMessage.classList.remove('hidden');
+                valid = false;
+            } else if (message.length > 1000) {
+                errMessage.innerText = "Nội dung không được vượt quá 1000 ký tự";
+                errMessage.classList.remove('hidden');
+                valid = false;
+            } else {
+                errMessage.classList.add('hidden');
+            }
+
+            if (!valid) {
+                e.preventDefault();
+            }
+        });
+    </script>
 </html>

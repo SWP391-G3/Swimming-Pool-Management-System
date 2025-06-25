@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao.customer;
 
 import dal.DBContext;
@@ -10,6 +6,7 @@ import model.customer.BookingDetails;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.jasper.tagplugins.jstl.core.ForEach;
 
 /**
  *
@@ -160,7 +157,7 @@ public class BookingDetailDAO extends DBContext {
                 + "JOIN Pools p ON b.pool_id = p.pool_id "
                 + "LEFT JOIN Payments pm ON b.booking_id = pm.booking_id "
                 + "LEFT JOIN Feedbacks f ON b.user_id = f.user_id AND b.pool_id = f.pool_id "
-                + "WHERE b.user_id = ?"
+                + "WHERE b.user_id = ? "
         );
         List<Object> params = new ArrayList<>();
         params.add(userId);
@@ -184,13 +181,13 @@ public class BookingDetailDAO extends DBContext {
 
         // Sắp xếp
         if ("date_asc".equals(sortOrder)) {
-            sql.append(" ORDER BY b.booking_date ASC");
+            sql.append(" ORDER BY b.created_at ASC");
         } else if ("price_asc".equals(sortOrder)) {
             sql.append(" ORDER BY amount ASC");
         } else if ("price_desc".equals(sortOrder)) {
             sql.append(" ORDER BY amount DESC");
         } else {
-            sql.append(" ORDER BY b.booking_date DESC");
+            sql.append(" ORDER BY b.created_at DESC");
         }
 
         // OFFSET-FETCH cho phân trang
@@ -300,7 +297,7 @@ public class BookingDetailDAO extends DBContext {
                 + "LEFT JOIN Payments pm ON b.booking_id = pm.booking_id "
                 + "LEFT JOIN Feedbacks f ON b.user_id = f.user_id AND b.pool_id = f.pool_id "
                 + "WHERE b.user_id = ? "
-                + "ORDER BY b.booking_date DESC";
+                + "ORDER BY b.created_at DESC";
         PreparedStatement st = connection.prepareStatement(sql);
         st.setInt(1, userId);
         ResultSet rs = st.executeQuery();
@@ -345,5 +342,13 @@ public class BookingDetailDAO extends DBContext {
         PreparedStatement st = connection.prepareStatement(sql);
         st.setInt(1, bookingId);
         st.executeUpdate();
+    }
+    
+    public static void main(String[] args) throws SQLException {
+        BookingDetailDAO b = new  BookingDetailDAO();
+        List<BookingDetails> ll = b.searchBookingDetails(32, "Hồ bơi Cầu Giấy", " ", " ", "pending", "date_asc", 0, 5);
+        for (BookingDetails bookingDetails : ll) {
+            System.out.println(bookingDetails.toString());
+        }
     }
 }

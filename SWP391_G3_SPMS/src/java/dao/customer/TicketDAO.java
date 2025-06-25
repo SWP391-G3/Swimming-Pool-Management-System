@@ -1,12 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao.customer;
 
 import dal.DBContext;
 import java.math.BigDecimal;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +9,13 @@ import model.customer.Ticket;
 
 public class TicketDAO extends DBContext {
 
-    public void addTicket(int bookingId, int ticketTypeId, BigDecimal price, Integer issuedBy) {
+    // Sửa: trả về ticketId vừa tạo
+    public int addTicket(int bookingId, int ticketTypeId, BigDecimal price, Integer issuedBy) {
+        int ticketId = -1;
         String sql = "INSERT INTO Ticket (booking_id, ticket_type_id, ticket_price, issued_by, issued_at) "
                 + "VALUES (?, ?, ?, ?, GETDATE())";
         try {
-            PreparedStatement st = connection.prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             st.setInt(1, bookingId);
             st.setInt(2, ticketTypeId);
             st.setBigDecimal(3, price);
@@ -28,10 +25,16 @@ public class TicketDAO extends DBContext {
                 st.setNull(4, java.sql.Types.INTEGER);
             }
             st.executeUpdate();
+            ResultSet rs = st.getGeneratedKeys();
+            if (rs.next()) {
+                ticketId = rs.getInt(1);
+            }
+            rs.close();
             st.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return ticketId;
     }
 
     public List<Ticket> getTicketsByBookingId(int bookingId) {

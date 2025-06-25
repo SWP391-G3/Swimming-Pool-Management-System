@@ -28,7 +28,7 @@ public class DiscountDAO extends DBContext {
                D.valid_from, D.valid_to, D.status, D.created_at, D.updated_at
         FROM Discounts D
         JOIN Customer_Discount CD ON D.discount_id = CD.discount_id
-        WHERE CD.user_id = ? AND D.status = 1 AND D.valid_to >= GETDATE()
+        WHERE CD.user_id = ? AND D.status = 1 AND CD.used_discount = 1 AND D.valid_to >= GETDATE()
     """;
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -113,5 +113,18 @@ public class DiscountDAO extends DBContext {
             e.printStackTrace();
         }
         return BigDecimal.ZERO;
+    }
+
+    public boolean markDiscountAsUsed(int userId, int discountId) {
+        String sql = "UPDATE Customer_Discount SET used_discount = 0 WHERE user_id = ? AND discount_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, userId);
+            st.setInt(2, discountId);
+            int affected = st.executeUpdate();
+            return affected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

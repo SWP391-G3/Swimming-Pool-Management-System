@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import model.customer.TicketSlot;
 
 import model.customer.TicketType;
 
@@ -115,4 +116,28 @@ public class TicketTypeDAO extends DBContext {
         }
         return list;
     }
+
+    public TicketSlot getTicketSlotByTicketTypeId(int ticketTypeId) {
+        String sql = "SELECT tt.ticket_type_id, "
+                + "CASE WHEN tt.is_combo = 1 THEN SUM(cd.quantity) ELSE 1 END AS totalQuantity "
+                + "FROM Ticket_Types tt "
+                + "LEFT JOIN Combo_Detail cd ON tt.ticket_type_id = cd.combo_type_id "
+                + "WHERE tt.ticket_type_id = ? "
+                + "GROUP BY tt.ticket_type_id, tt.is_combo";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, ticketTypeId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                int id = rs.getInt("ticket_type_id");
+                int totalQuantity = rs.getInt("totalQuantity");
+                return new TicketSlot(id, totalQuantity);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

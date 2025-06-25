@@ -15,8 +15,6 @@
 <%
         return;
     }
-
-    // Kiểm tra điều kiện hủy đặt bể: phải còn trạng thái có thể hủy và ngày đặt còn lớn hơn hôm nay
     String statusRaw = bookingDetail.getBookingStatus();
     boolean canCancelStatus = "pending".equalsIgnoreCase(statusRaw) || "confirmed".equalsIgnoreCase(statusRaw)
         || "Đã xác nhận".equalsIgnoreCase(statusRaw) || "Chờ xác nhận".equalsIgnoreCase(statusRaw);

@@ -35,6 +35,29 @@ public class Payment {
         this.createdAt = createdAt;
     }
 
+    public Payment(int bookingId, String paymentMethod, String paymentStatus, Date paymentDate,
+            BigDecimal totalAmount, BigDecimal discountAmount, String transactionReference, Date createdAt) {
+        this.bookingId = bookingId;
+        this.paymentMethod = paymentMethod;
+        this.paymentStatus = paymentStatus;
+        this.paymentDate = paymentDate;
+        this.totalAmount = totalAmount;
+        this.discountAmount = discountAmount;
+        this.transactionReference = transactionReference;
+        this.createdAt = createdAt;
+    }
+
+    public Payment(int bookingId, String paymentMethod, String paymentStatus, Date paymentDate,
+            BigDecimal totalAmount, BigDecimal discountAmount, String transactionReference) {
+        this.bookingId = bookingId;
+        this.paymentMethod = paymentMethod;
+        this.paymentStatus = paymentStatus;
+        this.paymentDate = paymentDate;
+        this.totalAmount = totalAmount;
+        this.discountAmount = discountAmount;
+        this.transactionReference = transactionReference;
+    }
+
     public int getPaymentId() {
         return paymentId;
     }

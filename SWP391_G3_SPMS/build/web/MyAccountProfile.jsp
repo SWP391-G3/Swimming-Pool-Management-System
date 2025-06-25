@@ -200,8 +200,8 @@
                         </h3>
                         <div class="space-y-3 mt-4">
                             <%
-                                if (voucherActive != null && !voucherActive.isEmpty()) {
-                                    for (DiscountDetail d : voucherActive) {
+                                if (voucherUsed != null && !voucherUsed.isEmpty()) {
+                                    for (DiscountDetail d : voucherUsed) {
                             %>
                             <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                                 <div>

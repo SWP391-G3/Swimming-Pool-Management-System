@@ -11,7 +11,7 @@
     Integer totalPages = (Integer) request.getAttribute("totalPages");
     String poolNameParam = request.getAttribute("poolName") != null ? (String) request.getAttribute("poolName") : "";
     String fromDateParam = request.getAttribute("fromDate") != null ? (String) request.getAttribute("fromDate") : "";
-    String toDateParam = request.getAttribute("toDate") != null ? (String) request.getAttribute("toDate") : ""; // Thêm dòng này
+    String toDateParam = request.getAttribute("toDate") != null ? (String) request.getAttribute("toDate") : "";
     String statusParam = request.getAttribute("status") != null ? (String) request.getAttribute("status") : "";
     String sortOrderParam = request.getAttribute("sortOrder") != null ? (String) request.getAttribute("sortOrder") : "";
     Integer pageSize = (request.getAttribute("pageSize") != null) ? (Integer) request.getAttribute("pageSize") : 5;

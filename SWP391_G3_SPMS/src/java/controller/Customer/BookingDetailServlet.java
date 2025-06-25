@@ -55,7 +55,7 @@ public class BookingDetailServlet extends HttpServlet {
             request.setAttribute("userFeedback", userFeedback);
             request.setAttribute("successMsg", request.getParameter("success"));
             request.setAttribute("errorMsg", request.getParameter("error"));
-            request.setAttribute("canCancel", canCancel); // Truyền biến này sang JSP
+            request.setAttribute("canCancel", canCancel);
             request.getRequestDispatcher("BookingDetail.jsp").forward(request, response);
         } catch (SQLException e) {
             throw new ServletException(e);

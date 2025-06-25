@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao.customer;
 
 import dal.DBContext;
@@ -20,18 +16,24 @@ public class BookingDAO extends DBContext {
 
     public int createBooking(Booking booking) {
         int generatedId = -1;
-        String sql = "INSERT INTO Booking (user_id, pool_id, booking_date, start_time, end_time, slot_count, booking_status, created_at) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, GETDATE())";
+        String sql = "INSERT INTO Booking (user_id, pool_id, discount_id, booking_date, start_time, end_time, slot_count, booking_status, created_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, GETDATE())";
 
         try {
             PreparedStatement st = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             st.setInt(1, booking.getUserId());
             st.setInt(2, booking.getPoolId());
-            st.setDate(3, booking.getBookingDate());
-            st.setTime(4, booking.getStartTime());
-            st.setTime(5, booking.getEndTime());
-            st.setInt(6, booking.getSlotCount());
-            st.setString(7, booking.getBookingStatus());
+            // discount_id
+            if (booking.getDiscountId() != null) {
+                st.setInt(3, booking.getDiscountId());
+            } else {
+                st.setNull(3, java.sql.Types.INTEGER);
+            }
+            st.setDate(4, booking.getBookingDate());
+            st.setTime(5, booking.getStartTime());
+            st.setTime(6, booking.getEndTime());
+            st.setInt(7, booking.getSlotCount());
+            st.setString(8, booking.getBookingStatus());
 
             int affectedRows = st.executeUpdate();
 
@@ -99,7 +101,6 @@ public class BookingDAO extends DBContext {
     }
 
     public BigDecimal calculateTotalAmountForBooking(int bookingId) {
-        // Sử dụng view vw_BookingTotalAmount để lấy tổng tiền cho booking này
         String sql = "SELECT total_amount FROM vw_BookingTotalAmount WHERE booking_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, bookingId);

@@ -35,6 +35,30 @@ public class Booking {
         this.updatedAt = updatedAt;
     }
 
+    public Booking(int userId, int poolId, Integer discountId, Date bookingDate, Time startTime, Time endTime, int slotCount, String bookingStatus, java.util.Date createdAt, java.util.Date updatedAt) {
+        this.userId = userId;
+        this.poolId = poolId;
+        this.discountId = discountId;
+        this.bookingDate = bookingDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.slotCount = slotCount;
+        this.bookingStatus = bookingStatus;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public Booking(int userId, int poolId, Integer discountId, Date bookingDate, Time startTime, Time endTime, int slotCount, String bookingStatus) {
+        this.userId = userId;
+        this.poolId = poolId;
+        this.discountId = discountId;
+        this.bookingDate = bookingDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.slotCount = slotCount;
+        this.bookingStatus = bookingStatus;
+    }
+
     // Getter & Setter
     public int getBookingId() {
         return bookingId;

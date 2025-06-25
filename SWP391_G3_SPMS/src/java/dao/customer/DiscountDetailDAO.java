@@ -31,7 +31,7 @@ public class DiscountDetailDAO extends DBContext {
                 + " ISNULL(d.quantity, 0) AS total_quantity "
                 + "FROM Discounts d "
                 + "JOIN Customer_Discount cd ON d.discount_id = cd.discount_id "
-                + "WHERE cd.user_id = ?"
+                + "WHERE cd.user_id = ? AND cd.used_discount = 1"
         );
 
         if (search != null && !search.isEmpty()) {
@@ -127,7 +127,7 @@ public class DiscountDetailDAO extends DBContext {
         List<DiscountDetail> list = new ArrayList<>();
         String sql = "SELECT d.* FROM Discounts d "
                 + "JOIN Customer_Discount cd ON d.discount_id = cd.discount_id "
-                + "WHERE cd.user_id = ? AND d.status = ?";
+                + "WHERE cd.user_id = ? AND cd.used_discount = ?";
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setInt(1, userId);
             st.setBoolean(2, status);

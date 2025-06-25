@@ -5,7 +5,9 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import model.customer.DiscountDetail;
@@ -32,13 +34,19 @@ public class VoucherServlet extends HttpServlet {
             int userId = user.getUser_id();
 
             String search = request.getParameter("search");
-            String expiry = request.getParameter("expiry");
+            String expiryStatus = request.getParameter("expiryStatus");
+            String expiryFrom = request.getParameter("expiryFrom");
+            String expiryTo = request.getParameter("expiryTo");
             String sort = request.getParameter("sort");
             String pageRaw = request.getParameter("page");
             int page = 1;
             try {
-                if (pageRaw != null) page = Integer.parseInt(pageRaw);
-                if (page <= 0) page = 1;
+                if (pageRaw != null) {
+                    page = Integer.parseInt(pageRaw);
+                }
+                if (page <= 0) {
+                    page = 1;
+                }
             } catch (Exception e) {
                 page = 1;
             }
@@ -47,27 +55,62 @@ public class VoucherServlet extends HttpServlet {
             try {
                 DiscountDetailDAO dao = new DiscountDetailDAO();
                 // Lấy nhiều voucher hơn để lọc chính xác sau khi áp dụng logic
-                List<DiscountDetail> rawVouchers = dao.getVoucherListByUserId(userId, search, expiry, sort, 1, 500);
+                List<DiscountDetail> rawVouchers = dao.getVoucherListByUserId(userId, search, null, sort, 1, 500);
 
                 List<DiscountDetail> vouchers = new ArrayList<>();
                 LocalDateTime now = LocalDateTime.now();
+                LocalDate today = now.toLocalDate();
 
-                // Lọc lại theo yêu cầu: nếu đã hết hạn và đã dùng thì ẩn khỏi danh sách
                 for (DiscountDetail voucher : rawVouchers) {
                     boolean isExpired = voucher.getValidTo().isBefore(now);
                     boolean isUsed = (voucher.getUsedDiscount() != null && !voucher.getUsedDiscount()); // used_discount = 0 là đã dùng
                     if (isExpired && isUsed) {
                         continue; // ẩn voucher này
                     }
-                    vouchers.add(voucher);
+                    // Lọc theo trạng thái hạn sử dụng
+                    LocalDate validToDate = voucher.getValidTo().toLocalDate();
+                    boolean passFilter = true;
+                    if ("active".equals(expiryStatus)) {
+                        if (validToDate.isBefore(today)) {
+                            passFilter = false;
+                        }
+                    } else if ("expiring".equals(expiryStatus)) {
+                        long days = ChronoUnit.DAYS.between(today, validToDate);
+                        if (days < 0 || days > 7) {
+                            passFilter = false;
+                        }
+                    } else if ("expired".equals(expiryStatus)) {
+                        if (!validToDate.isBefore(today)) {
+                            passFilter = false;
+                        }
+                    } else if ("range".equals(expiryStatus)) {
+                        if (expiryFrom == null || expiryTo == null || expiryFrom.isEmpty() || expiryTo.isEmpty()) {
+                            passFilter = false;
+                        } else {
+                            try {
+                                LocalDate from = LocalDate.parse(expiryFrom);
+                                LocalDate to = LocalDate.parse(expiryTo);
+                                if (validToDate.isBefore(from) || validToDate.isAfter(to)) {
+                                    passFilter = false;
+                                }
+                            } catch (Exception ex) {
+                                passFilter = false;
+                            }
+                        }
+                    }
+                    if (passFilter) {
+                        vouchers.add(voucher);
+                    }
                 }
 
                 int totalVoucher = vouchers.size();
                 int totalPage = (totalVoucher + pageSize - 1) / pageSize;
-                if (totalPage == 0) totalPage = 1; // LUÔN >= 1
-
-                if (page > totalPage) page = 1;   // Nếu nhập trang lớn hơn tổng số trang, về lại trang 1
-
+                if (totalPage == 0) {
+                    totalPage = 1; // LUÔN >= 1
+                }
+                if (page > totalPage) {
+                    page = 1;   // Nếu nhập trang lớn hơn tổng số trang, về lại trang 1
+                }
                 int fromIndex = Math.max(0, (page - 1) * pageSize);
                 int toIndex = Math.min(vouchers.size(), fromIndex + pageSize);
                 List<DiscountDetail> pageVouchers;
@@ -79,7 +122,9 @@ public class VoucherServlet extends HttpServlet {
 
                 request.setAttribute("vouchers", pageVouchers);
                 request.setAttribute("search", search != null ? search : "");
-                request.setAttribute("expiry", expiry != null ? expiry : "");
+                request.setAttribute("expiryStatus", expiryStatus != null ? expiryStatus : "all");
+                request.setAttribute("expiryFrom", expiryFrom != null ? expiryFrom : "");
+                request.setAttribute("expiryTo", expiryTo != null ? expiryTo : "");
                 request.setAttribute("sort", sort != null ? sort : "newest");
                 request.setAttribute("page", page);
                 request.setAttribute("totalPage", totalPage);
