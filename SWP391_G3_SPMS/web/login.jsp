@@ -90,7 +90,7 @@
                         name="username"
                         placeholder="Nhập tên đăng nhập"
                         class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        />
+                        required  />
                 </div>
                 <div>
                     <label for="passwordInput" class="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
@@ -100,11 +100,11 @@
                         name="password"
                         placeholder="Nhập mật khẩu"
                         class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        />
+                        required  />
                 </div>
                 <a href="ResetPassword.jsp" class="text-blue-600 font-regular text-sm hover:underline">Quên mật khẩu?</a>
                 <button
-                    type="submit"
+                    type="submit" id="btLogin"
                     class="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg hover:bg-blue-600 transition duration-300"
                     >
                     Đăng nhập

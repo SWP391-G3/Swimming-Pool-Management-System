@@ -201,7 +201,7 @@ public class PoolServiceServlet extends HttpServlet {
                 break;
             case 4:
                 location = "Đà Nẵng";
-                break;
+                break;  
             case 5:
                 location = "Cần Thơ";
                 break;
