@@ -6,6 +6,7 @@ import model.customer.BookingDetails;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import model.customer.Ticket;
 import org.apache.jasper.tagplugins.jstl.core.ForEach;
 
 /**
@@ -14,36 +15,63 @@ import org.apache.jasper.tagplugins.jstl.core.ForEach;
  */
 public class BookingDetailDAO extends DBContext {
 
-    // Get booking detail by bookingId
-    public BookingDetails getBookingDetailById(int id) throws SQLException {
-        String sql = "SELECT b.booking_id, b.user_id, b.pool_id, p.pool_name, "
-                + "(p.pool_road + ', ' + p.pool_address) AS pool_address_detail, "
-                + "b.booking_date, b.slot_count, ISNULL(pm.total_amount, 0) AS amount, b.booking_status, "
-                + "f.rating, f.comment "
+    public BookingDetails getBookingDetailById(int id) {
+        BookingDetails details = null;
+        String sql = "SELECT b.booking_id, "
+                + "b.user_id, "
+                + "b.pool_id, "
+                + "p.pool_name, "
+                + "p.pool_address AS poolAddressDetail, "
+                + "b.booking_date, "
+                + "b.slot_count, "
+                + "pay.total_amount AS amount, "
+                + "b.booking_status, "
+                + "f.rating, "
+                + "f.comment, "
+                + "b.start_time, "
+                + "b.end_time, "
+                + "COALESCE(d.discount_code, NULL) AS discount_code, "
+                + "COALESCE(d.discount_percent, 0) AS discount_percent, "
+                + "(SELECT COUNT(*) FROM Ticket t WHERE t.booking_id = b.booking_id) AS ticket_count "
                 + "FROM Booking b "
-                + "JOIN Pools p ON b.pool_id = p.pool_id "
-                + "LEFT JOIN Payments pm ON b.booking_id = pm.booking_id "
-                + "LEFT JOIN Feedbacks f ON b.user_id = f.user_id AND b.pool_id = f.pool_id "
+                + "INNER JOIN Pools p ON b.pool_id = p.pool_id "
+                + "LEFT JOIN Discounts d ON b.discount_id = d.discount_id "
+                + "LEFT JOIN Feedbacks f ON f.user_id = b.user_id AND f.pool_id = b.pool_id "
+                + "LEFT JOIN Payments pay ON pay.booking_id = b.booking_id "
                 + "WHERE b.booking_id = ?";
-        PreparedStatement st = connection.prepareStatement(sql);
-        st.setInt(1, id);
-        ResultSet rs = st.executeQuery();
-        if (rs.next()) {
-            return new BookingDetails(
-                    rs.getInt("booking_id"),
-                    rs.getInt("user_id"),
-                    rs.getInt("pool_id"),
-                    rs.getString("pool_name"),
-                    rs.getString("pool_address_detail"),
-                    rs.getDate("booking_date"),
-                    rs.getInt("slot_count"),
-                    rs.getBigDecimal("amount"),
-                    rs.getString("booking_status"),
-                    rs.getObject("rating") == null ? null : rs.getInt("rating"),
-                    rs.getString("comment")
-            );
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, id);
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    // Lấy danh sách vé một lần
+                    TicketDAO ticketDAO = new TicketDAO();
+                    List<Ticket> tickets = ticketDAO.getTicketsByBookingId(id);
+
+                    details = new BookingDetails(
+                            rs.getInt("booking_id"),
+                            rs.getInt("user_id"),
+                            rs.getInt("pool_id"),
+                            rs.getString("pool_name"),
+                            rs.getString("poolAddressDetail"),
+                            rs.getDate("booking_date"),
+                            rs.getInt("slot_count"),
+                            rs.getBigDecimal("amount"),
+                            rs.getString("booking_status"),
+                            rs.getObject("rating") == null ? null : rs.getInt("rating"),
+                            rs.getString("comment"),
+                            rs.getInt("ticket_count"),
+                            rs.getTime("start_time"),
+                            rs.getTime("end_time"),
+                            rs.getString("discount_code"),
+                            rs.getBigDecimal("discount_percent"),
+                            tickets
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return null;
+        return details;
     }
 
     // Get all booking details by userId
@@ -343,10 +371,10 @@ public class BookingDetailDAO extends DBContext {
         st.setInt(1, bookingId);
         st.executeUpdate();
     }
-    
+
     public static void main(String[] args) throws SQLException {
-        BookingDetailDAO b = new  BookingDetailDAO();
-        List<BookingDetails> ll = b.searchBookingDetails(32, "Hồ bơi Cầu Giấy", " ", " ", "pending", "date_asc", 0, 5);
+        BookingDetailDAO b = new BookingDetailDAO();
+        List<BookingDetails> ll = b.getBookingDetailsByUserId(41);
         for (BookingDetails bookingDetails : ll) {
             System.out.println(bookingDetails.toString());
         }

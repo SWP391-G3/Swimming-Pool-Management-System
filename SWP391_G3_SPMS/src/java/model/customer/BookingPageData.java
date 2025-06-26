@@ -22,6 +22,12 @@ public class BookingPageData{
     private BigDecimal totalAmount;
     private BigDecimal discountAmount;
     private BigDecimal finalAmount;
+    
+    // Các thuộc tính bổ sung
+    private int ticketCount;
+    private String discountCode;
+    private BigDecimal discountPercent;
+    private List<Ticket> tickets;
 
     public BookingPageData() {
     }

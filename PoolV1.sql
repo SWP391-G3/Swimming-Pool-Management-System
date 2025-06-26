@@ -233,6 +233,18 @@ CREATE TABLE Payment_RentItem (
     CONSTRAINT FK_PaymentRent_Service FOREIGN KEY (service_id) REFERENCES  Pool_Service(pool_service_id)
 );
 
+CREATE TABLE Contacts (
+    contact_id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    user_id INT NULL,
+    name NVARCHAR(100) NOT NULL,
+    email NVARCHAR(100) NOT NULL,
+    subject NVARCHAR(150) NULL,
+    content NVARCHAR(2000) NOT NULL,
+    created_at DATETIME NOT NULL,
+    is_resolved BIT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
 
 
 -- Phần này chạy sau

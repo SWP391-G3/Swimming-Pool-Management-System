@@ -1,8 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="model.customer.BookingDetails" %>
 <%@ page import="model.customer.Feedback" %>
+<%@ page import="model.customer.Ticket" %>
 <%@ page import="java.text.NumberFormat,java.util.Locale" %>
 <%@ page import="java.time.LocalDate" %>
+<%@ page import="java.util.List" %> 
 <%
     BookingDetails bookingDetail = (BookingDetails) request.getAttribute("bookingDetail");
     Feedback userFeedback = (Feedback) request.getAttribute("userFeedback");
@@ -21,7 +23,6 @@
 
     boolean canCancelDate = false;
     try {
-        // bookingDate là java.sql.Date
         java.sql.Date sqlDate = bookingDetail.getBookingDate();
         if (sqlDate != null) {
             LocalDate bookingDate = sqlDate.toLocalDate();
@@ -116,7 +117,73 @@
                             <%= bookingDetail.getPoolAddressDetail() %>
                         </div>
                     </div>
+
+                    <!-- Số lượng vé -->
+                    <div>
+                        <div class="text-gray-500 text-sm">Số lượng vé</div>
+                        <div class="font-medium text-gray-900"><%= bookingDetail.getTicketCount() %></div>
+                    </div>
+                    <!-- Giờ bắt đầu -->
+                    <div>
+                        <div class="text-gray-500 text-sm">Giờ bắt đầu</div>
+                        <div class="font-medium text-gray-900">
+                            <%= bookingDetail.getStartTime() != null ? bookingDetail.getStartTime().toString() : "" %>
+                        </div>
+                    </div>
+                    <!-- Mã giảm giá -->
+                    <div>
+                        <div class="text-gray-500 text-sm">Mã giảm giá</div>
+                        <div class="font-medium text-gray-900">
+                            <%= bookingDetail.getDiscountCode() != null ? bookingDetail.getDiscountCode() : "Không áp dụng" %>
+                            <% if (bookingDetail.getDiscountPercent() != null && bookingDetail.getDiscountPercent().compareTo(java.math.BigDecimal.ZERO) > 0) { %>
+                            (Giảm <%= bookingDetail.getDiscountPercent() %>%)
+                            <% } %>
+                        </div>
+                    </div>
+                    <!-- Giờ kết thúc -->
+                    <div>
+                        <div class="text-gray-500 text-sm">Giờ kết thúc</div>
+                        <div class="font-medium text-gray-900">
+                            <%= bookingDetail.getEndTime() != null ? bookingDetail.getEndTime().toString() : "" %>
+                        </div>
+                    </div>
+
                 </div>
+                <!-- Bảng danh sách vé -->
+                <h2 class="text-lg font-bold mt-8 mb-4 text-blue-700">Danh sách vé đã đặt</h2>
+                <%
+                    List<Ticket> tickets = bookingDetail.getTickets();
+                    if (tickets != null && !tickets.isEmpty()) {
+                %>
+                <table class="min-w-full border border-gray-200 rounded-lg mb-8">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="py-2 px-4 border-b text-center">Mã vé</th>
+                            <th class="py-2 px-4 border-b text-center">Số người</th>
+                            <th class="py-2 px-4 border-b text-center">Giá</th>
+                            <th class="py-2 px-4 border-b text-center">Ngày xuất vé</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (Ticket ticket : tickets) { %>
+                        <tr>
+                            <td class="py-2 px-4 border-b text-center font-mono"><%= ticket.getTicketCode() %></td>
+                            <td class="py-2 px-4 border-b text-center"><%= ticket.getTicketTypeId() %></td>
+
+                            <td class="py-2 px-4 border-b text-center"><%= currencyFormat.format(ticket.getTicketPrice()) %></td>
+                            <td class="py-2 px-4 border-b text-center"><%= ticket.getIssuedAt() != null ? ticket.getIssuedAt() : "" %></td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+                <%
+                    } else {
+                %>
+                <div class="text-gray-500 italic mb-8">Không có vé nào trong booking này.</div>
+                <%
+                    }
+                %>
+
                 <!-- Tổng tiền -->
                 <div class="flex justify-end mb-8">
                     <div class="text-right">
@@ -127,7 +194,7 @@
                     </div>
                 </div>
                 <hr class="my-8" />
-                <!-- Rate Pool Section -->
+                <!-- Rate Pool Section (giữ nguyên như cũ) -->
                 <div>
                     <h3 class="text-lg font-semibold mb-3 text-blue-700">Đánh giá hồ bơi</h3>
                     <% if (successMsg != null) { %>

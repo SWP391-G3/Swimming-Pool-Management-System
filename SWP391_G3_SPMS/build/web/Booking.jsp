@@ -571,22 +571,25 @@
     calendarGrid.innerHTML = "";
     let grid = [];
     let blanks = startDay === 0 ? 6 : startDay - 1;
-    for (let i = 0; i < blanks; i++)
-            grid.push("");
-    for (let d = 1; d <= daysInMonth; d++)
-            grid.push(d);
-    while (grid.length % 7 !== 0)
-            grid.push("");
+    for (let i = 0; i < blanks; i++) grid.push("");
+    for (let d = 1; d <= daysInMonth; d++) grid.push(d);
+    while (grid.length % 7 !== 0) grid.push("");
     for (let i = 0; i < grid.length; i++) {
     let d = grid[i];
     let cell = document.createElement("div");
-    cell.className =
-            "calendar-day text-gray-700 text-base py-2 cursor-pointer transition";
+    cell.className = "calendar-day text-gray-700 text-base py-2 cursor-pointer transition";
     if (d === "") {
     cell.className += " disabled";
     cell.innerHTML = "&nbsp;";
     } else {
     let thisDate = new Date(y, m, d);
+    // Kiểm tra nếu là ngày trước hôm nay thì disable
+    let thisDateNoTime = new Date(thisDate.getFullYear(), thisDate.getMonth(), thisDate.getDate());
+    let todayNoTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    if (thisDateNoTime < todayNoTime) {
+    cell.className += " disabled text-gray-300 cursor-not-allowed";
+    cell.innerHTML = d;
+    } else {
     cell.textContent = d;
     if (
             thisDate.getFullYear() === today.getFullYear() &&
@@ -606,6 +609,7 @@
     renderCalendar(y, m);
     renderSlots();
     };
+    }
     }
     calendarGrid.appendChild(cell);
     }
@@ -633,11 +637,24 @@
             selectedDate.getFullYear();
     slotDayLabel.textContent = label;
     slotList.innerHTML = "";
+    let isToday = selectedDate.toDateString() === today.toDateString();
+    let now = new Date();
     slotData.slots.forEach(function (slot) {
     var slotDiv = document.createElement("button");
     slotDiv.type = "button";
     slotDiv.className =
             "slot-item w-full border border-gray-300 rounded-lg px-5 py-3 flex flex-col text-left transition text-base bg-white hover:border-blue-400 hover:bg-blue-50 focus:outline-none";
+    // Lấy giờ bắt đầu slot
+    let startTime = slot.time.split(" - ")[0]; // "8:00"
+    let [h, m] = startTime.split(":");
+    let slotStart = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), Number(h), Number(m), 0, 0);
+    // Nếu là hôm nay và slotStart <= giờ hiện tại thì disable
+    let disabled = false;
+    if (isToday && slotStart <= now) {
+    disabled = true;
+    slotDiv.className += " disabled text-gray-300 cursor-not-allowed";
+    }
+
     if (selectedSlot && selectedSlot.slot === slot.slot)
             slotDiv.className += " selected border-blue-600 bg-blue-50";
     slotDiv.innerHTML =
@@ -652,6 +669,7 @@
             '<div class="text-xs text-gray-400 ml-1">Đang còn: ' +
             slot.left +
             "</div>";
+    if (!disabled) {
     slotDiv.onclick = function () {
     selectedSlot = slot;
     renderSlots();
@@ -669,6 +687,7 @@
     }
     slotModal.classList.add("hidden");
     };
+    }
     slotList.appendChild(slotDiv);
     });
     }
@@ -1178,16 +1197,12 @@
     };
     // --------- Update Payment Detail ---------
     function calcVoucherDiscount(total) {
-    if (!selectedVoucher || !selectedVoucher.code)
-            return 0;
-    // Sửa logic tính phần trăm giảm dựa trên code voucher
-    if (selectedVoucher.code.indexOf("20") !== - 1) {
-    return Math.round(total * 0.2);
+    if (!selectedVoucher || !selectedVoucher.code) return 0;
+    let percentMatch = selectedVoucher.code.match(/\d+/);
+    if (percentMatch) {
+    let percent = parseInt(percentMatch[0]);
+    return Math.round(total * percent / 100);
     }
-    if (selectedVoucher.code.indexOf("10") !== - 1) {
-    return Math.round(total * 0.1);
-    }
-    // Có thể bổ sung các trường hợp khác nếu có
     return 0;
     }
 
