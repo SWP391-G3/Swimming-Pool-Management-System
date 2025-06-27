@@ -34,7 +34,7 @@ public class EmailUtil {
         msg.setText("Dear user,\n\n"
                 + "You have requested to reset your password.\n"
                 + "Here is your OTP code: " + otpCode + "\n\n"
-                + "Please enter this code within 1 minutes to proceed.\n\n"
+                + "Please enter this code within 2 minutes to proceed.\n\n"
                 + "Best regards,\nSupport Team");
 
         Transport.send(msg);

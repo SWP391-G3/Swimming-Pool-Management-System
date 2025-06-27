@@ -274,8 +274,8 @@
                         quantityInput.setCustomValidity("Số lượng không được để trống!");
                     } else if (!/^\d+$/.test(v)) {
                         quantityInput.setCustomValidity("Số lượng chỉ được nhập số!");
-                    } else if (Number(v) > 1000) {
-                        quantityInput.setCustomValidity("Số lượng không được phép quá 1000!");
+                    } else if (Number(v) > 10000) {
+                        quantityInput.setCustomValidity("Số lượng không được phép quá 10000!");
                     } else {
                         quantityInput.setCustomValidity("");
                     }
