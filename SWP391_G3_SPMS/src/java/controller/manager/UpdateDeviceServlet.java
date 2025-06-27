@@ -15,7 +15,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.User;
 import model.manager.Device;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.http.Part;
 
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024, // 1MB
+        maxFileSize = 1024 * 1024 * 5, // 5MB
+        maxRequestSize = 1024 * 1024 * 10 // 10MB
+)
 /**
  *
  * @author Tuan Anh
@@ -27,7 +34,7 @@ public class UpdateDeviceServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // fix lỗi git
-                HttpSession session = request.getSession();
+        HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("currentUser");
         int branchId = 0;
         if (currentUser != null) {
@@ -63,35 +70,45 @@ public class UpdateDeviceServlet extends HttpServlet {
         String poolId = request.getParameter("poolId");
         if (poolId != null) {
             poolId = poolId.trim();
-            if (poolId.isEmpty()) poolId = null;
+            if (poolId.isEmpty()) {
+                poolId = null;
+            }
         }
         request.setAttribute("poolId", poolId);
 
         String keyword = request.getParameter("keyword");
         if (keyword != null) {
             keyword = keyword.trim();
-            if (keyword.isEmpty()) keyword = null;
+            if (keyword.isEmpty()) {
+                keyword = null;
+            }
         }
         request.setAttribute("keyword", keyword);
 
         String status = request.getParameter("status");
         if (status != null) {
             status = status.trim();
-            if (status.isEmpty()) status = null;
+            if (status.isEmpty()) {
+                status = null;
+            }
         }
         request.setAttribute("status", status);
 
         String page = request.getParameter("page");
         if (page != null) {
             page = page.trim();
-            if (page.isEmpty()) page = null;
+            if (page.isEmpty()) {
+                page = null;
+            }
         }
         request.setAttribute("page", page);
 
         String pageSize = request.getParameter("pageSize");
         if (pageSize != null) {
             pageSize = pageSize.trim();
-            if (pageSize.isEmpty()) pageSize = null;
+            if (pageSize.isEmpty()) {
+                pageSize = null;
+            }
         }
         request.setAttribute("pageSize", pageSize);
 
@@ -108,25 +125,33 @@ public class UpdateDeviceServlet extends HttpServlet {
         String returnPoolId = request.getParameter("returnPoolId");
         if (returnPoolId != null) {
             returnPoolId = returnPoolId.trim();
-            if (returnPoolId.isEmpty()) returnPoolId = null;
+            if (returnPoolId.isEmpty()) {
+                returnPoolId = null;
+            }
         }
 
         String returnKeyword = request.getParameter("returnKeyword");
         if (returnKeyword != null) {
             returnKeyword = returnKeyword.trim();
-            if (returnKeyword.isEmpty()) returnKeyword = null;
+            if (returnKeyword.isEmpty()) {
+                returnKeyword = null;
+            }
         }
 
         String returnStatus = request.getParameter("returnStatus");
         if (returnStatus != null) {
             returnStatus = returnStatus.trim();
-            if (returnStatus.isEmpty()) returnStatus = null;
+            if (returnStatus.isEmpty()) {
+                returnStatus = null;
+            }
         }
 
         String returnPage = request.getParameter("returnPage");
         if (returnPage != null) {
             returnPage = returnPage.trim();
-            if (returnPage.isEmpty()) returnPage = null;
+            if (returnPage.isEmpty()) {
+                returnPage = null;
+            }
         }
 
         String pageSizeParam = request.getParameter("pageSize");
@@ -164,7 +189,22 @@ public class UpdateDeviceServlet extends HttpServlet {
                 return;
             }
 
-            Device d = new Device(id, image, name, poolId, null, quantity, status, notes);
+            Part filePart = request.getPart("deviceImageFile");
+            String imagePath = request.getParameter("oldImage");
+            if (filePart != null && filePart.getSize() > 0) {
+                String fileName = java.nio.file.Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+                String uploadDir = getServletContext().getRealPath("/uploads/devices");
+                java.io.File dir = new java.io.File(uploadDir);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+                String filePath = uploadDir + java.io.File.separator + fileName;
+                filePart.write(filePath);
+                imagePath = "uploads/devices/" + fileName;
+            }
+
+            //Device d = new Device(id, image, name, poolId, null, quantity, status, notes);
+            Device d = new Device(id, imagePath, name, poolId, null, quantity, status, notes);
             dao.updateDevice(d);
 
             String redirectUrl = "managerListDeviceServlet?page=" + (returnPage != null ? returnPage : "1");

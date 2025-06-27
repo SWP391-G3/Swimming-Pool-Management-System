@@ -191,8 +191,8 @@ CREATE TABLE Ticket (
     CONSTRAINT FK_Ticket_TicketType FOREIGN KEY (ticket_type_id) REFERENCES Ticket_Types(ticket_type_id)
 );
 
--- Tuấn Anh thêm bảng này để làm chức năng coppy vé từ bể bơi này sang bể bơi khác
-
+-- Tuấn Anh thêm bảng này 
+-- Một loại vé có thể áp dụng cho nhiều hồ bơi, và mỗi hồ bơi có thể có nhiều loại vé. Mỗi cặp thì có một giá riêng.
 CREATE TABLE Pool_Ticket_Types (
     pool_id INT NOT NULL,
     ticket_type_id INT NOT NULL,
@@ -396,7 +396,7 @@ END;
 
 
 
--- Tuấn Anh
+-- Tuấn Anh ---------- Bắt buộc phải có ko là rách việc
 ALTER TABLE Pool_Ticket_Types ADD status NVARCHAR(20) DEFAULT 'active';
 
 ALTER TABLE Staffs ADD pool_id INT;
@@ -404,9 +404,10 @@ ALTER TABLE Staffs ADD pool_id INT;
 ALTER TABLE Ticket_Types
 ADD created_at DATETIME DEFAULT GETDATE();
 
+ALTER TABLE Ticket_Types
+ADD discount_percent DECIMAL DEFAULT 0;
 
-
-
+--------------------------------------------------------------
 
 --Huy gửi database của Staff
 ALTER TABLE Staffs ADD CONSTRAINT FK_Staffs_Pool FOREIGN KEY (pool_id) REFERENCES Pools(pool_id);
@@ -428,6 +429,5 @@ ALTER TABLE Staffs
 ADD CONSTRAINT FK_Staffs_StaffType FOREIGN KEY (staff_type_id) REFERENCES Staff_Types(staff_type_id);
 
 
-ALTER TABLE Ticket_Types
-ADD discount_percent DECIMAL DEFAULT 0;
+
 

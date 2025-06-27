@@ -7,101 +7,102 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Thêm thiết bị</title>
-    <link rel="stylesheet" href="./manager-css/managerAddUpdate-device.css">
-</head>
-<body>
-    <div class="container">
-        <h2>Thêm thiết bị mới</h2>
+    <head>
+        <title>Thêm thiết bị</title>
+        <link rel="stylesheet" href="./manager-css/managerAddUpdate-device-v1.css">
+    </head>
+    <body>
+        <div class="container">
+            <h2>Thêm thiết bị mới</h2>
 
-        <!-- Hiển thị lỗi phía client -->
-        <div id="noteError" style="color: red; font-weight: bold; margin-bottom: 10px;"></div>
+            <!-- Hiển thị lỗi phía client -->
+            <div id="noteError" style="color: red; font-weight: bold; margin-bottom: 10px;"></div>
 
-        <!-- Thông báo lỗi phía server (nếu có) -->
-        <c:if test="${not empty error}">
-            <div style="color: red; font-weight: bold; margin-bottom: 10px;">
-                ${error}
-            </div>
-        </c:if>
+            <!-- Thông báo lỗi phía server (nếu có) -->
+            <c:if test="${not empty error}">
+                <div style="color: red; font-weight: bold; margin-bottom: 10px;">
+                    ${error}
+                </div>
+            </c:if>
 
-        <form action="managerAddDeviceServlet" method="post" onsubmit="return validateForm();">
+            <form action="managerAddDeviceServlet" method="post" onsubmit="return validateForm();" enctype="multipart/form-data">
 
-            <div class="form-group">
-                <label>Hồ bơi:</label>
-                <select name="poolId" required>
-                    <c:forEach var="pool" items="${poolList}">
-                        <option value="${pool.poolId}" 
-                            <c:if test="${(not empty param.poolId ? param.poolId : poolId) == pool.poolId.toString()}">selected</c:if>>
-                            ${pool.poolName}
-                        </option>
-                    </c:forEach>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label>Hồ bơi:</label>
+                    <select name="poolId" required>
+                        <c:forEach var="pool" items="${poolList}">
+                            <option value="${pool.poolId}" 
+                                    <c:if test="${(not empty param.poolId ? param.poolId : poolId) == pool.poolId.toString()}">selected</c:if>>
+                                ${pool.poolName}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label>Ảnh (tên file):</label>
-                <input type="text" name="deviceImage" value="${param.deviceImage}">
-            </div>
+                <div class="form-group">
+                    <label>Ảnh (chọn file):</label>
+                    <input type="file" name="deviceImageFile" accept="image/*">
+                    <!-- Không dùng input type="text" nữa -->
+                </div>
 
-            <div class="form-group">
-                <label>Tên thiết bị:</label>
-                <input type="text" name="deviceName" required value="${param.deviceName}">
-            </div>
+                <div class="form-group">
+                    <label>Tên thiết bị:</label>
+                    <input type="text" name="deviceName" required value="${param.deviceName}">
+                </div>
 
-            <div class="form-group">
-                <label>Số lượng:</label>
-                <input type="number" name="quantity" required min="1" max="1000" value="${param.quantity}">
-            </div>
+                <div class="form-group">
+                    <label>Số lượng:</label>
+                    <input type="number" name="quantity" required min="1" max="1000" value="${param.quantity}">
+                </div>
 
-            <div class="form-group">
-                <label>Trạng thái:</label>
-                <select name="deviceStatus">
-                    <option value="available" ${param.deviceStatus == 'available' ? 'selected' : ''}>Tốt</option>
-                    <option value="maintenance" ${param.deviceStatus == 'maintenance' ? 'selected' : ''}>Bảo trì</option>
-                    <option value="broken" ${param.deviceStatus == 'broken' ? 'selected' : ''}>Hỏng</option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label>Trạng thái:</label>
+                    <select name="deviceStatus">
+                        <option value="available" ${param.deviceStatus == 'available' ? 'selected' : ''}>Tốt</option>
+                        <option value="maintenance" ${param.deviceStatus == 'maintenance' ? 'selected' : ''}>Bảo trì</option>
+                        <option value="broken" ${param.deviceStatus == 'broken' ? 'selected' : ''}>Hỏng</option>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label>Ghi chú:</label>
-                <textarea name="notes" maxlength="200" placeholder="Không vượt quá 200 ký tự">${param.notes}</textarea>
-            </div>
+                <div class="form-group">
+                    <label>Ghi chú:</label>
+                    <textarea name="notes" maxlength="200" placeholder="Không vượt quá 200 ký tự">${param.notes}</textarea>
+                </div>
 
-            <input type="hidden" name="returnPoolId" value="${poolId}">
-            <input type="hidden" name="returnKeyword" value="${keyword}">
-            <input type="hidden" name="returnStatus" value="${status}">
-            <input type="hidden" name="returnPage" value="${page}">
-            <input type="hidden" name="pageSize" value="${pageSize}">
+                <input type="hidden" name="returnPoolId" value="${poolId}">
+                <input type="hidden" name="returnKeyword" value="${keyword}">
+                <input type="hidden" name="returnStatus" value="${status}">
+                <input type="hidden" name="returnPage" value="${page}">
+                <input type="hidden" name="pageSize" value="${pageSize}">
 
-            <div class="button-group">
-                <button type="submit">Thêm</button>
-                <a href="managerListDeviceServlet?page=${page}&poolId=${poolId}&keyword=${keyword}&status=${status}&pageSize=${pageSize}" class="btn-back">Quay lại</a>
-            </div>
-        </form>
-    </div>
+                <div class="button-group">
+                    <button type="submit">Thêm</button>
+                    <a href="managerListDeviceServlet?page=${page}&poolId=${poolId}&keyword=${keyword}&status=${status}&pageSize=${pageSize}" class="btn-back">Quay lại</a>
+                </div>
+            </form>
+        </div>
 
-    <!-- JavaScript kiểm tra ghi chú -->
-    <script>
-        function validateForm() {
-            const notes = document.forms[0]["notes"].value;
-            const errorDiv = document.getElementById("noteError");
-            const specialChars = /[<>"]/;
+        <!-- JavaScript kiểm tra ghi chú -->
+        <script>
+            function validateForm() {
+                const notes = document.forms[0]["notes"].value;
+                const errorDiv = document.getElementById("noteError");
+                const specialChars = /[<>"]/;
 
-            errorDiv.innerText = ""; // Xoá lỗi cũ
+                errorDiv.innerText = ""; // Xoá lỗi cũ
 
-            if (notes.length > 200) {
-                errorDiv.innerText = "Ghi chú không được vượt quá 200 ký tự.";
-                return false;
+                if (notes.length > 200) {
+                    errorDiv.innerText = "Ghi chú không được vượt quá 200 ký tự.";
+                    return false;
+                }
+
+                if (specialChars.test(notes)) {
+                    errorDiv.innerText = "Ghi chú không được chứa ký tự đặc biệt như <, > hoặc \".";
+                    return false;
+                }
+
+                return true;
             }
-
-            if (specialChars.test(notes)) {
-                errorDiv.innerText = "Ghi chú không được chứa ký tự đặc biệt như <, > hoặc \".";
-                return false;
-            }
-
-            return true;
-        }
-    </script>
-</body>
+        </script>
+    </body>
 </html>

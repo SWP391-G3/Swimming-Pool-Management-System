@@ -17,7 +17,14 @@ import java.util.List;
 import model.User;
 import model.manager.Device;
 import model.manager.Pooldevice;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.http.Part;
 
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024, // 1MB
+        maxFileSize = 1024 * 1024 * 5, // 5MB
+        maxRequestSize = 1024 * 1024 * 10 // 10MB
+)
 /**
  *
  * @author Tuan Anh
@@ -180,7 +187,25 @@ public class AddDeviceServlet extends HttpServlet {
                 return;
             }
 
-            Device d = new Device(0, image, name, poolId, null, quantity, status, notes);
+            // Lấy file upload
+            Part filePart = request.getPart("deviceImageFile");
+            String fileName = null;
+            String imagePath = null;
+            if (filePart != null && filePart.getSize() > 0) {
+                fileName = java.nio.file.Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+                // Đường dẫn thư mục lưu file (tùy chỉnh path này cho phù hợp dự án của bạn)
+                String uploadDir = getServletContext().getRealPath("/uploads/devices");
+                java.io.File dir = new java.io.File(uploadDir);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+                String filePath = uploadDir + java.io.File.separator + fileName;
+                filePart.write(filePath);
+                imagePath = "uploads/devices/" + fileName; // Đường dẫn lưu vào DB để sử dụng trong src=
+            }
+
+            //Device d = new Device(0, image, name, poolId, null, quantity, status, notes);
+            Device d = new Device(0, imagePath, name, poolId, null, quantity, status, notes);
             deviceDAO.addDevice(d);
 
             int count = deviceDAO.countDevicesWithPool(
