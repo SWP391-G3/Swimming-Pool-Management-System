@@ -26,6 +26,7 @@
             <file>file:/D:/SWP/SWP391_G3_SPMS/web/index.html</file>
             <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/dao/FeedbackHomepageDAO.java</file>
             <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/controller/login/LoginGoogle.java</file>
+            <file>file:/D:/SWP/SWP391_G3_SPMS/web/EditAccountInfo.jsp</file>
             <file>file:/D:/SWP/SWP391_G3_SPMS/web/managerSidebar.jsp</file>
             <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/controller/Customer/ChangePasswordServlet.java</file>
             <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/controller/manager/ListDeviceServlet.java</file>
@@ -48,6 +49,7 @@
             <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/util/EmailUtil.java</file>
             <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/dao/DiscountDetailDAO.java</file>
             <file>file:/D:/SWP/SWP391_G3_SPMS/web/pool_service_detail.jsp</file>
+            <file>file:/D:/SWP/SWP391_G3_SPMS/web/HomePage.jsp</file>
             <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/controller/manager/PoolServiceServlet.java</file>
             <file>file:/D:/SWP/SWP391_G3_SPMS/web/managerStaffInfo.jsp</file>
             <file>file:/D:/SWP/SWP391_G3_SPMS/web/pool_service_form.jsp</file>
@@ -58,6 +60,7 @@
             <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/dao/DiscountDAO.java</file>
             <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/dao/FeedbackDAO.java</file>
             <file>file:/D:/SWP/SWP391_G3_SPMS/web/register.jsp</file>
+            <file>file:/D:/SWP/SWP391_G3_SPMS/web/ChangePassword.jsp</file>
             <file>file:/D:/SWP/SWP391_G3_SPMS/web/managerDevice.jsp</file>
             <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/dao/PoolServiceDAO.java</file>
             <file>file:/D:/SWP/SWP391_G3_SPMS/src/java/controller/manager/DeleteDeviceServlet.java</file>
