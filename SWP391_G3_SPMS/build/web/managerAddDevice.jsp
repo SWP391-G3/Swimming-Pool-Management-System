@@ -40,12 +40,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Ảnh (chọn file):</label>
-                    <input type="file" name="deviceImageFile" accept="image/*">
-                    <!-- Không dùng input type="text" nữa -->
-                </div>
-
-                <div class="form-group">
                     <label>Tên thiết bị:</label>
                     <input type="text" name="deviceName" required value="${param.deviceName}">
                 </div>
@@ -69,6 +63,13 @@
                     <textarea name="notes" maxlength="200" placeholder="Không vượt quá 200 ký tự">${param.notes}</textarea>
                 </div>
 
+
+                <div class="form-group">
+                    <label>Ảnh (chọn file):</label>
+                    <input type="file" name="deviceImageFile" accept="image/*">
+                    <!-- Không dùng input type="text" nữa -->
+                </div>
+
                 <input type="hidden" name="returnPoolId" value="${poolId}">
                 <input type="hidden" name="returnKeyword" value="${keyword}">
                 <input type="hidden" name="returnStatus" value="${status}">
@@ -82,27 +83,63 @@
             </form>
         </div>
 
-        <!-- JavaScript kiểm tra ghi chú -->
+
         <script>
             function validateForm() {
-                const notes = document.forms[0]["notes"].value;
-                const errorDiv = document.getElementById("noteError");
-                const specialChars = /[<>"]/;
+                let form = document.forms[0];
+                let deviceName = form["deviceName"].value.trim();
+                let poolId = form["poolId"].value;
+                let quantity = form["quantity"].value.trim();
+                let deviceStatus = form["deviceStatus"].value;
+                let notes = form["notes"].value;
+                let imageField = form["deviceImageFile"];
+                let noteError = document.getElementById("noteError");
+                noteError.innerText = "";
 
-                errorDiv.innerText = ""; // Xoá lỗi cũ
-
-                if (notes.length > 200) {
-                    errorDiv.innerText = "Ghi chú không được vượt quá 200 ký tự.";
+                // Kiểm tra các trường bắt buộc
+                if (deviceName === "") {
+                    noteError.innerText = "Tên thiết bị không được để trống.";
+                    form["deviceName"].focus();
+                    return false;
+                }
+                if (poolId === "" || poolId === null) {
+                    noteError.innerText = "Bạn phải chọn hồ bơi.";
+                    form["poolId"].focus();
+                    return false;
+                }
+                if (quantity === "" || isNaN(quantity) || parseInt(quantity) < 1) {
+                    noteError.innerText = "Số lượng không được để trống và phải lớn hơn 0.";
+                    form["quantity"].focus();
+                    return false;
+                }
+                if (deviceStatus === "" || deviceStatus === null) {
+                    noteError.innerText = "Bạn phải chọn trạng thái thiết bị.";
+                    form["deviceStatus"].focus();
+                    return false;
+                }
+                if (imageField && imageField.value.trim() === "") {
+                    noteError.innerText = "Bạn phải chọn ảnh cho thiết bị.";
+                    imageField.focus();
                     return false;
                 }
 
+                // Kiểm tra ghi chú
+                const specialChars = /[<>"]/;
+                if (notes.length > 200) {
+                    noteError.innerText = "Ghi chú không được vượt quá 200 ký tự.";
+                    form["notes"].focus();
+                    return false;
+                }
                 if (specialChars.test(notes)) {
-                    errorDiv.innerText = "Ghi chú không được chứa ký tự đặc biệt như <, > hoặc \".";
+                    noteError.innerText = "Ghi chú không được chứa ký tự đặc biệt như <, > hoặc \".";
+                    form["notes"].focus();
                     return false;
                 }
 
                 return true;
             }
         </script>
+        
+        
     </body>
 </html>

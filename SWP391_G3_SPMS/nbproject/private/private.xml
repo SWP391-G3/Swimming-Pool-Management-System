@@ -9,6 +9,7 @@
         </group>
         <group name="SWP_ITER1">
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/manager-css/managerAddUpdate-device.css</file>
+            <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/managerEditTicket.jsp</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/controller/manager/AddDeviceServlet.java</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/controller/manager/UpdateDeviceServlet.java</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/managerDevice.jsp</file>
