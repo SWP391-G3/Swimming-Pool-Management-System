@@ -17,6 +17,7 @@ public class Discounts {
     private String discountCode;
     private String description;
     private BigDecimal discountPercent;
+     private int quantity;
     private LocalDateTime validFrom;
     private LocalDateTime validTo;
     private boolean status;
@@ -26,11 +27,12 @@ public class Discounts {
     public Discounts() {
     }
 
-    public Discounts(int discountId, String discountCode, String description, BigDecimal discountPercent, LocalDateTime validFrom, LocalDateTime validTo, boolean status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Discounts(int discountId, String discountCode, String description, BigDecimal discountPercent, int quantity, LocalDateTime validFrom, LocalDateTime validTo, boolean status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.discountId = discountId;
         this.discountCode = discountCode;
         this.description = description;
         this.discountPercent = discountPercent;
+        this.quantity = quantity;
         this.validFrom = validFrom;
         this.validTo = validTo;
         this.status = status;
@@ -68,6 +70,14 @@ public class Discounts {
 
     public void setDiscountPercent(BigDecimal discountPercent) {
         this.discountPercent = discountPercent;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public LocalDateTime getValidFrom() {
@@ -109,5 +119,7 @@ public class Discounts {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    
 
 }

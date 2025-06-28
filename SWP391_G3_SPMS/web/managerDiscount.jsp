@@ -20,21 +20,24 @@
         <title>Quản lý Mã giảm giá</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <link rel="stylesheet" href="./manager-css/manager-panel.css">
-        <link rel="stylesheet" href="./manager-css/managerDiscount-v2.css">
+        <link rel="stylesheet" href="./manager-css/managerDiscount-v3.css">
 
 
 
     </head>
     <body>
 
-        <c:if test="${not empty success}">
-            <div class="success-message" id="successMsg">${success}</div>
+        <c:if test="${not empty sessionScope.success}">
+            <div class="success-message" id="successMsg">${sessionScope.success}</div>
+            <%
+                session.removeAttribute("success");
+            %>
             <script>
                 setTimeout(function () {
                     var msg = document.getElementById('successMsg');
                     if (msg)
                         msg.style.display = 'none';
-                }, 3000); // 3000 ms = 3 giây
+                }, 3000);
             </script>
         </c:if>
 
@@ -78,7 +81,7 @@
                         </div>
                     </form>
                     <div class="action-buttons">
-                        <a href="managerAddDiscount?page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}" class="btn-add">
+                        <a href="ManagerAddDiscountServlet?page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}" class="btn-add">
                             <i class="fas fa-plus"></i> Thêm mã giảm giá
                         </a>
                     </div>
@@ -91,7 +94,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Mã giảm giá</th>
-                                <th>Mô tả</th>
+
                                 <th>Giảm giá</th>
                                 <th>Số lượng</th>
                                 <th>Ngày bắt đầu</th>
@@ -115,8 +118,8 @@
                                         <tr>
                                             <td>${discount.id}</td>
                                             <td>${discount.code}</td>
-                                            <td>${discount.description}</td>
-                                            <td>${discount.percent}%</td>
+                                            <!-- <td>{discount.description}</td> -->   
+                                            <td><fmt:formatNumber value="${discount.percent}" maxFractionDigits="0" />%</td>
                                             <td>${discount.quantity}</td>
                                             <td>
                                                 <fmt:formatDate value="${discount.validFrom}" pattern="dd/MM/yyyy HH:mm"/>

@@ -165,7 +165,8 @@ body {
 
 .discount-table th,
 .discount-table td {
-    padding: 12px 15px;
+    padding: 12px 5px;
+    
     text-align: left;
     border-bottom: 1px solid #eee;
 }
@@ -233,8 +234,8 @@ body {
 }
 
 .btn-edit {
-    background: #d1fae5;
-    color: var(--success);
+    background: #bae6fd;
+    color: #2563eb;
 }
 
 .btn-disable {
