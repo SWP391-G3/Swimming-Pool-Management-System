@@ -20,7 +20,7 @@
         <title>Quản lý Mã giảm giá</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <link rel="stylesheet" href="./manager-css/manager-panel.css">
-        <link rel="stylesheet" href="./manager-css/managerDiscount-v1.css">
+        <link rel="stylesheet" href="./manager-css/managerDiscount-v2.css">
 
 
 
@@ -50,6 +50,7 @@
                 <div class="header">
                     <h2>Quản lý Mã giảm giá</h2>
                     <form class="search-form" method="get" action="managerDiscountServlet" id="searchForm">
+
                         <div class="search-input-group">
                             <input type="text" name="keyword" placeholder="Tìm kiếm mã giảm giá..." value="${fn:escapeXml(keyword)}">
                             <select name="status">
@@ -59,6 +60,11 @@
                                 <option value="expired" ${status == 'expired' ? 'selected' : ''}>Đã hết hạn</option>
                                 <option value="upcoming" ${status == 'upcoming' ? 'selected' : ''}>Sắp diễn ra</option>
                             </select>
+                            <!-- Thêm bộ lọc ngày -->
+                            <input type="date" name="fromDate" value="${fromDate}">
+
+                            <input type="date" name="toDate" value="${toDate}">
+                            <input type="hidden" name="page" value="${page}">
                             <select name="pageSize" id="pageSizeSelect">
                                 <option value="5" ${pageSize == 5 ? 'selected' : ''}>5/Trang</option>
                                 <option value="10" ${pageSize == 10 ? 'selected' : ''}>10/Trang</option>
@@ -85,9 +91,11 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Mã giảm giá</th>
+                                <th>Mô tả</th>
                                 <th>Giảm giá</th>
                                 <th>Số lượng</th>
-                                <th>Thời gian hiệu lực</th>
+                                <th>Ngày bắt đầu</th>
+                                <th>Ngày kết thúc</th>
                                 <th>Trạng thái</th>
                                 <th>Ngày tạo</th>
                                 <th>Thao tác</th>
@@ -97,7 +105,7 @@
                             <c:choose>
                                 <c:when test="${empty discountList}">
                                     <tr>
-                                        <td colspan="8" style="text-align: center; color: gray; font-style: italic;">
+                                        <td colspan="10" style="text-align: center; color: gray; font-style: italic;">
                                             Không tìm thấy mã giảm giá nào phù hợp.
                                         </td>
                                     </tr>
@@ -107,19 +115,35 @@
                                         <tr>
                                             <td>${discount.id}</td>
                                             <td>${discount.code}</td>
+                                            <td>${discount.description}</td>
                                             <td>${discount.percent}%</td>
                                             <td>${discount.quantity}</td>
                                             <td>
-                                                <div class="date-range">
-                                                    <fmt:formatDate value="${discount.validFrom}" pattern="dd/MM/yyyy HH:mm"/>
-                                                    <span>đến</span>
-                                                    <fmt:formatDate value="${discount.validTo}" pattern="dd/MM/yyyy HH:mm"/>
-                                                </div>
+                                                <fmt:formatDate value="${discount.validFrom}" pattern="dd/MM/yyyy HH:mm"/>
                                             </td>
                                             <td>
-                                                <span class="status ${discount.statusClass}">
-                                                    ${discount.statusText}
-                                                </span>
+                                                <fmt:formatDate value="${discount.validTo}" pattern="dd/MM/yyyy HH:mm"/>
+                                            </td>
+                                            <c:set var="now" value="<%= new java.util.Date() %>"/>
+
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${!discount.status}">
+                                                        <span class="status inactive">Ngừng hoạt động</span>
+                                                    </c:when>
+                                                    <c:when test="${discount.status and discount.validFrom gt now}">
+                                                        <span class="status upcoming">Sắp diễn ra</span>
+                                                    </c:when>
+                                                    <c:when test="${discount.status and discount.validTo lt now}">
+                                                        <span class="status expired">Đã hết hạn</span>
+                                                    </c:when>
+                                                    <c:when test="${discount.status and discount.validFrom le now and discount.validTo ge now}">
+                                                        <span class="status active">Đang hoạt động</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="status inactive">Không xác định</span>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </td>
                                             <td>
                                                 <fmt:formatDate value="${discount.createdAt}" pattern="dd/MM/yyyy HH:mm"/>

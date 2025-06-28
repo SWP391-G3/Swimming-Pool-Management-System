@@ -22,7 +22,7 @@
     </servlet>
     <servlet>
         <servlet-name>managerTicketServlet</servlet-name>
-        <servlet-class>controller.manager.managerTicketServlet</servlet-class>
+        <servlet-class>controller.manager.ManagerTicketServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>CustomerAccountInfor</servlet-name>

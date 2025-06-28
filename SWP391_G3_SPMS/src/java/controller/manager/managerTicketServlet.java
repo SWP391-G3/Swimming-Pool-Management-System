@@ -22,7 +22,7 @@ import model.manager.TicketType;
  *
  * @author Tuan Anh
  */
-public class managerTicketServlet extends HttpServlet {
+public class ManagerTicketServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
