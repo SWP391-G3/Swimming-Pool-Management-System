@@ -59,14 +59,25 @@ public class AdminDeletePoolServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String id = request.getParameter("id");
+        String pageRaw = request.getParameter("page");
         PoolDAO dao = new PoolDAO();
-        int pool_id;
+
         try {
-            pool_id = Integer.parseInt(id);
-            dao.deletePool(pool_id);
-            response.sendRedirect("adminPoolManagement");
+            int pool_id = Integer.parseInt(id);
+            int page = (pageRaw != null) ? Integer.parseInt(pageRaw) : 1;
+
+            if (!dao.canDelete(pool_id)) {
+                // Không thể xóa vì vẫn đang hoạt động
+                response.sendRedirect("adminPoolManagement?error=1&page=" + page);
+            } else {
+                dao.deletePool(pool_id);
+                response.sendRedirect("adminPoolManagement?page=" + page);
+            }
+
         } catch (NumberFormatException e) {
-        }
+            e.printStackTrace();
+            response.sendRedirect("adminPoolManagement?error=2"); // Tham số không hợp lệ
+        } 
     }
 
     /**

@@ -343,6 +343,20 @@ public class PoolDAO extends DBContext {
         return null;
     }
 
+    public boolean canDelete(int pool_id) {
+        String sql = "SELECT pool_status FROM Pools WHERE pool_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, pool_id);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return !rs.getBoolean("pool_status"); // Chỉ xóa khi đang là false (hủy hoạt động)
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Không tìm thấy pool hoặc lỗi → không cho xóa
+    }
+
     public static void main(String[] args) {
         PoolDAO dao = new PoolDAO();
         List<Pool> list = new ArrayList<>();

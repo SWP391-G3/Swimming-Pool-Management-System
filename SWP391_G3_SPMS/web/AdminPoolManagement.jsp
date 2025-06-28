@@ -128,7 +128,7 @@
                                     </span>
                                 </td>
                                 <td class="p-3 border space-x-2">
-                                    <a href="adminUpdatePool?id=<%= p.getPool_id() %>" class="bg-[#FFFF99] text-black px-2 py-1 rounded hover:bg-yellow-500"><i class="fa-solid fa-pen-to-square"></i> Sửa</a>
+                                    <a href="adminUpdatePool?id=<%= p.getPool_id() %>&page=<%= currentPage %>" class="bg-[#FFFF99] text-black px-2 py-1 rounded hover:bg-yellow-500"><i class="fa-solid fa-pen-to-square"></i> Sửa</a>
                                     <button class="bg-[#FF3333] text-white px-2 py-1 rounded hover:bg-red-600" onclick="confirmDelete(<%= p.getPool_id() %>)">
                                         <i class="fa-solid fa-trash"></i> Xóa
                                     </button>
@@ -176,6 +176,7 @@
                 <p class="text-gray-700 mb-6">Bạn có chắc chắn muốn xóa bể bơi này không?</p>
                 <form id="deleteForm" action="adminDeletePool" method="GET">
                     <input type="hidden" name="id" id="deletePoolId" value="">
+                    <input type="hidden" name="page" id="deletePage" value="">
                     <div class="flex justify-end gap-3">
                         <button type="button" onclick="closeModal()" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Hủy</button>
                         <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Xóa</button>
@@ -184,10 +185,65 @@
             </div>
         </div>
 
+        <%
+            String error = request.getParameter("error"); // ✅ dùng getParameter thay vì getAttribute
+            if ("1".equals(error)) {
+        %>
+        <script>
+            window.onload = function () {
+                showCannotDeleteMessage();
+            }
+        </script>
+        <%
+            }
+        %>
+
+
+
+        <!-- Modal báo lỗi trạng thái -->
+        <div id="errorModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-xl shadow-2xl p-6 sm:p-8 w-full max-w-md animate-fade-in">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="text-red-600 text-2xl">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-red-600">Không thể xóa</h2>
+                </div>
+                <p class="text-gray-700 mb-6 leading-relaxed">
+                    Chỉ có thể xóa bể bơi đang ở trạng thái <strong>"Hủy hoạt động"</strong>.
+                </p>
+                <div class="flex justify-end">
+                    <button onclick="closeErrorModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded transition duration-200">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Optional: hiệu ứng mượt -->
+        <style>
+            @keyframes fade-in {
+                from {
+                    opacity: 0;
+                    transform: scale(0.95);
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+            .animate-fade-in {
+                animation: fade-in 0.2s ease-out;
+            }
+        </style>
+
+
         <!-- Script xử lý xóa và mở sidebar -->
         <script>
             // Modal xác nhận xóa
             function confirmDelete(poolId) {
+                const currentPage = <%= currentPage %>;
+                document.getElementById("deletePage").value = currentPage;
                 document.getElementById("deletePoolId").value = poolId;
                 document.getElementById("deleteModal").classList.remove("hidden");
             }
@@ -209,6 +265,15 @@
                     sidebar.classList.add("-translate-x-full");
                 }
             });
+
+            function showCannotDeleteMessage() {
+                document.getElementById("errorModal").classList.remove("hidden");
+            }
+
+            function closeErrorModal() {
+                document.getElementById("errorModal").classList.add("hidden");
+            }
+
 
         </script>
 

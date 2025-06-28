@@ -33,44 +33,62 @@
         </nav>
 
         <!-- Main content -->
-        <main class="flex-1 ml-64 p-8">
-            <div class="flex justify-between items-center bg-white shadow rounded p-4 mb-6">
-                <h2 class="text-2xl font-bold text-blue-600">Cập nhật bể bơi</h2>
-                <a href="#" class="text-gray-700 hover:text-blue-600"><i class="bi bi-person-circle text-2xl"></i></a>
+        <main class="flex-1 ml-64 px-6 py-8 bg-gray-50">
+            <div class="bg-white shadow rounded-2xl p-6 mb-6 flex justify-between items-center">
+                <h2 class="text-3xl font-semibold text-blue-700 tracking-tight">Cập nhật bể bơi</h2>
+                <i class="bi bi-person-circle text-3xl text-gray-600"></i>
             </div>
 
             <% 
-                    String error = (String) request.getAttribute("error");
-                        if (error == null) {
-                            error = "";
-                        }
-                Pool p = (Pool) request.getAttribute("Pool"); if(p != null) { %>
-            <form id="updatePoolForm" action="adminUpdatePool" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white shadow rounded p-6">
+                String error = (String) request.getAttribute("error");
+                String currentPage = (String) request.getAttribute("page");
+                if (error == null) error = "";
+                Pool p = (Pool) request.getAttribute("Pool"); 
+                if (p != null) { 
+            %>
+            <form id="updatePoolForm" action="adminUpdatePool" method="POST" enctype="multipart/form-data"
+                  class="grid grid-cols-1 lg:grid-cols-2 gap-6 bg-white shadow-md rounded-2xl p-8">
+
                 <input type="hidden" name="pool_id" value="<%= p.getPool_id() %>">
+                <input type="hidden" name="page" value="<%= currentPage %>">
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Tên bể bơi</label>
-                    <input type="text" name="pool_name" value="<%= p.getPool_name() %>" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" required>
+                <div class="md:col-span-2 flex gap-6">
+                    <div class="w-full md:w-1/2 space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Tên bể bơi</label>
+                            <input type="text" name="pool_name" value="<%= p.getPool_name() %>"
+                                   class="mt-1 w-full border border-gray-300 rounded px-3 py-2" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Chọn ảnh mới</label>
+                            <input type="file" name="pool_image" class="w-full border border-gray-300 rounded px-3 py-2" accept="image/*">
+                            <p class="text-xs text-gray-500 mt-1">Để trống nếu không muốn thay đổi ảnh</p>
+                        </div>
+                    </div>
+
+                    <div class="w-full md:w-1/2">
+                        <label class="block text-sm font-medium text-gray-700">Hình ảnh hiện tại</label>
+                        <img src="<%= p.getPool_image() %>" alt="Ảnh bể bơi" class="w-44 h-32 object-cover border rounded-lg shadow-sm mt-2 mb-3">
+                    </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Hình Ảnh</label>
-                    <input type="text" name="pool_image" value="<%= p.getPool_image() %>" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" required>
-                </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Mô tả</label>
-                    <input type="text" name="pool_desctiprion" value="<%= p.getPool_description() %>" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" required>
+                    <input type="text" name="pool_description" value="<%= p.getPool_description() %>"
+                           class="mt-1 w-full border border-gray-300 rounded-xl px-4 py-2 shadow-sm" required>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Tên đường</label>
-                    <input type="text" name="pool_road" value="<%= p.getPool_road() %>" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" required>
+                    <input type="text" name="pool_road" value="<%= p.getPool_road() %>"
+                           class="mt-1 w-full border border-gray-300 rounded-xl px-4 py-2 shadow-sm" required>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Khu vực</label>
-                    <select id="branchId" name="pool_address" class="mt-1 w-full border border-gray-300 rounded px-3 py-2">
+                    <select id="poolAddress" name="pool_address"
+                            class="mt-1 w-full border border-gray-300 rounded-xl px-4 py-2 shadow-sm">
                         <option value="Hà Nội" <%= p.getPool_address().equals("Hà Nội") ? "selected" : "" %>>Hà Nội</option>
                         <option value="Hồ Chí Minh" <%= p.getPool_address().equals("Hồ Chí Minh") ? "selected" : "" %>>Hồ Chí Minh</option>
                         <option value="Đà Nẵng" <%= p.getPool_address().equals("Đà Nẵng") ? "selected" : "" %>>Đà Nẵng</option>
@@ -81,46 +99,55 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Sức chứa</label>
-                    <input type="number" name="max_slot" value="<%= p.getMax_slot() %>" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" required>
+                    <input type="number" name="max_slot" value="<%= p.getMax_slot() %>"
+                           class="mt-1 w-full border border-gray-300 rounded-xl px-4 py-2 shadow-sm" required>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Giờ mở cửa</label>
-                    <input type="time" name="open_time" value="<%= p.getOpen_time() %>" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" required>
+                    <input type="time" name="open_time" value="<%= p.getOpen_time() %>"
+                           class="mt-1 w-full border border-gray-300 rounded-xl px-4 py-2 shadow-sm" required>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Giờ đóng cửa</label>
-                    <input type="time" name="close_time" value="<%= p.getClose_time() %>" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" required>
+                    <input type="time" name="close_time" value="<%= p.getClose_time() %>"
+                           class="mt-1 w-full border border-gray-300 rounded-xl px-4 py-2 shadow-sm" required>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Trạng thái</label>
-                    <select name="pool_status" class="mt-1 w-full border border-gray-300 rounded px-3 py-2">
+                    <select name="pool_status"
+                            class="mt-1 w-full border border-gray-300 rounded-xl px-4 py-2 shadow-sm">
                         <option value="true" <%= p.isPool_status() ? "selected" : "" %>>Đang hoạt động</option>
                         <option value="false" <%= !p.isPool_status() ? "selected" : "" %>>Hủy hoạt động</option>
                     </select>
                 </div>
+
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Mã khu vực</label>
-                    <input type="number" id="branchId" name="branch_id" value="<%= p.getBranch_id() %>" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" required>
-                    <p class="text-sm text-gray-500 mt-1">1 - Hà Nội, 2 - HCM, 3 - Đà Nẵng, 4 - Cần thơ, 5 - Quy Nhơn</p>
+                    <input type="number" id="branchId" name="branch_id" value="<%= p.getBranch_id() %>"
+                           class="mt-1 w-full border border-gray-300 rounded-xl px-4 py-2 shadow-sm" required>
+                    <p class="text-sm text-gray-500 mt-1">1 - Hà Nội, 2 - HCM, 3 - Đà Nẵng, 4 - Cần Thơ, 5 - Quy Nhơn</p>
                 </div>
 
-                <div class="md:col-span-2 flex gap-4">
-                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center gap-2">
+                <div class="lg:col-span-2 flex gap-4 mt-4">
+                    <button type="submit"
+                            class="bg-green-600 text-white px-6 py-2 rounded-xl shadow-md hover:bg-green-700 transition-all duration-200 flex items-center gap-2">
                         <i class="bi bi-check-circle"></i> Cập nhật
                     </button>
-                    <a href="adminPoolManagement" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 flex items-center gap-2">
+                    <a href="adminPoolManagement"
+                       class="bg-gray-500 text-white px-6 py-2 rounded-xl hover:bg-gray-600 shadow-md transition-all duration-200 flex items-center gap-2">
                         <i class="bi bi-arrow-left-circle"></i> Quay lại
                     </a>
                 </div>
             </form>
             <% } %>
         </main>
-        <!-- Error Modal (Tailwind version) -->
+
+        <!-- Error Modal -->
         <div id="errorModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
-            <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 animate-fade-in-down">
+            <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-red-600">Lỗi</h2>
                     <button onclick="closeErrorModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
@@ -136,21 +163,18 @@
             </div>
         </div>
 
-
+        <!-- Scripts -->
         <script>
             function closeErrorModal() {
                 document.getElementById('errorModal').classList.add('hidden');
             }
-
             window.onload = function () {
             <% if (error != null && !error.isEmpty()) { %>
                 document.getElementById('errorMessage').textContent = "<%= error.replace("\"", "\\\"") %>";
                 document.getElementById('errorModal').classList.remove('hidden');
             <% } %>
             };
-        </script>
 
-        <script>
             const areaCodeMap = {
                 "Hà Nội": 1,
                 "Hồ Chí Minh": 2,
@@ -158,39 +182,33 @@
                 "Cần Thơ": 4,
                 "Quy Nhơn": 5
             };
-
             document.getElementById("poolAddress").addEventListener("change", function () {
                 const selected = this.value;
                 const branchIdInput = document.getElementById("branchId");
-                if (areaCodeMap[selected]) {
-                    branchIdInput.value = areaCodeMap[selected];
-                } else {
-                    branchIdInput.value = "";
-                }
+                branchIdInput.value = areaCodeMap[selected] || "";
             });
-        </script>
 
-        <script>
             document.getElementById("updatePoolForm").addEventListener("submit", function (event) {
                 const poolName = document.getElementsByName("pool_name")[0].value.trim();
-                const poolImage = document.getElementsByName("pool_image")[0].value.trim();
-                const poolDescription = document.getElementsByName("pool_desctiprion")[0].value.trim(); // Sai chính tả
+                const fileInput = document.querySelector('input[name="pool_image"]');
+                const poolImageFile = fileInput.files[0];
+                const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+                const poolDescription = document.getElementsByName("pool_description")[0].value.trim();
                 const poolRoad = document.getElementsByName("pool_road")[0].value.trim();
                 const poolAddress = document.getElementsByName("pool_address")[0].value;
                 const maxSlot = document.getElementsByName("max_slot")[0].value;
                 const openTime = document.getElementsByName("open_time")[0].value;
                 const closeTime = document.getElementsByName("close_time")[0].value;
 
-
-                const nameRegex = /^[a-zA-ZÀ-ỹ\s0-9]+$/; // Cho phép chữ cái có dấu, khoảng trắng, số
                 let errorMsg = "";
+                const nameRegex = /^[a-zA-ZÀ-ỹ\s0-9]+$/;
 
-                if (poolName === "" || poolName.length < 3) {
+                if (poolName.length < 3) {
                     errorMsg = "Tên bể bơi phải có ít nhất 3 ký tự.";
                 } else if (!nameRegex.test(poolName)) {
                     errorMsg = "Tên bể bơi không được chứa ký tự đặc biệt.";
-                } else if (!poolImage.startsWith("http")) {
-                    errorMsg = "Link hình ảnh không hợp lệ.";
+                } else if (poolImageFile && !allowedTypes.includes(poolImageFile.type)) {
+                    errorMsg = "Chỉ chấp nhận file ảnh JPG, PNG hoặc WEBP.";
                 } else if (poolDescription.length < 10) {
                     errorMsg = "Mô tả phải có ít nhất 10 ký tự.";
                 } else if (poolRoad === "") {
