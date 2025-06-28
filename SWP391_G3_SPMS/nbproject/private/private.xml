@@ -2,15 +2,20 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/src/java/controller/Admin/Employee/AdminAddNewEmployeeServlet.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/web/adminAddNewEmployee.jsp</file>
+        </group>
         <group name="SWP391_G3_SPMS">
             <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/src/java/dao/admin/CustomerDAO.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/web/adminAddNewEmployee.jsp</file>
             <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/web/adminFilterCustomer.jsp</file>
             <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/src/java/model/admin/Customer.java</file>
             <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/src/java/controller/Admin/Employee/AdminViewEmployeeListServlet.java</file>
-            <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/web/adminAddNewEmployee.jsp</file>
             <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/src/java/util/PasswordEncryption.java</file>
             <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/web/adminAddManager.jsp</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/src/java/controller/Admin/Manager/AdminLockManagerServlet.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/web/register.jsp</file>
             <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/src/java/model/admin/CustomerTicket.java</file>
             <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/web/AdminPoolManagement.jsp</file>
             <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/web/adminViewCustomerHistory.jsp</file>
@@ -42,6 +47,7 @@
             <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/src/java/model/User.java</file>
             <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/web/adminUpdateManager.jsp</file>
             <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/src/java/dao/admin/CustomerVoucherDAO.java</file>
+            <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/web/login.jsp</file>
             <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/src/java/dao/admin/CustomerTicketDAO.java</file>
             <file>file:/D:/5rd_Semester_FPTU/SWP391/Clone/SWP-Project/SWP391_G3_SPMS/web/adminViewManagerList.jsp</file>
         </group>

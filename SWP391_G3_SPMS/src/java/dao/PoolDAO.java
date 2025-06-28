@@ -105,6 +105,21 @@ public class PoolDAO extends DBContext {
         return list;
     }
 
+    public boolean isPoolNameExist(String poolName) {
+        String sql = "SELECT COUNT(*) FROM Pools WHERE pool_name COLLATE SQL_Latin1_General_CP1_CI_AS = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, poolName);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public void insertPool(Pool pool) {
         String sql = "INSERT INTO Pools (pool_name, pool_road, pool_address, max_slot, open_time, close_time,created_at,pool_image,branch_id,pool_description) VALUES (?,?,?,?,?,?,?,?,?,?)";
         try {

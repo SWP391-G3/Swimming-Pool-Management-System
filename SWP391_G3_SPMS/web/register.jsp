@@ -82,6 +82,7 @@
                     <div>
                         <label class="block mb-1 text-sm font-medium text-gray-700">Họ và tên</label>
                         <input
+                            id="full_name"
                             type="text"
                             name="full_name"
                             placeholder="Nhập họ và tên"
@@ -96,6 +97,7 @@
                     <div>
                         <label class="block mb-1 text-sm font-medium text-gray-700">Email</label>
                         <input
+                            id="email"
                             type="email"
                             name="email"
                             placeholder="email@gmail.com"
@@ -108,6 +110,7 @@
                     <div>
                         <label class="block mb-1 text-sm font-medium text-gray-700">Số điện thoại</label>
                         <input
+                            id="phone"
                             type="tel"
                             name="phone"
                             placeholder="Nhập số điện thoại"
@@ -121,6 +124,7 @@
                     <div>
                         <label class="block mb-1 text-sm font-medium text-gray-700">Tên đăng nhập</label>
                         <input
+                            id="username"
                             type="text"
                             name="username"
                             placeholder="Tên đăng nhập"
@@ -134,6 +138,7 @@
                     <div>
                         <label class="block mb-1 text-sm font-medium text-gray-700">Mật khẩu</label>
                         <input
+                            id="password"
                             type="password"
                             name="password"
                             placeholder="Nhập mật khẩu"
@@ -145,6 +150,7 @@
                     <div>
                         <label class="block mb-1 text-sm font-medium text-gray-700">Nhập lại mật khẩu</label>
                         <input
+                            id="repassword"
                             type="password"
                             name="confirm_password"
                             placeholder="Nhập lại mật khẩu"

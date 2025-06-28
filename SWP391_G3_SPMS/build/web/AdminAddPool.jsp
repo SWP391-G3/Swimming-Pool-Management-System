@@ -58,9 +58,9 @@
                 <a href="#" class="text-gray-700 hover:text-blue-600"><i class="bi bi-person-circle text-2xl"></i></a>
             </div>
 
-            <% String error = (String) request.getAttribute("error"); if(error == null){ error = ""; } %>
+            <% String error = (String) request.getAttribute("error"); %>
             <!-- Form -->
-            <form id="addPoolForm" action="adminAddPool" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white shadow rounded p-6">
+            <form id="addPoolForm" action="adminAddPool" enctype="multipart/form-data" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white shadow rounded p-6">
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Tên bể bơi</label>
@@ -68,7 +68,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Hình ảnh</label>
-                    <input type="text" name="poolImage" value="${param.poolImage}" class="mt-1 w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nhập link hình ảnh" required>
+                    <input type="file" name="poolImage" value="${param.poolImage}" class="mt-1 w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nhập link hình ảnh" required>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Mô tả</label>
@@ -150,8 +150,9 @@
                 }
 
                 window.onload = function () {
-                <% if (error != null && !error.isEmpty()) { %>
-                    document.getElementById('errorMessage').textContent = "<%= error.replace("\"", "\\\"") %>";
+                <% if (error != null) { %>
+                    const message = `<%= error.replaceAll("\"", "\\\\\"").replaceAll("\n", "\\n") %>`;
+                    document.getElementById('errorMessage').textContent = message;
                     document.getElementById('errorModal').classList.remove('hidden');
                 <% } %>
                 };
@@ -179,41 +180,41 @@
 
             <script>
                 document.getElementById("addPoolForm").addEventListener("submit", function (event) {
-                    const poolName = document.getElementsByName("poolName")[0].value.trim();
-                    const poolImage = document.getElementsByName("poolImage")[0].value.trim();
-                    const poolDescription = document.getElementsByName("poolDescription")[0].value.trim();
-                    const poolRoad = document.getElementsByName("poolRoad")[0].value.trim();
-                    const poolAddress = document.getElementsByName("poolAddress")[0].value;
-                    const maxSlot = document.getElementsByName("maxSlot")[0].value;
-                    const openTime = document.getElementsByName("openTime")[0].value;
-                    const closeTime = document.getElementsByName("closeTime")[0].value;
+                const poolName = document.getElementsByName("poolName")[0].value.trim();
+                const fileInput = document.querySelector('input[name="poolImage"]');
+                const poolImageFile = fileInput.files[0];
+                const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+                const poolDescription = document.getElementsByName("poolDescription")[0].value.trim();
+                const poolRoad = document.getElementsByName("poolRoad")[0].value.trim();
+                const poolAddress = document.getElementsByName("poolAddress")[0].value;
+                const maxSlot = document.getElementsByName("maxSlot")[0].value;
+                const openTime = document.getElementsByName("openTime")[0].value;
+                const closeTime = document.getElementsByName("closeTime")[0].value;
+                const nameRegex = /^[a-zA-ZÀ-ỹ\s0-9]+$/; // Cho phép chữ cái có dấu, khoảng trắng, số
+                let errorMsg = "";
+                if (poolName === "" || poolName.length < 3) {
+                    errorMsg = "Tên bể bơi phải có ít nhất 3 ký tự.";
+                } else if (!nameRegex.test(poolName)) {
+                    errorMsg = "Tên bể bơi không được chứa ký tự đặc biệt.";
+                } else if (poolImageFile && !allowedTypes.includes(poolImageFile.type)) {
+                    errorMsg = "Chỉ chấp nhận file ảnh JPG, PNG hoặc WEBP.";
+                } else if (poolDescription.length < 10) {
+                    errorMsg = "Mô tả phải có ít nhất 10 ký tự.";
+                } else if (poolRoad === "") {
+                    errorMsg = "Vui lòng nhập tên đường.";
+                } else if (poolAddress === "") {
+                    errorMsg = "Vui lòng chọn khu vực.";
+                } else if (maxSlot <= 0 || isNaN(maxSlot)) {
+                    errorMsg = "Sức chứa phải lớn hơn 0.";
+                } else if (openTime >= closeTime) {
+                    errorMsg = "Giờ mở cửa phải trước giờ đóng cửa.";
+                }
 
-                    const nameRegex = /^[a-zA-ZÀ-ỹ\s0-9]+$/; // Cho phép chữ cái có dấu, khoảng trắng, số
-                    let errorMsg = "";
-
-                    if (poolName === "" || poolName.length < 3) {
-                        errorMsg = "Tên bể bơi phải có ít nhất 3 ký tự.";
-                    } else if (!nameRegex.test(poolName)) {
-                        errorMsg = "Tên bể bơi không được chứa ký tự đặc biệt.";
-                    } else if (!poolImage.startsWith("http")) {
-                        errorMsg = "Link hình ảnh không hợp lệ.";
-                    } else if (poolDescription.length < 10) {
-                        errorMsg = "Mô tả phải có ít nhất 10 ký tự.";
-                    } else if (poolRoad === "") {
-                        errorMsg = "Vui lòng nhập tên đường.";
-                    } else if (poolAddress === "") {
-                        errorMsg = "Vui lòng chọn khu vực.";
-                    } else if (maxSlot <= 0 || isNaN(maxSlot)) {
-                        errorMsg = "Sức chứa phải lớn hơn 0.";
-                    } else if (openTime >= closeTime) {
-                        errorMsg = "Giờ mở cửa phải trước giờ đóng cửa.";
-                    }
-
-                    if (errorMsg !== "") {
-                        event.preventDefault();
+                if (errorMsg !== "") {
+                event.preventDefault();
                         document.getElementById('errorMessage').textContent = errorMsg;
                         document.getElementById('errorModal').classList.remove('hidden');
-                    }
+                }
                 });
             </script>
 

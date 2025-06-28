@@ -85,6 +85,7 @@
                 <div>
                     <label for="usernameInput" class="block text-sm font-medium text-gray-700 mb-1">Tên đăng nhập</label>
                     <input
+                 
                         type="text"
                         id="usernameInput"
                         name="username"
@@ -103,6 +104,7 @@
                         />
                 </div>
                 <button
+                    id="login"
                     type="submit"
                     class="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg hover:bg-blue-600 transition duration-300"
                     >
