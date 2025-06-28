@@ -201,8 +201,8 @@ body {
 }
 
 .status.expired {
-    background: #f3f4f6;
-    color: #6b7280;
+    background: red;
+    color: #ffffff;
 }
 
 .status.upcoming {

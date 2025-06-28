@@ -14,8 +14,12 @@
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/managerDevice.jsp</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/model/manager/Pooldevice.java</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/managerDiscount.jsp</file>
+            <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/manager-css/managerDiscount-v4.css</file>
+            <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/controller/manager/ManagerDeleteDiscountServlet.java</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/controller/manager/ManagerAddTicketServlet.java</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/controller/manager/ManagerStaffServlet.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/managerEditDiscount.jsp</file>
+            <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/controller/manager/ManagerEditDiscountServlet.java</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/manager-css/managerTicket-v3.css</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/controller/manager/ManagerAddDeviceServlet.java</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/manager-css/managerAddUpdate-device-v1.css</file>
@@ -31,12 +35,16 @@
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/managerPanel.jsp</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/managerAddDevice.jsp</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/manager-css/managerDiscount-v2.css</file>
+            <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/manager-css/managerEditDiscount.css</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/controller/manager/ManagerAddDiscountServlet.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/manager-css/managerEditTicket-v1.css</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/controller/manager/ManagerTicketServlet.java</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/dal/DBContext.java</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/controller/manager/ManagerDetailTicketAjaxServlet.java</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/dao/manager/TicketTypeDAO.java</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/managerTicket.jsp</file>
+            <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/controller/manager/ManagerEditTicketServlet.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/managerAddTicket.jsp</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/web/managerAddDiscount.jsp</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER1/SWP391_G3_SPMS/src/java/controller/manager/ManagerListDeviceServlet.java</file>
         </group>

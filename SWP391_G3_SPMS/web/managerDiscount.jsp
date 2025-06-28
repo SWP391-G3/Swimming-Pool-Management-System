@@ -20,7 +20,7 @@
         <title>Quản lý Mã giảm giá</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <link rel="stylesheet" href="./manager-css/manager-panel.css">
-        <link rel="stylesheet" href="./manager-css/managerDiscount-v3.css">
+        <link rel="stylesheet" href="./manager-css/managerDiscount-v4.css">
 
 
 
@@ -156,12 +156,12 @@
                                                    onclick="showDiscountDetail(${discount.id})">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="managerEditDiscount?id=${discount.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}" 
+                                                <a href="managerEditDiscountServlet?id=${discount.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}" 
                                                    class="btn-edit" 
                                                    title="Cập nhật">
                                                     Cập nhật
                                                 </a>
-                                                <a href="managerDeleteDiscount?id=${discount.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}"
+                                                <a href="managerDeleteDiscountServlet?id=${discount.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}"
                                                    class="btn-disable"
                                                    title="Xóa"
                                                    onclick="return confirm('Bạn có chắc chắn muốn xóa mã giảm giá này?');">

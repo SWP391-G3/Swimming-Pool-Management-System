@@ -130,13 +130,70 @@ public class DiscountDAO extends DBContext {
     public boolean insert(Discounts d) {
         String sql = "INSERT INTO Discounts (discount_code, description, discount_percent, quantity, valid_from, valid_to, status, created_at) VALUES (?, ?, ?, ?, ?, ?, 1, GETDATE())";
         try {
-            PreparedStatement ps = connection.prepareStatement(sql); 
+            PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, d.getDiscountCode());
             ps.setString(2, d.getDescription());
             ps.setBigDecimal(3, d.getDiscountPercent());
             ps.setInt(4, d.getQuantity());
             ps.setTimestamp(5, Timestamp.valueOf(d.getValidFrom()));
             ps.setTimestamp(6, Timestamp.valueOf(d.getValidTo()));
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Lấy thông tin discount theo ID
+    public Discounts getDiscountById(int id) {
+        String sql = "SELECT * FROM Discounts WHERE discount_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Discounts d = new Discounts();
+                d.setDiscountId(rs.getInt("discount_id"));
+                d.setDiscountCode(rs.getString("discount_code"));
+                d.setDescription(rs.getString("description"));
+                d.setDiscountPercent(rs.getBigDecimal("discount_percent"));
+                d.setQuantity(rs.getInt("quantity"));
+                d.setValidFrom(rs.getTimestamp("valid_from").toLocalDateTime());
+                d.setValidTo(rs.getTimestamp("valid_to").toLocalDateTime());
+                d.setStatus(rs.getBoolean("status"));
+                d.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                if (rs.getTimestamp("updated_at") != null) {
+                    d.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+                }
+                return d;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+// Cập nhật voucher
+    public boolean update(Discounts d) {
+        String sql = "UPDATE Discounts SET description=?, discount_percent=?, quantity=?, valid_from=?, valid_to=?, status=?, updated_at=GETDATE() WHERE discount_id=?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, d.getDescription());
+            ps.setBigDecimal(2, d.getDiscountPercent());
+            ps.setInt(3, d.getQuantity());
+            ps.setTimestamp(4, java.sql.Timestamp.valueOf(d.getValidFrom()));
+            ps.setTimestamp(5, java.sql.Timestamp.valueOf(d.getValidTo()));
+            ps.setBoolean(6, d.isStatus());
+            ps.setInt(7, d.getDiscountId());
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean deleteDiscount(int id) {
+        String sql = "DELETE FROM Discounts WHERE discount_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
