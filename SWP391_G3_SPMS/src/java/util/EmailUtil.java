@@ -10,10 +10,41 @@ import java.util.Properties;
 
 public class EmailUtil {
 
-    public static void sendOTP(String toEmail, String otpCode) throws MessagingException {
+    public static void sendOTP(String toEmail, String otpCode, String purpose) throws MessagingException {
+        
+        
         final String fromEmail = "tonghung24112003ff@gmail.com";
-        final String password = "uwtu xjsn tlol wubu"; // App Password, không dùng password thật
+        final String password = "uwtu xjsn tlol wubu"; // Gmail App Password
 
+        // Nội dung email tùy theo mục đích
+        String subject = "";
+        String message = "";
+
+        switch (purpose.toLowerCase()) {
+            case "register":
+                subject = "Mã xác thực đăng ký tài khoản";
+                message = "Chào bạn,\n\n"
+                        + "Cảm ơn bạn đã đăng ký tài khoản.\n"
+                        + "Mã xác thực (OTP) của bạn là: " + otpCode + "\n\n"
+                        + "Vui lòng nhập mã này trong vòng 2 phút để hoàn tất đăng ký.\n\n"
+                        + "Trân trọng,\nĐội ngũ hỗ trợ";
+                break;
+
+            case "reset":
+            case "reset-password":
+                subject = "Mã OTP đặt lại mật khẩu";
+                message = "Chào bạn,\n\n"
+                        + "Bạn đã yêu cầu đặt lại mật khẩu.\n"
+                        + "Mã OTP của bạn là: " + otpCode + "\n\n"
+                        + "Vui lòng nhập mã này trong vòng 2 phút để tiếp tục.\n\n"
+                        + "Trân trọng,\nĐội ngũ hỗ trợ";
+                break;
+
+            default:
+                throw new IllegalArgumentException("Mục đích gửi email không hợp lệ: " + purpose);
+        }
+
+        // Thiết lập cấu hình gửi mail
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -27,15 +58,12 @@ public class EmailUtil {
             }
         });
 
+        // Tạo và gửi email
         Message msg = new MimeMessage(session);
         msg.setFrom(new InternetAddress(fromEmail));
         msg.setRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
-        msg.setSubject("Your OTP Code for Password Reset");
-        msg.setText("Dear user,\n\n"
-                + "You have requested to reset your password.\n"
-                + "Here is your OTP code: " + otpCode + "\n\n"
-                + "Please enter this code within 2 minutes to proceed.\n\n"
-                + "Best regards,\nSupport Team");
+        msg.setSubject(subject);
+        msg.setText(message);
 
         Transport.send(msg);
     }

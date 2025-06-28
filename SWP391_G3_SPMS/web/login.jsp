@@ -7,7 +7,6 @@
         <title>Đăng nhập</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <style>
-            /* Gợn sóng */
             body {
                 background: linear-gradient(180deg, #a0e9ff 0%, #6dd5fa 100%);
                 overflow: hidden;
@@ -44,7 +43,6 @@
                 }
             }
 
-            /* Bong bóng */
             .bubble {
                 position: absolute;
                 bottom: -50px;
@@ -77,6 +75,16 @@
         <div class="relative z-10 bg-white/80 backdrop-blur-xl shadow-2xl rounded-2xl w-full max-w-md p-8 space-y-6">
             <h2 class="text-2xl font-bold text-center text-blue-600">Đăng nhập</h2>
 
+            <!-- ✅ Thông báo đăng ký thành công -->
+            <c:if test="${not empty sessionScope.message}">
+                <div class="text-green-800 bg-green-100 border border-green-300 px-4 py-2 rounded mb-4 text-center font-semibold">
+                    ✅ ${sessionScope.message}
+                </div>
+                <c:remove var="message" scope="session" />
+            </c:if>
+
+
+            <!-- ❌ Thông báo lỗi -->
             <c:if test="${not empty error}">
                 <p class="bg-red-100 text-red-700 p-3 rounded text-sm font-semibold text-center">${error}</p>
             </c:if>
@@ -137,7 +145,7 @@
             </div>
         </div>
 
-        <!-- Script tạo bong bóng -->
+        <!-- Bong bóng -->
         <script>
             const createBubbles = () => {
                 for (let i = 0; i < 50; i++) {

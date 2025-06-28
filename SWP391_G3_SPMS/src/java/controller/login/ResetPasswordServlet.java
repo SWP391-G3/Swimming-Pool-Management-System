@@ -1,4 +1,7 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package controller.login;
 
 import dao.UserDAO;
@@ -50,7 +53,7 @@ public class ResetPasswordServlet extends HttpServlet {
 
         // Tạo mã OTP và thời điểm gửi
         String otp = String.format("%06d", new Random().nextInt(999999));
-        Date otpCreatedAt = new Date(); // thời điểm hiện tại
+        Date otpCreatedAt = new Date();
 
         // Lưu vào session
         session.setAttribute("otp", otp);
@@ -58,7 +61,7 @@ public class ResetPasswordServlet extends HttpServlet {
         session.setAttribute("resetEmail", email);
 
         try {
-            EmailUtil.sendOTP(email, otp);
+            EmailUtil.sendOTP(email, otp, "reset");
             session.setAttribute("message", "Mã OTP đã được gửi đến email.");
             response.sendRedirect("ResetPassword.jsp?step=otp");
         } catch (Exception e) {
@@ -81,7 +84,6 @@ public class ResetPasswordServlet extends HttpServlet {
             return;
         }
 
-        // Tính thời gian đã trôi qua (giây)
         long millisPassed = new Date().getTime() - otpCreatedAt.getTime();
         long secondsPassed = millisPassed / 1000;
 
@@ -92,7 +94,7 @@ public class ResetPasswordServlet extends HttpServlet {
         }
 
         if (expectedOtp.equals(userInputOtp)) {
-            session.setAttribute("message", "Hoàn tất mã OTP.Vui lòng đặt lại mật khẩu.");
+            session.setAttribute("message", "Hoàn tất mã OTP. Vui lòng đặt lại mật khẩu.");
             response.sendRedirect("ResetPassword.jsp?step=newpass");
         } else {
             session.setAttribute("error", "Mã OTP không chính xác.");
@@ -101,49 +103,46 @@ public class ResetPasswordServlet extends HttpServlet {
     }
 
     // Bước 3: Đặt lại mật khẩu mới
-  private void handleNewPasswordStep(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    HttpSession session = request.getSession();
-    String newPassword = request.getParameter("newPassword");
-    String confirmPassword = request.getParameter("confirmPassword");
-    String email = (String) session.getAttribute("resetEmail");
+    private void handleNewPasswordStep(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        String newPassword = request.getParameter("newPassword");
+        String confirmPassword = request.getParameter("confirmPassword");
+        String email = (String) session.getAttribute("resetEmail");
 
-    if (email == null) {
-        response.getWriter().println("Chưa xác thực OTP.");
-        return;
+        if (email == null) {
+            response.getWriter().println("Chưa xác thực OTP.");
+            return;
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            session.setAttribute("error", "Mật khẩu xác nhận không khớp.");
+            response.sendRedirect("ResetPassword.jsp?step=newpass");
+            return;
+        }
+
+        String passwordValidationMessage = validateRegisterPassword(newPassword);
+        if (passwordValidationMessage != null) {
+            session.setAttribute("error", passwordValidationMessage);
+            response.sendRedirect("ResetPassword.jsp?step=newpass");
+            return;
+        }
+
+        UserDAO userDao = new UserDAO();
+        String hashedPassword = HashUtils.hashPassword(newPassword);
+        boolean updated = userDao.updatePasswordByEmail(email, hashedPassword);
+
+        if (updated) {
+            session.removeAttribute("otp");
+            session.removeAttribute("otpCreatedAt");
+            session.removeAttribute("resetEmail");
+
+            session.setAttribute("message", "Đặt lại mật khẩu thành công. Vui lòng đăng nhập.");
+            response.sendRedirect("login.jsp");
+        } else {
+            session.setAttribute("error", "Không thể cập nhật mật khẩu.");
+            response.sendRedirect("ResetPassword.jsp?step=newpass");
+        }
     }
-
-    // Kiểm tra mật khẩu xác nhận
-    if (!newPassword.equals(confirmPassword)) {
-        session.setAttribute("error", "Mật khẩu xác nhận không khớp.");
-        response.sendRedirect("ResetPassword.jsp?step=newpass");
-        return;
-    }
-
-    // Kiểm tra mật khẩu mạnh
-    String passwordValidationMessage = validateRegisterPassword(newPassword);
-    if (passwordValidationMessage != null) {
-        session.setAttribute("error", passwordValidationMessage);
-        response.sendRedirect("ResetPassword.jsp?step=newpass");
-        return;
-    }
-
-    // Hash và cập nhật
-    UserDAO userDao = new UserDAO();
-    String hashedPassword = HashUtils.hashPassword(newPassword);
-    boolean updated = userDao.updatePasswordByEmail(email, hashedPassword);
-
-    if (updated) {
-        session.removeAttribute("otp");
-        session.removeAttribute("otpCreatedAt");
-        session.removeAttribute("resetEmail");
-
-        session.setAttribute("message", "Đặt lại mật khẩu thành công. Vui lòng đăng nhập.");
-        response.sendRedirect("login.jsp");
-    } else {
-        session.setAttribute("error", "Không thể cập nhật mật khẩu.");
-        response.sendRedirect("ResetPassword.jsp?step=newpass");
-    }
-}
 
     // Gửi lại mã OTP mới
     private void handleResendOtp(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -163,7 +162,7 @@ public class ResetPasswordServlet extends HttpServlet {
         session.setAttribute("otpCreatedAt", otpCreatedAt);
 
         try {
-            EmailUtil.sendOTP(email, otp);
+            EmailUtil.sendOTP(email, otp, "reset");
             session.setAttribute("message", "Mã OTP mới đã được gửi.");
             response.sendRedirect("ResetPassword.jsp?step=otp");
         } catch (Exception e) {
