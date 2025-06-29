@@ -166,6 +166,7 @@
                         Xác nhận OTP
                     </button>
                 </form>
+
                 <div class="text-center mt-2">
                     <a href="register?step=resend"
                        class="text-yellow-600 font-medium hover:underline">

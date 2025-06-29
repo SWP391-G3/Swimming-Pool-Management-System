@@ -115,13 +115,13 @@
                 </form>
 
                 <!-- 🔁 Nút gửi lại OTP -->
-                <form method="post" action="reset-password" class="mt-4">
-                    <input type="hidden" name="step" value="resend" />
-                    <button type="submit"
-                            class="w-full bg-yellow-500 text-white font-semibold py-2 rounded-lg hover:bg-yellow-600 transition duration-300">
+                <div class="text-center mt-2">
+                    <a href="reset-password?step=resend"
+                       class="text-yellow-600 font-medium hover:underline">
                         Gửi lại mã OTP
-                    </button>
-                </form>
+                    </a>
+                </div>
+
             </c:if>
 
             <!-- STEP 3: Nhập mật khẩu mới -->
