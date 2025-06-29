@@ -283,7 +283,6 @@
                 errorDiv.scrollIntoView({behavior: 'smooth', block: 'center'});
             }
 
-            // Validation functions tương tự như trong Java
             function validateFullName(fullName) {
                 if (!fullName || fullName.trim() === "") {
                     return "Họ và tên không được để trống.";

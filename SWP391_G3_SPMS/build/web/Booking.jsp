@@ -127,12 +127,7 @@
                                     type="button"
                                     >
                                     <div class="text-xs text-gray-500">Slot</div>
-                                    <div
-                                        class="text-base font-bold text-blue-700"
-                                        id="slotNumberText"
-                                        >
-                                        2
-                                    </div>
+                                    <div class="text-base font-bold text-blue-700" id="slotNumberText">2</div>
                                 </button>
                                 <div
                                     class="flex-1 flex flex-col justify-center border border-gray-300 rounded-md px-3 py-2"
@@ -498,6 +493,13 @@
             if (slotCountInput) {
             const totalSlotCount = selectedTickets.reduce((sum, t) => sum + t.quantity, 0);
             slotCountInput.value = totalSlotCount;
+            }
+
+            //kiểm tra bắt buộc phải chọn slot
+            if (!selectedDate || !selectedSlot) {
+            alert("Bạn phải chọn ngày và khung giờ (slot) trước khi thanh toán!");
+            e.preventDefault();
+            return false;
             }
 
             // Nếu muốn kiểm tra bắt buộc phải có ít nhất 1 vé
