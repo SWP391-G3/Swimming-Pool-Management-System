@@ -170,6 +170,28 @@ public class DeviceDao extends DBContext {
         }
         return devices;
     }
+    
+    // Phương thức kiểm tra trùng tên khi thêm thiết bị 
+    public boolean isDeviceNameExistsInPool(int poolId, String deviceName) {
+    String sql = "SELECT COUNT(*) FROM Pool_Device WHERE pool_id = ? AND LOWER(device_name) = LOWER(?)";
+
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setInt(1, poolId);
+        ps.setString(2, deviceName);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0;
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+
+    
+    
+    
+    
 
     public static void main(String[] args) {
         DeviceDao dao = new DeviceDao();

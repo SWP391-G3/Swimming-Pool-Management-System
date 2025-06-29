@@ -201,6 +201,32 @@ public class DiscountDAO extends DBContext {
         return false;
     }
 
+    // Dùng cho AJAX hiển thị chi tiết
+    public Discount getDiscountByIdAjax(int id) {
+        String sql = "SELECT * FROM Discounts WHERE discount_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Discount d = new Discount();
+                d.setId(rs.getInt("discount_id"));
+                d.setCode(rs.getString("discount_code"));
+                d.setDescription(rs.getString("description"));
+                d.setPercent(rs.getDouble("discount_percent"));
+                d.setQuantity(rs.getInt("quantity"));
+                d.setValidFrom(rs.getTimestamp("valid_from"));
+                d.setValidTo(rs.getTimestamp("valid_to"));
+                d.setStatus(rs.getBoolean("status"));
+                d.setCreatedAt(rs.getTimestamp("created_at"));
+                d.setUpdatedAt(rs.getTimestamp("updated_at"));
+                return d;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
 
         // Tạo dữ liệu test

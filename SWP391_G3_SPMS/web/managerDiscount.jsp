@@ -194,7 +194,14 @@
             </div>
         </div>
 
-        <!-- Modal xem chi tiết -->
+       
+
+    </body>
+</html>
+
+
+<link rel="stylesheet" href="./manager-css/managerDetailDiscount.css">
+ <!-- Modal xem chi tiết -->
         <div id="discountDetailModal" class="modal" style="display:none;">
             <div class="modal-content">
                 <span class="close" onclick="closeDiscountModal()">&times;</span>
@@ -218,46 +225,43 @@
             });
 
             function showDiscountDetail(discountId) {
-                var modal = document.getElementById('discountDetailModal');
-                var body = document.getElementById('discountDetailBody');
-                body.innerHTML = `
-                    <div class="loading-spinner">
-                        <div class="spinner"></div>
-                        <p>Loading discount details...</p>
-                    </div>
-                `;
-                modal.style.display = 'flex';
-                setTimeout(() => modal.classList.add('show'), 10);
+    var modal = document.getElementById('discountDetailModal');
+    var body = document.getElementById('discountDetailBody');
+    body.innerHTML = `
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Đang tải chi tiết...</p>
+        </div>
+    `;
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('show'), 10);
 
-                var params = new URLSearchParams({id: discountId});
-                fetch("managerDetailDiscountAjax", {
-                    method: "POST",
-                    headers: {"Content-Type": "application/x-www-form-urlencoded"},
-                    body: params
-                })
-                        .then(res => res.text())
-                        .then(html => {
-                            body.innerHTML = html;
-                        })
-                        .catch(error => {
-                            body.innerHTML = `
-                                <div class="error-message">
-                                    <h3>Error</h3>
-                                    <p>Failed to load discount details. Please try again.</p>
-                                </div>
-                            `;
-                        });
-            }
+    var params = new URLSearchParams({id: discountId});
+    fetch("managerDetailDiscountAjax", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: params
+    })
+    .then(res => res.text())
+    .then(html => {
+        body.innerHTML = html;
+    })
+    .catch(error => {
+        body.innerHTML = `
+            <div class="error-message">
+                <h3>Error</h3>
+                <p>Không tải được chi tiết voucher.</p>
+            </div>
+        `;
+    });
+}
 
-            function closeDiscountModal() {
-                var modal = document.getElementById('discountDetailModal');
-                modal.classList.remove('show');
-                setTimeout(() => {
-                    modal.style.display = 'none';
-                    document.getElementById('discountDetailBody').innerHTML = '';
-                }, 300);
-            }
+function closeDiscountModal() {
+    var modal = document.getElementById('discountDetailModal');
+    modal.classList.remove('show');
+    setTimeout(() => {
+        modal.style.display = 'none';
+        document.getElementById('discountDetailBody').innerHTML = '';
+    }, 300);
+}
         </script>
-
-    </body>
-</html>

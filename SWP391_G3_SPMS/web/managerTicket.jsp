@@ -64,7 +64,7 @@
                             <option value="inactive" <c:if test="${status == 'inactive'}">selected</c:if>>Ngừng bán</option>
                             </select>
                             <select name="pageSize" id="pageSizeSelect" onchange="document.getElementById('searchForm').submit();">
-                               <option value="5" <c:if test="${pageSize == 5}">selected</c:if>>5/Trang</option>
+                                <option value="5" <c:if test="${pageSize == 5}">selected</c:if>>5/Trang</option>
                             <option value="10" <c:if test="${pageSize == 10}">selected</c:if>>10/Trang</option>
                             <option value="15" <c:if test="${pageSize == 15}">selected</c:if>>15/Trang</option>
                             <option value="25" <c:if test="${pageSize == 25}">selected</c:if>>25/Trang</option>
@@ -75,7 +75,7 @@
                     <div class="action-buttons">
                         <a href="managerAddTicket?page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" class="btn-add"><i class="fa-solid fa-plus"></i> Thêm loại vé</a>
                         <!-- comment   <a href="copyTicket.jsp?page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&poolId=${fn:escapeXml(poolId)}" class="btn-copy"><i class="fas fa-copy"></i> Copy loại vé</a> -->
-                   <a href="managerTicketServlet" class="btn-copy"><i class="fa-solid fa-face-smile"></i>Làm mới</a> 
+                        <a href="managerTicketServlet" class="btn-copy"><i class="fa-solid fa-face-smile"></i>Làm mới</a> 
                     </div>
                 </div>
                 <div class="ticket-list">
@@ -167,7 +167,7 @@
             </div>
         </div>
 
-       
+
         <script>
             const searchInput = document.querySelector('input[name="keyword"]');
             const searchForm = document.getElementById('searchForm');
@@ -181,39 +181,39 @@
                 }, 500);
             });
         </script>
-        
-        
+
+
         <!-- Validate keyword truyền vào  -->
         <script>
-    document.getElementById('searchForm').addEventListener('submit', function (e) {
-        const keywordInput = document.querySelector('input[name="keyword"]');
-        const keyword = keywordInput.value.trim();
+            document.getElementById('searchForm').addEventListener('submit', function (e) {
+                const keywordInput = document.querySelector('input[name="keyword"]');
+                const keyword = keywordInput.value.trim();
 
-        // Kiểm tra rỗng toàn dấu cách
-        if (keyword.length > 0) {
-            // Giới hạn độ dài
-            if (keyword.length > 50) {
-                alert("Từ khóa tìm kiếm không được vượt quá 50 ký tự.");
-                e.preventDefault();
-                return;
-            }
+                // Kiểm tra rỗng toàn dấu cách
+                if (keyword.length > 0) {
+                    // Giới hạn độ dài
+                    if (keyword.length > 50) {
+                        alert("Từ khóa tìm kiếm không được vượt quá 50 ký tự.");
+                        e.preventDefault();
+                        return;
+                    }
 
-            // Kiểm tra ký tự đặc biệt nguy hiểm
-            const invalidPattern = /[<>']/;
-            if (invalidPattern.test(keyword)) {
-                alert("Từ khóa không được chứa ký tự < > hoặc dấu nháy.");
-                e.preventDefault();
-                return;
-            }
-        }
+                    // Kiểm tra ký tự đặc biệt nguy hiểm
+                    const invalidPattern = /[<>']/;
+                    if (invalidPattern.test(keyword)) {
+                        alert("Từ khóa không được chứa ký tự < > hoặc dấu nháy.");
+                        e.preventDefault();
+                        return;
+                    }
+                }
 
-       
-    });
-</script>
 
-        
-        
-        
+            });
+        </script>
+
+
+
+
     </body>
 </html>
 

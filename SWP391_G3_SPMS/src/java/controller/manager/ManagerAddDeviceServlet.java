@@ -169,7 +169,22 @@ public class ManagerAddDeviceServlet extends HttpServlet {
 
         try {
             int poolId = Integer.parseInt(request.getParameter("poolId"));
-            String name = request.getParameter("deviceName");
+            
+            String name = request.getParameter("deviceName").trim();
+        
+            // Kiểm tra tên thiết bị đã tồn tại trong cùng hồ bơi 
+            if (deviceDAO.isDeviceNameExistsInPool(poolId, name)) {
+                request.setAttribute("error", "Tên thiết bị này đã tồn tại trong hồ bơi.");
+                request.setAttribute("poolList", deviceDAO.getPoolsByBranchId(branchId));
+                request.setAttribute("poolId", returnPoolId);
+                request.setAttribute("keyword", returnKeyword);
+                request.setAttribute("status", returnStatus);
+                request.setAttribute("page", returnPage);
+                request.setAttribute("pageSize", pageSize);
+                request.getRequestDispatcher("managerAddDevice.jsp").forward(request, response);
+                return;
+            }
+
             String image = request.getParameter("deviceImage");
             String status = request.getParameter("deviceStatus");
             String notes = request.getParameter("notes");

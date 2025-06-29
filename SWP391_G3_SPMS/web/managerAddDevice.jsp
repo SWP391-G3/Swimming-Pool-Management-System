@@ -30,6 +30,7 @@
                 <div class="form-group">
                     <label>Hồ bơi:</label>
                     <select name="poolId" required>
+                        <option value="">-- Tất cả hồ bơi --</option>
                         <c:forEach var="pool" items="${poolList}">
                             <option value="${pool.poolId}" 
                                     <c:if test="${(not empty param.poolId ? param.poolId : poolId) == pool.poolId.toString()}">selected</c:if>>
@@ -52,6 +53,7 @@
                 <div class="form-group">
                     <label>Trạng thái:</label>
                     <select name="deviceStatus">
+                        <option value="">-- Tất cả trạng thái --</option>
                         <option value="available" ${param.deviceStatus == 'available' ? 'selected' : ''}>Tốt</option>
                         <option value="maintenance" ${param.deviceStatus == 'maintenance' ? 'selected' : ''}>Bảo trì</option>
                         <option value="broken" ${param.deviceStatus == 'broken' ? 'selected' : ''}>Hỏng</option>
@@ -77,11 +79,32 @@
                 <input type="hidden" name="pageSize" value="${pageSize}">
 
                 <div class="button-group">
-                    <button type="submit">Thêm</button>
                     <a href="managerListDeviceServlet?page=${page}&poolId=${poolId}&keyword=${keyword}&status=${status}&pageSize=${pageSize}" class="btn-back">Quay lại</a>
+                    <button type="submit">Thêm</button>
+                    <button type="button" onclick="document.getElementById('excel-upload-form').style.display = 'block';" class="btn-add" style="background: #3b82f6; color: #fff;">Nhập nhiều thiết bị (Excel)</button>
+
+
                 </div>
+
+                <!-- Nút mở form upload Excel -->
+
+
+                <!-- Form upload file Excel (ẩn/hiện bằng JS) -->
+                <div id="excel-upload-form" style="display:none; padding: 18px; margin-left: 400px ; border: 1px solid #ddd; margin: 16px 0; background: #fbfbfb;">
+                    <form action="managerImportDeviceExcelServlet" method="post" enctype="multipart/form-data">
+                        <label>Chọn file Excel (.xlsx): </label>
+                        <input type="file" name="excelFile" accept=".xlsx, .xls" required>
+                        <button type="submit">Upload</button>
+                        <button type="button" onclick="document.getElementById('excel-upload-form').style.display = 'none';">Hủy</button>
+                    </form>
+                    <div style="margin-top:8px">
+                        <a href="template/device_import_template.xlsx" download>Tải file mẫu Excel</a>
+                    </div>
+                </div>
+
             </form>
         </div>
+
 
 
         <script>
@@ -139,7 +162,7 @@
                 return true;
             }
         </script>
-        
-        
+
+
     </body>
 </html>

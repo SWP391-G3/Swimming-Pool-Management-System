@@ -34,6 +34,7 @@
                 <div class="form-group">
                     <label>Hồ bơi:</label>
                     <select name="poolId">
+                        <option value="">-- Tất cả hồ bơi --</option>
                         <c:forEach var="pool" items="${poolList}">
                             <option value="${pool.poolId}"
                                     <c:choose>
@@ -62,6 +63,7 @@
                 <div class="form-group">
                     <label>Trạng thái:</label>
                     <select name="deviceStatus">
+                        <option value="">-- Tất cả trạng thái --</option>
                         <option value="available" 
                                 ${param.deviceStatus == 'available' || (empty param.deviceStatus && device.deviceStatus == 'available') ? 'selected' : ''}>Tốt</option>
                         <option value="maintenance" 
