@@ -6,13 +6,13 @@ package util;
 
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 public class EmailUtil {
 
-    public static void sendOTP(String toEmail, String otpCode, String purpose) throws MessagingException {
-        
-        
+    public static void sendOTP(String toEmail, String otpCode, String purpose) throws MessagingException, UnsupportedEncodingException {
+
         final String fromEmail = "tonghung24112003ff@gmail.com";
         final String password = "uwtu xjsn tlol wubu"; // Gmail App Password
 
@@ -62,8 +62,9 @@ public class EmailUtil {
         Message msg = new MimeMessage(session);
         msg.setFrom(new InternetAddress(fromEmail));
         msg.setRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
-        msg.setSubject(subject);
-        msg.setText(message);
+        msg.setSubject(MimeUtility.encodeText(subject, "UTF-8", "B"));
+
+        msg.setContent(message, "text/plain; charset=UTF-8");
 
         Transport.send(msg);
     }

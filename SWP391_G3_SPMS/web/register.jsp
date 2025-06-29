@@ -32,6 +32,7 @@
                 animation-delay: 2s;
                 opacity: 0.5;
             }
+
             .wave:nth-child(3) {
                 animation-delay: 4s;
                 opacity: 0.3;
@@ -73,7 +74,7 @@
         <div class="wave"></div>
         <div class="wave"></div>
 
-        <div class="relative z-10 bg-white/80 backdrop-blur-xl shadow-2xl rounded-2xl w-full max-w-md p-8 space-y-6">
+        <div class="relative z-10 bg-white/80 backdrop-blur-xl shadow-2xl rounded-2xl w-full max-w-3xl p-10 space-y-8">
             <h2 class="text-2xl font-bold text-center text-blue-600">Đăng ký tài khoản</h2>
 
             <c:if test="${not empty requestScope.error}">
@@ -86,33 +87,67 @@
 
             <!-- STEP 1: Form đăng ký -->
             <c:if test="${empty param.step || param.step == 'info'}">
-                <form action="register" method="POST" class="space-y-4" autocomplete="off">
+                <form action="register" method="POST" class="space-y-6" autocomplete="off">
                     <input type="hidden" name="step" value="info" />
 
-                    <input type="text" name="full_name" placeholder="Họ và tên"
-                        value="${param.full_name != null ? param.full_name : ''}"
-                        class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400" required />
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Cột trái -->
+                        <div class="space-y-4">
+                            <input type="text" name="full_name" placeholder="Họ và tên"
+                                   value="${param.full_name != null ? param.full_name : ''}"
+                                   class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400" required />
 
-                    <input type="email" name="email" placeholder="Email"
-                        value="${param.email != null ? param.email : ''}"
-                        class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400" required />
+                            <input type="tel" name="phone" placeholder="Số điện thoại"
+                                   value="${param.phone != null ? param.phone : ''}"
+                                   class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400" required />
 
-                    <input type="tel" name="phone" placeholder="Số điện thoại"
-                        value="${param.phone != null ? param.phone : ''}"
-                        class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400" required />
+                            <div class="relative">
+                                <input type="password" id="passwordInput" name="password" placeholder="Mật khẩu"
+                                       class="w-full px-4 py-2 pr-10 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400" required />
+                                <button type="button" id="togglePassword" class="absolute top-2.5 right-3 text-gray-600">
+                                    <svg id="eyeIcon1" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                         viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M2.458 12C3.732 7.943 7.523 5 12 5
+                                          s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7
+                                          S3.732 16.057 2.458 12z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
 
-                    <input type="text" name="username" placeholder="Tên đăng nhập"
-                        value="${param.username != null ? param.username : ''}"
-                        class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400" required />
+                        <!-- Cột phải -->
+                        <div class="space-y-4">
+                            <input type="email" name="email" placeholder="Email"
+                                   value="${param.email != null ? param.email : ''}"
+                                   class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400" required />
 
-                    <input type="password" name="password" placeholder="Mật khẩu"
-                        class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400" required />
+                            <input type="text" name="username" placeholder="Tên đăng nhập"
+                                   value="${param.username != null ? param.username : ''}"
+                                   class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400" required />
 
-                    <input type="password" name="confirm_password" placeholder="Nhập lại mật khẩu"
-                        class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400" required />
+                            <div class="relative">
+                                <input type="password" id="confirmPasswordInput" name="confirm_password" placeholder="Nhập lại mật khẩu"
+                                       class="w-full px-4 py-2 pr-10 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400" required />
+                                <button type="button" id="toggleConfirmPassword" class="absolute top-2.5 right-3 text-gray-600">
+                                    <svg id="eyeIcon2" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                         viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M2.458 12C3.732 7.943 7.523 5 12 5
+                                          s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7
+                                          S3.732 16.057 2.458 12z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
                     <button type="submit"
-                        class="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+                            class="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg hover:bg-blue-600 transition duration-300">
                         Đăng ký & gửi OTP
                     </button>
                 </form>
@@ -124,27 +159,56 @@
                     <input type="hidden" name="step" value="otp" />
                     <label class="block text-sm font-medium text-gray-700">Nhập mã OTP bạn nhận được</label>
                     <input type="text" name="otp" placeholder="Mã OTP"
-                        class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400" required />
+                           class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400" required />
 
                     <button type="submit"
-                        class="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+                            class="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg hover:bg-blue-600 transition duration-300">
                         Xác nhận OTP
                     </button>
                 </form>
-
-                <form method="post" action="register" class="mt-4">
-                    <input type="hidden" name="step" value="resend" />
-                    <button type="submit"
-                        class="w-full bg-yellow-500 text-white font-semibold py-2 rounded-lg hover:bg-yellow-600 transition duration-300">
+                <div class="text-center mt-2">
+                    <a href="register?step=resend"
+                       class="text-yellow-600 font-medium hover:underline">
                         Gửi lại mã OTP
-                    </button>
-                </form>
+                    </a>
+                </div>
+
             </c:if>
 
             <div class="text-center mt-4">
                 <a href="login.jsp" class="text-sm text-gray-600 hover:underline">← Quay lại đăng nhập</a>
             </div>
         </div>
+
+        <script>
+            function togglePasswordVisibility(inputId, iconId) {
+                const input = document.getElementById(inputId);
+                const icon = document.getElementById(iconId);
+                const isHidden = input.type === "password";
+
+                input.type = isHidden ? "text" : "password";
+                icon.innerHTML = isHidden
+                        ? `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                         d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7
+                            a9.956 9.956 0 012.345-4.288M6.7 6.7
+                            A9.966 9.966 0 0112 5c4.477 0 8.268 2.943 9.542 7
+                            a9.954 9.954 0 01-4.293 5.144M15 12a3 3 0 01-3 3m0-6a3 3 0 013 3m0 0L4 4" />`
+                        : `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                         d="M2.458 12C3.732 7.943 7.523 5 12 5
+                            s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7
+                            S3.732 16.057 2.458 12z" />`;
+            }
+
+            document.getElementById("togglePassword").addEventListener("click", () => {
+                togglePasswordVisibility("passwordInput", "eyeIcon1");
+            });
+
+            document.getElementById("toggleConfirmPassword").addEventListener("click", () => {
+                togglePasswordVisibility("confirmPasswordInput", "eyeIcon2");
+            });
+        </script>
 
         <script>
             const createBubbles = () => {
