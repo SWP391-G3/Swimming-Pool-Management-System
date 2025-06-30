@@ -91,7 +91,7 @@
                 <div class="modal-content">
                     <span class="close-modal" onclick="closeExcelModal()">&times;</span>
                     <h3>Nhập thiết bị từ Excel</h3>
-                    <form action="managerImportDeviceExcelServlet" method="post" enctype="multipart/form-data">
+                    <form action="ManagerImportDeviceExcelServlet" method="post" enctype="multipart/form-data">
                         <label style="display: block; margin-bottom: 8px; font-weight: 500;">Chọn file Excel (.xlsx, .xls)</label>
                         <input type="file" name="excelFile" accept=".xlsx, .xls" required>
 

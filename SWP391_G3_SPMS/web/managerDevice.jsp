@@ -1,8 +1,3 @@
-<%-- 
-    Document   : managerDevice
-    Created on : May 28, 2025, 10:10:26 PM
-    Author     : Tuan Anh
---%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -23,6 +18,30 @@
             <%@ include file="../managerSidebar.jsp" %>
 
             <div class="content-panel">
+                <%-- Thông báo thành công/lỗi đặt ở đây --%>
+                <c:if test="${not empty sessionScope.importSuccess}">
+                    <div class="alert alert-success" style="color: green; background: #e6f7e6; border: 1px solid #8fd98f; border-radius: 4px; padding: 8px 16px; margin: 16px 0 18px 0; font-weight: 500;">
+                        ${sessionScope.importSuccess}
+                    </div>
+                    <%
+                        session.removeAttribute("importSuccess");
+                    %>
+                </c:if>
+                    <c:if test="${not empty sessionScope.importErrors}">
+                    <div class="alert alert-danger" style="color: #b30000; background: #ffeaea; border: 1px solid #ffb3b3; border-radius: 4px; padding: 8px 16px; margin: 16px 0 18px 0; font-weight: 500;">
+                        <ul style="margin:0 0 0 16px;">
+                            <c:forEach var="err" items="${sessionScope.importErrors}">
+                                <li>${err}</li>
+                                </c:forEach>
+                        </ul>
+                    </div>
+                    <%
+                        session.removeAttribute("importErrors");
+                    %>
+                </c:if>
+                
+                <!-- Kết thúc vùng thông báo -->
+
                 <div class="header">
                     <h2>Quản lý thiết bị hồ bơi</h2>
 
@@ -40,18 +59,12 @@
                             <option value="maintenance" ${status == 'maintenance' ? 'selected' : ''}>Bảo trì</option>
                             <option value="broken" ${status == 'broken' ? 'selected' : ''}>Hỏng</option>
                         </select>
-
-                        <!-- Dropdown chọn số lượng/trang -->
                         <select name="pageSize" id="pageSizeSelect" onchange="document.getElementById('searchForm').submit();">
-                            
                             <option value="5" ${pageSize == 5 ? 'selected' : ''}>5/Trang</option>
                             <option value="10" ${pageSize == 10 ? 'selected' : ''}>10/Trang</option>
                             <option value="15" ${pageSize == 15 ? 'selected' : ''}>15/Trang</option>
-                            
                         </select>
-
                         <input type="hidden" name="page" value="${page}">
-
                         <button type="submit">Tìm kiếm</button>
                     </form>
 
@@ -63,7 +76,7 @@
                             <th>ID</th>
                             <th>Ảnh</th>
                             <th>Tên thiết bị</th>
-                            <th>Hồ bơi</th> 
+                            <th>Hồ bơi</th>
                             <th>Số lượng</th>
                             <th>Trạng thái</th>
                             <th>Ghi chú</th>
@@ -120,8 +133,6 @@
                         </c:choose>
                     </tbody>
                 </table>
-                
-                
 
                 <!-- Phân trang -->
                 <div class="pagination">
@@ -139,7 +150,14 @@
             </div>
         </div>
 
-        <!-- JavaScript tìm kiếm tự động -->
+        <script>
+            setTimeout(function () {
+                var alert = document.querySelector('.alert');
+                if (alert)
+                    alert.style.display = 'none';
+            }, 5000);
+        </script>
+
         <script>
             const searchInput = document.querySelector('input[name="keyword"]');
             const searchForm = document.getElementById('searchForm');
