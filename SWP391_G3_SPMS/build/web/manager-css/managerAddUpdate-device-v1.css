@@ -43,6 +43,133 @@ body {
   transform: translateY(20px);
 }
 
+ /* Modal Container */
+    #excel-upload-form-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        backdrop-filter: blur(5px);
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Modal Content */
+    #excel-upload-form-modal .modal-content {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        width: 450px;
+        max-width: 90%;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        position: relative;
+        animation: modalFadeIn 0.3s;
+    }
+
+    @keyframes modalFadeIn {
+        from {opacity: 0; transform: translateY(-20px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+
+    /* Close Button */
+    #excel-upload-form-modal .close-modal {
+        position: absolute;
+        right: 20px;
+        top: 15px;
+        font-size: 24px;
+        color: #aaa;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+
+    #excel-upload-form-modal .close-modal:hover {
+        color: #333;
+    }
+
+    /* Modal Title */
+    #excel-upload-form-modal h3 {
+        margin-top: 0;
+        color: #2c3e50;
+        font-size: 1.4rem;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* File Input */
+    #excel-upload-form-modal input[type="file"] {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 20px;
+        border: 2px dashed #ddd;
+        border-radius: 8px;
+        background: #f9f9f9;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    #excel-upload-form-modal input[type="file"]:hover {
+        border-color: #4CAF50;
+        background: #f5fff5;
+    }
+
+    /* Button Group */
+    #excel-upload-form-modal .button-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    #excel-upload-form-modal .button-group button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+    #excel-upload-form-modal .button-group button[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    #excel-upload-form-modal .button-group button[type="submit"]:hover {
+        background-color: #3e8e41;
+    }
+
+    #excel-upload-form-modal .button-group button[type="button"] {
+        background-color: #f1f1f1;
+        color: #333;
+    }
+
+    #excel-upload-form-modal .button-group button[type="button"]:hover {
+        background-color: #ddd;
+    }
+
+    /* Download Link */
+    #excel-upload-form-modal a {
+        display: inline-block;
+        margin-top: 15px;
+        color: #3498db;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    #excel-upload-form-modal a:hover {
+        color: #2980b9;
+        text-decoration: underline;
+    }
+
+    #excel-upload-form-modal a i {
+        margin-right: 5px;
+    }
+
+
 @keyframes fadeInUp {
   to {
     opacity: 1;

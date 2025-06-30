@@ -174,7 +174,7 @@
                 document.getElementById('singleTicketSection').style.display = isCombo ? 'none' : '';
                 document.getElementById('comboTicketSection').style.display = isCombo ? '' : 'none';
             }
-            
+
             function toggleCombo() {   // ẩn hiện vé đơn và combo tương ứng
                 var isCombo = document.querySelector('input[name="ticketKind"]:checked').value === 'combo';
                 document.getElementById('singleTicketSection').style.display = isCombo ? 'none' : '';
@@ -187,32 +187,32 @@
                     el.disabled = !isCombo;
                 });
             }
-            
-            
-            
+
+
+
+            function formatCurrencyVND(amount) {
+                // Làm tròn xuống về số nguyên
+                amount = Math.floor(amount);
+                return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " đ";
+            }
             function updateComboPrice() {
                 var base = 0;
-                //Khởi tạo biến base để lưu tổng giá gốc của combo (chưa áp dụng giảm giá)
-                
                 document.querySelectorAll("#comboTicketSection .combo-qty").forEach(function (input) {
-                    var qty = parseInt(input.value) || 0; //  số lượng vé thành phần
+                    var qty = parseInt(input.value) || 0;
                     var price = parseFloat(input.closest("tr").querySelector('input[name="comboPrice"]').value);
                     base += qty * price;
                 });
-                document.getElementById("comboBasePrice").innerText = base.toLocaleString();
+                document.getElementById("comboBasePrice").innerText = formatCurrencyVND(base);
+
                 var discount = parseFloat(document.getElementById("discountPercent").value) || 0;
-                var final = base * (1 - discount / 100);
-                document.getElementById("comboFinalPrice").innerText = final.toLocaleString();
-                document.getElementById("finalComboPrice").value = final;
+                // Làm tròn phần trăm về số nguyên
+                var discountDisplay = Math.round(discount);
+                document.getElementById("discountPercent").value = discountDisplay; // nếu muốn ép luôn trên input
+
+                var final = base * (1 - discountDisplay / 100);
+                document.getElementById("comboFinalPrice").innerText = formatCurrencyVND(final);
+                document.getElementById("finalComboPrice").value = Math.floor(final); // input hidden lưu số nguyên
             }
-            document.addEventListener("DOMContentLoaded", function () {
-                document.querySelectorAll(".combo-qty, #discountPercent").forEach(function (el) {
-                    el.addEventListener("change", updateComboPrice);
-                    el.addEventListener("input", updateComboPrice);
-                });
-            });
-            
-            document.addEventListener('DOMContentLoaded', toggleCombo);
         </script>
 
 
@@ -226,9 +226,12 @@
                 // Kiểm tra hồ bơi
                 if (isCombo) {
                     let hasValidQty = false;
+                    let totalQty = 0;
                     document.querySelectorAll(".combo-qty").forEach(input => {
-                        if (parseInt(input.value) > 0) {
+                        let qty = parseInt(input.value);
+                        if (qty > 0) {
                             hasValidQty = true;
+                            totalQty += qty;
                         }
                     });
                     if (!hasValidQty) {
@@ -236,10 +239,26 @@
                         e.preventDefault();
                         return;
                     }
+                    // Validate tổng vé thành phần
+                    if (totalQty > 10) {
+                        alert("Tổng số lượng vé thành phần trong combo không được vượt quá 10.");
+                        e.preventDefault();
+                        return;
+                    }
 
                     const comboPools = document.getElementById("poolIdsCombo");
                     if (comboPools.selectedOptions.length === 0) {
                         alert("Vui lòng chọn ít nhất 1 hồ bơi áp dụng cho vé combo.");
+                        e.preventDefault();
+                        return;
+                    }
+
+                    // Validate discountPercent
+                    const discountInput = document.getElementById("discountPercent");
+                    let discount = parseFloat(discountInput.value);
+                    if (isNaN(discount) || discount < 5 || discount > 50) {
+                        alert("Ưu đãi (%) phải nằm trong khoảng từ 5% đến 50%.");
+                        discountInput.focus();
                         e.preventDefault();
                         return;
                     }
@@ -265,14 +284,12 @@
                     e.preventDefault();
                     return;
                 }
-
                 if (descPattern.test(desc)) {
                     descError.innerText = "Mô tả không được chứa ký tự đặc biệt như <, > hoặc \".";
                     e.preventDefault();
                     return;
                 }
             });
-
         </script>
 
 

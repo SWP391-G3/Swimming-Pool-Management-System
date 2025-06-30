@@ -209,14 +209,16 @@ public class ManagerAddDeviceServlet extends HttpServlet {
             if (filePart != null && filePart.getSize() > 0) {
                 fileName = java.nio.file.Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
                 // Đường dẫn thư mục lưu file (tùy chỉnh path này cho phù hợp dự án của bạn)
-                String uploadDir = getServletContext().getRealPath("/uploads/devices");
+                String uploadDir = getServletContext().getRealPath("images/uploads/devices");
+               // String uploadPath = getServletContext().getRealPath("/images/uploads/devices");
+
                 java.io.File dir = new java.io.File(uploadDir);
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
                 String filePath = uploadDir + java.io.File.separator + fileName;
                 filePart.write(filePath);
-                imagePath = "uploads/devices/" + fileName; // Đường dẫn lưu vào DB để sử dụng trong src=
+                imagePath = "images/uploads/devices/" + fileName; // Đường dẫn lưu vào DB để sử dụng trong src=
             }
 
             //Device d = new Device(0, image, name, poolId, null, quantity, status, notes);

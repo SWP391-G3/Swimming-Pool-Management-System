@@ -107,7 +107,7 @@
                                             <td>${ticket.id}</td>
                                             <td>${ticket.code}</td>
                                             <td>${ticket.name}</td>
-                                            <td><fmt:formatNumber value="${ticket.basePrice}" type="currency" currencySymbol="₫"/></td>
+                                            <td><fmt:formatNumber value="${ticket.basePrice}" type="number" groupingUsed="true" currencySymbol="₫" maxFractionDigits="0" />₫</td>
                                             <td>
                                                 <div class="pool-tags">
                                                     <c:forEach var="pool" items="${ticket.pools}">

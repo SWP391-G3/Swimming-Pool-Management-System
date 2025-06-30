@@ -168,6 +168,74 @@
         </div>
 
         <script>
+            document.getElementById("editTicketForm").addEventListener("submit", function (e) {
+                // Xác định có phải vé combo không
+                const isCombo = ${ticket.isCombo ? 'true' : 'false'};
+                let hasValidQty = false;
+                let totalQty = 0;
+
+                // Validate thành phần combo
+                if (isCombo) {
+                    document.querySelectorAll(".combo-qty").forEach(input => {
+                        let qty = parseInt(input.value) || 0;
+                        if (qty > 0) {
+                            hasValidQty = true;
+                            totalQty += qty;
+                        }
+                    });
+                    if (!hasValidQty) {
+                        alert("Vui lòng chọn ít nhất 1 vé thành phần cho combo.");
+                        e.preventDefault();
+                        return;
+                    }
+                    if (totalQty > 10) {
+                        alert("Tổng số lượng vé thành phần trong combo không được vượt quá 10.");
+                        e.preventDefault();
+                        return;
+                    }
+                    // Validate discountPercent
+                    const discountInput = document.getElementById("discountPercent");
+                    let discount = parseFloat(discountInput.value);
+                    if (isNaN(discount) || discount < 5 || discount > 50) {
+                        alert("Ưu đãi (%) phải nằm trong khoảng từ 5% đến 50%.");
+                        discountInput.focus();
+                        e.preventDefault();
+                        return;
+                    }
+                }
+
+                // Validate hồ bơi (áp dụng cho cả đơn và combo)
+                const poolSelect = document.getElementById("poolIds");
+                if (poolSelect && poolSelect.selectedOptions.length === 0) {
+                    alert("Vui lòng chọn ít nhất 1 hồ bơi áp dụng.");
+                    e.preventDefault();
+                    return;
+                }
+
+                // Validate mô tả
+                const descInput = document.getElementById("description");
+                const descError = document.getElementById("descError");
+                const desc = descInput.value.trim();
+                descError.innerText = "";
+                const descPattern = /[<>"]/;
+                if (desc.length > 200) {
+                    descError.innerText = "Mô tả không được vượt quá 200 ký tự.";
+                    descInput.focus();
+                    e.preventDefault();
+                    return;
+                }
+                if (descPattern.test(desc)) {
+                    descError.innerText = "Mô tả không được chứa ký tự đặc biệt như <, > hoặc \".";
+                    descInput.focus();
+                    e.preventDefault();
+                    return;
+                }
+            });
+        </script>
+
+
+
+        <script>
             function updateComboPrice() {
                 var base = 0;
                 document.querySelectorAll(".combo-qty").forEach(function (input) {

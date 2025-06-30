@@ -9,7 +9,8 @@
 <html>
     <head>
         <title>Thêm thiết bị</title>
-        <link rel="stylesheet" href="./manager-css/managerAddUpdate-device-v1.css">
+        <link rel="stylesheet" href="./manager-css/managerAddUpdate-device-v2.css">
+
     </head>
     <body>
         <div class="container">
@@ -65,11 +66,9 @@
                     <textarea name="notes" maxlength="200" placeholder="Không vượt quá 200 ký tự">${param.notes}</textarea>
                 </div>
 
-
                 <div class="form-group">
                     <label>Ảnh (chọn file):</label>
                     <input type="file" name="deviceImageFile" accept="image/*">
-                    <!-- Không dùng input type="text" nữa -->
                 </div>
 
                 <input type="hidden" name="returnPoolId" value="${poolId}">
@@ -81,88 +80,102 @@
                 <div class="button-group">
                     <a href="managerListDeviceServlet?page=${page}&poolId=${poolId}&keyword=${keyword}&status=${status}&pageSize=${pageSize}" class="btn-back">Quay lại</a>
                     <button type="submit">Thêm</button>
-                    <button type="button" onclick="document.getElementById('excel-upload-form').style.display = 'block';" class="btn-add" style="background: #3b82f6; color: #fff;">Nhập nhiều thiết bị (Excel)</button>
-
-
+                    <!-- Nút mở form upload Excel -->
+                    <button type="button" onclick="openExcelModal();" class="btn-add">
+                        Nhập nhiều thiết bị (Excel)
+                    </button>
                 </div>
-
-                <!-- Nút mở form upload Excel -->
-
-
-                <!-- Form upload file Excel (ẩn/hiện bằng JS) -->
-                <div id="excel-upload-form" style="display:none; padding: 18px; margin-left: 400px ; border: 1px solid #ddd; margin: 16px 0; background: #fbfbfb;">
-                    <form action="managerImportDeviceExcelServlet" method="post" enctype="multipart/form-data">
-                        <label>Chọn file Excel (.xlsx): </label>
-                        <input type="file" name="excelFile" accept=".xlsx, .xls" required>
-                        <button type="submit">Upload</button>
-                        <button type="button" onclick="document.getElementById('excel-upload-form').style.display = 'none';">Hủy</button>
-                    </form>
-                    <div style="margin-top:8px">
-                        <a href="template/device_import_template.xlsx" download>Tải file mẫu Excel</a>
-                    </div>
-                </div>
-
             </form>
-        </div>
+            <!-- Modal nhập nhiều thiết bị Excel -->
+            <div id="excel-upload-form-modal">
+                <div class="modal-content">
+                    <span class="close-modal" onclick="closeExcelModal()">&times;</span>
+                    <h3>Nhập thiết bị từ Excel</h3>
+                    <form action="managerImportDeviceExcelServlet" method="post" enctype="multipart/form-data">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500;">Chọn file Excel (.xlsx, .xls)</label>
+                        <input type="file" name="excelFile" accept=".xlsx, .xls" required>
 
+                        <div class="button-group">
+                            <button type="button" onclick="closeExcelModal()">Hủy</button>
+                            <button type="submit">Tải lên</button>
+                        </div>
+                    </form>
 
+                    <a href="template/device_import_template.xlsx" download>
+                        <i class="fas fa-download"></i> Tải file mẫu Excel
+                    </a>
+                </div>
+            </div>
 
-        <script>
-            function validateForm() {
-                let form = document.forms[0];
-                let deviceName = form["deviceName"].value.trim();
-                let poolId = form["poolId"].value;
-                let quantity = form["quantity"].value.trim();
-                let deviceStatus = form["deviceStatus"].value;
-                let notes = form["notes"].value;
-                let imageField = form["deviceImageFile"];
-                let noteError = document.getElementById("noteError");
-                noteError.innerText = "";
+            <script>
+                function validateForm() {
+                    let form = document.forms[0];
+                    let deviceName = form["deviceName"].value.trim();
+                    let poolId = form["poolId"].value;
+                    let quantity = form["quantity"].value.trim();
+                    let deviceStatus = form["deviceStatus"].value;
+                    let notes = form["notes"].value;
+                    let imageField = form["deviceImageFile"];
+                    let noteError = document.getElementById("noteError");
+                    noteError.innerText = "";
 
-                // Kiểm tra các trường bắt buộc
-                if (deviceName === "") {
-                    noteError.innerText = "Tên thiết bị không được để trống.";
-                    form["deviceName"].focus();
-                    return false;
+                    // Kiểm tra các trường bắt buộc
+                    if (deviceName === "") {
+                        noteError.innerText = "Tên thiết bị không được để trống.";
+                        form["deviceName"].focus();
+                        return false;
+                    }
+                    if (poolId === "" || poolId === null) {
+                        noteError.innerText = "Bạn phải chọn hồ bơi.";
+                        form["poolId"].focus();
+                        return false;
+                    }
+                    if (quantity === "" || isNaN(quantity) || parseInt(quantity) < 1) {
+                        noteError.innerText = "Số lượng không được để trống và phải lớn hơn 0.";
+                        form["quantity"].focus();
+                        return false;
+                    }
+                    if (deviceStatus === "" || deviceStatus === null) {
+                        noteError.innerText = "Bạn phải chọn trạng thái thiết bị.";
+                        form["deviceStatus"].focus();
+                        return false;
+                    }
+                    if (imageField && imageField.value.trim() === "") {
+                        noteError.innerText = "Bạn phải chọn ảnh cho thiết bị.";
+                        imageField.focus();
+                        return false;
+                    }
+
+                    // Kiểm tra ghi chú
+                    const specialChars = /[<>"]/;
+                    if (notes.length > 200) {
+                        noteError.innerText = "Ghi chú không được vượt quá 200 ký tự.";
+                        form["notes"].focus();
+                        return false;
+                    }
+                    if (specialChars.test(notes)) {
+                        noteError.innerText = "Ghi chú không được chứa ký tự đặc biệt như <, > hoặc \".";
+                        form["notes"].focus();
+                        return false;
+                    }
+
+                    return true;
                 }
-                if (poolId === "" || poolId === null) {
-                    noteError.innerText = "Bạn phải chọn hồ bơi.";
-                    form["poolId"].focus();
-                    return false;
-                }
-                if (quantity === "" || isNaN(quantity) || parseInt(quantity) < 1) {
-                    noteError.innerText = "Số lượng không được để trống và phải lớn hơn 0.";
-                    form["quantity"].focus();
-                    return false;
-                }
-                if (deviceStatus === "" || deviceStatus === null) {
-                    noteError.innerText = "Bạn phải chọn trạng thái thiết bị.";
-                    form["deviceStatus"].focus();
-                    return false;
-                }
-                if (imageField && imageField.value.trim() === "") {
-                    noteError.innerText = "Bạn phải chọn ảnh cho thiết bị.";
-                    imageField.focus();
-                    return false;
-                }
 
-                // Kiểm tra ghi chú
-                const specialChars = /[<>"]/;
-                if (notes.length > 200) {
-                    noteError.innerText = "Ghi chú không được vượt quá 200 ký tự.";
-                    form["notes"].focus();
-                    return false;
+                // Modal excel
+                function openExcelModal() {
+                    document.getElementById('excel-upload-form-modal').style.display = 'flex';
                 }
-                if (specialChars.test(notes)) {
-                    noteError.innerText = "Ghi chú không được chứa ký tự đặc biệt như <, > hoặc \".";
-                    form["notes"].focus();
-                    return false;
+                function closeExcelModal() {
+                    document.getElementById('excel-upload-form-modal').style.display = 'none';
                 }
-
-                return true;
-            }
-        </script>
-
-
+                // Đóng modal khi click ngoài vùng form
+                window.onclick = function (event) {
+                    let modal = document.getElementById('excel-upload-form-modal');
+                    if (event.target === modal) {
+                        closeExcelModal();
+                    }
+                }
+            </script>
     </body>
 </html>
