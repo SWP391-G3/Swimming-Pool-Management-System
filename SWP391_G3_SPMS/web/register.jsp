@@ -98,8 +98,12 @@
                                    class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400" required />
 
                             <input type="tel" name="phone" placeholder="Số điện thoại"
+                                   pattern="0[0-9]{9}"
+                                   title="Số điện thoại phải bắt đầu bằng 0 và có đúng 10 chữ số"
                                    value="${param.phone != null ? param.phone : ''}"
-                                   class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400" required />
+                                   class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                   required />
+
 
                             <div class="relative">
                                 <input type="password" id="passwordInput" name="password" placeholder="Mật khẩu"
