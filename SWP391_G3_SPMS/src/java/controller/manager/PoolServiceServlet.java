@@ -1,7 +1,8 @@
-package controller.manager;
+ package controller.manager;
 
 import dao.PoolDAO;
-import dao.PoolServiceDAO;
+import dao.manager.PoolServiceDAO;
+
 import model.Pool;
 import model.manager.PoolService;
 import jakarta.servlet.*;
