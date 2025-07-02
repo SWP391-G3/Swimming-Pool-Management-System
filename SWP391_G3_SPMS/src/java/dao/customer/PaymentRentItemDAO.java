@@ -6,7 +6,10 @@ import dal.DBContext;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ *
+ * @author LAZYVL
+ */
 public class PaymentRentItemDAO extends DBContext {
 
     // Thêm một Payment_RentItem mới

@@ -5,15 +5,18 @@
 package model.customer;
 
 import java.math.BigDecimal;
-
+/**
+ *
+ * @author LAZYVL
+ */
 public class BookingService {
 
-    private int bookingServiceId;    // booking_service_id
-    private int bookingId;           // booking_id
-    private int poolServiceId;       // pool_service_id
-    private int branchId;            // branch_id
-    private int quantity;            // quantity
-    private BigDecimal totalServicePrice;  // total_service_price
+    private int bookingServiceId;
+    private int bookingId;
+    private int poolServiceId;
+    private int branchId;
+    private int quantity;
+    private BigDecimal totalServicePrice;
 
     public BookingService() {
     }

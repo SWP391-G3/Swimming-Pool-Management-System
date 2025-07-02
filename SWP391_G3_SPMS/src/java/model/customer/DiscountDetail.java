@@ -2,7 +2,10 @@ package model.customer;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
+/**
+ *
+ * @author LAZYVL
+ */
 public class DiscountDetail {
 
     private int discountId;

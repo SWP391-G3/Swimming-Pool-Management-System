@@ -8,6 +8,10 @@ import dal.DBContext;
 
 import java.sql.*;
 import model.customer.Payment;
+/**
+ *
+ * @author LAZYVL
+ */
 
 public class PaymentDAO extends DBContext {
 

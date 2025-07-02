@@ -1,7 +1,10 @@
 package model.customer;
 
 import java.math.BigDecimal;
-
+/**
+ *
+ * @author LAZYVL
+ */
 public class TicketType {
 
     private int ticketTypeId;

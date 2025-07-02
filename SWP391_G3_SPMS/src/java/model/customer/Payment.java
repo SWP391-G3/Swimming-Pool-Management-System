@@ -6,7 +6,10 @@ package model.customer;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
+/**
+ *
+ * @author LAZYVL
+ */
 public class Payment {
 
     private int paymentId;

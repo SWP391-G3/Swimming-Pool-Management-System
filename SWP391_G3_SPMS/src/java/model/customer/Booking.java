@@ -2,6 +2,10 @@ package model.customer;
 
 import java.sql.Date;
 import java.sql.Time;
+/**
+ *
+ * @author LAZYVL
+ */
 
 public class Booking {
 

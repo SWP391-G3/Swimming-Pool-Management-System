@@ -1,7 +1,10 @@
 package model.customer;
 
 import java.util.Date;
-
+/**
+ *
+ * @author LAZYVL
+ */
 public class Contact {
     private int contactId;
     private Integer userId;

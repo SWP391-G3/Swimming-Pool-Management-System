@@ -11,6 +11,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import model.customer.BookingService;
+/**
+ *
+ * @author LAZYVL
+ */
 
 public class BookingServiceDAO extends DBContext {
 

@@ -6,7 +6,10 @@ package model.customer;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
+/**
+ *
+ * @author LAZYVL
+ */
 public class Ticket {
 
     private int ticketId;
@@ -14,9 +17,9 @@ public class Ticket {
     private int ticketTypeId;
     private BigDecimal ticketPrice;
     private String ticketCode;
-    private Integer issuedBy;     // Cho phép null
-    private Date issuedAt;        // java.util.Date phù hợp với DATETIME
-    private int quantity;          //xử lý BookingDetail
+    private Integer issuedBy;
+    private Date issuedAt;
+    private int quantity;
 
     public Ticket() {
     }

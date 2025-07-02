@@ -5,7 +5,10 @@
 package model.customer;
 
 import java.math.BigDecimal;
-
+/**
+ *
+ * @author LAZYVL
+ */
 public class PoolServiceSelection {
 
     private int poolServiceId;

@@ -12,7 +12,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.customer.PoolService;
-
+/**
+ *
+ * @author LAZYVL
+ */
 public class PoolServiceDAO extends DBContext {
 
     public List<PoolService> getServicesByPoolId(int poolId) {

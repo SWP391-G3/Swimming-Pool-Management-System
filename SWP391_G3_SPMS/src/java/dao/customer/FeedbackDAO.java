@@ -7,6 +7,10 @@ import model.customer.User;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+/**
+ *
+ * @author LAZYVL
+ */
 
 public class FeedbackDAO extends DBContext {
 
