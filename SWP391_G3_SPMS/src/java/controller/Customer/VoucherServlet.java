@@ -12,7 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import model.customer.DiscountDetail;
 import model.customer.User;
-
+/**
+ *
+ * @author LAZYVL
+ */
 public class VoucherServlet extends HttpServlet {
 
     @Override

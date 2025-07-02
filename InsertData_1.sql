@@ -48,14 +48,92 @@ INSERT INTO Users(username, password, full_name, email, phone, address, role_id,
 ('customer12', '02f7f6b0cf1fd5bd487acaf5fbfcfbcac78726ef006273bcfeb76e5cfe9a0d68', N'Tống Thị M', 'cust12@example.com', '0900001012', 'Bình Thuận', 4, 1, '2001-12-12', 'Female', NULL, GETDATE(), NULL), --pass: cust@123
 ('customer13', '02f7f6b0cf1fd5bd487acaf5fbfcfbcac78726ef006273bcfeb76e5cfe9a0d68', N'Thân Văn N', 'cust13@example.com', '0900001013', 'Lâm Đồng', 4, 1, '2002-01-13', 'Male', NULL, GETDATE(), NULL), --pass: cust@123
 ('customer14', '02f7f6b0cf1fd5bd487acaf5fbfcfbcac78726ef006273bcfeb76e5cfe9a0d68', N'Trần Thị O', 'cust14@example.com', '0900001014', 'Quảng Nam', 4, 1, '2003-02-14', 'Female', NULL, GETDATE(), NULL), --pass: cust@123
-('customer15', '02f7f6b0cf1fd5bd487acaf5fbfcfbcac78726ef006273bcfeb76e5cfe9a0d68', N'Phan Văn P', 'cust15@example.com', '0900001015', 'Bắc Giang', 4, 1, '2004-03-15', 'Male', NULL, GETDATE(), NULL); --pass: cust@123
+('customer15', '02f7f6b0cf1fd5bd487acaf5fbfcfbcac78726ef006273bcfeb76e5cfe9a0d68', N'Phan Văn P', 'cust15@example.com', '0900001015', 'Bắc Giang', 4, 1, '2004-03-15', 'Male', NULL, GETDATE(), NULL), --pass: cust@123
+('customer16', '02f7f6b0cf1fd5bd487acaf5fbfcfbcac78726ef006273bcfeb76e5cfe9a0d68', N'Trần Thị O', 'cust16@example.com', '0900001014', 'Quảng Nam', 4, 1, '2003-02-14', 'Female', NULL, GETDATE(), NULL), --pass: cust@123
+('customer17', '02f7f6b0cf1fd5bd487acaf5fbfcfbcac78726ef006273bcfeb76e5cfe9a0d68', N'Trần Thị O', 'cust17@example.com', '0900001014', 'Quảng Nam', 4, 1, '2003-02-14', 'Female', NULL, GETDATE(), NULL), --pass: cust@123
+('staff26', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Vinh', 'staff26@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff27', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Vu', 'staff27@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff28', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Vin', 'staff28@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff29', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Veo', 'staff29@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff30', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Van', 'staff30@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff31', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Vit', 'staff31@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff32', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Vo', 'staff32@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff33', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Vem', 'staff33@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff34', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Vot', 'staff34@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff35', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Vut', 'staff35@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff36', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Me', 'staff36@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff37', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Meo', 'staff37@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff38', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Teo', 'staff38@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff39', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Cu', 'staff39@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff40', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Ô', 'staff40@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff41', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Soc', 'staff41@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff42', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Tran', 'staff42@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff43', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Te', 'staff43@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff44', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Vuc', 'staff44@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff45', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Mit', 'staff45@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff46', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Va', 'staff46@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff47', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Vau', 'staff47@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff49', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Môi', 'staff48@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff50', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Muỗi', 'staff49@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff51', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Tít', 'staff50@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff52', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Tao', 'staff51@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff53', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Bôi', 'staff52@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff54', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Cười', 'staff53@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff55', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Nút', 'staff54@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff56', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Nít', 'staff55@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff57', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Ma', 'staff56@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff58', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Quỷ', 'staff57@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff59', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Hẹo', 'staff58@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff60', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Chiến', 'staff59@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff61', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn C', 'staff60@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff62', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VB', 'staff61@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff63', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VS', 'staff62@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff64', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VD', 'staff63@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff65', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VF', 'staff64@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff66', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VB', 'staff65@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff67', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VQ', 'staff66@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff68', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VR', 'staff67@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff69', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VT', 'staff68@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff70', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VY', 'staff69@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff71', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VU', 'staff70@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff72', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VO', 'staff71@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff73', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VP', 'staff72@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff74', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VYE', 'staff73@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff75', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VE', 'staff74@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff76', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VL', 'staff75@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff77', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VM', 'staff76@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff78', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VMB', 'staff77@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff79', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VHH', 'staff78@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff80', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VĐ', 'staff79@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff81', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VDD', 'staff80@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff82', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VFF', 'staff81@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff83', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn VGG', 'staff82@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff84', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn HGH', 'staff83@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff85', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn BBB', 'staff84@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff86', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn CCC', 'staff85@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff87', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn ABC', 'staff86@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff88', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn BBC', 'staff87@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff89', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn NNG', 'staff88@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff90', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn MML', 'staff89@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff91', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn JJJ', 'staff90@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff92', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn AAa', 'staff91@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff93', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn afF', 'staff92@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff94', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn TTT', 'staff93@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff95', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn CCV', 'staff94@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff96', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn CHU', 'staff95@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff97', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Bro', 'staff97@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff98', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Bưởi', 'staff98@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff99', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn Chuối', 'staff99@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff100', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn CAM', 'staff100@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL), --pass: staff@123
+('staff101', 'b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1', N'Cao Văn CHia', 'staff101@example.com', '0910000025', N'Trụ sở phụ', 3, 1, '1995-01-25', 'Male', NULL, GETDATE(), NULL); --pass: staff@123
+
 -- Tạo chi nhánh gắn với từng manager
 INSERT INTO Branchs (branch_name, manager_id) VALUES
-(N'Chi nhánh Hà Nội', 1),
-(N'Chi nhánh Hồ Chí Minh', 2),
-(N'Chi nhánh Đà Nẵng', 3),
-(N'Chi nhánh Cần Thơ', 4),
-(N'Chi nhánh Quy Nhơn', 5);
+(N'Chi nhánh Hà Nội', 2),
+(N'Chi nhánh Hồ Chí Minh', 3),
+(N'Chi nhánh Đà Nẵng', 4),
+(N'Chi nhánh Cần Thơ', 5),
+(N'Chi nhánh Quy Nhơn', 6);
 
 -- Gán branch_id cho các hồ bơi theo địa chỉ
 UPDATE Pools SET branch_id = 1 WHERE pool_address = N'Hà Nội'
@@ -63,13 +141,6 @@ UPDATE Pools SET branch_id = 2 WHERE pool_address = N'Hồ Chí Minh'
 UPDATE Pools SET branch_id = 3 WHERE pool_address = N'Đà Nẵng'
 UPDATE Pools SET branch_id = 4 WHERE pool_address = N'Cần Thơ'
 UPDATE Pools SET branch_id = 5 WHERE pool_address = N'Quy Nhơn';
-
-INSERT INTO Staffs(user_id, branch_id) VALUES
-(7,1),(8,1),(9,1),(10,1),(11,1),	--Cơ sở HN
-(12,2),(13,2),(14,2),(15,2),(16,2),	--Cơ sở HCM
-(17,3),(18,3),(19,3),(20,3),(21,3),	--Cơ sở DN
-(22,4),(23,4),(24,4),(25,4),(26,4),	--Cơ sở CT
-(27,5),(28,5),(29,5),(30,5),(31,5);	--Cơ sở QN
 
 -- Thêm dữ liệu vào bảng Pools
 INSERT INTO Pools (pool_name, pool_road, pool_address, max_slot, open_time, close_time, pool_status, created_at, pool_image, pool_description) VALUES
@@ -99,6 +170,120 @@ INSERT INTO Pools (pool_name, pool_road, pool_address, max_slot, open_time, clos
 (N'Hồ bơi Trần Phú', N'Đường Trần Phú', N'Quy Nhơn', 60, '05:30:00', '21:00:00', 1, GETDATE(), N'https://bcp.cdnchinhphu.vn/334894974524682240/2024/4/11/an-toan-thiet-bi-be-boi-17128195925281735826251.jpg',N'Bể bơi nằm cạnh vườn cây nhiệt đới, không khí trong lành.'),
 (N'Hồ bơi Phú Tài', N'Đường Tây Sơn', N'Quy Nhơn', 55, '06:00:00', '20:00:00', 1, GETDATE(), N'https://prihoda.co.uk/wp-content/uploads/2015/09/Swiming-pool-fabric-ducting-prihoda-8.jpg',N'Bể bơi dịch vụ cao cấp với phòng thay đồ riêng biệt.');
 
+-- Thêm dữ liệu vào bảng Staff_Types
+INSERT INTO Staff_Types (type_name, description) VALUES
+(N'Nhân viên kỹ thuật', N'Bảo trì thiết bị và cơ sở hạ tầng'),
+(N'Nhân viên soát vé', N'Kiểm tra vé khách hàng tại bể bơi'),
+(N'Nhân viên kiểm tra thiết bị', N'Theo dõi và báo cáo tình trạng thiết bị'),
+(N'Nhân viên hỗ trợ dịch vụ', N'Hỗ trợ khách hàng sử dụng dịch vụ tại bể bơi'); 
+
+-- Thêm dữ liệu vào bảng Staffs
+INSERT INTO Staffs (user_id, branch_id, pool_id, staff_type_id)
+VALUES 
+(7, 1, 1, 1),  --HN
+(8, 1, 1, 2), 
+(9, 1, 1, 3),  
+(10, 1, 1, 4),
+(11, 1, 2, 1),  
+(12, 1, 2, 2), 
+(13, 1, 2, 3),  
+(14, 1, 2, 4),
+(15, 1, 3, 1),  
+(16, 1, 3, 2), 
+(17, 1, 3, 3),  
+(18, 1, 3, 4),
+(19, 1, 4, 1),  
+(20, 1, 4, 2), 
+(21, 1, 4, 3),  
+(22, 1, 4, 4),
+(23, 1, 5, 1),
+(24, 1, 5, 2),  
+(25, 1, 5, 3), 
+(26, 1, 5, 4), 
+---------------------------
+(27, 2, 6, 1), --HCM
+(28, 2, 6, 2),  
+(29, 2, 6, 3), 
+(30, 2, 6, 4),  
+(31, 2, 7, 1),
+(49, 2, 7, 2),
+(50, 2, 7, 3),  
+(51, 2, 7, 4),
+(52, 2, 8, 1),
+(53, 2, 8, 2),
+(54, 2, 8, 3),  
+(55, 2, 8, 4),
+(56, 2, 9, 1),
+(57, 2, 9, 2),
+(58, 2, 9, 3),  
+(59, 2, 9, 4),
+(60, 2, 10, 1),
+(61, 2, 10, 2),
+(62, 2, 10, 3),  
+(63, 2, 10, 4),
+----------------------------
+(64, 3, 11, 1), --DN
+(65, 3, 11, 2),
+(66, 3, 11, 3),  
+(67, 3, 11, 4),
+(68, 3, 12, 1),
+(69, 3, 12, 2),
+(70, 3, 12, 3),  
+(71, 3, 12, 4),
+(72, 3, 13, 1),
+(73, 3, 13, 2),
+(74, 3, 13, 3),  
+(75, 3, 13, 4),
+(76, 3, 14, 1),
+(77, 3, 14, 2),
+(78, 3, 14, 3),  
+(79, 3, 14, 4),
+(80, 3, 15, 1),
+(81, 3, 15, 2),
+(82, 3, 15, 3),  
+(83, 3, 15, 4),
+----------------------------------
+(84, 4, 16, 1), --CT
+(85, 4, 16, 2),
+(86, 4, 16, 3),  
+(87, 4, 16, 4),
+(88, 4, 17, 1),
+(89, 4, 17, 2),
+(90, 4, 17, 3),  
+(91, 4, 17, 4),
+(92, 4, 18, 1),
+(93, 4, 18, 2),
+(94, 4, 18, 3),  
+(95, 4, 18, 4),
+(96, 4, 19, 1),
+(97, 4, 19, 2),
+(98, 4, 19, 3),  
+(99, 4, 19, 4),
+(100, 4, 20, 1),
+(101, 4, 20, 2),
+(102, 4, 20, 3),  
+(103, 4, 20, 4),
+----------------------------------
+(104, 5, 21, 1), --QN
+(105, 5, 21, 2),
+(106, 5, 21, 3),  
+(107, 5, 21, 4),
+(108, 5, 22, 1),
+(109, 5, 22, 2),
+(110, 5, 22, 3),  
+(111, 5, 22, 4),  
+(112, 5, 23, 1),
+(113, 5, 23, 2),
+(114, 5, 23, 3),  
+(115, 5, 23, 4),
+(116, 5, 24, 1),
+(117, 5, 24, 2),
+(118, 5, 24, 3),  
+(119, 5, 24, 4),  
+(120, 5, 25, 1),
+(121, 5, 25, 2),
+(122, 5, 25, 3),  
+(123, 5, 25, 4);
 
 -- Thêm dữ liệu vào bảng Pool_Device
 INSERT INTO Pool_Device (pool_id, device_image, device_name, quantity, device_status, notes) VALUES
@@ -846,7 +1031,7 @@ INSERT INTO Pool_Service(pool_id, service_name, description, price, service_imag
 (25,N'Kính Bơi',N'Kính bơi giúp bảo vệ mắt khỏi hóa chất trong nước và tăng tầm nhìn rõ ràng khi bơi',20000,N'https://yeuboiloi.com/wp-content/uploads/2022/05/view-v500s_bl_001b.jpg',60),
 (25,N'Mũ bơi',N'Mũ bơi giúp bảo vệ tóc, giữ vệ sinh nước bể và giảm lực cản khi bơi',20000,N'https://huyphu.com/cdn/720/Product/_2jLd53DPGe/1572874168438.jpg',60);
 
---Thêm bảng Booking_Service: chỉ sử dụng các service_id 1-4 ở trên, booking_id từ 1 đến 15
+--Thêm bảng Booking_Service
 INSERT INTO Booking_Service (booking_id, pool_service_id, branch_id, quantity, total_service_price) VALUES
 (1, 1, 1, 2, 40000),    -- Thuê 2 tủ đồ
 (1, 2, 1, 2, 80000),    -- Thuê 2 đồ bơi
@@ -864,12 +1049,12 @@ INSERT INTO Booking_Service (booking_id, pool_service_id, branch_id, quantity, t
 (10, 2, 1, 1, 40000);   -- Thuê 1 đồ bơi
 
 --Thêm bảng Ticket_Types
-INSERT INTO Ticket_Types (type_code, type_name, description, base_price, is_combo) VALUES 
-(N'ADULT', N'Người lớn', N'Vé dành cho người lớn', 100000.00, 0),
-(N'CHILD', N'Trẻ em', N'Vé dành cho trẻ em', 70000.00, 0),
-(N'SENIOR', N'Người già', N'Vé dành cho người cao tuổi', 80000.00, 0),
-(N'FAMILY', N'Combo Gia Đình', N'2 người lớn + 2 trẻ em', 300000.00, 1),
-(N'TRIPLE', N'Combo Nhóm 3', N'3 người lớn', 270000.00, 1);
+INSERT INTO Ticket_Types (type_code, type_name, description, base_price, is_combo, created_at, discount_percent) VALUES 
+(N'ADULT', N'Người lớn', N'Vé dành cho người lớn', 100000.00, 0, GETDATE(), 0),
+(N'CHILD', N'Trẻ em', N'Vé dành cho trẻ em', 70000.00, 0, GETDATE(), 0),
+(N'SENIOR', N'Người già', N'Vé dành cho người cao tuổi', 80000.00, 0, GETDATE(), 0),
+(N'FAMILY', N'Combo Gia Đình', N'2 người lớn + 2 trẻ em', 289000.00, 1, GETDATE(), 15),
+(N'TRIPLE', N'Combo Nhóm 3', N'3 người lớn', 270000.00, 1, GETDATE(), 10);
 
 -- Thêm bảng Combo_Detail
 INSERT INTO Combo_Detail (combo_type_id, included_type_id, quantity)VALUES 
@@ -887,6 +1072,13 @@ INSERT INTO Ticket (booking_id, ticket_type_id, ticket_price, ticket_code, issue
 (3, 3, 80000, 'SENIOR-TICKET-0006', 1, GETDATE()), -- Người già
 (4, 4, 300000, 'FAMILY-TICKET-0007', 1, GETDATE()),-- Combo Gia đình
 (5, 5, 270000, 'TRIPLE-TICKET-0008', 1, GETDATE());-- Combo 3 Người lớn
+
+--Ticket_Type để set lại tất cả hồ bơi vé đều đang hoạt động <Khong duoc xoa!!!>
+INSERT INTO Pool_Ticket_Types (pool_id, ticket_type_id, status)
+SELECT p.pool_id, t.ticket_type_id, 'active'
+FROM Pools p
+CROSS JOIN Ticket_Types t; 
+
 --Thêm bảng Payment
 INSERT INTO Payments (booking_id, payment_method, payment_status, payment_date, total_amount, discount_amount, transaction_reference, created_at) VALUES 
 (1, N'Bank_transfers', N'completed', GETDATE(), 300000, 30000, 'TX200', GETDATE()),

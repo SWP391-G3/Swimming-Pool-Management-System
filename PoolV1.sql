@@ -5,8 +5,6 @@ CREATE TABLE Roles (
     role_name NVARCHAR(50) NOT NULL UNIQUE
 );
 
-
-
 -- Bảng người dùng
 CREATE TABLE Users (
     user_id INT IDENTITY(1,1) PRIMARY KEY,                 -- Mã định danh người dùng
@@ -30,17 +28,9 @@ CREATE TABLE Users (
 CREATE TABLE Branchs (
     branch_id INT IDENTITY(1,1) PRIMARY KEY,
     branch_name NVARCHAR(100) NOT NULL,
-    manager_id INT NOT NULL,
+    manager_id INT NULL,
 	CONSTRAINT FK_Branchs_Manager FOREIGN KEY (manager_id) REFERENCES Users(user_id)
 );
-
-CREATE TABLE Staffs(
-	staff_id INT IDENTITY(1,1) PRIMARY KEY,
-	user_id INT NOT NULL,
-	branch_id INT NOT NULL,
-	CONSTRAINT FK_Staffs_User FOREIGN KEY (user_id) REFERENCES Users(user_id),
-	CONSTRAINT FK_Staffs_Branch FOREIGN KEY (branch_id) REFERENCES Branchs(branch_id)
-)
 
 -- Tạo bảng Pools
 CREATE TABLE Pools (
@@ -58,6 +48,24 @@ CREATE TABLE Pools (
 	pool_description NVARCHAR(255),
 	branch_id INT,
     CONSTRAINT CK_Pools_OpenBeforeClose CHECK (close_time > open_time)
+);
+
+CREATE TABLE Staff_Types (
+    staff_type_id INT IDENTITY(1,1) PRIMARY KEY,
+    type_name NVARCHAR(100) NOT NULL UNIQUE, -- VD: Kỹ thuật, Xoát vé, Kiểm tra thiết bị, Hỗ trợ dịch vụ
+    description NVARCHAR(255)
+);
+
+CREATE TABLE Staffs(
+	staff_id INT IDENTITY(1,1) PRIMARY KEY,
+	user_id INT NOT NULL,
+	branch_id INT NOT NULL,
+	pool_id INT NOT NULL,
+	staff_type_id INT,
+	CONSTRAINT FK_Staffs_User FOREIGN KEY (user_id) REFERENCES Users(user_id),
+	CONSTRAINT FK_Staffs_Branch FOREIGN KEY (branch_id) REFERENCES Branchs(branch_id),
+	CONSTRAINT FK_Staffs_Pool FOREIGN KEY (pool_id) REFERENCES Pools(pool_id),
+	CONSTRAINT FK_Staffs_StaffType FOREIGN KEY (staff_type_id) REFERENCES Staff_Types(staff_type_id)
 );
 
 -- Tạo bảng Pool_Device
@@ -175,7 +183,9 @@ CREATE TABLE Ticket_Types (
     type_name NVARCHAR(100) NOT NULL,
     description NVARCHAR(255),
     base_price DECIMAL(10,2) NOT NULL,
-    is_combo BIT NOT NULL DEFAULT 0             -- nếu là combo (1), thường (0)
+    is_combo BIT NOT NULL DEFAULT 0,             -- nếu là combo (1), thường (0)
+	created_at DATETIME DEFAULT GETDATE(),
+	discount_percent DECIMAL DEFAULT 0
 );
 
 -- Bảng định nghĩa chi tiết combo: combo gồm những loại vé nào và số lượng
@@ -189,9 +199,10 @@ CREATE TABLE Combo_Detail (
 );
 
 --Tạo bảng Pool_Ticket_Type (Quản lý ticket theo bể)
-CREATE TABLE Pool_Ticket_Type (
+CREATE TABLE Pool_Ticket_Types (
     pool_id INT NOT NULL,
     ticket_type_id INT NOT NULL,
+	status NVARCHAR(20) DEFAULT 'active',
     PRIMARY KEY (pool_id, ticket_type_id),
     CONSTRAINT FK_Pool_Ticket_Type_Pool FOREIGN KEY (pool_id) REFERENCES Pools(pool_id),
     CONSTRAINT FK_Pool_Ticket_Types FOREIGN KEY (ticket_type_id) REFERENCES Ticket_Types(ticket_type_id)
@@ -244,6 +255,38 @@ CREATE TABLE Contacts (
     is_resolved BIT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

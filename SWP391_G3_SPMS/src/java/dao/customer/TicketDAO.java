@@ -6,10 +6,13 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import model.customer.Ticket;
-
+/**
+ *
+ * @author LAZYVL
+ */
 public class TicketDAO extends DBContext {
 
-    // Sửa: trả về ticketId vừa tạo
+    // Tạo
     public int addTicket(int bookingId, int ticketTypeId, BigDecimal price, Integer issuedBy) {
         int ticketId = -1;
         String sql = "INSERT INTO Ticket (booking_id, ticket_type_id, ticket_price, issued_by, issued_at) "

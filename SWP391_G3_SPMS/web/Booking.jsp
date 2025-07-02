@@ -79,6 +79,12 @@
                 </a>
             </div>
 
+            <% String error = (String) request.getAttribute("error"); %>
+            <% if (error != null && !error.isEmpty()) { %>
+            <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-center font-semibold">
+                <%= error %>
+            </div>
+            <% } %>
             <form id="bookingForm" action="booking" method="post">
                 <input type="hidden" name="service" value="makeBooking"/>
                 <input type="hidden" name="poolId" value="<%= pool.getPool_id() %>"/>
@@ -222,7 +228,7 @@
                                 <circle cx="12" cy="12" r="10" stroke-width="2" />
                                 <path d="M8 12h4v4" stroke-width="2" stroke-linecap="round" />
                                 </svg>
-                                Chính sách hoàn tiền
+                                Chính sách
                             </div>
                         </div>
                         <!-- Thuê đồ -->
@@ -502,12 +508,31 @@
             return false;
             }
 
+
+
+            // Validate: Số lượng vé tối đa 10
+            const totalTicketQty = selectedTickets.reduce((sum, t) => sum + t.quantity, 0);
+            if (totalTicketQty > 10) {
+            alert("Bạn chỉ được đặt tối đa 10 vé!");
+            e.preventDefault();
+            return false;
+            }
+
             // Nếu muốn kiểm tra bắt buộc phải có ít nhất 1 vé
             if (selectedTickets.length === 0) {
             alert("Bạn phải chọn ít nhất 1 vé!");
             e.preventDefault();
             return false;
             }
+
+            // Validate: Số lượng đồ thuê tối đa 10
+            const totalRentQty = selectedRents.reduce((sum, r) => sum + r.quantity, 0);
+            if (totalRentQty > 10) {
+            alert("Bạn chỉ được thuê tối đa 10 món!");
+            e.preventDefault();
+            return false;
+            }
+
             });
         </script>
     </body>

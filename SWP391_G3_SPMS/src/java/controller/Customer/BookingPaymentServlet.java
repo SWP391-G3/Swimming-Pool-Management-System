@@ -66,7 +66,7 @@ public class BookingPaymentServlet extends HttpServlet {
                 discountDAO.markDiscountAsUsed(pageData.getUser().getUser_id(), pageData.getSelectedDiscount().getDiscountId());
             }
 
-            // 2.Ticket(s) và lưu lại ticketId
+            //Ticket và lưu lại ticketId
             TicketDAO ticketDAO = new TicketDAO();
             List<Integer> ticketIds = new ArrayList<>();
             for (TicketSelection t : pageData.getSelectedTickets()) {
@@ -76,7 +76,7 @@ public class BookingPaymentServlet extends HttpServlet {
                 }
             }
 
-            // 3. Insert Booking_Service (dịch vụ thuê)
+            //Insert Booking_Service
             BookingServiceDAO bookingServiceDAO = new BookingServiceDAO();
             for (PoolServiceSelection r : pageData.getSelectedRents()) {
                 bookingServiceDAO.addServiceToBooking(
@@ -88,7 +88,7 @@ public class BookingPaymentServlet extends HttpServlet {
                 );
             }
 
-            // 4. Insert Payment
+            //Insert Payment
             model.customer.Payment payment = new model.customer.Payment(
                     bookingId,
                     "Bank_transfers",
@@ -102,7 +102,7 @@ public class BookingPaymentServlet extends HttpServlet {
             paymentDAO.addPayment(payment);
             int paymentId = paymentDAO.getLastPaymentIdByBookingId(bookingId);
 
-            // 5. Insert Payment_Ticket
+            //Insert Payment_Ticket
             PaymentTicketDAO paymentTicketDAO = new PaymentTicketDAO();
             int idx = 0;
             for (TicketSelection t : pageData.getSelectedTickets()) {
@@ -113,15 +113,13 @@ public class BookingPaymentServlet extends HttpServlet {
                 }
             }
 
-            // 6. Insert Payment_RentItem
+            //Insert Payment_RentItem
             PaymentRentItemDAO paymentRentDAO = new PaymentRentItemDAO();
             for (model.customer.PoolServiceSelection r : pageData.getSelectedRents()) {
                 paymentRentDAO.addPaymentRentItem(paymentId, r.getPoolServiceId(), r.getPrice(), r.getQuantity());
             }
 
-            // 7. (Optional) Update trạng thái booking nếu muốn
-            // bookingDAO.updateBookingStatus(bookingId, "confirmed");
-            // 8. Xóa dữ liệu booking trên session và chuyển tới trang thành công
+            //Xóa dữ liệu booking trên session và chuyển tới trang thành công
             session.removeAttribute("bookingPageData");
             response.sendRedirect("payment-success.jsp");
         } catch (Exception ex) {

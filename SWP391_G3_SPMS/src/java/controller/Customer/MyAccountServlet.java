@@ -1,13 +1,7 @@
 package controller.Customer;
 
-import dao.customer.BookingDetailDAO;
-import dao.customer.DiscountDetailDAO;
-import dao.customer.UserDAO;
-import model.customer.BookingDetails;
-import model.customer.DiscountDetail;
-import model.customer.User;
-
-
+import dao.customer.*;
+import model.customer.*;
 import java.util.List;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -15,6 +9,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+/**
+ *
+ * @author LAZYVL
+ */
 
 public class MyAccountServlet extends HttpServlet {
 

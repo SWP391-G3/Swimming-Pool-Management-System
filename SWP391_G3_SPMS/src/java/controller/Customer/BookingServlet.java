@@ -11,6 +11,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.sql.Date;
 import java.sql.Time;
+/**
+ *
+ * @author LAZYVL
+ */
 
 public class BookingServlet extends HttpServlet {
 
@@ -147,20 +151,11 @@ public class BookingServlet extends HttpServlet {
         }
 
         BigDecimal finalAmount = totalAmount.subtract(discountAmount);
-        if (finalAmount.compareTo(BigDecimal.ZERO) < 0) {
-            finalAmount = BigDecimal.ZERO;
-        }
 
         //Check bookingDate
         Date bookingDate = null;
         if (bookingDateStr != null && !bookingDateStr.isBlank()) {
-            try {
-                bookingDate = Date.valueOf(bookingDateStr);
-            } catch (IllegalArgumentException e) {
-                System.out.println("Sai định dạng ngày: " + bookingDateStr);
-            }
-        } else {
-            System.out.println("Không có ngày đặt!");
+            bookingDate = Date.valueOf(bookingDateStr);
         }
 
         //Check startTime & endTime
@@ -177,20 +172,42 @@ public class BookingServlet extends HttpServlet {
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
+        
+        // Tính tổng số người (slot) từ các vé
+        int totalPerson = 0;
 
-        //Tinh TicketSlot
-        List<TicketSlot> ts = new ArrayList<>();
-
-        for (int i = 0; i < ticketTypeIds.length; i++) {
+        if (ticketTypeIds != null && ticketQuantities != null) {
             TicketTypeDAO ttDAO = new TicketTypeDAO();
-            int ticketTypeId = Integer.parseInt(ticketTypeIds[i]);
-            TicketSlot tts = ttDAO.getTicketSlotByTicketTypeId(ticketTypeId);
-            ts.add(tts);
+            for (int i = 0; i < ticketTypeIds.length; i++) {
+                int ticketTypeId = Integer.parseInt(ticketTypeIds[i]);
+                int quantity = Integer.parseInt(ticketQuantities[i]);
+                TicketSlot tts = ttDAO.getTicketSlotByTicketTypeId(ticketTypeId);
+                int ticketSlot = tts != null ? tts.getTicketSlot() : 1;
+                totalPerson += ticketSlot * quantity;
+            }
         }
 
-        int countTicketSlot = 0;
-        for (TicketSlot t : ts) {
-            countTicketSlot += t.getTicketSlot();
+        if (totalPerson > 10) {
+            PoolDAO poolDAO = new PoolDAO();
+            pool = poolDAO.getPoolByID(poolId);
+            TicketTypeDAO ticketTypeDAO = new TicketTypeDAO();
+            List<TicketType> ticketTypes = ticketTypeDAO.getTicketTypesByPoolId(poolId);
+            PoolServiceDAO poolServiceDAO = new PoolServiceDAO();
+            List<PoolService> poolServices = poolServiceDAO.getServicesByPoolId(poolId);
+            DiscountDAO discountDAO = new DiscountDAO();
+            List<Discounts> discounts = discountDAO.getAvailableDiscountsForUser(user.getUser_id());
+
+            BookingPageData pageData = new BookingPageData();
+            pageData.setUser(user);
+            pageData.setPool(pool);
+            pageData.setTicketTypes(ticketTypes);
+            pageData.setPoolServices(poolServices);
+            pageData.setDiscounts(discounts);
+
+            request.setAttribute("pageData", pageData);
+            request.setAttribute("error", "Tối đa cho mỗi lần booking là 10 người. Booking hiện tại đang có " + totalPerson + " người!");
+            request.getRequestDispatcher("Booking.jsp").forward(request, response);
+            return;
         }
 
         // Build BookingPageData
@@ -199,7 +216,7 @@ public class BookingServlet extends HttpServlet {
                 bookingDate,
                 startTime,
                 endTime,
-                countTicketSlot,
+                totalPerson,
                 selectedTickets,
                 selectedRents,
                 selectedDiscount,

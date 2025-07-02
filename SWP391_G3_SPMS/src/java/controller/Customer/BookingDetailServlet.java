@@ -1,17 +1,17 @@
 package controller.Customer;
 
-import dao.customer.BookingDetailDAO;
-import dao.customer.FeedbackDAO;
-import dao.customer.UserDAO;
-import model.customer.BookingDetails;
-import model.customer.Feedback;
-import model.customer.User;
+import dao.customer.*;
+import model.customer.*;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.time.LocalDate; // Thêm import này
+import java.time.LocalDate;
+/**
+ *
+ * @author LAZYVL
+ */
 
 public class BookingDetailServlet extends HttpServlet {
 
@@ -46,11 +46,22 @@ public class BookingDetailServlet extends HttpServlet {
                     }
                 }
             }
+            
+             // Xử lý quantity cho từng ticket ở đây
+            List<Ticket> tickets = bookingDetail.getTickets();
+            TicketTypeDAO ticketTypeDAO = new TicketTypeDAO();
+            for (Ticket ticket : tickets) {
+                int ticketTypeId = ticket.getTicketTypeId();
+                TicketSlot slot = ticketTypeDAO.getTicketSlotByTicketTypeId(ticketTypeId);
+                int quantity = (slot != null) ? slot.getTicketSlot(): 1;
+                ticket.setQuantity(quantity);
+            }
 
             // Kiểm tra có cho phép huỷ không (nếu ngày đặt < hôm nay thì không cho huỷ)
             LocalDate today = LocalDate.now();
             boolean canCancel = bookingDetail.getBookingDate().toLocalDate().isAfter(today);
-
+            
+            request.setAttribute("tickets", tickets);  
             request.setAttribute("bookingDetail", bookingDetail);
             request.setAttribute("userFeedback", userFeedback);
             request.setAttribute("successMsg", request.getParameter("success"));

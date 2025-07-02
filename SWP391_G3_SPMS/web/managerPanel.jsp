@@ -6,7 +6,7 @@
 
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import = "model.User" %>
+<%@ page import = "model.customer.User" %>
 <% 
             User currentUser1 = (User) session.getAttribute("currentUser");
             String userName1;

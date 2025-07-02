@@ -25,7 +25,7 @@ public class TicketTypeDAO extends DBContext {
         List<TicketType> list = new ArrayList<>();
         String sql = "SELECT t.ticket_type_id, t.type_code, t.type_name, t.description, t.base_price, t.is_combo "
                 + "FROM Ticket_Types t "
-                + "JOIN Pool_Ticket_Type pt ON t.ticket_type_id = pt.ticket_type_id "
+                + "JOIN Pool_Ticket_Types pt ON t.ticket_type_id = pt.ticket_type_id "
                 + "WHERE pt.pool_id = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -139,5 +139,4 @@ public class TicketTypeDAO extends DBContext {
         }
         return null;
     }
-
 }

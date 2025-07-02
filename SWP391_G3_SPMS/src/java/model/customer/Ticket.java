@@ -16,6 +16,7 @@ public class Ticket {
     private String ticketCode;
     private Integer issuedBy;     // Cho phép null
     private Date issuedAt;        // java.util.Date phù hợp với DATETIME
+    private int quantity;          //xử lý BookingDetail
 
     public Ticket() {
     }
@@ -28,6 +29,13 @@ public class Ticket {
         this.ticketCode = ticketCode;
         this.issuedBy = issuedBy;
         this.issuedAt = issuedAt;
+    }
+
+    public Ticket(BigDecimal ticketPrice, String ticketCode, Date issuedAt, int quantity) {
+        this.ticketPrice = ticketPrice;
+        this.ticketCode = ticketCode;
+        this.issuedAt = issuedAt;
+        this.quantity = quantity;
     }
 
     public int getTicketId() {
@@ -86,6 +94,15 @@ public class Ticket {
         this.issuedAt = issuedAt;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    
     @Override
     public String toString() {
         return "Ticket{"

@@ -168,8 +168,7 @@
                         <% for (Ticket ticket : tickets) { %>
                         <tr>
                             <td class="py-2 px-4 border-b text-center font-mono"><%= ticket.getTicketCode() %></td>
-                            <td class="py-2 px-4 border-b text-center"><%= ticket.getTicketTypeId() %></td>
-
+                            <td class="py-2 px-4 border-b text-center"><%= ticket.getQuantity() %></td>        //Tôi muốn đây sẽ in ra quantity của vé đấy
                             <td class="py-2 px-4 border-b text-center"><%= currencyFormat.format(ticket.getTicketPrice()) %></td>
                             <td class="py-2 px-4 border-b text-center"><%= ticket.getIssuedAt() != null ? ticket.getIssuedAt() : "" %></td>
                         </tr>
