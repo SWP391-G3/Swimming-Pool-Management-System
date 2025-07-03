@@ -1,0 +1,187 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
+package controller.manager;
+
+import dao.manager.TicketTypeDAO;
+import java.io.IOException;
+import java.io.PrintWriter;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Optional;
+import model.manager.PoolTicket;
+import model.customer.User;
+import model.manager.TicketType;
+
+/**
+ *
+ * @author Tuan Anh
+ */
+@WebServlet("/managerTicketServlet")
+public class ManagerTicketServlet extends HttpServlet {
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet managerTicketServlet</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet managerTicketServlet at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        int branchId = 0;
+        switch (currentUser.getUser_id()) {
+            case 2:
+                branchId = 1;
+                break; // Hà Nội
+            case 3:
+                branchId = 2;
+                break; // Hồ Chí Minh
+            case 4:
+                branchId = 3;
+                break; // Đà Nẵng
+            case 5:
+                branchId = 4;
+                break; // Quy Nhơn
+            case 6:
+                branchId = 5;
+                break; // Cần Thơ
+            default:
+                response.sendRedirect("login.jsp");
+                return;
+        }
+
+        // Lấy filter từ request
+        String keyword = Optional.ofNullable(request.getParameter("keyword")).orElse("").trim();
+        String status = Optional.ofNullable(request.getParameter("status")).orElse("all");
+        String poolIdRaw = Optional.ofNullable(request.getParameter("poolId")).orElse("all");
+        String pageParam = request.getParameter("page");
+        String pageSizeParam = request.getParameter("pageSize");
+
+        // Lấy lõi bên delete
+        
+        String error = request.getParameter("error");
+        if (error != null && !error.isEmpty()) {
+            request.setAttribute("error", error);
+        }
+        
+        // Xử lý filter, lấy ticketList, forward về managerTicket.jsp như bình thường
+
+        String success = request.getParameter("success");
+        if ("1".equals(success)) {
+            request.setAttribute("success", "Thêm loại vé thành công!");
+        }
+        
+        if ("2".equals(success)) {
+            request.setAttribute("success", "Cập nhập vé thành công!");
+        }
+        
+        if ("3".equals(success)) {
+            request.setAttribute("success", "Xóa vé thành công!");
+        }
+
+        // Xử lý phân trang
+        int defaultPageSize = 5;   // Hiển thị 5 dữ liệu
+        int pageSize = defaultPageSize;
+        if (pageSizeParam != null) {
+            try {
+                pageSize = Integer.parseInt(pageSizeParam);
+                if (pageSize != 5 && pageSize != 10 && pageSize != 15 && pageSize != 25) {
+                    pageSize = defaultPageSize;
+                }
+            } catch (NumberFormatException e) {
+                pageSize = defaultPageSize;
+            }
+        }
+        int page = 1;  // Trang hiện tại
+        try {
+            if (pageParam != null) {
+                page = Integer.parseInt(pageParam);
+            }
+        } catch (NumberFormatException e) {
+            page = 1;
+        }
+        if (page < 1) {
+            page = 1;
+        }
+        int offset = (page - 1) * pageSize;
+
+        try {
+            TicketTypeDAO dao = new TicketTypeDAO();
+
+            //Đếm số lượng loại vé phù hợp với bộ lọc được chọn (chi nhánh, hồ bơi, trạng thái, từ khóa)
+            int total = dao.countTicketsByBranch(branchId, poolIdRaw, status, keyword);
+            int endP = total / pageSize;
+            if (total % pageSize != 0) {
+                endP++;
+            }
+
+            // lấy danh sách các loại vé (TicketType) thuộc về các hồ bơi trong một chi nhánh cụ thể, kèm theo các điều kiện lọc và phân trang. 
+            List<TicketType> ticketList = dao.filterTicketsByBranch(branchId, poolIdRaw, status, keyword, offset, pageSize);
+            List<PoolTicket> poolList = dao.getPoolsByBranch(branchId);
+
+            // Đẩy dữ liệu sang jsp
+            request.setAttribute("ticketList", ticketList);
+            request.setAttribute("poolList", poolList);
+            request.setAttribute("keyword", keyword);
+            request.setAttribute("status", status);
+            request.setAttribute("poolId", poolIdRaw);
+            request.setAttribute("page", page);
+            request.setAttribute("pageSize", pageSize);
+            request.setAttribute("endP", endP);
+            request.setAttribute("total", total);
+
+            request.getRequestDispatcher("managerTicket.jsp").forward(request, response);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("error", "Lỗi truy vấn dữ liệu: " + ex.getMessage());
+            request.getRequestDispatcher("managerTicket.jsp").forward(request, response);
+        }
+    }
+
+    private int parseIntOrDefault(String val, int def) {
+        try {
+            return Integer.parseInt(val);
+        } catch (Exception e) {
+            return def;
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+}

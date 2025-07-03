@@ -1,0 +1,77 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Jul 2, 2025, 6:36:40 PM
+    Author     : Lenovo
+*/
+
+.main-content {
+    margin-left: 0;
+    padding: 1.5rem;
+    background-color: #f3f4f6; /* Tailwind gray-100 */
+    min-height: 100vh;
+    transition: margin 0.3s ease-in-out;
+}
+
+@media (min-width: 768px) {
+    .main-content {
+        margin-left: 18rem; /* khớp với sidebar width */
+    }
+}
+
+main {
+    max-width: 100%;
+    padding: 1rem;
+}
+
+main h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1d4ed8; /* Tailwind blue-700 */
+    margin-bottom: 1.5rem;
+}
+
+.card-link {
+    background-color: white;
+    border: 2px solid #3b82f6; /* Tailwind blue-500 */
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.card-link:hover {
+    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.1);
+    transform: translateY(-3px);
+}
+
+.card-link-green {
+    border-color: #10b981; /* Tailwind green-500 */
+}
+
+.card-link-green:hover {
+    box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.1);
+}
+
+.card-link i {
+    font-size: 2.25rem; /* text-4xl */
+    margin-bottom: 1rem;
+}
+
+.card-link h3 {
+    font-size: 1.125rem; /* text-lg */
+    font-weight: 600;
+    color: #1e40af; /* Tailwind blue-700 */
+}
+
+.card-link-green h3 {
+    color: #047857; /* Tailwind green-700 */
+}
+
+.card-link p {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #4b5563; /* Tailwind gray-600 */
+}
