@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
-import model.User;
+import model.customer.User;
 import model.manager.PoolTicket;
 import model.manager.Staff;
 

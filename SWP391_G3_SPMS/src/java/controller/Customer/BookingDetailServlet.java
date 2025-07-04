@@ -1,16 +1,17 @@
 package controller.Customer;
 
-import dao.BookingDetailDAO;
-import dao.FeedbackDAO;
-import dao.UserDAO;
-import model.BookingDetails;
-import model.Feedback;
-import model.User;
+import dao.customer.*;
+import model.customer.*;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.time.LocalDate;
+/**
+ *
+ * @author LAZYVL
+ */
 
 public class BookingDetailServlet extends HttpServlet {
 
@@ -45,11 +46,27 @@ public class BookingDetailServlet extends HttpServlet {
                     }
                 }
             }
+            
+             // Xử lý quantity cho từng ticket ở đây
+            List<Ticket> tickets = bookingDetail.getTickets();
+            TicketTypeDAO ticketTypeDAO = new TicketTypeDAO();
+            for (Ticket ticket : tickets) {
+                int ticketTypeId = ticket.getTicketTypeId();
+                TicketSlot slot = ticketTypeDAO.getTicketSlotByTicketTypeId(ticketTypeId);
+                int quantity = (slot != null) ? slot.getTicketSlot(): 1;
+                ticket.setQuantity(quantity);
+            }
 
+            // Kiểm tra có cho phép huỷ không (nếu ngày đặt < hôm nay thì không cho huỷ)
+            LocalDate today = LocalDate.now();
+            boolean canCancel = bookingDetail.getBookingDate().toLocalDate().isAfter(today);
+            
+            request.setAttribute("tickets", tickets);  
             request.setAttribute("bookingDetail", bookingDetail);
             request.setAttribute("userFeedback", userFeedback);
             request.setAttribute("successMsg", request.getParameter("success"));
             request.setAttribute("errorMsg", request.getParameter("error"));
+            request.setAttribute("canCancel", canCancel);
             request.getRequestDispatcher("BookingDetail.jsp").forward(request, response);
         } catch (SQLException e) {
             throw new ServletException(e);
@@ -59,13 +76,46 @@ public class BookingDetailServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //User user = (User) request.getSession().getAttribute("user");
-        //int userId = user.getUserId();
-        
-        int userId = 2;
+        String action = request.getParameter("action");
+
+        // ----------- Xử lý huỷ đặt bể -----------
+        if ("cancelBooking".equals(action)) {
+            String bookingIdStr = request.getParameter("bookingId");
+            User currentUser = (User) request.getSession().getAttribute("currentUser");
+            int userId = currentUser.getUser_id();
+            try {
+                int bookingId = Integer.parseInt(bookingIdStr);
+                BookingDetailDAO bookingDetailDAO = new BookingDetailDAO();
+                BookingDetails bookingDetail = bookingDetailDAO.getBookingDetailById(bookingId);
+                // Kiểm tra quyền huỷ
+                if (bookingDetail == null || bookingDetail.getUserId() != userId) {
+                    response.sendRedirect("booking_history");
+                    return;
+                }
+                // Kiểm tra ngày đặt để không cho huỷ nếu đã quá hoặc bằng hôm nay
+                LocalDate today = LocalDate.now();
+                if (!bookingDetail.getBookingDate().toLocalDate().isAfter(today)) {
+                    response.sendRedirect("booking_detail?bookingId=" + bookingId + "&error=1");
+                    return;
+                }
+                // Huỷ đặt bể
+                bookingDetailDAO.cancelBooking(bookingId);
+                response.sendRedirect("booking_detail?bookingId=" + bookingId);
+                return;
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.sendRedirect("booking_detail?bookingId=" + bookingIdStr + "&error=1");
+                return;
+            }
+        }
+
+        // ----------- Xử lý gửi feedback -----------
+        User currentUser = (User) request.getSession().getAttribute("currentUser");
+        int userId = currentUser.getUser_id();
+
         UserDAO userDAO = new UserDAO();
         User user = userDAO.getUserByID(userId);
-        
+
         if (user == null) {
             response.sendRedirect("login.jsp");
             return;
@@ -102,7 +152,6 @@ public class BookingDetailServlet extends HttpServlet {
                 feedbackDAO.sendFeedback(user, poolId, rating, comment);
                 response.sendRedirect("booking_detail?bookingId=" + bookingId + "&success=1");
             } else {
-                // Thong bao da feedback
                 response.sendRedirect("booking_detail?bookingId=" + bookingId + "&error=1");
             }
         } catch (Exception e) {

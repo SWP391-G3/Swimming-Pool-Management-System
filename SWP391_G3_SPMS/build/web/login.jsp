@@ -7,7 +7,6 @@
         <title>Đăng nhập</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <style>
-            /* Gợn sóng */
             body {
                 background: linear-gradient(180deg, #a0e9ff 0%, #6dd5fa 100%);
                 overflow: hidden;
@@ -44,7 +43,6 @@
                 }
             }
 
-            /* Bong bóng */
             .bubble {
                 position: absolute;
                 bottom: -50px;
@@ -77,6 +75,27 @@
         <div class="relative z-10 bg-white/80 backdrop-blur-xl shadow-2xl rounded-2xl w-full max-w-md p-8 space-y-6">
             <h2 class="text-2xl font-bold text-center text-blue-600">Đăng nhập</h2>
 
+            <!-- ✅ Thông báo đăng ký thành công -->
+            <c:if test="${not empty sessionScope.message}">
+                <div id="registerSuccessToast" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center justify-between space-x-4 transition-all duration-500 z-50">
+                    <span>✅ ${sessionScope.message}</span>
+                    <button onclick="document.getElementById('registerSuccessToast').style.display = 'none'" class="text-white text-lg font-bold">×</button>
+                </div>
+                <c:remove var="message" scope="session" />
+            </c:if>
+            <script>
+                window.addEventListener('DOMContentLoaded', () => {
+                    const toast = document.getElementById('registerSuccessToast');
+                    if (toast) {
+                        setTimeout(() => {
+                            toast.style.display = 'none';
+                        }, 5000);
+                    }
+                });
+            </script>
+
+
+            <!-- ❌ Thông báo lỗi -->
             <c:if test="${not empty error}">
                 <p class="bg-red-100 text-red-700 p-3 rounded text-sm font-semibold text-center">${error}</p>
             </c:if>
@@ -90,20 +109,65 @@
                         name="username"
                         placeholder="Nhập tên đăng nhập"
                         class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        />
+                        required  />
                 </div>
-                <div>
+                <div class="relative">
                     <label for="passwordInput" class="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
                     <input
                         type="password"
                         id="passwordInput"
                         name="password"
                         placeholder="Nhập mật khẩu"
-                        class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        />
+                        class="w-full px-4 py-2 pr-10 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        required />
+
+                    <!-- Nút icon -->
+                    <button type="button" id="togglePassword" class="absolute top-8 right-3 text-gray-600">
+                        <!-- Mặc định là icon con mắt (mật khẩu đang ẩn) -->
+                        <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                             viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7S3.732 16.057 2.458 12z" />
+                        </svg>
+                    </button>
                 </div>
+
+                <script>
+                    const passwordInput = document.getElementById("passwordInput");
+                    const toggleButton = document.getElementById("togglePassword");
+                    const eyeIcon = document.getElementById("eyeIcon");
+
+                    let isPasswordVisible = false;
+
+                    toggleButton.addEventListener("click", function () {
+                        isPasswordVisible = !isPasswordVisible;
+                        passwordInput.type = isPasswordVisible ? "text" : "password";
+
+                        // Đổi icon SVG thành có gạch hoặc không
+                        eyeIcon.innerHTML = isPasswordVisible
+                                ? `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7
+                     a9.956 9.956 0 012.345-4.288M6.7 6.7
+                     A9.966 9.966 0 0112 5c4.477 0 8.268 2.943 9.542 7
+                     a9.954 9.954 0 01-4.293 5.144M15 12a3 3 0 01-3 3m0-6a3 3 0 013 3m0 0L4 4" />`
+                                : `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5
+                     s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7
+                     S3.732 16.057 2.458 12z" />`;
+                    });
+                </script>
+
+
+
+
+
+                <a href="ResetPassword.jsp" class="text-blue-600 font-regular text-sm hover:underline">Quên mật khẩu?</a>
                 <button
-                    type="submit" id="btnlogin"
+                    type="submit" id="btLogin"
                     class="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg hover:bg-blue-600 transition duration-300"
                     >
                     Đăng nhập
@@ -136,7 +200,7 @@
             </div>
         </div>
 
-        <!-- Script tạo bong bóng -->
+        <!-- Bong bóng -->
         <script>
             const createBubbles = () => {
                 for (let i = 0; i < 50; i++) {

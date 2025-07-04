@@ -61,16 +61,18 @@ public class AdminLockCustomerServlet extends HttpServlet {
         try {
             int userId = Integer.parseInt(request.getParameter("userId"));
             boolean currentStatus = Boolean.parseBoolean(request.getParameter("userStatus"));
-
-            boolean newStatus = !currentStatus; // Đảo trạng thái
+            boolean newStatus = !currentStatus;
 
             CustomerDAO dao = new CustomerDAO();
             dao.lockCustomer(userId, newStatus);
 
-            request.getRequestDispatcher("adminViewCustomerList").forward(request, response);
+            // Trả về JSON kết quả
+            response.setContentType("application/json");
+            response.getWriter().write("{\"success\":true, \"newStatus\":" + newStatus + "}");
         } catch (Exception e) {
-            e.printStackTrace(); // Ghi log lỗi ra console, giúp debug nếu có vấn đề
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid input");
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("{\"success\":false}");
         }
     }
 

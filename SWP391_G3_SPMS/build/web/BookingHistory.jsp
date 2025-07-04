@@ -1,6 +1,7 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="java.util.List" %>
-<%@ page import="model.BookingDetails" %>
+<%@ page import="model.customer.BookingDetails" %>
 <%@ page import="java.text.SimpleDateFormat,java.text.NumberFormat,java.util.Locale" %>
 <%
     List<BookingDetails> bookingList = (List<BookingDetails>) request.getAttribute("bookingList");
@@ -11,7 +12,7 @@
     Integer totalPages = (Integer) request.getAttribute("totalPages");
     String poolNameParam = request.getAttribute("poolName") != null ? (String) request.getAttribute("poolName") : "";
     String fromDateParam = request.getAttribute("fromDate") != null ? (String) request.getAttribute("fromDate") : "";
-    String toDateParam = request.getAttribute("toDate") != null ? (String) request.getAttribute("toDate") : ""; // Thêm dòng này
+    String toDateParam = request.getAttribute("toDate") != null ? (String) request.getAttribute("toDate") : "";
     String statusParam = request.getAttribute("status") != null ? (String) request.getAttribute("status") : "";
     String sortOrderParam = request.getAttribute("sortOrder") != null ? (String) request.getAttribute("sortOrder") : "";
     Integer pageSize = (request.getAttribute("pageSize") != null) ? (Integer) request.getAttribute("pageSize") : 5;
@@ -30,6 +31,7 @@
         <link rel="stylesheet" href="css/styles.css" />
     </head>
     <body class="bg-gray-50 min-h-screen font-['Inter'] antialiased">
+        <%@include file="header.jsp" %>
         <div class="container mx-auto px-4 py-8">
             <a
                 href="my_account"
@@ -130,18 +132,7 @@
                                 <option value="price_desc" <%= "price_desc".equals(request.getParameter("sortOrder")) ? "selected" : "" %>>Giá giảm</option>
                             </select>
                         </div>
-                        <!-- Số booking/trang -->
-                        <div class="flex-2 min-w-[140px]">
-                            <label class="block text-gray-600 mb-1 font-medium">Số booking</label>
-                            <input
-                                type="number"
-                                name="pageSize"
-                                min="1"
-                                max="50"
-                                value="<%= request.getParameter("pageSize") != null ? request.getParameter("pageSize") : (request.getAttribute("pageSize") != null ? request.getAttribute("pageSize") : 5) %>"
-                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            />
-                        </div>
+                        <!-- Đã bỏ trường Số booking/trang -->
                         <!--Gửi tìm kiếm -->
                         <div class="flex-shrink-0 md:ml-2">
                             <button
@@ -214,28 +205,65 @@
                         </tbody>
                     </table>
                     <% if (totalPages != null && totalPages > 1) { %>
-                    <div class="flex justify-center items-center mt-8 gap-2">
-                        <% for (int i = 1; i <= totalPages; i++) { %>
-                        <form method="get" style="display:inline;">
+                    <div class="flex flex-col md:flex-row justify-center items-center mt-8 gap-4">
+                        <div class="flex flex-wrap gap-2">
+                            <% for (int i = 1; i <= totalPages; i++) { %>
+                            <form method="get" style="display:inline;">
+                                <input type="hidden" name="poolName" value="<%= poolNameParam %>"/>
+                                <input type="hidden" name="fromDate" value="<%= fromDateParam %>"/>
+                                <input type="hidden" name="toDate" value="<%= toDateParam %>"/>
+                                <input type="hidden" name="status" value="<%= statusParam %>"/>
+                                <input type="hidden" name="sortOrder" value="<%= sortOrderParam %>"/>
+                                <input type="hidden" name="page" value="<%= i %>"/>
+                                <button
+                                    type="submit"
+                                    class="px-3 py-1 rounded-md border font-medium
+                                    <%= (i == currentPage) ? "bg-blue-600 text-white border-blue-600" : "bg-white text-blue-600 border-gray-300 hover:bg-blue-100" %>">
+                                    <%= i %>
+                                </button>
+                            </form>
+                            <% } %>
+                        </div>
+                        <!-- Nhập trang muốn tới -->
+                        <form method="get" class="flex items-center gap-2" onsubmit="return validatePageNumber();">
                             <input type="hidden" name="poolName" value="<%= poolNameParam %>"/>
                             <input type="hidden" name="fromDate" value="<%= fromDateParam %>"/>
                             <input type="hidden" name="toDate" value="<%= toDateParam %>"/>
                             <input type="hidden" name="status" value="<%= statusParam %>"/>
                             <input type="hidden" name="sortOrder" value="<%= sortOrderParam %>"/>
-                            <input type="hidden" name="pageSize" value="<%= pageSize %>"/>
-                            <input type="hidden" name="page" value="<%= i %>"/>
-                            <button
-                                type="submit"
-                                class="px-3 py-1 rounded-md border font-medium
-                                <%= (i == currentPage) ? "bg-blue-600 text-white border-blue-600" : "bg-white text-blue-600 border-gray-300 hover:bg-blue-100" %>">
-                                <%= i %>
-                            </button>
+                            <input
+                                id="gotoPage"
+                                name="page"
+                                type="number"
+                                min="1"
+                                max="<%= totalPages %>"
+                                class="border border-gray-300 rounded-md px-2 py-1 w-16 text-center focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                placeholder="Số"
+                                required
+                                value="<%= currentPage %>"
+                                />
                         </form>
-                        <% } %>
                     </div>
+                    <script>
+                        function validatePageNumber() {
+                            var input = document.getElementById('gotoPage');
+                            var value = parseInt(input.value, 10);
+                            var max = <%= totalPages %>;
+                            if (isNaN(value) || value < 1 || value > max) {
+                                input.focus();
+                                input.classList.add('ring-2', 'ring-red-500');
+                                setTimeout(function () {
+                                    input.classList.remove('ring-2', 'ring-red-500');
+                                }, 1500);
+                                return false;
+                            }
+                            return true;
+                        }
+                    </script>
                     <% } %>
                 </div>
             </section>
         </div>
+        <%@include file="footer.jsp" %>
     </body>
 </html>

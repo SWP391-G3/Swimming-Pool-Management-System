@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
-import model.User;
+import model.customer.User;
 import model.manager.Device;
 import model.manager.Pooldevice;
 

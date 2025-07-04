@@ -1,5 +1,6 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.List,model.Pool,model.FeedbackHomepage,model.User" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page import="java.util.List,model.customer.Pool,model.customer.FeedbackHomepage,model.customer.User" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -36,55 +37,7 @@
     </head>
 
     <body class="main-layout">
-        <!-- loader  -->
-        <!--        <div class="loader_bg">
-                    <div class="loader"><img src="images/loading.gif" alt="#" /></div>
-                </div>-->
-        <!-- end loader -->
-        <!-- header -->
-        <header class="bg-white shadow-md w-full">
-            <div class="container mx-auto px-4">
-                <div class="flex items-center justify-between py-4">
-                    <!-- Logo -->
-                    <div class="flex items-center space-x-3">
-                        <div class="h-20 w-20">
-                            <img src="images/logoPool.png" alt="Logo" class="h-full w-full object-contain" />
-                        </div>
-                        <a href="home" class="text-3xl md:text-5xl font-bold text-[#33CCFF]">PoolHub</a>
-                    </div>
-
-
-                    <% 
-                        User currentUser = (User) session.getAttribute("currentUser");
-                        String userName = (currentUser != null) ? currentUser.getFull_name() : "";
-                        if(currentUser == null){
-                            response.sendRedirect("LandingPage.jsp");
-                            return;
-                        }
-                    %>
-
-                    <!-- Navigation -->
-                    <nav class="hidden md:flex space-x-6 text-base font-medium items-center">
-                        <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Trang Chủ</a>
-                        <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Giới Thiệu</a>
-                        <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Bể Bơi</a>
-                        <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Đánh Giá</a>
-                        <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Liên Hệ</a>
-                        <a href="my_account" class="flex items-center space-x-2 text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">
-                            <span>Tài khoản <%= !userName.isEmpty() ? ("| " + userName) : "" %></span>
-                            <img src="<%= currentUser != null ? currentUser.getImages() : "default-avatar.png" %>"
-                                 alt="avatar"
-                                 class="w-8 h-8 rounded-full object-cover border border-gray-300" />
-                        </a>
-                    </nav>
-                </div>
-            </div>
-        </header>
-
-
-
-
-        <!-- end header -->
+        <%@include file="header.jsp" %>
 
         <!-- banner -->
         <section class="relative w-full overflow-hidden">
@@ -350,70 +303,7 @@
         </div>
 
 
-        <!-- end blog -->
-
-        <!-- contact -->
-
-        <!-- end contact -->
-
-        <!-- footer -->
-        <footer class="bg-gray-900 text-white pt-12">
-            <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-10 pb-10">
-                <!-- Liên Hệ -->
-                <div>
-                    <h3 class="text-xl font-semibold mb-4 text-[#33CCFF]">Liên Hệ Chúng Tôi</h3>
-                    <ul class="space-y-3 text-gray-300">
-                        <li class="flex items-center gap-2">
-                            <i class="fa fa-map-marker text-[#33CCFF]"></i> Địa chỉ
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <i class="fa fa-mobile text-[#33CCFF]"></i> +01 1234569540
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <i class="fa fa-envelope text-[#33CCFF]"></i>
-                            <a href="mailto:poolhub@gmail.com" class="hover:underline">poolhub@gmail.com</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Liên Kết Menu -->
-                <div>
-                    <h3 class="text-xl font-semibold mb-4 text-[#33CCFF]">Liên Kết Menu</h3>
-                    <ul class="space-y-2 text-gray-300">
-                        <li><a href="#" class="hover:text-[#33CCFF] transition">Trang Chủ</a></li>
-                        <li><a href="#" class="hover:text-[#33CCFF] transition">Về Chúng Tôi</a></li>
-                        <li><a href="#" class="hover:text-[#33CCFF] transition">Bể Bơi</a></li>
-                        <li><a href="#" class="hover:text-[#33CCFF] transition">Thư Viện Hình Ảnh</a></li>
-                        <li><a href="#" class="hover:text-[#33CCFF] transition">Đánh Giá</a></li>
-                        <li><a href="#" class="hover:text-[#33CCFF] transition">Liên Hệ</a></li>
-                    </ul>
-                </div>
-
-                <!-- Đăng ký bản tin -->
-                <div>
-                    <h3 class="text-xl font-semibold mb-4 text-[#33CCFF]">Bản Tin</h3>
-                    <form class="flex flex-col gap-3 mb-4">
-                        <input type="email" placeholder="Nhập email của bạn" 
-                               class="w-full px-4 py-2 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-[#33CCFF]" />
-                        <button type="submit" class="bg-[#33CCFF] text-white px-4 py-2 rounded-lg hover:bg-[#1BAFDA] transition">Đăng Ký</button>
-                    </form>
-
-                    <div class="flex space-x-4">
-                        <a href="#"><i class="fa fa-facebook text-2xl hover:text-[#33CCFF] transition"></i></a>
-                        <a href="#"><i class="fa fa-twitter text-2xl hover:text-[#33CCFF] transition"></i></a>
-                        <a href="#"><i class="fa fa-linkedin text-2xl hover:text-[#33CCFF] transition"></i></a>
-                        <a href="#"><i class="fa fa-youtube-play text-2xl hover:text-[#33CCFF] transition"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Copyright -->
-            <div class="border-t border-gray-700 py-4 text-center text-gray-400 text-sm">
-                © 2025 Tất cả quyền được bảo lưu. Thiết kế và phân phối bởi <span class="text-[#33CCFF] font-semibold">PoolHub</span>.
-            </div>
-        </footer>
-
-        <!-- end footer -->
+        <%@include file="footer.jsp" %>
 
         <!-- Javascript files-->
         <script src="js/jquery.min.js"></script>

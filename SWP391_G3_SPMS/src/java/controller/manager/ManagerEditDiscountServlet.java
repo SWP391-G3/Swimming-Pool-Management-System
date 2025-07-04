@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller.manager;
 
 import dao.manager.DiscountDAO;
@@ -13,45 +9,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
-import model.Discounts;
-import model.User;
-import java.time.format.DateTimeFormatter;
+import model.manager.Discount;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import model.customer.User;
 
-/**
- *
- * @author Tuan Anh
- */
 @WebServlet(name = "ManagerEditDiscountServlet", urlPatterns = {"/managerEditDiscountServlet"})
 public class ManagerEditDiscountServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ManagerEditDiscountServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ManagerEditDiscountServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -72,15 +36,23 @@ public class ManagerEditDiscountServlet extends HttpServlet {
         try {
             int id = Integer.parseInt(idRaw);
             DiscountDAO dao = new DiscountDAO();
-            Discounts d = dao.getDiscountById(id);
+            Discount d = dao.getDiscountById(id);
             if (d == null) {
                 response.sendRedirect("managerDiscountServlet");
                 return;
             }
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-            request.setAttribute("validFromVal", d.getValidFrom() != null ? d.getValidFrom().format(formatter) : "");
-            request.setAttribute("validToVal", d.getValidTo() != null ? d.getValidTo().format(formatter) : "");
+            // Chỉ cho phép manager tạo discount này mới được sửa
+            int managerId = currentUser.getUser_id();
+            if (!dao.canManagerEditDiscount(id, managerId)) {
+                session.setAttribute("error", "Bạn không phải người tạo voucher này, không có quyền chỉnh sửa!");
+                response.sendRedirect("managerDiscountServlet");
+                return;
+            }
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+            request.setAttribute("validFromVal", d.getValidFrom() != null ? formatter.format(d.getValidFrom()) : "");
+            request.setAttribute("validToVal", d.getValidTo() != null ? formatter.format(d.getValidTo()) : "");
             // Truyền dữ liệu voucher vào form
             request.setAttribute("discount", d);
 
@@ -107,6 +79,7 @@ public class ManagerEditDiscountServlet extends HttpServlet {
             response.sendRedirect("login.jsp");
             return;
         }
+        int managerId = currentUser.getUser_id(); // hoặc getId()
 
         request.setCharacterEncoding("UTF-8");
         DiscountDAO dao = new DiscountDAO();
@@ -120,6 +93,13 @@ public class ManagerEditDiscountServlet extends HttpServlet {
 
         try {
             int discountId = Integer.parseInt(idRaw);
+
+            // Kiểm tra quyền sửa trước khi xử lý gì thêm!
+            if (!dao.canManagerEditDiscount(discountId, managerId)) {
+                session.setAttribute("error", "Bạn không phải người tạo voucher này, không có quyền chỉnh sửa!");
+                response.sendRedirect("managerDiscountServlet");
+                return;
+            }
 
             String description = request.getParameter("description");
             String percentStr = request.getParameter("discount_percent");
@@ -139,11 +119,11 @@ public class ManagerEditDiscountServlet extends HttpServlet {
             String error = null;
 
             // Validate discount_percent
-            BigDecimal percent = null;
+            double percent = 0.0;
             if (error == null) {
                 try {
-                    percent = new BigDecimal(percentStr);
-                    if (percent.compareTo(BigDecimal.ONE) < 0 || percent.compareTo(new BigDecimal("50")) > 0) {
+                    percent = Double.parseDouble(percentStr);
+                    if (percent < 1 || percent > 50) {
                         error = "Phần trăm giảm giá phải từ 1 đến 50!";
                     }
                 } catch (Exception e) {
@@ -165,18 +145,19 @@ public class ManagerEditDiscountServlet extends HttpServlet {
             }
 
             // Validate ngày
-            LocalDateTime validFrom = null, validTo = null;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+            java.util.Date validFrom = null, validTo = null;
             if (error == null) {
                 try {
-                    validFrom = LocalDateTime.parse(validFromStr.replace(" ", "T"));
-                    validTo = LocalDateTime.parse(validToStr.replace(" ", "T"));
-                    if (validFrom.isAfter(validTo)) {
+                    validFrom = sdf.parse(validFromStr);
+                    validTo = sdf.parse(validToStr);
+                    if (validFrom.after(validTo)) {
                         error = "Ngày bắt đầu phải trước ngày kết thúc!";
                     }
-                    if (validFrom.isBefore(LocalDateTime.now())) {
+                    if (validFrom.before(new java.util.Date())) {
                         error = "Ngày bắt đầu không được trong quá khứ!";
                     }
-                } catch (DateTimeParseException e) {
+                } catch (ParseException e) {
                     error = "Ngày bắt đầu/kết thúc không hợp lệ!";
                 }
             }
@@ -184,19 +165,19 @@ public class ManagerEditDiscountServlet extends HttpServlet {
             boolean checkedStatus = (statusStr != null && statusStr.equals("1"));
 
             if (error != null) {
-                Discounts d = new Discounts();
-                d.setDiscountId(discountId);
-                d.setDiscountCode(request.getParameter("discount_code"));
+                Discount d = new Discount();
+                d.setId(discountId);
+                d.setCode(request.getParameter("discount_code"));
                 d.setDescription(description);
-                d.setDiscountPercent(percent);
+                d.setPercent(percent);
                 d.setQuantity(quantity);
                 d.setValidFrom(validFrom);
                 d.setValidTo(validTo);
                 d.setStatus(checkedStatus);
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-                request.setAttribute("validFromVal", validFrom != null ? validFrom.format(formatter) : "");
-                request.setAttribute("validToVal", validTo != null ? validTo.format(formatter) : "");
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+                request.setAttribute("validFromVal", validFrom != null ? formatter.format(validFrom) : "");
+                request.setAttribute("validToVal", validTo != null ? formatter.format(validTo) : "");
                 request.setAttribute("discount", d);
                 request.setAttribute("error", error);
 
@@ -214,24 +195,25 @@ public class ManagerEditDiscountServlet extends HttpServlet {
 
             String discountCode = request.getParameter("discount_code");
             if (discountCode == null || discountCode.isEmpty()) {
-                discountCode = dao.getDiscountById(discountId).getDiscountCode();
+                discountCode = dao.getDiscountById(discountId).getCode();
             }
 
-            Discounts d = new Discounts();
-            d.setDiscountId(discountId);
+            Discount d = new Discount();
+            d.setId(discountId);
             d.setDescription(description);
-            d.setDiscountPercent(percent);
+            d.setPercent(percent);
             d.setQuantity(quantity);
             d.setValidFrom(validFrom);
             d.setValidTo(validTo);
             d.setStatus(checkedStatus);
-            d.setDiscountCode(discountCode);
+            d.setCode(discountCode);
 
-            boolean result = dao.update(d);
+            boolean result = dao.update(d, managerId); // Truyền managerId vào DAO
 
             if (result) {
                 session.setAttribute("success", "Cập nhật voucher thành công!");
             } else {
+                // Không đúng quyền thì đã redirect ở trên. Nếu lỗi khác thì báo lỗi chung.
                 session.setAttribute("error", "Lỗi khi cập nhật!");
             }
 

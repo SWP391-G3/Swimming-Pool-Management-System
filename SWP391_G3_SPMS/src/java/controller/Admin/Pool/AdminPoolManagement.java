@@ -4,7 +4,7 @@
  */
 package controller.Admin.Pool;
 
-import dao.PoolDAO;
+import dao.customer.PoolDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,8 +14,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
-import model.Pool;
-import model.User;
+import model.customer.Pool;
+import model.customer.User;
 
 /**
  *
@@ -65,6 +65,7 @@ public class AdminPoolManagement extends HttpServlet {
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("currentUser");
         PoolDAO dao = new PoolDAO();
+        String error = request.getParameter("error");
         int totalRecords = dao.getTotalRecord();
         int page = 1; // mac dinh ban dau la 1
         int poolContain = 4;
@@ -94,6 +95,7 @@ public class AdminPoolManagement extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("nameWork", nameWork);
         session.setAttribute("currentUser", currentUser);
+        session.setAttribute("error", error);
         request.getRequestDispatcher("AdminPoolManagement.jsp").forward(request, response);
     }
 

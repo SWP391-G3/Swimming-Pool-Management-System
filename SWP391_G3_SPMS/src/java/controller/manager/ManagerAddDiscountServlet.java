@@ -13,11 +13,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
-import model.Discounts;
-import model.User;
+import model.customer.User;
+import model.manager.Discount;
 
 /**
  *
@@ -52,177 +49,176 @@ public class ManagerAddDiscountServlet extends HttpServlet {
         }
     }
 
-    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       
+
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser == null) {
             response.sendRedirect("login.jsp");
             return;
         }
-        
-        
+
         request.getRequestDispatcher("managerAddDiscount.jsp").forward(request, response);
-        
-        
-        
-        
+
     }
 
-  
     @Override
-protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
 
-    HttpSession session = request.getSession();
-    User currentUser = (User) session.getAttribute("currentUser");
-    if (currentUser == null) {
-        response.sendRedirect("login.jsp");
-        return;
-    }
+        request.setCharacterEncoding("UTF-8");
+        DiscountDAO dao = new DiscountDAO();
 
-    request.setCharacterEncoding("UTF-8");
-    DiscountDAO dao = new DiscountDAO();
+        String code = request.getParameter("discount_code");
+        String description = request.getParameter("description");
+        String percentStr = request.getParameter("discount_percent");
+        String quantityStr = request.getParameter("quantity");
+        String validFromStr = request.getParameter("valid_from");
+        String validToStr = request.getParameter("valid_to");
 
-    String code = request.getParameter("discount_code");
-    String description = request.getParameter("description");
-    String percentStr = request.getParameter("discount_percent");
-    String quantityStr = request.getParameter("quantity");
-    String validFromStr = request.getParameter("valid_from");
-    String validToStr = request.getParameter("valid_to");
+        // Các tham số filter để giữ lại sau redirect
+        String keyword = request.getParameter("keyword") != null ? request.getParameter("keyword") : "";
+        String status = request.getParameter("status") != null ? request.getParameter("status") : "all";
+        String pageSizeStr = request.getParameter("pageSize") != null ? request.getParameter("pageSize") : "5";
+        String fromDate = request.getParameter("fromDate") != null ? request.getParameter("fromDate") : "";
+        String toDate = request.getParameter("toDate") != null ? request.getParameter("toDate") : "";
 
-    // Các tham số filter để giữ lại sau redirect
-    String keyword = request.getParameter("keyword") != null ? request.getParameter("keyword") : "";
-    String status = request.getParameter("status") != null ? request.getParameter("status") : "all";
-    String pageSizeStr = request.getParameter("pageSize") != null ? request.getParameter("pageSize") : "5";
-    String fromDate = request.getParameter("fromDate") != null ? request.getParameter("fromDate") : "";
-    String toDate = request.getParameter("toDate") != null ? request.getParameter("toDate") : "";
+        String error = null;
 
-    String error = null;
+        // Validate mã code
+        if (code == null || code.trim().isEmpty()) {
+            error = "Mã voucher không được để trống!";
+        } else if (dao.isCodeExists(code.trim())) {
+            error = "Mã voucher đã tồn tại!";
+        }
 
-    // Validate mã code
-    if (code == null || code.trim().isEmpty()) {
-        error = "Mã voucher không được để trống!";
-    } else if (dao.isCodeExists(code.trim())) {
-        error = "Mã voucher đã tồn tại!";
-    }
+        // Validate discount_percent
+        double percent = 0.0;
+        if (error == null) {
+            try {
+                percent = Double.parseDouble(percentStr);
+                if (percent < 1 || percent > 50) {
+                    error = "Phần trăm giảm giá phải từ 1 đến 50!";
+                }
+            } catch (Exception e) {
+                error = "Phần trăm giảm giá không hợp lệ!";
+            }
+        }
 
-    // Validate discount_percent
-    BigDecimal percent = null;
-    if (error == null) {
-        try {
-            percent = new BigDecimal(percentStr);
-            if (percent.compareTo(BigDecimal.ONE) < 0 || percent.compareTo(new BigDecimal("50")) > 0)
-                error = "Phần trăm giảm giá phải từ 1 đến 50!";
-        } catch (Exception e) {
-            error = "Phần trăm giảm giá không hợp lệ!";
+        // Validate quantity
+        int quantity = 1;
+        if (error == null) {
+            try {
+                quantity = Integer.parseInt(quantityStr);
+                if (quantity < 1 || quantity > 100) {
+                    error = "Số lượng từ 1 đến 100!";
+                }
+            } catch (Exception e) {
+                error = "Số lượng không hợp lệ!";
+            }
+        }
+
+        // Validate ngày
+        java.time.LocalDateTime validFrom = null, validTo = null;
+        if (error == null) {
+            try {
+                validFrom = java.time.LocalDateTime.parse(validFromStr.replace(" ", "T"));
+                validTo = java.time.LocalDateTime.parse(validToStr.replace(" ", "T"));
+                if (validFrom.isAfter(validTo)) {
+                    error = "Ngày bắt đầu phải trước ngày kết thúc!";
+                }
+                if (validFrom.isBefore(java.time.LocalDateTime.now())) {
+                    error = "Ngày bắt đầu không được trong quá khứ!";
+                }
+            } catch (Exception e) {
+                error = "Ngày bắt đầu/kết thúc không hợp lệ!";
+            }
+        }
+
+        if (error != null) {
+            request.setAttribute("error", error);
+
+            // Giữ lại filter khi về lại form
+            request.setAttribute("keyword", keyword);
+            request.setAttribute("status", status);
+            request.setAttribute("pageSize", pageSizeStr);
+            request.setAttribute("fromDate", fromDate);
+            request.setAttribute("toDate", toDate);
+
+            request.getRequestDispatcher("managerAddDiscount.jsp").forward(request, response);
+            return;
+        }
+
+        // Tạo Discount đúng model.manager.Discount
+        Discount d = new Discount();
+        d.setCode(code.trim());
+        d.setDescription(description);
+        d.setPercent(percent);
+        d.setQuantity(quantity);
+        d.setValidFrom(java.sql.Timestamp.valueOf(validFrom));
+        d.setValidTo(java.sql.Timestamp.valueOf(validTo));
+        d.setStatus(true);
+
+// Lấy id của manager hiện tại (lưu ý: currentUser.getUser_id() hoặc currentUser.getId() tùy model bạn)
+        int managerId = currentUser.getUser_id(); // hoặc getId() tùy tên hàm getter của bạn
+
+        boolean result = dao.insert(d, managerId); // TRUYỀN THÊM managerId vào DAO
+
+        if (result) {
+            // Tính lại số lượng voucher và số trang cuối cùng
+            int pageSize = Integer.parseInt(pageSizeStr);
+
+            java.util.Date fromDateObj = null, toDateObj = null;
+            try {
+                if (fromDate != null && !fromDate.isEmpty()) {
+                    fromDateObj = java.sql.Date.valueOf(fromDate);
+                }
+                if (toDate != null && !toDate.isEmpty()) {
+                    toDateObj = java.sql.Date.valueOf(toDate);
+                }
+            } catch (Exception e) {
+            }
+
+            int totalVoucher = 0;
+            try {
+                totalVoucher = dao.countDiscounts(keyword, status, fromDateObj, toDateObj);
+            } catch (Exception e) {
+                totalVoucher = 0;
+            }
+            int endPage = (int) Math.ceil((double) totalVoucher / pageSize);
+            if (endPage < 1) {
+                endPage = 1;
+            }
+
+            session.setAttribute("success", "Thêm voucher thành công!");
+
+            String redirectUrl = "managerDiscountServlet?page=" + endPage
+                    + "&pageSize=" + pageSize
+                    + "&keyword=" + java.net.URLEncoder.encode(keyword, "UTF-8")
+                    + "&status=" + status
+                    + (fromDate != null && !fromDate.isEmpty() ? "&fromDate=" + fromDate : "")
+                    + (toDate != null && !toDate.isEmpty() ? "&toDate=" + toDate : "");
+            response.sendRedirect(redirectUrl);
+        } else {
+            request.setAttribute("error", "Lỗi khi lưu vào CSDL!");
+
+            request.setAttribute("keyword", keyword);
+            request.setAttribute("status", status);
+            request.setAttribute("pageSize", pageSizeStr);
+            request.setAttribute("fromDate", fromDate);
+            request.setAttribute("toDate", toDate);
+
+            request.getRequestDispatcher("managerAddDiscount.jsp").forward(request, response);
         }
     }
-
-    // Validate quantity
-    int quantity = 1;
-    if (error == null) {
-        try {
-            quantity = Integer.parseInt(quantityStr);
-            if (quantity < 1 || quantity > 100)
-                error = "Số lượng từ 1 đến 100!";
-        } catch (Exception e) {
-            error = "Số lượng không hợp lệ!";
-        }
-    }
-
-    // Validate ngày
-    LocalDateTime validFrom = null, validTo = null;
-    if (error == null) {
-        try {
-            validFrom = LocalDateTime.parse(validFromStr.replace(" ", "T"));
-            validTo = LocalDateTime.parse(validToStr.replace(" ", "T"));
-            if (validFrom.isAfter(validTo))
-                error = "Ngày bắt đầu phải trước ngày kết thúc!";
-            if (validFrom.isBefore(LocalDateTime.now()))
-                error = "Ngày bắt đầu không được trong quá khứ!";
-        } catch (DateTimeParseException e) {
-            error = "Ngày bắt đầu/kết thúc không hợp lệ!";
-        }
-    }
-
-    if (error != null) {
-        request.setAttribute("error", error);
-
-        // Giữ lại filter khi về lại form
-        request.setAttribute("keyword", keyword);
-        request.setAttribute("status", status);
-        request.setAttribute("pageSize", pageSizeStr);
-        request.setAttribute("fromDate", fromDate);
-        request.setAttribute("toDate", toDate);
-
-        request.getRequestDispatcher("managerAddDiscount.jsp").forward(request, response);
-        return;
-    }
-
-    Discounts d = new Discounts();
-    d.setDiscountCode(code.trim());
-    d.setDescription(description);
-    d.setDiscountPercent(percent);
-    d.setQuantity(quantity);
-    d.setValidFrom(validFrom);
-    d.setValidTo(validTo);
-    d.setStatus(true);
-
-    boolean result = dao.insert(d);
-
-    if (result) {
-        // Tính lại số lượng voucher và số trang cuối cùng
-        int pageSize = Integer.parseInt(pageSizeStr);
-
-        // Chuyển fromDate, toDate sang java.util.Date nếu cần (nếu bạn truyền Date cho countDiscounts)
-        java.util.Date fromDateObj = null, toDateObj = null;
-        try {
-            if (fromDate != null && !fromDate.isEmpty())
-                fromDateObj = java.sql.Date.valueOf(fromDate);
-            if (toDate != null && !toDate.isEmpty())
-                toDateObj = java.sql.Date.valueOf(toDate);
-        } catch (Exception e) { }
-
-        int totalVoucher = 0;
-        try {
-            totalVoucher = dao.countDiscounts(keyword, status, fromDateObj, toDateObj);
-        } catch (Exception e) {
-            totalVoucher = 0;
-        }
-        int endPage = (int) Math.ceil((double) totalVoucher / pageSize);
-        if (endPage < 1) endPage = 1;
-
-        // Đặt message vào session để chuyển hướng vẫn hiển thị được
-        session.setAttribute("success", "Thêm voucher thành công!");
-
-        // Giữ lại filter khi redirect về trang cuối cùng
-        String redirectUrl = "managerDiscountServlet?page=" + endPage
-                + "&pageSize=" + pageSize
-                + "&keyword=" + java.net.URLEncoder.encode(keyword, "UTF-8")
-                + "&status=" + status
-                + (fromDate != null && !fromDate.isEmpty() ? "&fromDate=" + fromDate : "")
-                + (toDate != null && !toDate.isEmpty() ? "&toDate=" + toDate : "");
-        response.sendRedirect(redirectUrl);
-    } else {
-        request.setAttribute("error", "Lỗi khi lưu vào CSDL!");
-
-        // Giữ lại filter khi về lại form
-        request.setAttribute("keyword", keyword);
-        request.setAttribute("status", status);
-        request.setAttribute("pageSize", pageSizeStr);
-        request.setAttribute("fromDate", fromDate);
-        request.setAttribute("toDate", toDate);
-
-        request.getRequestDispatcher("managerAddDiscount.jsp").forward(request, response);
-    }
-}
-        
-        
-    
 
     @Override
     public String getServletInfo() {

@@ -19,9 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import model.User;
+import model.customer.User;
 import model.manager.PoolTicket;
 import model.manager.TicketType;
 
@@ -29,7 +27,7 @@ import model.manager.TicketType;
  *
  * @author Tuan Anh
  */
-@WebServlet(name = "managerAddTicket", urlPatterns = {"/managerAddTicket"})
+@WebServlet(name = "managerAddTicket", urlPatterns = {"/managerAddTicket"})    // Tuấn Anh đã ở đây
 public class ManagerAddTicketServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)

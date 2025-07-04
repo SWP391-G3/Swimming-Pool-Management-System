@@ -1,17 +1,39 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="model.BookingDetails" %>
-<%@ page import="model.Feedback" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import="model.customer.BookingDetails" %>
+<%@ page import="model.customer.Feedback" %>
+<%@ page import="model.customer.Ticket" %>
+<%@ page import="java.text.NumberFormat,java.util.Locale" %>
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="java.util.List" %> 
 <%
     BookingDetails bookingDetail = (BookingDetails) request.getAttribute("bookingDetail");
     Feedback userFeedback = (Feedback) request.getAttribute("userFeedback");
     String successMsg = (String) request.getAttribute("successMsg");
     String errorMsg = (String) request.getAttribute("errorMsg");
+    NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
     if (bookingDetail == null) {
 %>
 <div class="text-red-600 font-bold">Không tìm thấy thông tin booking!</div>
 <%
         return;
     }
+    String statusRaw = bookingDetail.getBookingStatus();
+    boolean canCancelStatus = "pending".equalsIgnoreCase(statusRaw) || "confirmed".equalsIgnoreCase(statusRaw)
+        || "Đã xác nhận".equalsIgnoreCase(statusRaw) || "Chờ xác nhận".equalsIgnoreCase(statusRaw);
+
+    boolean canCancelDate = false;
+    try {
+        java.sql.Date sqlDate = bookingDetail.getBookingDate();
+        if (sqlDate != null) {
+            LocalDate bookingDate = sqlDate.toLocalDate();
+            LocalDate today = LocalDate.now();
+            canCancelDate = bookingDate.isAfter(today);
+        }
+    } catch (Exception e) {
+        canCancelDate = false;
+    }
+    boolean canCancel = canCancelStatus && canCancelDate;
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,6 +46,7 @@
         <link rel="stylesheet" href="css/styles.css" />
     </head>
     <body class="bg-gray-50 min-h-screen font-['Inter'] antialiased">
+        <%@include file="header.jsp" %>
         <div class="container mx-auto px-4 py-8">
             <!-- Nút quay về -->
             <a href="booking_history" class="inline-flex items-center text-blue-600 font-medium mb-8 hover:underline">
@@ -40,7 +63,20 @@
                     CHI TIẾT ĐẶT BỂ
                 </h1>
             </div>
-            <section class="bg-white border border-gray-200 rounded-lg p-8 shadow-sm w-full">
+            <section class="bg-white border border-gray-200 rounded-lg p-8 shadow-sm w-full relative">
+                <!-- Nút Huỷ đặt bể -->
+                <% if (canCancel) { %>
+                <form method="post" action="booking_detail"
+                      onsubmit="return confirm('Bạn chắc chắn muốn huỷ đặt bể này?');"
+                      class="absolute top-8 right-8">
+                    <input type="hidden" name="bookingId" value="<%= bookingDetail.getBookingId() %>"/>
+                    <input type="hidden" name="action" value="cancelBooking"/>
+                    <button type="submit"
+                            class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-md shadow transition-colors">
+                        Huỷ đặt bể
+                    </button>
+                </form>
+                <% } %>
                 <h2 class="text-xl font-bold mb-6 text-blue-700">Thông tin đặt bể</h2>
                 <div class="mb-6 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-2 gap-4">
                     <div>
@@ -59,7 +95,6 @@
                         <div class="text-gray-500 text-sm">Trạng thái</div>
                         <div>
                             <%
-                            String statusRaw = bookingDetail.getBookingStatus();
                             String statusLabel = "Chưa xác nhận";
                             String badgeClass = "bg-yellow-100 text-yellow-800";
                             if ("confirmed".equalsIgnoreCase(statusRaw) || "Đã xác nhận".equalsIgnoreCase(statusRaw)) {
@@ -84,18 +119,83 @@
                             <%= bookingDetail.getPoolAddressDetail() %>
                         </div>
                     </div>
+
+                    <!-- Số lượng vé -->
+                    <div>
+                        <div class="text-gray-500 text-sm">Số lượng vé</div>
+                        <div class="font-medium text-gray-900"><%= bookingDetail.getTicketCount() %></div>
+                    </div>
+                    <!-- Giờ bắt đầu -->
+                    <div>
+                        <div class="text-gray-500 text-sm">Giờ bắt đầu</div>
+                        <div class="font-medium text-gray-900">
+                            <%= bookingDetail.getStartTime() != null ? bookingDetail.getStartTime().toString() : "" %>
+                        </div>
+                    </div>
+                    <!-- Mã giảm giá -->
+                    <div>
+                        <div class="text-gray-500 text-sm">Mã giảm giá</div>
+                        <div class="font-medium text-gray-900">
+                            <%= bookingDetail.getDiscountCode() != null ? bookingDetail.getDiscountCode() : "Không áp dụng" %>
+                            <% if (bookingDetail.getDiscountPercent() != null && bookingDetail.getDiscountPercent().compareTo(java.math.BigDecimal.ZERO) > 0) { %>
+                            (Giảm <%= bookingDetail.getDiscountPercent() %>%)
+                            <% } %>
+                        </div>
+                    </div>
+                    <!-- Giờ kết thúc -->
+                    <div>
+                        <div class="text-gray-500 text-sm">Giờ kết thúc</div>
+                        <div class="font-medium text-gray-900">
+                            <%= bookingDetail.getEndTime() != null ? bookingDetail.getEndTime().toString() : "" %>
+                        </div>
+                    </div>
+
                 </div>
+                <!-- Bảng danh sách vé -->
+                <h2 class="text-lg font-bold mt-8 mb-4 text-blue-700">Danh sách vé đã đặt</h2>
+                <%
+                    List<Ticket> tickets = bookingDetail.getTickets();
+                    if (tickets != null && !tickets.isEmpty()) {
+                %>
+                <table class="min-w-full border border-gray-200 rounded-lg mb-8">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="py-2 px-4 border-b text-center">Mã vé</th>
+                            <th class="py-2 px-4 border-b text-center">Số người</th>
+                            <th class="py-2 px-4 border-b text-center">Giá</th>
+                            <th class="py-2 px-4 border-b text-center">Ngày xuất vé</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (Ticket ticket : tickets) { %>
+                        <tr>
+                            <td class="py-2 px-4 border-b text-center font-mono"><%= ticket.getTicketCode() %></td>
+                            <td class="py-2 px-4 border-b text-center"><%= ticket.getQuantity() %></td>        
+                            <td class="py-2 px-4 border-b text-center"><%= currencyFormat.format(ticket.getTicketPrice()) %></td>
+                            <td class="py-2 px-4 border-b text-center"><%= ticket.getIssuedAt() != null ? ticket.getIssuedAt() : "" %></td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+                <%
+                    } else {
+                %>
+                <div class="text-gray-500 italic mb-8">Không có vé nào trong booking này.</div>
+                <%
+                    }
+                %>
+
                 <!-- Tổng tiền -->
                 <div class="flex justify-end mb-8">
                     <div class="text-right">
                         <div class="text-gray-500 text-base font-medium">Tổng tiền</div>
                         <div class="text-3xl md:text-4xl font-extrabold text-blue-700 mt-1 mb-2">
-                            <%= bookingDetail.getAmount() %>₫
+                            <%= bookingDetail.getAmount() != null ? currencyFormat.format(bookingDetail.getAmount()) : "" %>
                         </div>
                     </div>
                 </div>
                 <hr class="my-8" />
-                <!-- Rate Pool Section -->
+                <!-- Rate Pool Section (giữ nguyên như cũ) -->
                 <div>
                     <h3 class="text-lg font-semibold mb-3 text-blue-700">Đánh giá hồ bơi</h3>
                     <% if (successMsg != null) { %>
@@ -145,5 +245,6 @@
                 </div>
             </section>
         </div>
+        <%@include file="footer.jsp" %>
     </body>
 </html>

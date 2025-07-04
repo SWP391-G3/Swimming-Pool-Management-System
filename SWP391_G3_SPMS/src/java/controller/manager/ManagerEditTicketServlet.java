@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
-import model.User;
+import model.customer.User;
 import model.manager.PoolTicket;
 import model.manager.TicketType;
 
@@ -79,8 +79,6 @@ public class ManagerEditTicketServlet extends HttpServlet {
                 request.setAttribute("comboDetail", comboDetail);
             }
 
-            
-
             request.setAttribute("ticket", ticket);
             request.setAttribute("poolList", poolList);
             request.setAttribute("poolIdsString", poolIdsString);
@@ -94,7 +92,7 @@ public class ManagerEditTicketServlet extends HttpServlet {
             request.setAttribute("poolId", request.getParameter("poolId"));
 
             request.getRequestDispatcher("managerEditTicket.jsp").forward(request, response);
-            
+
         } catch (Exception ex) {
 
             ex.printStackTrace();
@@ -256,19 +254,19 @@ public class ManagerEditTicketServlet extends HttpServlet {
         try {
             // 1. Cập nhật Ticket_Types
             if (!isCombo) {
-                dao.updateTicketType(id, typeName, description, basePrice, false,0);
+                dao.updateTicketType(id, typeName, description, basePrice, false, 0);
             } else {
                 double discountPercent = 0;
                 try {
                     discountPercent = Double.parseDouble(discountPercentRaw);
                 } catch (Exception ignored) {
                 }
-               
+
                 dao.updateTicketType(id, typeName, description, basePrice, true, discountPercent);
                 //  Cập nhật thành phần combo (xóa cũ, thêm mới)
                 Map<Integer, Integer> comboMap = new HashMap<>();
                 List<TicketType> singleTypesList = dao.getAllSingleTypes();
-                
+
                 for (TicketType single : singleTypesList) {
                     String qtyStr = request.getParameter("comboQty_" + single.getId());
                     int qty = qtyStr == null ? 0 : Integer.parseInt(qtyStr);
@@ -278,6 +276,12 @@ public class ManagerEditTicketServlet extends HttpServlet {
                 }
                 dao.deleteComboDetail(id);
                 dao.addComboDetail(id, comboMap);
+            }
+            if (poolIds.isEmpty()) {
+                // set error, forward lại JSP, KHÔNG gọi updateTicketTypePools khi poolIds rỗng
+                request.setAttribute("error", "Phải chọn ít nhất 1 hồ bơi!");
+                // ... (forward lại JSP)
+                return;
             }
             // 3. Cập nhật mapping pool
             dao.updateTicketTypePools(id, poolIds, statusF);
@@ -292,6 +296,13 @@ public class ManagerEditTicketServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Có lỗi khi cập nhật loại vé.");
+
+            // Thêm stacktrace chi tiết để debug
+            java.io.StringWriter sw = new java.io.StringWriter();
+            e.printStackTrace(new java.io.PrintWriter(sw));
+            String stackTrace = sw.toString();
+            request.setAttribute("stacktrace", stackTrace);
+
             try {
                 TicketType ticket = dao.getTicketTypeById(id);
                 List<PoolTicket> poolList = dao.getPoolsByBranch(branchId);
@@ -319,10 +330,10 @@ public class ManagerEditTicketServlet extends HttpServlet {
                 // Ghi thông báo lỗi chi tiết (message hoặc stacktrace) vào biến error
                 request.setAttribute("error", "Lỗi: " + ex.getMessage());
                 // (Tùy ý) In stacktrace ra chuỗi
-                java.io.StringWriter sw = new java.io.StringWriter();
-                ex.printStackTrace(new java.io.PrintWriter(sw));
-                String stackTrace = sw.toString();
-                request.setAttribute("stacktrace", stackTrace);
+                java.io.StringWriter sw2 = new java.io.StringWriter();
+                ex.printStackTrace(new java.io.PrintWriter(sw2));
+                String stackTrace2 = sw2.toString();
+                request.setAttribute("stacktrace", stackTrace2);
 
                 // Forward về JSP thay vì redirect (để thấy lỗi)
                 request.getRequestDispatcher("managerEditTicket.jsp").forward(request, response);

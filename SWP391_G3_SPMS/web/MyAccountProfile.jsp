@@ -1,5 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="model.User,model.BookingDetails,model.DiscountDetail,java.util.List,java.text.SimpleDateFormat,java.text.NumberFormat,java.util.Locale" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import="model.customer.User,model.customer.BookingDetails,model.customer.DiscountDetail,java.util.List,java.text.SimpleDateFormat,java.text.NumberFormat,java.util.Locale" %>
 <%
     User user = (User) request.getAttribute("user");
     List<BookingDetails> recentBookings = (List<BookingDetails>) request.getAttribute("recentBookings");
@@ -21,17 +22,8 @@
         <link rel="stylesheet" href="css/styles.css">
     </head>
     <body class="bg-white min-h-screen font-['Inter'] antialiased">
+        <%@include file="header.jsp" %>
         <div class="container mx-auto px-4 py-8">
-
-            <!-- Back homepage -->
-            <a href="home"
-               class="absolute top-4 left-4 z-50 bg-white/70 px-4 py-2 rounded-full shadow flex items-center gap-2 hover:bg-blue-100 transition">
-                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                </svg>
-                <span class="font-medium text-blue-700">Trang chủ</span>
-            </a>
-
             <!-- Hero Image Section -->
             <div class="relative w-full h-64 mb-8 rounded-lg overflow-hidden shadow-lg">
                 <img src="https://www.saharapoolbuilder.com/wp-content/uploads/2019/07/swimming-pool-depth-recommendations.jpg"
@@ -53,7 +45,7 @@
                         <span class="text-white font-medium">LỊCH SỬ ĐẶT BỂ</span>
                     </div>
                 </a>
-                <a href="#" class="bg-blue-500 rounded-lg p-6 text-center cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 block">
+                <a href="voucher" class="bg-blue-500 rounded-lg p-6 text-center cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 block">
                     <div class="flex flex-col items-center">
                         <svg class="w-8 h-8 mb-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/>
@@ -200,8 +192,8 @@
                         </h3>
                         <div class="space-y-3 mt-4">
                             <%
-                                if (voucherActive != null && !voucherActive.isEmpty()) {
-                                    for (DiscountDetail d : voucherActive) {
+                                if (voucherUsed != null && !voucherUsed.isEmpty()) {
+                                    for (DiscountDetail d : voucherUsed) {
                             %>
                             <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                                 <div>
@@ -223,5 +215,6 @@
                 </div>
             </div>
         </div>
+        <%@include file="footer.jsp" %>
     </body>
 </html>

@@ -35,24 +35,23 @@ public class CheckNewPassword {
     }
     
     //Ham kiem tra Register Password
-    public static String validateRegisterPassword(String newPassword) {
-        if (newPassword == null || newPassword.isEmpty()) {
-            return "Mật khẩu mới không được để trống!";
-        }
-        if (newPassword.length() < 8) {
-            return "Mật khẩu mới phải có ít nhất 8 ký tự!";
-        }
-        if (newPassword.matches(".*\\s+.*")) {
-            return "Mật khẩu mới không được chứa khoảng trắng!";
-        }
-        int groups = 0;
-        if (newPassword.matches(".*[a-z].*")) groups++;           // chữ thường
-        if (newPassword.matches(".*[A-Z].*")) groups++;           // chữ hoa
-        if (newPassword.matches(".*\\d.*")) groups++;             // số
-        if (newPassword.matches(".*[^a-zA-Z0-9].*")) groups++;    // ký tự đặc biệt
-        if (groups < 3) {
-            return "Mật khẩu mới phải có ít nhất 3 trong 4 nhóm: chữ thường, chữ hoa, số, ký tự đặc biệt!";
-        }
-        return null; // hợp lệ
+    public static String validateRegisterPassword(String password) {
+    if (password.length() < 8) {
+        return "Mật khẩu phải có ít nhất 8 ký tự.";
     }
+    if (!password.matches(".*[a-z].*")) {
+        return "Mật khẩu phải chứa ít nhất một chữ thường.";
+    }
+    if (!password.matches(".*[A-Z].*")) {
+        return "Mật khẩu phải chứa ít nhất một chữ in hoa.";
+    }
+    if (!password.matches(".*\\d.*")) {
+        return "Mật khẩu phải chứa ít nhất một số.";
+    }
+    if (!password.matches(".*[^a-zA-Z0-9].*")) {
+        return "Mật khẩu phải chứa ít nhất một ký tự đặc biệt.";
+    }
+    return null; // hợp lệ
+}
+
 }

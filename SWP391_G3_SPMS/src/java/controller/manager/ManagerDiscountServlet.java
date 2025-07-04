@@ -17,7 +17,7 @@ import jakarta.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import model.User;
+import model.customer.User;
 import model.manager.Discount;
 import okhttp3.Connection;
 

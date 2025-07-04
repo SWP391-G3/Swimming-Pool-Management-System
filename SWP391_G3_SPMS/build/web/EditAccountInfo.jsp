@@ -1,5 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="model.User,java.text.SimpleDateFormat" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import="model.customer.User,java.text.SimpleDateFormat" %>
 <%
     User user = (User) request.getAttribute("user");
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -20,6 +21,7 @@
         <link rel="stylesheet" href="css/styles.css" />
     </head>
     <body class="bg-gray-50 min-h-screen font-['Inter'] antialiased">
+        <%@include file="header.jsp" %>
         <div class="container mx-auto px-4 py-8">
 
             <!-- Nút quay về -->
@@ -256,7 +258,7 @@
                 </section>
             </div>
         </div>
-
+        <%@include file="footer.jsp" %>
         <script>
             // Preview avatar khi upload file
             function previewAvatar(event) {
@@ -283,7 +285,6 @@
                 errorDiv.scrollIntoView({behavior: 'smooth', block: 'center'});
             }
 
-            // Validation functions tương tự như trong Java
             function validateFullName(fullName) {
                 if (!fullName || fullName.trim() === "") {
                     return "Họ và tên không được để trống.";
@@ -409,5 +410,6 @@
                 return true; // Cho phép submit
             }
         </script>
+
     </body>
 </html>

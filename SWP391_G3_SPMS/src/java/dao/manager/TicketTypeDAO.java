@@ -157,7 +157,7 @@ public class TicketTypeDAO extends DBContext {
     // Gán loại vé vào các pool, trạng thái mặc định 'active'
     // Phương thức này là cũ khi chưa có discount
     public void addTicketTypeToPools(int ticketTypeId, List<Integer> poolIds, String status) throws SQLException {
-        String sql = "INSERT INTO Pool_Ticket_Types (pool_id, ticket_type_id, price, status) VALUES (?, ?, 0, ?)";
+        String sql = "INSERT INTO Pool_Ticket_Types (pool_id, ticket_type_id, status) VALUES (?, ?, ?)";
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             for (Integer poolId : poolIds) {
                 st.setInt(1, poolId);
@@ -169,26 +169,7 @@ public class TicketTypeDAO extends DBContext {
         }
     }
     
-    
-    //    public void addTicketTypeToPools(int ticketTypeId, List<Integer> poolIds, String status) throws SQLException {
-//    String sql = "INSERT INTO Pool_Ticket_Types (pool_id, ticket_type_id, price, status) VALUES (?, ?, 0, ?)";
-//    try (PreparedStatement st = connection.prepareStatement(sql)) {
-//        for (Integer poolId : poolIds) {
-//            // Xóa trước nếu đã tồn tại
-//            String deleteSql = "DELETE FROM Pool_Ticket_Types WHERE pool_id = ? AND ticket_type_id = ?";
-//            try (PreparedStatement del = connection.prepareStatement(deleteSql)) {
-//                del.setInt(1, poolId);
-//                del.setInt(2, ticketTypeId);
-//                del.executeUpdate();
-//            }
-//            st.setInt(1, poolId);
-//            st.setInt(2, ticketTypeId);
-//            st.setString(3, status);
-//            st.addBatch();
-//        }
-//        st.executeBatch();
-//    }
-//}
+
     
     
     
@@ -210,47 +191,12 @@ public class TicketTypeDAO extends DBContext {
         }
     }
     return -1;
+    
+           
 }
     
     
     
-    
-    
-
-
-    
-    
-    
-    
-    // Cập nhập update -- khi chưa có trường discount
-//    public TicketType getTicketTypeById(int ticketTypeId) throws SQLException {
-//        TicketType ticket = null;
-//        String sql = "SELECT tt.ticket_type_id, tt.type_code, tt.type_name, tt.description, tt.base_price, tt.is_combo, tt.created_at, "
-//                + "       (SELECT COUNT(*) FROM Pool_Ticket_Types WHERE ticket_type_id = tt.ticket_type_id AND status = 'active') AS active_count "
-//                + "FROM Ticket_Types tt WHERE tt.ticket_type_id = ?";
-//        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-//            ps.setInt(1, ticketTypeId);
-//            try (ResultSet rs = ps.executeQuery()) {
-//                if (rs.next()) {
-//                    System.out.println("DEBUG: Đã lấy được vé id=" + ticketTypeId + ", code=" + rs.getString("type_code") + ", is_combo=" + rs.getBoolean("is_combo"));
-//                    ticket = new TicketType();
-//                    ticket.setId(rs.getInt("ticket_type_id"));
-//                    ticket.setCode(rs.getString("type_code"));
-//                    ticket.setName(rs.getString("type_name"));
-//                    ticket.setDescription(rs.getString("description"));
-//                    ticket.setBasePrice(rs.getDouble("base_price"));
-//                    ticket.setIsCombo(rs.getBoolean("is_combo"));
-//                    ticket.setCreatedAt(rs.getTimestamp("created_at"));
-//                    ticket.setPools(getPoolNamesOfTicketType(ticketTypeId));
-//                    int activeCount = rs.getInt("active_count");
-//                    ticket.setActive(activeCount > 0);
-//                } else {
-//                    System.out.println("DEBUG: Không tìm thấy vé với id=" + ticketTypeId);
-//                }
-//            }
-//        }
-//        return ticket;
-//    }
     
     // Cập nhập update khi đã thêm trường discount
     public TicketType getTicketTypeById(int ticketTypeId) throws SQLException {
@@ -300,7 +246,7 @@ public class TicketTypeDAO extends DBContext {
     
     
 
-// Xóa và cập nhật lại danh sách pool áp dụng cho loại vé
+// Xóa và cập nhật lại danh sách pool áp dụng cho loại vé    // Nguy Hiểm báo động đcm
     public void updateTicketTypePools(int ticketTypeId, List<Integer> poolIds, String status) throws SQLException {
         // Xóa cũ
         String deleteSql = "DELETE FROM Pool_Ticket_Types WHERE ticket_type_id = ?";
@@ -309,7 +255,7 @@ public class TicketTypeDAO extends DBContext {
             del.executeUpdate();
         }
         // Thêm mới
-        String insertSql = "INSERT INTO Pool_Ticket_Types (pool_id, ticket_type_id, price, status) VALUES (?, ?, 0, ?)";
+        String insertSql = "INSERT INTO Pool_Ticket_Types (pool_id, ticket_type_id, status) VALUES (?, ?, ?)";
         try (PreparedStatement ins = connection.prepareStatement(insertSql)) {
             for (Integer poolId : poolIds) {
                 ins.setInt(1, poolId);
@@ -419,19 +365,6 @@ public class TicketTypeDAO extends DBContext {
             ps.executeUpdate();
         }
     }
-// Thêm lại thành phần combo mới
-//public void addComboDetail(int comboTypeId, Map<Integer, Integer> comboMap) throws SQLException {
-//    String sql = "INSERT INTO Combo_Detail (combo_type_id, included_type_id, quantity) VALUES (?, ?, ?)";
-//    try (PreparedStatement st = connection.prepareStatement(sql)) {
-//        for (Map.Entry<Integer, Integer> entry : comboMap.entrySet()) {
-//            st.setInt(1, comboTypeId);
-//            st.setInt(2, entry.getKey());
-//            st.setInt(3, entry.getValue());
-//            st.addBatch();
-//        }
-//        st.executeBatch();
-//    }
-//}
 
     
     public String getTicketStatus(int ticketTypeId, int poolId) throws SQLException {
@@ -452,45 +385,45 @@ public class TicketTypeDAO extends DBContext {
     
     
     public static void main(String[] args) {
-//        int branchId = 1; // ví dụ branch id
-//        String poolId = "all";
-//        String status = "active";
-//        String keyword = "";
-//        int page = 1; // trang bạn muốn test
-//        int pageSize = 25; // số dòng mỗi trang
-//        int offset = (page - 1) * pageSize;
-//
+        int branchId = 1; // ví dụ branch id
+        String poolId = "all";
+        String status = "active";
+        String keyword = "";  
+        int page = 1; // trang bạn muốn test
+        int pageSize = 25; // số dòng mỗi trang
+        int offset = (page - 1) * pageSize;
+
+        TicketTypeDAO dao = new TicketTypeDAO();
+
+        try {
+            // Dùng hàm phân trang
+            List<TicketType> tickets = dao.filterTicketsByBranch(branchId, poolId, status, keyword, offset, pageSize);
+
+            if (tickets.isEmpty()) {
+                System.out.println("Không tìm thấy loại vé nào phù hợp.");
+            } else {
+                for (TicketType t : tickets) {
+                    System.out.println("ID: " + t.getId());
+                    System.out.println("Mã: " + t.getCode());
+                    System.out.println("Tên: " + t.getName());
+                    System.out.println("Giá: " + t.getBasePrice());
+                    System.out.println("Trạng thái: " + (t.isActive() ? "Đang bán" : "Ngừng bán"));
+                    System.out.println("Áp dụng tại: " + String.join(", ", t.getPools()));
+                    System.out.println("--------------");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 //        TicketTypeDAO dao = new TicketTypeDAO();
-//
-////        try {
-////            // Dùng hàm phân trang
-////            List<TicketType> tickets = dao.filterTicketsByBranch(branchId, poolId, status, keyword, offset, pageSize);
-////
-////            if (tickets.isEmpty()) {
-////                System.out.println("Không tìm thấy loại vé nào phù hợp.");
-////            } else {
-////                for (TicketType t : tickets) {
-////                    System.out.println("ID: " + t.getId());
-////                    System.out.println("Mã: " + t.getCode());
-////                    System.out.println("Tên: " + t.getName());
-////                    System.out.println("Giá: " + t.getBasePrice());
-////                    System.out.println("Trạng thái: " + (t.isActive() ? "Đang bán" : "Ngừng bán"));
-////                    System.out.println("Áp dụng tại: " + String.join(", ", t.getPools()));
-////                    System.out.println("--------------");
-////                }
-////            }
-////        } catch (Exception e) {
-////            e.printStackTrace();
-////        }
-////    }
-////        TicketTypeDAO dao = new TicketTypeDAO();
-////        try {
-////            List<PoolTicket> list = dao.getPoolsByBranch(branchId);
-////            for (PoolTicket poolTicket : list) {
-////                System.out.println(poolTicket);
-////            }
-////        } catch (Exception e) {
-////        }
+//        try {
+//            List<PoolTicket> list = dao.getPoolsByBranch(branchId);
+//            for (PoolTicket poolTicket : list) {
+//                System.out.println(poolTicket);
+//            }
+//        } catch (Exception e) {
+//        }
 //        try {
 //            TicketType a = dao.getTicketTypeById(8);
 //            System.out.println(a);
@@ -499,23 +432,23 @@ public class TicketTypeDAO extends DBContext {
 //        }
 
 
-TicketTypeDAO dao = new TicketTypeDAO();
-    try {
-        int comboTypeId = 5; // Thay bằng ID vé combo bạn muốn test
-        Map<Integer, Integer> comboDetail = dao.getComboDetail(comboTypeId);
-        System.out.println("Combo Detail for comboTypeId=" + comboTypeId + ":");
-        if (comboDetail.isEmpty()) {
-            System.out.println("Không có thành phần combo nào.");
-        } else {
-            for (Map.Entry<Integer, Integer> entry : comboDetail.entrySet()) {
-                System.out.println("Included type id: " + entry.getKey() + ", Quantity: " + entry.getValue());
-            }
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-
-
-    }
+//TicketTypeDAO dao = new TicketTypeDAO();
+//    try {
+//        int comboTypeId = 5; // Thay bằng ID vé combo bạn muốn test
+//        Map<Integer, Integer> comboDetail = dao.getComboDetail(comboTypeId);
+//        System.out.println("Combo Detail for comboTypeId=" + comboTypeId + ":");
+//        if (comboDetail.isEmpty()) {
+//            System.out.println("Không có thành phần combo nào.");
+//        } else {
+//            for (Map.Entry<Integer, Integer> entry : comboDetail.entrySet()) {
+//                System.out.println("Included type id: " + entry.getKey() + ", Quantity: " + entry.getValue());
+//            }
+//        }
+//    } catch (Exception e) {
+//        e.printStackTrace();
+//    }
+//
+//
+//    }
 
 }

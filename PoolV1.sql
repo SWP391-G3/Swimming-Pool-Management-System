@@ -1,11 +1,9 @@
-﻿--CREATE DATABASE PoolV2
+﻿--CREATE DATABASE SwimmingPoolDB2
 
 CREATE TABLE Roles (
     role_id INT IDENTITY(1,1) PRIMARY KEY,
     role_name NVARCHAR(50) NOT NULL UNIQUE
 );
-
-
 
 -- Bảng người dùng
 CREATE TABLE Users (
@@ -30,17 +28,9 @@ CREATE TABLE Users (
 CREATE TABLE Branchs (
     branch_id INT IDENTITY(1,1) PRIMARY KEY,
     branch_name NVARCHAR(100) NOT NULL,
-    manager_id INT NOT NULL,
+    manager_id INT NULL,
 	CONSTRAINT FK_Branchs_Manager FOREIGN KEY (manager_id) REFERENCES Users(user_id)
 );
-
-CREATE TABLE Staffs(
-	staff_id INT IDENTITY(1,1) PRIMARY KEY,
-	user_id INT NOT NULL,
-	branch_id INT NOT NULL,
-	CONSTRAINT FK_Staffs_User FOREIGN KEY (user_id) REFERENCES Users(user_id),
-	CONSTRAINT FK_Staffs_Branch FOREIGN KEY (branch_id) REFERENCES Branchs(branch_id)
-)
 
 -- Tạo bảng Pools
 CREATE TABLE Pools (
@@ -58,6 +48,24 @@ CREATE TABLE Pools (
 	pool_description NVARCHAR(255),
 	branch_id INT,
     CONSTRAINT CK_Pools_OpenBeforeClose CHECK (close_time > open_time)
+);
+
+CREATE TABLE Staff_Types (
+    staff_type_id INT IDENTITY(1,1) PRIMARY KEY,
+    type_name NVARCHAR(100) NOT NULL UNIQUE, -- VD: Kỹ thuật, Xoát vé, Kiểm tra thiết bị, Hỗ trợ dịch vụ
+    description NVARCHAR(255)
+);
+
+CREATE TABLE Staffs(
+	staff_id INT IDENTITY(1,1) PRIMARY KEY,
+	user_id INT NOT NULL,
+	branch_id INT NOT NULL,
+	pool_id INT NOT NULL,
+	staff_type_id INT,
+	CONSTRAINT FK_Staffs_User FOREIGN KEY (user_id) REFERENCES Users(user_id),
+	CONSTRAINT FK_Staffs_Branch FOREIGN KEY (branch_id) REFERENCES Branchs(branch_id),
+	CONSTRAINT FK_Staffs_Pool FOREIGN KEY (pool_id) REFERENCES Pools(pool_id),
+	CONSTRAINT FK_Staffs_StaffType FOREIGN KEY (staff_type_id) REFERENCES Staff_Types(staff_type_id)
 );
 
 -- Tạo bảng Pool_Device
@@ -83,7 +91,9 @@ CREATE TABLE Discounts (
     valid_to DATETIME NOT NULL,
     status BIT NOT NULL DEFAULT 1,
     created_at DATETIME NOT NULL DEFAULT GETDATE(),
-    updated_at DATETIME
+    updated_at DATETIME,
+	created_by INT NOT NULL,
+	CONSTRAINT FK_Discounts_CreatedBy FOREIGN KEY (created_by) REFERENCES Users(user_id)
 );
 
 -- Tạo bảng Customer_Discount
@@ -99,14 +109,14 @@ CREATE TABLE Customer_Discount(
 -- Tạo bảng Booking
 CREATE TABLE Booking (
     booking_id INT IDENTITY(1,1) PRIMARY KEY,
-    user_id INT NOT NULL,
+    user_id INT NULL,
     pool_id INT NOT NULL,
     discount_id INT NULL,
     booking_date DATE NOT NULL,
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
     slot_count INT NOT NULL CHECK (slot_count > 0),
-    booking_status NVARCHAR(20) NOT NULL DEFAULT 'pending',
+    booking_status NVARCHAR(20) NOT NULL DEFAULT 'pending', --pending/comfirmed/canceled
     created_at DATETIME NOT NULL DEFAULT GETDATE(),
     updated_at DATETIME,
     CONSTRAINT FK_Booking_User FOREIGN KEY (user_id) REFERENCES Users(user_id),
@@ -167,6 +177,7 @@ CREATE TABLE Payments (
     created_at DATETIME NOT NULL DEFAULT GETDATE(),
     CONSTRAINT FK_Payments_Booking FOREIGN KEY (booking_id) REFERENCES Booking(booking_id)
 );
+
 -- Tạo bảng Ticket_Types (có thêm type_code để hỗ trợ sinh mã vé)
 CREATE TABLE Ticket_Types (
     ticket_type_id INT IDENTITY(1,1) PRIMARY KEY,
@@ -174,7 +185,29 @@ CREATE TABLE Ticket_Types (
     type_name NVARCHAR(100) NOT NULL,
     description NVARCHAR(255),
     base_price DECIMAL(10,2) NOT NULL,
-    is_combo BIT NOT NULL DEFAULT 0             -- nếu là combo (1), thường (0)
+    is_combo BIT NOT NULL DEFAULT 0,             -- nếu là combo (1), thường (0)
+	created_at DATETIME DEFAULT GETDATE(),
+	discount_percent DECIMAL DEFAULT 0
+);
+
+-- Bảng định nghĩa chi tiết combo: combo gồm những loại vé nào và số lượng
+CREATE TABLE Combo_Detail (
+    combo_type_id INT NOT NULL,
+    included_type_id INT NOT NULL,
+    quantity INT NOT NULL CHECK (quantity > 0),
+    PRIMARY KEY (combo_type_id, included_type_id),
+    FOREIGN KEY (combo_type_id) REFERENCES Ticket_Types(ticket_type_id),
+    FOREIGN KEY (included_type_id) REFERENCES Ticket_Types(ticket_type_id)
+);
+
+--Tạo bảng Pool_Ticket_Type (Quản lý ticket theo bể)
+CREATE TABLE Pool_Ticket_Types (
+    pool_id INT NOT NULL,
+    ticket_type_id INT NOT NULL,
+	status NVARCHAR(20) DEFAULT 'active',
+    PRIMARY KEY (pool_id, ticket_type_id),
+    CONSTRAINT FK_Pool_Ticket_Type_Pool FOREIGN KEY (pool_id) REFERENCES Pools(pool_id),
+    CONSTRAINT FK_Pool_Ticket_Types FOREIGN KEY (ticket_type_id) REFERENCES Ticket_Types(ticket_type_id)
 );
 
 -- Tạo bảng Ticket
@@ -190,20 +223,6 @@ CREATE TABLE Ticket (
     CONSTRAINT FK_Ticket_IssuedBy FOREIGN KEY (issued_by) REFERENCES Users(user_id),
     CONSTRAINT FK_Ticket_TicketType FOREIGN KEY (ticket_type_id) REFERENCES Ticket_Types(ticket_type_id)
 );
-
--- Tuấn Anh thêm bảng này 
--- Một loại vé có thể áp dụng cho nhiều hồ bơi, và mỗi hồ bơi có thể có nhiều loại vé. Mỗi cặp thì có một giá riêng.
-CREATE TABLE Pool_Ticket_Types (
-    pool_id INT NOT NULL,
-    ticket_type_id INT NOT NULL,
-    price DECIMAL(10,2) NOT NULL,
-    PRIMARY KEY (pool_id, ticket_type_id),
-    FOREIGN KEY (pool_id) REFERENCES Pools(pool_id),
-    FOREIGN KEY (ticket_type_id) REFERENCES Ticket_Types(ticket_type_id)
-);
-
-
-
 
 -- Bảng Payment_Ticket
 CREATE TABLE Payment_Ticket (
@@ -227,15 +246,122 @@ CREATE TABLE Payment_RentItem (
     CONSTRAINT FK_PaymentRent_Service FOREIGN KEY (service_id) REFERENCES  Pool_Service(pool_service_id)
 );
 
--- Bảng định nghĩa chi tiết combo: combo gồm những loại vé nào và số lượng
-CREATE TABLE Combo_Detail (
-    combo_type_id INT NOT NULL,
-    included_type_id INT NOT NULL,
-    quantity INT NOT NULL CHECK (quantity > 0),
-    PRIMARY KEY (combo_type_id, included_type_id),
-    FOREIGN KEY (combo_type_id) REFERENCES Ticket_Types(ticket_type_id),
-    FOREIGN KEY (included_type_id) REFERENCES Ticket_Types(ticket_type_id)
+-- Bảng Contacts
+CREATE TABLE Contacts (
+    contact_id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    user_id INT NULL,
+    name NVARCHAR(100) NOT NULL,
+    email NVARCHAR(100) NOT NULL,
+    subject NVARCHAR(150) NULL,
+    content NVARCHAR(2000) NOT NULL,
+    created_at DATETIME NOT NULL,
+    is_resolved BIT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
+
+-- Bảng Notifications
+CREATE TABLE Notifications (
+    notification_id INT IDENTITY(1,1) PRIMARY KEY,
+    title NVARCHAR(200) NOT NULL,
+    content NVARCHAR(2000) NOT NULL,
+    created_by INT NOT NULL,                    -- user_id của Manager
+    created_at DATETIME NOT NULL DEFAULT GETDATE(),
+    target_role_id INT NULL,                    -- Gửi cho role cụ thể (VD: chỉ gửi cho Customer), hoặc NULL nếu gửi toàn bộ
+    target_branch_id INT NULL,                  -- Gửi cho chi nhánh cụ thể, hoặc NULL nếu không phân biệt
+    CONSTRAINT FK_Notifications_Creator FOREIGN KEY (created_by) REFERENCES Users(user_id),
+    CONSTRAINT FK_Notifications_Role FOREIGN KEY (target_role_id) REFERENCES Roles(role_id),
+    CONSTRAINT FK_Notifications_Branch FOREIGN KEY (target_branch_id) REFERENCES Branchs(branch_id)
+);
+
+-- Bảng Discount_Audit_Log
+CREATE TABLE Discount_Audit_Log (
+    log_id INT IDENTITY(1,1) PRIMARY KEY,
+    discount_id INT NOT NULL,
+    manager_id INT NOT NULL,
+    action_type NVARCHAR(10) NOT NULL, -- 'INSERT', 'UPDATE', 'DELETE'
+    action_time DATETIME NOT NULL DEFAULT GETDATE(),
+    old_description NVARCHAR(255),
+    new_description NVARCHAR(255),
+    old_discount_percent DECIMAL(5,2),
+    new_discount_percent DECIMAL(5,2),
+    old_quantity INT,
+    new_quantity INT,
+    old_valid_from DATETIME,
+    new_valid_from DATETIME,
+    old_valid_to DATETIME,
+    new_valid_to DATETIME,
+    old_status BIT,
+    new_status BIT,
+    notes NVARCHAR(255) NULL
+);
+
+-- Bảng Service_Reports
+CREATE TABLE Service_Reports (
+    report_id INT IDENTITY(1,1) PRIMARY KEY,
+    staff_id INT NOT NULL,
+    pool_id INT NOT NULL,
+    branch_id INT NOT NULL,
+    service_id INT NOT NULL,
+    service_name NVARCHAR(100) NOT NULL,
+    report_reason NVARCHAR(255) NOT NULL,
+    suggestion NVARCHAR(255),
+    report_date DATETIME NOT NULL DEFAULT GETDATE(),
+    status NVARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'done')),
+    CONSTRAINT FK_ServiceReports_Staff FOREIGN KEY (staff_id) REFERENCES Staffs(staff_id),
+    CONSTRAINT FK_ServiceReports_Pool FOREIGN KEY (pool_id) REFERENCES Pools(pool_id),
+    CONSTRAINT FK_ServiceReports_Branch FOREIGN KEY (branch_id) REFERENCES Branchs(branch_id),
+    CONSTRAINT FK_ServiceReports_Service FOREIGN KEY (service_id) REFERENCES Pool_Service(pool_service_id)
+);
+
+-- Bảng Device_Reports
+CREATE TABLE Device_Reports (
+    report_id INT IDENTITY(1,1) PRIMARY KEY,
+    staff_id INT  NOT NULL,
+    pool_id INT  NOT NULL,
+    branch_id INT  NOT NULL,
+    device_id INT  NULL,
+    device_name NVARCHAR(100) NOT NULL,
+    report_reason NVARCHAR(255) NOT NULL,
+    suggestion NVARCHAR(255),
+    report_date DATETIME NOT NULL DEFAULT GETDATE(),
+    status NVARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'done')), -- Chỉ “pending” hoặc “done”
+    CONSTRAINT FK_DeviceReports_Staff FOREIGN KEY (staff_id)  REFERENCES Staffs(staff_id),
+    CONSTRAINT FK_DeviceReports_Pool FOREIGN KEY (pool_id)   REFERENCES Pools(pool_id),
+    CONSTRAINT FK_DeviceReports_Branch FOREIGN KEY (branch_id) REFERENCES Branchs(branch_id),
+    CONSTRAINT FK_DeviceReports_Device FOREIGN KEY (device_id) REFERENCES Pool_Device(device_id)
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 -- Phần này chạy sau
 -- Tạo view hỗ trợ tổng tiền theo booking
@@ -393,41 +519,6 @@ END;
 --    @booking_id = 101, 
 --    @payment_method = 'Cash',
 --    @transaction_reference = 'TXN20250614-0001';
-
-
-
--- Tuấn Anh ---------- Bắt buộc phải có ko là rách việc
-ALTER TABLE Pool_Ticket_Types ADD status NVARCHAR(20) DEFAULT 'active';
-
-ALTER TABLE Staffs ADD pool_id INT;
-
-ALTER TABLE Ticket_Types
-ADD created_at DATETIME DEFAULT GETDATE();
-
-ALTER TABLE Ticket_Types
-ADD discount_percent DECIMAL DEFAULT 0;
-
---------------------------------------------------------------
-
---Huy gửi database của Staff
-ALTER TABLE Staffs ADD CONSTRAINT FK_Staffs_Pool FOREIGN KEY (pool_id) REFERENCES Pools(pool_id);
-
--- bổ xung khi làm quản lý nhân viên dành cho admin
-ALTER TABLE Branchs ALTER COLUMN manager_id INT NULL;
-
-CREATE TABLE Staff_Types (
-    staff_type_id INT IDENTITY(1,1) PRIMARY KEY,
-    type_name NVARCHAR(100) NOT NULL UNIQUE, -- VD: Kỹ thuật, Xoát vé, Kiểm tra thiết bị, Hỗ trợ dịch vụ
-    description NVARCHAR(255)
-);
-
-
-ALTER TABLE Staffs
-ADD staff_type_id INT;
-
-ALTER TABLE Staffs
-ADD CONSTRAINT FK_Staffs_StaffType FOREIGN KEY (staff_type_id) REFERENCES Staff_Types(staff_type_id);
-
 
 
 

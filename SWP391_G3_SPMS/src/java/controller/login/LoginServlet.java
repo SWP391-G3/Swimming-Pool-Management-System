@@ -4,7 +4,7 @@
  */
 package controller.login;
 
-import dao.UserDAO;
+import dao.customer.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.User;
+import model.customer.User;
 import util.HashUtils;
 
 /**
@@ -30,11 +30,7 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        if (username.trim().isEmpty() || password.trim().isEmpty()) {
-            request.setAttribute("error", "Tên đăng nhập hoặc mật khẩu không được bỏ trống");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return;
-        }
+       
 
         UserDAO dao = new UserDAO();
         User user = dao.getUserByUsername(username); // Lấy user theo username

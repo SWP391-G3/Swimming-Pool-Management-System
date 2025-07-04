@@ -14,8 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.net.URLEncoder;
-import java.util.Optional;
-import model.User;
+import model.customer.User;
 
 /**
  *

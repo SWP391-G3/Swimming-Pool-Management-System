@@ -4,8 +4,8 @@
  */
 package controller.HomePage;
 
-import dao.FeedbackHomepageDAO;
-import dao.PoolDAO;
+import dao.customer.FeedbackHomepageDAO;
+import dao.customer.PoolDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,9 +15,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
-import model.FeedbackHomepage;
-import model.Pool;
-import model.User;
+import model.customer.FeedbackHomepage;
+import model.customer.Pool;
+import model.customer.User;
 
 /**
  *

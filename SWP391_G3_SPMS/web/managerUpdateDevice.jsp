@@ -137,7 +137,7 @@
                     form["deviceStatus"].focus();
                     return false;
                 }
-                if (imageField && imageField.value.trim() === "") {
+                if ((!oldImage || oldImage.trim() === "") && imageField && imageField.value.trim() === "") {
                     noteError.innerText = "Bạn phải chọn ảnh cho thiết bị.";
                     imageField.focus();
                     return false;

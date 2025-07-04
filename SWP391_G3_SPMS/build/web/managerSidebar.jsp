@@ -6,7 +6,7 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<%@page import = "model.User" %>
+<%@page import = "model.customer.User" %>
 <%
     User currentUser = (User) session.getAttribute("currentUser");
     String userName;
@@ -49,6 +49,15 @@
                    <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="2"/><rect x="7" y="14" width="10" height="6" rx="1.5" fill="#38bdf8" opacity="0.7"/><circle cx="12" cy="12" r="2" fill="#38bdf8"/></svg>
                    Quản lý thiết bị
                </a>
+            </li>
+            <li>
+                <a href="pool-service"
+                <c:if test="${activeMenu eq 'pool-service'}">class="active"</c:if>>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M18 14c1.1 0 2 .9 2 2v4H4v-4c0-1.1.9-2 2-2h12zm0-2H6c-1.66 0-3 1.34-3 3v5h18v-5c0-1.66-1.34-3-3-3zM12 2c1.66 0 3 1.34 3 3s-1.34 3-3 3S9 6.66 9 5s1.34-3 3-3zM12 8c2.21 0 4-1.79 4-4S14.21 0 12 0 8 1.79 8 4s1.79 4 4 4z"/>
+                    </svg>
+                     Quản lý dịch vụ 
+                </a>
             </li>
             <li>
                 <a href="managerStaff"

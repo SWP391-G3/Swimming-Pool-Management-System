@@ -4,7 +4,7 @@
  */
 package controller.Admin.Pool;
 
-import dao.PoolDAO;
+import dao.customer.PoolDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -55,17 +55,35 @@ public class AdminDeletePoolServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String id = request.getParameter("id");
+        String pageRaw = request.getParameter("page");
         PoolDAO dao = new PoolDAO();
-        int pool_id;
+
+        if (id == null || id.isEmpty()) {
+            response.sendRedirect("adminPoolManagement?error=2");
+            return;
+        }
+
         try {
-            pool_id = Integer.parseInt(id);
-            dao.deletePool(pool_id);
-            response.sendRedirect("adminPoolManagement");
+            int pool_id = Integer.parseInt(id);
+            int page = (pageRaw != null) ? Integer.parseInt(pageRaw) : 1;
+
+            if (!dao.canDelete(pool_id)) {
+                // Không thể xóa vì vẫn đang hoạt động
+                response.sendRedirect("adminPoolManagement?error=1&page=" + page);
+            } else {
+                dao.deletePool(pool_id);
+                response.sendRedirect("adminPoolManagement?page=" + page);
+            }
+
         } catch (NumberFormatException e) {
+            e.printStackTrace();
+            response.sendRedirect("adminPoolManagement?error=2"); // Tham số không hợp lệ
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("adminPoolManagement?error=3"); // Lỗi khác
         }
     }
 

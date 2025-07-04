@@ -1,5 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.List,model.Pool,model.FeedbackHomepage,model.User" %>
+<%@page import="java.util.List,model.customer.Pool,model.customer.FeedbackHomepage,model.customer.User" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -30,17 +30,9 @@
               media="screen">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-        <!--[if lt IE 9]>
-           <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
     </head>
 
     <body class="main-layout">
-        <!-- loader  -->
-        <!--        <div class="loader_bg">
-                    <div class="loader"><img src="images/loading.gif" alt="#" /></div>
-                </div>-->
-        <!-- end loader -->
         <!-- header -->
         <header class="bg-white shadow-md w-full">
             <div class="container mx-auto px-4">
@@ -60,11 +52,11 @@
 
                     <!-- Navigation -->
                     <nav class="hidden md:flex space-x-6 text-base font-medium items-center">
-                        <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Trang Chủ</a>
+                        <a href="home" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Trang Chủ</a>
                         <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Giới Thiệu</a>
-                        <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Bể Bơi</a>
+                        <a href="customerViewPoolList" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Bể Bơi</a>
                         <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Đánh Giá</a>
-                        <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Liên Hệ</a>
+                        <a href="contact" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Liên Hệ</a>
                         <a href="login.jsp" class="flex items-center space-x-2 text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">
                             <span>Đăng nhập</span>
                         </a>

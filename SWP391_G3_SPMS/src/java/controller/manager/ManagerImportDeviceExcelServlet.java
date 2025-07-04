@@ -7,13 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.MultipartConfig;  // Cho phép nhận file upload
 import jakarta.servlet.http.*;
-import model.User;
+import model.customer.User;
 import model.manager.Device;
-import org.apache.poi.ss.usermodel.*;
-
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;   // Đọc dữ liệu từ Excel
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;  // Xử lý file Excel định dạng .xlsx
 
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024, // 1MB
@@ -54,16 +53,16 @@ public class ManagerImportDeviceExcelServlet extends HttpServlet {
         }
         DeviceDao dao = new DeviceDao();
 
-        Part excelFile = request.getPart("excelFile");
+        Part excelFile = request.getPart("excelFile");   // Lấy file đã upload:
         List<String> errorList = new ArrayList<>();
         int imported = 0;
 
         if (excelFile != null && excelFile.getSize() > 0) {
-            try (InputStream inputStream = excelFile.getInputStream(); Workbook workbook = new XSSFWorkbook(inputStream)) {
-                Sheet sheet = workbook.getSheetAt(0);
+            try (InputStream inputStream = excelFile.getInputStream(); Workbook workbook = new XSSFWorkbook(inputStream)) {  // inputStream = excelFile.getInputStream() mở luồng đọc file.
+                Sheet sheet = workbook.getSheetAt(0);  // Lấy sheet đầu tiên                                                                 // XSSFWorkbook là class của Apache POI để đọc file .xlsx
                 int rowNum = 0;
                 for (Row row : sheet) {
-                    if (rowNum++ == 0) {
+                    if (rowNum++ == 0) {  // bỏ qua dòng tiêu đề
                         continue; // bỏ header
                     }
                     try {
@@ -147,7 +146,7 @@ public class ManagerImportDeviceExcelServlet extends HttpServlet {
 
     }
 
-    private String getCellString(Cell cell) {
+    private String getCellString(Cell cell) {  // Hàm này ép kiểu ô về chuỗi 
         if (cell == null) {
             return "";
         }

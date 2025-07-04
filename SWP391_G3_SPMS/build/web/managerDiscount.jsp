@@ -27,6 +27,17 @@
     </head>
     <body>
 
+        <c:if test="${not empty sessionScope.error}">
+            <div class="error-message">${sessionScope.error}</div>
+            <c:remove var="error" scope="session"/>
+        </c:if>
+
+        <c:if test="${not empty sessionScope.success}">
+            <div class="success-message">${sessionScope.success}</div>
+            <c:remove var="success" scope="session"/>
+        </c:if>
+
+
         <c:if test="${not empty sessionScope.success}">
             <div class="success-message" id="successMsg">${sessionScope.success}</div>
             <%
@@ -122,10 +133,10 @@
                                             <td><fmt:formatNumber value="${discount.percent}" maxFractionDigits="0" />%</td>
                                             <td>${discount.quantity}</td>
                                             <td>
-                                                <fmt:formatDate value="${discount.validFrom}" pattern="dd/MM/yyyy HH:mm"/>
+                                                <fmt:formatDate value="${discount.validFrom}" pattern="dd/MM/yyyy"/>
                                             </td>
                                             <td>
-                                                <fmt:formatDate value="${discount.validTo}" pattern="dd/MM/yyyy HH:mm"/>
+                                                <fmt:formatDate value="${discount.validTo}" pattern="dd/MM/yyyy"/>
                                             </td>
                                             <c:set var="now" value="<%= new java.util.Date() %>"/>
 
@@ -194,74 +205,74 @@
             </div>
         </div>
 
-       
+
 
     </body>
 </html>
 
 
 <link rel="stylesheet" href="./manager-css/managerDetailDiscount.css">
- <!-- Modal xem chi tiết -->
-        <div id="discountDetailModal" class="modal" style="display:none;">
-            <div class="modal-content">
-                <span class="close" onclick="closeDiscountModal()">&times;</span>
-                <div id="discountDetailBody">
-                    <!-- Nội dung sẽ được load ở đây -->
-                </div>
-            </div>
+<!-- Modal xem chi tiết -->
+<div id="discountDetailModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeDiscountModal()">&times;</span>
+        <div id="discountDetailBody">
+            <!-- Nội dung sẽ được load ở đây -->
         </div>
+    </div>
+</div>
 
-        <script>
-            const searchInput = document.querySelector('input[name="keyword"]');
-            const searchForm = document.getElementById('searchForm');
-            let timeout = null;
+<script>
+    const searchInput = document.querySelector('input[name="keyword"]');
+    const searchForm = document.getElementById('searchForm');
+    let timeout = null;
 
-            searchInput.addEventListener('input', function () {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    document.querySelector('input[name="page"]').value = 1; // reset về trang 1
-                    searchForm.submit();
-                }, 400);
-            });
-
-            function showDiscountDetail(discountId) {
-    var modal = document.getElementById('discountDetailModal');
-    var body = document.getElementById('discountDetailBody');
-    body.innerHTML = `
-        <div class="loading-spinner">
-            <div class="spinner"></div>
-            <p>Đang tải chi tiết...</p>
-        </div>
-    `;
-    modal.style.display = 'flex';
-    setTimeout(() => modal.classList.add('show'), 10);
-
-    var params = new URLSearchParams({id: discountId});
-    fetch("managerDetailDiscountAjax", {
-        method: "POST",
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: params
-    })
-    .then(res => res.text())
-    .then(html => {
-        body.innerHTML = html;
-    })
-    .catch(error => {
-        body.innerHTML = `
-            <div class="error-message">
-                <h3>Error</h3>
-                <p>Không tải được chi tiết voucher.</p>
-            </div>
-        `;
+    searchInput.addEventListener('input', function () {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            document.querySelector('input[name="page"]').value = 1; // reset về trang 1
+            searchForm.submit();
+        }, 400);
     });
-}
 
-function closeDiscountModal() {
-    var modal = document.getElementById('discountDetailModal');
-    modal.classList.remove('show');
-    setTimeout(() => {
-        modal.style.display = 'none';
-        document.getElementById('discountDetailBody').innerHTML = '';
-    }, 300);
-}
-        </script>
+    function showDiscountDetail(discountId) {
+        var modal = document.getElementById('discountDetailModal');
+        var body = document.getElementById('discountDetailBody');
+        body.innerHTML = `
+<div class="loading-spinner">
+    <div class="spinner"></div>
+    <p>Đang tải chi tiết...</p>
+</div>
+`;
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('show'), 10);
+
+        var params = new URLSearchParams({id: discountId});
+        fetch("managerDetailDiscountAjax", {
+            method: "POST",
+            headers: {"Content-Type": "application/x-www-form-urlencoded"},
+            body: params
+        })
+                .then(res => res.text())
+                .then(html => {
+                    body.innerHTML = html;
+                })
+                .catch(error => {
+                    body.innerHTML = `
+    <div class="error-message">
+        <h3>Error</h3>
+        <p>Không tải được chi tiết voucher.</p>
+    </div>
+`;
+                });
+    }
+
+    function closeDiscountModal() {
+        var modal = document.getElementById('discountDetailModal');
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+            document.getElementById('discountDetailBody').innerHTML = '';
+        }, 300);
+    }
+</script>

@@ -1,7 +1,8 @@
 package controller.Customer;
 
-import dao.BookingDetailDAO;
-import model.BookingDetails;
+import dao.customer.BookingDetailDAO;
+import dao.customer.UserDAO;
+import model.customer.BookingDetails;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
@@ -10,7 +11,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.User;
+import model.customer.User;
+/**
+ *
+ * @author LAZYVL
+ */
 
 public class BookingHistoryServlet extends HttpServlet {
 
@@ -18,15 +23,16 @@ public class BookingHistoryServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-
-            Integer userId;
             HttpSession session = request.getSession();
             User currentUser = (User) session.getAttribute("currentUser");
             if (currentUser == null) {
                 response.sendRedirect("login.jsp");
                 return;
             }
-            userId = currentUser.getUser_id();
+            int userId = currentUser.getUser_id();
+
+            UserDAO userDAO = new UserDAO();
+            User userDetails = userDAO.getUserByID(userId);
 
             String poolName = request.getParameter("poolName");
             String fromDateStr = request.getParameter("fromDate");

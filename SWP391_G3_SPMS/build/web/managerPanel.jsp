@@ -6,7 +6,7 @@
 
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import = "model.User" %>
+<%@ page import = "model.customer.User" %>
 <% 
             User currentUser1 = (User) session.getAttribute("currentUser");
             String userName1;
@@ -24,48 +24,48 @@
 %>
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Manager Panel</title>
-    <link rel="stylesheet" href="./manager-css/manager-panel.css">
-</head>
-<body>
-    <div class="layout">
-        <%-- Sidebar động --%>
-        <%@ include file="managerSidebar.jsp" %>
-        <div class="content-panel">
-            <div class="content-header">
-                <h2>Chào mừng, <%= userName %></h2>
-                <p class="desc">Truy cập nhanh các chức năng dành cho quản lý.</p>
-            </div>
-            <div class="dashboard-cards">
-                <a href="managerListDeviceServlet" class="dashboard-card">
-                    <div class="dashboard-card-title">Quản lý thiết bị</div>
-                    <div class="dashboard-card-desc">Theo dõi, thêm thiết bị, bảo trì thiết bị bể bơi.</div>
-                </a>
-                <a href="managerStaff" class="dashboard-card">
-                    <div class="dashboard-card-title">Nhân Viên</div>
-                    <div class="dashboard-card-desc">Xem danh sách nhân viên khu vực, thông tin nhân viên.</div>
-                </a>
-                <a href="managerTicketServlet" class="dashboard-card">
-                    <div class="dashboard-card-title">Quản lý vé</div>
-                    <div class="dashboard-card-desc">Trang quản lý vé hỗ trợ các chức năng từ xem, tìm kiếm, lọc, đến thêm/sửa/xóa vé trong phạm vi chi nhánh quản lý.</div>
-                </a>
-                <a href="managerDiscountServlet" class="dashboard-card">
-                    <div class="dashboard-card-title">Quản lý Voucher</div>
-                    <div class="dashboard-card-desc">Tạo, xem, cập nhật, xóa mã giảm giá/voucher.</div>
-                </a>
-                <a href="area-revenue.jsp" class="dashboard-card">
-                    <div class="dashboard-card-title">Quản lý doanh thu khu vực</div>
-                    <div class="dashboard-card-desc">Thống kê doanh thu, phân tích hiệu quả theo từng khu vực.</div>
-                </a>
-                <a href="feedback-management.jsp" class="dashboard-card">
-                    <div class="dashboard-card-title">Quản lý feedback</div>
-                    <div class="dashboard-card-desc">Xem, phản hồi, đánh giá ý kiến khách hàng.</div>
-                </a>
+    <head>
+        <meta charset="UTF-8">
+        <title>Manager Panel</title>
+        <link rel="stylesheet" href="./manager-css/manager-panel.css">
+    </head>
+    <body>
+        <div class="layout">
+            <%-- Sidebar động --%>
+            <%@ include file="managerSidebar.jsp" %>
+            <div class="content-panel">
+                <div class="content-header">
+                    <h2>Chào mừng, <%= userName %></h2>
+                    <p class="desc">Truy cập nhanh các chức năng dành cho quản lý.</p>
+                </div>
+                <div class="dashboard-cards">
+                    <a href="managerListDeviceServlet" class="dashboard-card">
+                        <div class="dashboard-card-title">Quản lý thiết bị</div>
+                        <div class="dashboard-card-desc">Theo dõi, thêm thiết bị, bảo trì thiết bị bể bơi.</div>
+                    </a>
+                    <a href="managerStaff" class="dashboard-card">
+                        <div class="dashboard-card-title">Nhân Viên</div>
+                        <div class="dashboard-card-desc">Xem danh sách nhân viên khu vực, thông tin nhân viên.</div>
+                    </a>
+                    <a href="managerTicketServlet" class="dashboard-card">
+                        <div class="dashboard-card-title">Quản lý vé</div>
+                        <div class="dashboard-card-desc">Trang quản lý vé hỗ trợ các chức năng từ xem, tìm kiếm, lọc, đến thêm/sửa/xóa vé trong phạm vi chi nhánh quản lý.</div>
+                    </a>
+                    <a href="managerDiscountServlet" class="dashboard-card">
+                        <div class="dashboard-card-title">Quản lý voucher</div>
+                        <div class="dashboard-card-desc">Tạo, xem, cập nhật, xóa mã giảm giá/voucher.</div>
+                    </a>
+                    <a href="area-revenue.jsp" class="dashboard-card">
+                        <div class="dashboard-card-title">Quản lý doanh thu khu vực</div>
+                        <div class="dashboard-card-desc">Thống kê doanh thu, phân tích hiệu quả theo từng khu vực.</div>
+                    </a>
+                    <a href="feedback-management.jsp" class="dashboard-card">
+                        <div class="dashboard-card-title">Quản lý feedback</div>
+                        <div class="dashboard-card-desc">Xem, phản hồi, đánh giá ý kiến khách hàng.</div>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-</body>
+    </body>
 </html>
 

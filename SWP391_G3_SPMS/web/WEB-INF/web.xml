@@ -24,6 +24,26 @@
         <servlet-name>managerTicketServlet</servlet-name>
         <servlet-class>controller.manager.ManagerTicketServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>VoucherServlet</servlet-name>
+        <servlet-class>controller.Customer.VoucherServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ContactServlet</servlet-name>
+        <servlet-class>controller.HomePage.ContactServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VoucherDetailServlet</servlet-name>
+        <servlet-class>controller.Customer.VoucherDetailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BookingServlet</servlet-name>
+        <servlet-class>controller.Customer.BookingServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BookingPaymentServlet</servlet-name>
+        <servlet-class>controller.Customer.BookingPaymentServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>CustomerAccountInfor</servlet-name>
         <url-pattern>/CustomerAccountInfor</url-pattern>
@@ -71,9 +91,27 @@
     </servlet-mapping>
     <!-- Start Page -->
     <servlet-mapping>
-        <servlet-name>managerTicketServlet</servlet-name>
-        <url-pattern>/managerTicketServlet</url-pattern>
+        <servlet-name>VoucherServlet</servlet-name>
+        <url-pattern>/voucher</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ContactServlet</servlet-name>
+        <url-pattern>/contact</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VoucherDetailServlet</servlet-name>
+        <url-pattern>/voucher_detail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BookingServlet</servlet-name>
+        <url-pattern>/booking</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BookingPaymentServlet</servlet-name>
+        <url-pattern>/payment</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Start Page -->
     <welcome-file-list>
         <welcome-file>LandingPage.jsp</welcome-file>
     </welcome-file-list>

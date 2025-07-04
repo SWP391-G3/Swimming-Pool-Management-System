@@ -16,7 +16,6 @@ public class Pooldevice {
     private String poolName;
     private int branchId; 
     private List<Device> devices; 
-    
 
     public Pooldevice() {}
 
