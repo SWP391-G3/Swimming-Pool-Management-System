@@ -27,6 +27,7 @@
     </head>
     <body>
 
+        <!-- Thông báo ra nếu ko phải discount do manager tạo -->
         <c:if test="${not empty sessionScope.error}">
             <div class="error-message">${sessionScope.error}</div>
             <c:remove var="error" scope="session"/>
@@ -35,7 +36,7 @@
         <c:if test="${not empty sessionScope.success}">
             <div class="success-message">${sessionScope.success}</div>
             <c:remove var="success" scope="session"/>
-        </c:if>
+        </c:if> 
 
 
         <c:if test="${not empty sessionScope.success}">
