@@ -4,7 +4,7 @@
  */
 package controller.login;
 
-import dao.UserDAO;
+import dao.customer.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import model.User;
+import model.customer.User;
 import util.HashUtils;
 import util.CheckNewPassword;
 import static util.CheckNewPassword.validateRegisterPassword;

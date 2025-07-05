@@ -4,7 +4,7 @@
  */
 package controller.login;
 
-import dao.UserDAO;
+import dao.customer.UserDAO;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;

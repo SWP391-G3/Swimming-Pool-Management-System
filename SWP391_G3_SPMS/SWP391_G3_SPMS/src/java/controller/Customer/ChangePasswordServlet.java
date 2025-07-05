@@ -1,9 +1,8 @@
 package controller.Customer;
 
-import dao.UserDAO;
-import model.User;
+import dao.customer.UserDAO;
+import model.customer.User;
 import util.PasswordEncryption;
-import util.CheckNewPassword;
 
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -11,6 +10,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+/**
+ *
+ * @author LAZYVL
+ */
 
 public class ChangePasswordServlet extends HttpServlet {
 
@@ -23,40 +26,31 @@ public class ChangePasswordServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-              HttpSession session = request.getSession();
-                User user1 = (User) session.getAttribute("currentUser");
-                if (user1 == null) {
-                    response.sendRedirect("login.jsp");
-                    return;
-                }
 
-        int userId = user1.getUser_id();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("currentUser");
+        if (user == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        int userId = user.getUser_id();
         UserDAO userDAO = new UserDAO();
-        User user = userDAO.getUserByID(userId);
+        user = userDAO.getUserByID(userId);
 
         String currentPassword = request.getParameter("current_password");
         String newPassword = request.getParameter("new_password");
         String confirmPassword = request.getParameter("confirm_password");
+
         String message = null;
 
-        if (user == null) {
-            message = "Không tìm thấy người dùng!";
-        } else if (currentPassword == null || newPassword == null || confirmPassword == null
-                || currentPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
-            message = "Vui lòng nhập đầy đủ thông tin!";
-        } else if (!PasswordEncryption.checkPassword(currentPassword, user.getPassword())) {
+        if (!PasswordEncryption.checkPassword(currentPassword, user.getPassword())) {
             message = "Mật khẩu hiện tại không đúng!";
         } else if (!newPassword.equals(confirmPassword)) {
             message = "Mật khẩu mới và xác nhận không khớp!";
         } else {
-            // Kiểm tra quy tắc mật khẩu mới
-            String ruleMsg = CheckNewPassword.validateNewPassword(newPassword, currentPassword);
-            if (ruleMsg != null) {
-                message = ruleMsg;
-            } else {
-                userDAO.updatePassword(user.getUser_id(), newPassword); //Mã hóa trước khi lưu
-                message = "Đổi mật khẩu thành công!";
-            }
+            userDAO.updatePassword(userId, newPassword); // Đảm bảo DAO tự mã hóa
+            message = "Đổi mật khẩu thành công!";
         }
 
         request.setAttribute("message", message);

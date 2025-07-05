@@ -1,13 +1,7 @@
 package controller.Customer;
 
-import dao.BookingDetailDAO;
-import dao.DiscountDetailDAO;
-import dao.UserDAO;
-import model.BookingDetails;
-import model.DiscountDetail;
-import model.User;
-
-
+import dao.customer.*;
+import model.customer.*;
 import java.util.List;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -15,6 +9,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+/**
+ *
+ * @author LAZYVL
+ */
 
 public class MyAccountServlet extends HttpServlet {
 
@@ -29,7 +27,7 @@ public class MyAccountServlet extends HttpServlet {
             return;
         }
 
-        int userId = currentUser.getUser_id(); // Gan tam userId = 2
+        int userId = currentUser.getUser_id();
 
         UserDAO userDAO = new UserDAO();
         BookingDetailDAO bookingDetailDAO = new BookingDetailDAO();

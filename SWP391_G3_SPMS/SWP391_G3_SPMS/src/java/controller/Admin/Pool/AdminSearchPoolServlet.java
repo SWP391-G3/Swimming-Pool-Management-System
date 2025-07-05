@@ -4,7 +4,7 @@
  */
 package controller.Admin.Pool;
 
-import dao.PoolDAO;
+import dao.customer.PoolDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
-import model.Pool;
+import model.customer.Pool;
 
 /**
  *

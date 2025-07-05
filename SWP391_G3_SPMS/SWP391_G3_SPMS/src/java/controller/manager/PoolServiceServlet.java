@@ -1,20 +1,28 @@
- package controller.manager;
+package controller.manager;
 
-import dao.PoolDAO;
+import dao.customer.PoolDAO;
 import dao.manager.PoolServiceDAO;
 
-import model.Pool;
+import model.customer.Pool;
 import model.manager.PoolService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import model.User;
+import java.util.UUID;
+import model.customer.User;
 
 @WebServlet("/pool-service")
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024, // 1MB
+        maxFileSize = 5 * 1024 * 1024, // 5MB
+        maxRequestSize = 10 * 1024 * 1024 // 10MB
+)
 public class PoolServiceServlet extends HttpServlet {
 
     private final PoolServiceDAO dao = new PoolServiceDAO();
@@ -188,56 +196,106 @@ public class PoolServiceServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         String action = request.getParameter("action");
-    HttpSession session = request.getSession();
-    User currentUser = (User) session.getAttribute("currentUser");
-    String location = "";
-    if (currentUser != null) {
-        switch (currentUser.getUser_id()) {
-            case 2:
-                location = "Hà Nội";
-                break;
-            case 3:
-                location = "Hồ Chí Minh";
-                break;
-            case 4:
-                location = "Đà Nẵng";
-                break;  
-            case 5:
-                location = "Cần Thơ";
-                break;
-            case 6:
-                location = "Quy Nhơn";
-                break;
-        }
-    }
-
-    try {
-        PoolDAO poolDAO = new PoolDAO();
-        List<Pool> poolList = poolDAO.searchPoolByAddress(location);
-        List<Integer> poolIds = new ArrayList<>();
-        for (Pool pool : poolList) {
-            poolIds.add(pool.getPool_id());
+        String action = request.getParameter("action");
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("currentUser");
+        String location = "";
+        if (currentUser != null) {
+            switch (currentUser.getUser_id()) {
+                case 2:
+                    location = "Hà Nội";
+                    break;
+                case 3:
+                    location = "Hồ Chí Minh";
+                    break;
+                case 4:
+                    location = "Đà Nẵng";
+                    break;
+                case 5:
+                    location = "Cần Thơ";
+                    break;
+                case 6:
+                    location = "Quy Nhơn";
+                    break;
+            }
         }
 
-        if ("add".equals(action)) {
-            String[] poolIdsParam = request.getParameterValues("pool_ids");
-            if (poolIdsParam == null || poolIdsParam.length == 0) {
-                session.setAttribute("errorMessage", "Vui lòng chọn ít nhất một hồ bơi.");
-                response.sendRedirect("pool-service");
-                return;
+        try {
+            PoolDAO poolDAO = new PoolDAO();
+            List<Pool> poolList = poolDAO.searchPoolByAddress(location);
+            List<Integer> poolIds = new ArrayList<>();
+            for (Pool pool : poolList) {
+                poolIds.add(pool.getPool_id());
             }
 
-            String serviceName = request.getParameter("service_name");
-            String description = request.getParameter("description");
-            double price = Double.parseDouble(request.getParameter("price"));
-            String serviceImage = request.getParameter("service_image");
-            int quantity = Integer.parseInt(request.getParameter("quantity"));
-            String serviceStatus = request.getParameter("service_status");
+            if ("add".equals(action)) {
+                String[] poolIdsParam = request.getParameterValues("pool_ids");
+                if (poolIdsParam == null || poolIdsParam.length == 0) {
+                    session.setAttribute("errorMessage", "Vui lòng chọn ít nhất một hồ bơi.");
+                    response.sendRedirect("pool-service");
+                    return;
+                }
 
-            for (String poolIdStr : poolIdsParam) {
-                int poolId = Integer.parseInt(poolIdStr.trim());
-                if (!poolIds.contains(poolId)) continue;
+                Part filePart = request.getPart("service_image");
+                String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+
+                String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
+
+                // Đường dẫn thư mục lưu ảnh
+                String appPath = getServletContext().getRealPath("/");
+                String uploadPath = appPath + "images" + File.separator + "pool";
+                File uploadDir = new File(uploadPath);
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdirs();
+                }
+
+                // Lưu file ảnh
+                String filePath = uploadPath + File.separator + uniqueFileName;
+                filePart.write(filePath);
+
+                // Đường dẫn ảnh để lưu DB
+
+                String serviceName = request.getParameter("service_name");
+                String description = request.getParameter("description");
+                double price = Double.parseDouble(request.getParameter("price"));
+                String serviceImage = "images/pool/" + uniqueFileName;
+                int quantity = Integer.parseInt(request.getParameter("quantity"));
+                String serviceStatus = request.getParameter("service_status");
+
+                for (String poolIdStr : poolIdsParam) {
+                    int poolId = Integer.parseInt(poolIdStr.trim());
+                    if (!poolIds.contains(poolId)) {
+                        continue;
+                    }
+
+                    PoolService ps = new PoolService();
+                    ps.setPoolId(poolId);
+                    ps.setServiceName(serviceName);
+                    ps.setDescription(description);
+                    ps.setPrice(price);
+                    ps.setServiceImage(serviceImage);
+                    ps.setQuantity(quantity);
+                    ps.setServiceStatus(serviceStatus);
+
+                    dao.add(ps);
+                }
+
+                response.sendRedirect("pool-service");
+                return;
+
+            } else if ("update".equals(action)) {
+                int poolId = Integer.parseInt(request.getParameter("pool_id"));
+                if (!poolIds.contains(poolId)) {
+                    response.sendRedirect("pool-service");
+                    return;
+                }
+
+                String serviceName = request.getParameter("service_name");
+                String description = request.getParameter("description");
+                double price = Double.parseDouble(request.getParameter("price"));
+                String serviceImage = request.getParameter("service_image");
+                int quantity = Integer.parseInt(request.getParameter("quantity"));
+                String serviceStatus = request.getParameter("service_status");
 
                 PoolService ps = new PoolService();
                 ps.setPoolId(poolId);
@@ -247,61 +305,32 @@ public class PoolServiceServlet extends HttpServlet {
                 ps.setServiceImage(serviceImage);
                 ps.setQuantity(quantity);
                 ps.setServiceStatus(serviceStatus);
+                ps.setPoolServiceId(Integer.parseInt(request.getParameter("pool_service_id")));
 
-                dao.add(ps);
-            }
-
-            response.sendRedirect("pool-service");
-            return;
-
-        } else if ("update".equals(action)) {
-            int poolId = Integer.parseInt(request.getParameter("pool_id"));
-            if (!poolIds.contains(poolId)) {
+                dao.update(ps);
                 response.sendRedirect("pool-service");
                 return;
-            }
 
-            String serviceName = request.getParameter("service_name");
-            String description = request.getParameter("description");
-            double price = Double.parseDouble(request.getParameter("price"));
-            String serviceImage = request.getParameter("service_image");
-            int quantity = Integer.parseInt(request.getParameter("quantity"));
-            String serviceStatus = request.getParameter("service_status");
+            } else if ("delete".equals(action)) {
+                int id = Integer.parseInt(request.getParameter("id"));
+                PoolService ps = dao.getById(id);
 
-            PoolService ps = new PoolService();
-            ps.setPoolId(poolId);
-            ps.setServiceName(serviceName);
-            ps.setDescription(description);
-            ps.setPrice(price);
-            ps.setServiceImage(serviceImage);
-            ps.setQuantity(quantity);
-            ps.setServiceStatus(serviceStatus);
-            ps.setPoolServiceId(Integer.parseInt(request.getParameter("pool_service_id")));
-
-            dao.update(ps);
-            response.sendRedirect("pool-service");
-            return;
-
-        } else if ("delete".equals(action)) {
-            int id = Integer.parseInt(request.getParameter("id"));
-            PoolService ps = dao.getById(id);
-
-            if (ps != null && poolIds.contains(ps.getPoolId())) {
-                if ("unavailable".equalsIgnoreCase(ps.getServiceStatus())) {
-                    dao.delete(id);
+                if (ps != null && poolIds.contains(ps.getPoolId())) {
+                    if ("unavailable".equalsIgnoreCase(ps.getServiceStatus())) {
+                        dao.delete(id);
+                    } else {
+                        session.setAttribute("errorMessage", "Không thể xóa dịch vụ đang hoạt động. Vui lòng ngưng trước khi xóa.");
+                    }
                 } else {
-                    session.setAttribute("errorMessage", "Không thể xóa dịch vụ đang hoạt động. Vui lòng ngưng trước khi xóa.");
+                    session.setAttribute("errorMessage", "Dịch vụ không hợp lệ hoặc bạn không có quyền xóa.");
                 }
-            } else {
-                session.setAttribute("errorMessage", "Dịch vụ không hợp lệ hoặc bạn không có quyền xóa.");
+
+                response.sendRedirect("pool-service");
             }
 
-            response.sendRedirect("pool-service");
+        } catch (SQLException | NumberFormatException e) {
+            e.printStackTrace();
+            response.sendRedirect("error.jsp");
         }
-
-    } catch (SQLException | NumberFormatException e) {
-        e.printStackTrace();
-        response.sendRedirect("error.jsp");
-    }
     }
 }

@@ -1,7 +1,7 @@
 package controller.Customer;
 
-import dao.UserDAO;
-import model.User;
+import dao.customer.UserDAO;
+import model.customer.User;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +16,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
+/**
+ *
+ * @author LAZYVL
+ */
 
 @WebServlet("/profile")
 @MultipartConfig
@@ -50,10 +54,15 @@ public class CustomerAccountInforServlet extends HttpServlet {
                 response.getWriter().println("Không tìm thấy người dùng trong cơ sở dữ liệu!");
             }
         } else if (service.equals("changePassword")) {
-            // Chuyển đến trang đổi mật khẩu
-            int userId = 2; // Hardcode để test
+            HttpSession session = request.getSession();
+            User currentUser = (User) session.getAttribute("currentUser");
+            if (currentUser == null) {
+                response.sendRedirect("login.jsp");
+                return;
+            }
+
             UserDAO userDAO = new UserDAO();
-            User userDetails = userDAO.getUserByID(userId);
+            User userDetails = userDAO.getUserByID(currentUser.getUser_id());
             request.setAttribute("user", userDetails);
             request.getRequestDispatcher("ChangePassword.jsp").forward(request, response);
         }
@@ -70,7 +79,6 @@ public class CustomerAccountInforServlet extends HttpServlet {
             return;
         }
         int userId = user1.getUser_id();
-
         String service = request.getParameter("service");
         if (service == null) {
             service = "updateProfile";
@@ -80,7 +88,7 @@ public class CustomerAccountInforServlet extends HttpServlet {
             UserDAO userDAO = new UserDAO();
 
             try {
-                // Lấy thông tin từ form (đã được validate ở client-side)
+                // Lấy thông tin từ form
                 String fullName = request.getParameter("full_name");
                 String email = request.getParameter("email");
                 String phone = request.getParameter("phone");
@@ -101,12 +109,10 @@ public class CustomerAccountInforServlet extends HttpServlet {
 
                 String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
                 File uploadDir = new File(uploadPath);
-
                 if (!uploadDir.exists()) {
                     uploadDir.mkdir();
                 }
 
-                // Nếu có file upload
                 if (filePart != null && filePart.getSize() > 0
                         && filePart.getSubmittedFileName() != null
                         && !filePart.getSubmittedFileName().isEmpty()) {
@@ -118,35 +124,34 @@ public class CustomerAccountInforServlet extends HttpServlet {
                 }
 
                 // Cập nhật thông tin user
-                User user = userDAO.getUserByID(userId);
-                if (user != null) {
-                    user.setFull_name(fullName);
-                    user.setEmail(email);
-                    user.setPhone(phone);
-                    user.setAddress(address);
-                    user.setDob(dob);
-                    user.setGender(gender);
+                User userFromDb = userDAO.getUserByID(userId);
+                if (userFromDb != null) {
+                    userFromDb.setFull_name(fullName);
+                    userFromDb.setEmail(email);
+                    userFromDb.setPhone(phone);
+                    userFromDb.setAddress(address);
+                    userFromDb.setDob(dob);
+                    userFromDb.setGender(gender);
 
-                    // Chỉ update ảnh nếu có upload ảnh mới
                     if (images != null) {
-                        user.setImages(images);
+                        userFromDb.setImages(images);
                     }
 
-                    // Cập nhật vào database
-                    userDAO.updateUser(user);
+                    userDAO.updateUser(userFromDb);
 
-                    // Trả về thông báo success
+                    // Cập nhật lại session
+                    session.setAttribute("currentUser", userFromDb);
+
                     request.setAttribute("updateSuccess", "Cập nhật thông tin thành công!");
-                    request.setAttribute("user", userDAO.getUserById(userId));
+                    request.setAttribute("user", userFromDb);
                     request.getRequestDispatcher("EditAccountInfo.jsp").forward(request, response);
                 } else {
                     response.getWriter().println("Không tìm thấy người dùng trong cơ sở dữ liệu!");
                 }
 
             } catch (Exception e) {
-                // Xử lý lỗi server (parse date, database, etc.)
-                User user = userDAO.getUserByID(userId);
-                request.setAttribute("user", user);
+                User userFromDb = userDAO.getUserByID(userId);
+                request.setAttribute("user", userFromDb);
                 request.setAttribute("error", "Có lỗi xảy ra khi cập nhật thông tin: " + e.getMessage());
                 request.getRequestDispatcher("EditAccountInfo.jsp").forward(request, response);
             }

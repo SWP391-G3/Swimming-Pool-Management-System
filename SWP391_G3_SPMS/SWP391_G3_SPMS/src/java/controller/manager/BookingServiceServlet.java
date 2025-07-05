@@ -5,7 +5,7 @@
 package controller.manager;
 
 
-import dao.BookingServiceDAO;
+import dao.manager.BookingServiceDAO;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
