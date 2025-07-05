@@ -74,10 +74,11 @@
             <file>file:/E:/HK_5_SU2025/SWP_ITER2/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dal/DBContext.java</file>
         </group>
         <group>
-            <file>file:/C:/Users/Administrator/Desktop/SWP_ITER2/SWP391_G3_SPMS/SWP391_G3_SPMS/web/CustomerHomePage.jsp</file>
-            <file>file:/C:/Users/Administrator/Desktop/SWP_ITER2/SWP391_G3_SPMS/SWP391_G3_SPMS/web/HomePage.jsp</file>
-            <file>file:/C:/Users/Administrator/Desktop/SWP_ITER2/SWP391_G3_SPMS/SWP391_G3_SPMS/web/header.jsp</file>
-            <file>file:/C:/Users/Administrator/Desktop/SWP_ITER2/SWP391_G3_SPMS/SWP391_G3_SPMS/web/footer.jsp</file>
+            <file>file:/D:/Workspace/Github_Project/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/HomePage/CustomerHomePageServlet.java</file>
+            <file>file:/D:/Workspace/Github_Project/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/HomePage/HomeServlet.java</file>
+            <file>file:/D:/Workspace/Github_Project/SWP391_G3_SPMS/SWP391_G3_SPMS/web/viewpoolList.jsp</file>
+            <file>file:/D:/Workspace/Github_Project/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/poolist/PoolListServlet.java</file>
+            <file>file:/D:/Workspace/Github_Project/SWP391_G3_SPMS/SWP391_G3_SPMS/web/customerViewPoolList.jsp</file>
         </group>
     </open-files>
 </project-private>

@@ -1,4 +1,4 @@
-﻿--CREATE DATABASE SwimmingPoolDB
+﻿--CREATE DATABASE SwimmingPoolDB2
 
 CREATE TABLE Roles (
     role_id INT IDENTITY(1,1) PRIMARY KEY,
@@ -91,7 +91,9 @@ CREATE TABLE Discounts (
     valid_to DATETIME NOT NULL,
     status BIT NOT NULL DEFAULT 1,
     created_at DATETIME NOT NULL DEFAULT GETDATE(),
-    updated_at DATETIME
+    updated_at DATETIME,
+	created_by INT NOT NULL,
+	CONSTRAINT FK_Discounts_CreatedBy FOREIGN KEY (created_by) REFERENCES Users(user_id)
 );
 
 -- Tạo bảng Customer_Discount
@@ -107,14 +109,14 @@ CREATE TABLE Customer_Discount(
 -- Tạo bảng Booking
 CREATE TABLE Booking (
     booking_id INT IDENTITY(1,1) PRIMARY KEY,
-    user_id INT NOT NULL,
+    user_id INT NULL,
     pool_id INT NOT NULL,
     discount_id INT NULL,
     booking_date DATE NOT NULL,
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
     slot_count INT NOT NULL CHECK (slot_count > 0),
-    booking_status NVARCHAR(20) NOT NULL DEFAULT 'pending', --pending/comfirmed/c
+    booking_status NVARCHAR(20) NOT NULL DEFAULT 'pending', --pending/comfirmed/canceled
     created_at DATETIME NOT NULL DEFAULT GETDATE(),
     updated_at DATETIME,
     CONSTRAINT FK_Booking_User FOREIGN KEY (user_id) REFERENCES Users(user_id),
@@ -244,6 +246,7 @@ CREATE TABLE Payment_RentItem (
     CONSTRAINT FK_PaymentRent_Service FOREIGN KEY (service_id) REFERENCES  Pool_Service(pool_service_id)
 );
 
+-- Bảng Contacts
 CREATE TABLE Contacts (
     contact_id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
     user_id INT NULL,
@@ -256,7 +259,77 @@ CREATE TABLE Contacts (
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
+-- Bảng Notifications
+CREATE TABLE Notifications (
+    notification_id INT IDENTITY(1,1) PRIMARY KEY,
+    title NVARCHAR(200) NOT NULL,
+    content NVARCHAR(2000) NOT NULL,
+    created_by INT NOT NULL,                    -- user_id của Manager
+    created_at DATETIME NOT NULL DEFAULT GETDATE(),
+    target_role_id INT NULL,                    -- Gửi cho role cụ thể (VD: chỉ gửi cho Customer), hoặc NULL nếu gửi toàn bộ
+    target_branch_id INT NULL,                  -- Gửi cho chi nhánh cụ thể, hoặc NULL nếu không phân biệt
+    CONSTRAINT FK_Notifications_Creator FOREIGN KEY (created_by) REFERENCES Users(user_id),
+    CONSTRAINT FK_Notifications_Role FOREIGN KEY (target_role_id) REFERENCES Roles(role_id),
+    CONSTRAINT FK_Notifications_Branch FOREIGN KEY (target_branch_id) REFERENCES Branchs(branch_id)
+);
 
+-- Bảng Discount_Audit_Log
+CREATE TABLE Discount_Audit_Log (
+    log_id INT IDENTITY(1,1) PRIMARY KEY,
+    discount_id INT NOT NULL,
+    manager_id INT NOT NULL,
+    action_type NVARCHAR(10) NOT NULL, -- 'INSERT', 'UPDATE', 'DELETE'
+    action_time DATETIME NOT NULL DEFAULT GETDATE(),
+    old_description NVARCHAR(255),
+    new_description NVARCHAR(255),
+    old_discount_percent DECIMAL(5,2),
+    new_discount_percent DECIMAL(5,2),
+    old_quantity INT,
+    new_quantity INT,
+    old_valid_from DATETIME,
+    new_valid_from DATETIME,
+    old_valid_to DATETIME,
+    new_valid_to DATETIME,
+    old_status BIT,
+    new_status BIT,
+    notes NVARCHAR(255) NULL
+);
+
+-- Bảng Service_Reports
+CREATE TABLE Service_Reports (
+    report_id INT IDENTITY(1,1) PRIMARY KEY,
+    staff_id INT NOT NULL,
+    pool_id INT NOT NULL,
+    branch_id INT NOT NULL,
+    service_id INT NOT NULL,
+    service_name NVARCHAR(100) NOT NULL,
+    report_reason NVARCHAR(255) NOT NULL,
+    suggestion NVARCHAR(255),
+    report_date DATETIME NOT NULL DEFAULT GETDATE(),
+    status NVARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'done')),
+    CONSTRAINT FK_ServiceReports_Staff FOREIGN KEY (staff_id) REFERENCES Staffs(staff_id),
+    CONSTRAINT FK_ServiceReports_Pool FOREIGN KEY (pool_id) REFERENCES Pools(pool_id),
+    CONSTRAINT FK_ServiceReports_Branch FOREIGN KEY (branch_id) REFERENCES Branchs(branch_id),
+    CONSTRAINT FK_ServiceReports_Service FOREIGN KEY (service_id) REFERENCES Pool_Service(pool_service_id)
+);
+
+-- Bảng Device_Reports
+CREATE TABLE Device_Reports (
+    report_id INT IDENTITY(1,1) PRIMARY KEY,
+    staff_id INT  NOT NULL,
+    pool_id INT  NOT NULL,
+    branch_id INT  NOT NULL,
+    device_id INT  NULL,
+    device_name NVARCHAR(100) NOT NULL,
+    report_reason NVARCHAR(255) NOT NULL,
+    suggestion NVARCHAR(255),
+    report_date DATETIME NOT NULL DEFAULT GETDATE(),
+    status NVARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'done')), -- Chỉ “pending” hoặc “done”
+    CONSTRAINT FK_DeviceReports_Staff FOREIGN KEY (staff_id)  REFERENCES Staffs(staff_id),
+    CONSTRAINT FK_DeviceReports_Pool FOREIGN KEY (pool_id)   REFERENCES Pools(pool_id),
+    CONSTRAINT FK_DeviceReports_Branch FOREIGN KEY (branch_id) REFERENCES Branchs(branch_id),
+    CONSTRAINT FK_DeviceReports_Device FOREIGN KEY (device_id) REFERENCES Pool_Device(device_id)
+);
 
 
 

@@ -153,16 +153,16 @@
                 <c:if test="${totalPages > 1}">
                     <div class="pagination">
                         <c:if test="${currentPage > 1}">
-                            <a href="homepage?page=${currentPage-1}&searchName=${param.searchName}&capacity=${param.capacity}&openTime=${param.openTime}&closeTime=${param.closeTime}&searchLocation=${param.searchLocation}">&lt;&lt;</a>
+                            <a href="customerViewPoolList?page=${currentPage-1}&searchName=${param.searchName}&capacity=${param.capacity}&openTime=${param.openTime}&closeTime=${param.closeTime}&searchLocation=${param.searchLocation}">&lt;&lt;</a>
                         </c:if>
                         <c:forEach begin="1" end="${totalPages}" var="pageNum">
-                            <a href="homepage?page=${pageNum}&searchName=${param.searchName}&capacity=${param.capacity}&openTime=${param.openTime}&closeTime=${param.closeTime}&searchLocation=${param.searchLocation}"
+                            <a href="customerViewPoolList?page=${pageNum}&searchName=${param.searchName}&capacity=${param.capacity}&openTime=${param.openTime}&closeTime=${param.closeTime}&searchLocation=${param.searchLocation}"
                                class="${pageNum == currentPage ? 'active' : ''}">
                                 ${pageNum}
                             </a>
                         </c:forEach>
                         <c:if test="${currentPage < totalPages}">
-                            <a href="homepage?page=${currentPage+1}&searchName=${param.searchName}&capacity=${param.capacity}&openTime=${param.openTime}&closeTime=${param.closeTime}&searchLocation=${param.searchLocation}">&gt;&gt;</a>
+                            <a href="customerViewPoolList?page=${currentPage+1}&searchName=${param.searchName}&capacity=${param.capacity}&openTime=${param.openTime}&closeTime=${param.closeTime}&searchLocation=${param.searchLocation}">&gt;&gt;</a>
                         </c:if>
                     </div>
                 </c:if>
