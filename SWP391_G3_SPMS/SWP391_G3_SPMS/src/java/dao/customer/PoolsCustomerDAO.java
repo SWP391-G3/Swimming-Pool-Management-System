@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import static java.util.Collections.list;
 import java.util.List;
+import model.customer.PoolService;
 
 public class PoolsCustomerDAO extends DBContext {
 
@@ -35,6 +36,7 @@ public class PoolsCustomerDAO extends DBContext {
                         : null);
 
                 pool.setPool_description(rs.getString("pool_description"));
+                pool.setList_image(rs.getString("list_image"));
                 return pool;
             }
         } catch (SQLException e) {
@@ -227,5 +229,6 @@ public class PoolsCustomerDAO extends DBContext {
         
         
     }
-
+        
+     
 }
