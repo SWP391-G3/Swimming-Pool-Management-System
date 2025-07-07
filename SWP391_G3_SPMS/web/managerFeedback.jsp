@@ -20,7 +20,7 @@
         <title>Quản lý Phản hồi</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <link rel="stylesheet" href="./manager-css/manager-panel.css">
-        <link rel="stylesheet" href="./manager-css/managerFeedback.css">
+        <link rel="stylesheet" href="./manager-css/managerFeedback-v1.css">
     </head>
 
     <body>
@@ -49,64 +49,73 @@
                 <div class="header">
                     <div class="header-title-row">
                         <h2>Quản lý phản hồi</h2>
-                        
+
                     </div>
 
                     <div class="filter-row">
                         <form class="search-form" method="get" action="managerFeedbackServlet" id="searchForm">
-                            <input type="text" name="keyword" placeholder="Tìm theo tên hoặc nội dung..." value="${fn:escapeXml(keyword)}" maxlength="100">
+                            <input type="text" name="keyword" placeholder="Tìm theo tên hoặc nội dung..." 
+                                   value="${fn:escapeXml(keyword)}" maxlength="100">
+
                             <select name="poolId">
-                                <option value="all" <c:if test="${poolId == 'all'}">selected</c:if>>-- Tất cả hồ bơi --</option>
+                                <option value="all" <c:if test="${poolId == 'all' || empty poolId}">selected</c:if>>-- Tất cả hồ bơi --</option>
                                 <c:forEach var="pool" items="${poolList}">
-                                    <option value="${pool.pool_id}" <c:if test="${pool.pool_id.toString() == poolId}">selected</c:if>>${pool.pool_name}</option>
+                                    <option value="${pool.id}" <c:if test="${pool.id.toString() == poolId}">selected</c:if>>
+                                        ${pool.name}
+                                    </option>
                                 </c:forEach>
                             </select>
+
                             <select name="rating">
-                                <option value="all" <c:if test="${rating == 'all'}">selected</c:if>>Tất cả đánh giá</option>
+                                <option value="all" <c:if test="${rating == 'all' || empty rating}">selected</c:if>>Tất cả đánh giá</option>
                                 <option value="1" <c:if test="${rating == '1'}">selected</c:if>>1 sao</option>
                                 <option value="2" <c:if test="${rating == '2'}">selected</c:if>>2 sao</option>
                                 <option value="3" <c:if test="${rating == '3'}">selected</c:if>>3 sao</option>
                                 <option value="4" <c:if test="${rating == '4'}">selected</c:if>>4 sao</option>
                                 <option value="5" <c:if test="${rating == '5'}">selected</c:if>>5 sao</option>
                                 </select>
+
                                 <select name="dateFilter">
-                                    <option value="all" <c:if test="${dateFilter == 'all'}">selected</c:if>>Tất cả thời gian</option>
+                                    <option value="all" <c:if test="${dateFilter == 'all' || empty dateFilter}">selected</c:if>>Tất cả thời gian</option>
                                 <option value="today" <c:if test="${dateFilter == 'today'}">selected</c:if>>Hôm nay</option>
                                 <option value="week" <c:if test="${dateFilter == 'week'}">selected</c:if>>Tuần này</option>
                                 <option value="month" <c:if test="${dateFilter == 'month'}">selected</c:if>>Tháng này</option>
                                 </select>
+
                                 <select name="pageSize" id="pageSizeSelect">
                                     <option value="5" <c:if test="${pageSize == 5}">selected</c:if>>5/Trang</option>
                                 <option value="10" <c:if test="${pageSize == 10}">selected</c:if>>10/Trang</option>
                                 <option value="15" <c:if test="${pageSize == 15}">selected</c:if>>15/Trang</option>
                                 <option value="25" <c:if test="${pageSize == 25}">selected</c:if>>25/Trang</option>
                                 </select>
-                                <input type="hidden" name="page" value="${page}">
-                            <button type="submit"><i class="fas fa-search"></i></button>
-                        </form>
-                            
+
+                                <input type="hidden" name="page" value="1">
+                                <button type="submit"><i class="fas fa-search"></i></button>
+                            </form>
+
                             <div class="action-buttons">
-                            <a href="managerFeedbackServlet" class="btn-copy">
-                                <i class="fa-solid fa-arrows-rotate"></i> Làm mới
-                            </a>
+                                <a href="managerFeedbackServlet" class="btn-copy">
+                                    <i class="fa-solid fa-arrows-rotate"></i> Làm mới
+                                </a>
+                            </div>
+
                         </div>
-                            
                     </div>
-                </div>
-                <div class="feedback-list">
-                    <table class="feedback-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Khách hàng</th>
-                                <th>Hồ bơi</th>
-                                <th>Đánh giá</th>
-                                <th>Nội dung</th>
-                                <th>Ngày tạo</th>
-                                <th>Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <div class="feedback-list">
+                        <table class="feedback-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Khách hàng</th>
+                                     <th>Email</th>
+                                    <th>Hồ bơi</th>
+                                    <th>Đánh giá</th>
+                                    <th>Nội dung</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                             <c:choose>
                                 <c:when test="${empty feedbackList}">
                                     <tr>
@@ -118,16 +127,17 @@
                                 <c:otherwise>
                                     <c:forEach var="feedback" items="${feedbackList}" varStatus="i">
                                         <tr>
-                                            <td>${feedback.feedback_id}</td>
+                                            <td>${feedback.feedbackId}</td>
                                             <td>
                                                 <div class="user-info">
-                                                    <c:if test="${not empty feedback.user_image}">
-                                                        <img src="${feedback.user_image}" alt="User Avatar" class="user-avatar">
+                                                    <c:if test="${not empty feedback.userImage}">
+                                                        <img src="${feedback.userImage}" alt="User Avatar" class="user-avatar">
                                                     </c:if>
-                                                    <span>${feedback.user_name}</span>
+                                                    <span>${feedback.userName}</span>
                                                 </div>
                                             </td>
-                                            <td>${feedback.pool_name}</td>
+                                            <td>${feedback.userEmail}</td>
+                                            <td>${feedback.poolName}</td>
                                             <td>
                                                 <div class="star-rating">
                                                     <c:forEach begin="1" end="5" var="star">
@@ -144,14 +154,14 @@
                                                 </c:if>
                                             </td>
                                             <td>
-                                                <fmt:formatDate value="${feedback.created_at}" pattern="dd/MM/yyyy HH:mm"/>
+                                                <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy HH:mm"/>
                                             </td>
                                             <td>
                                                 <a href="javascript:void(0);" class="btn-view" title="Xem chi tiết"
-                                                   onclick="showFeedbackDetail(${feedback.feedback_id})">
+                                                   onclick="showFeedbackDetail(${feedback.feedbackId})">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="managerDeleteFeedback?id=${feedback.feedback_id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&rating=${fn:escapeXml(rating)}&dateFilter=${fn:escapeXml(dateFilter)}&poolId=${fn:escapeXml(poolId)}"
+                                                <a href="managerDeleteFeedback?id=${feedback.feedbackId}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&rating=${fn:escapeXml(rating)}&dateFilter=${fn:escapeXml(dateFilter)}&poolId=${fn:escapeXml(poolId)}"
                                                    class="btn-disable"
                                                    title="Xóa"
                                                    onclick="return confirm('Bạn có chắc chắn muốn xóa phản hồi này?');">

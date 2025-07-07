@@ -91,15 +91,9 @@
                     Quản lý voucher
                 </a>
             </li>
+            
             <li>
-                <a href="area-revenue.jsp"
-                <c:if test="${activeMenu eq 'revenue'}">class="active"</c:if>>
-                    <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="8"/><rect x="10" y="8" width="4" height="12"/><rect x="17" y="4" width="4" height="16"/></svg>
-                    Quản lý doanh thu khu vực
-                </a>
-            </li>
-            <li>
-                <a href="managerFeedback.jsp"
+                <a href="managerFeedbackServlet"
                 <c:if test="${activeMenu eq 'feedback'}">class="active"</c:if>>
                 <svg viewBox="0 0 24 24"><path d="M21 6H3v12h4v4l4-4h10z"/></svg>
                 Quản lý feedback

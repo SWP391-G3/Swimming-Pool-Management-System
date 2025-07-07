@@ -451,6 +451,85 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     margin-bottom: 16px;
 }
 
+/* === CSS cho phần phân trang === */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 24px;
+    padding: 12px 0;
+}
+
+.pagination a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 8px;
+    border-radius: 6px;
+    background-color: #f3f4f6;
+    color: #4b5563;
+    text-decoration: none;
+    font-size: 0.95em;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.pagination a:hover {
+    background-color: #e5e7eb;
+    color: #1f2937;
+    border-color: #d1d5db;
+}
+
+.pagination a.active {
+    background-color: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    font-weight: 600;
+}
+
+.pagination a:first-child,
+.pagination a:last-child {
+    padding: 0 12px;
+}
+
+/* Hiệu ứng khi hover */
+.pagination a:not(.active):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive cho phân trang */
+@media (max-width: 768px) {
+    .pagination {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    
+    .pagination a {
+        min-width: 32px;
+        height: 32px;
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 480px) {
+    .pagination a {
+        min-width: 28px;
+        height: 28px;
+        padding: 0 6px;
+        font-size: 0.85em;
+    }
+    
+    .pagination a:first-child,
+    .pagination a:last-child {
+        padding: 0 8px;
+    }
+}
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
