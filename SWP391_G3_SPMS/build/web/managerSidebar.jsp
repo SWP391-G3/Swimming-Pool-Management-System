@@ -99,7 +99,7 @@
                 </a>
             </li>
             <li>
-                <a href="feedback-management.jsp"
+                <a href="managerFeedback.jsp"
                 <c:if test="${activeMenu eq 'feedback'}">class="active"</c:if>>
                 <svg viewBox="0 0 24 24"><path d="M21 6H3v12h4v4l4-4h10z"/></svg>
                 Quản lý feedback

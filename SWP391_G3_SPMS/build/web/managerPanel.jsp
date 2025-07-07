@@ -59,7 +59,7 @@
                         <div class="dashboard-card-title">Quản lý doanh thu khu vực</div>
                         <div class="dashboard-card-desc">Thống kê doanh thu, phân tích hiệu quả theo từng khu vực.</div>
                     </a>
-                    <a href="feedback-management.jsp" class="dashboard-card">
+                    <a href="managerFeedback.jsp" class="dashboard-card">
                         <div class="dashboard-card-title">Quản lý feedback</div>
                         <div class="dashboard-card-desc">Xem, phản hồi, đánh giá ý kiến khách hàng.</div>
                     </a>

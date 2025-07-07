@@ -43,7 +43,8 @@
 
                 <div class="form-group">
                     <label>Tên thiết bị:</label>
-                    <input type="text" name="deviceName" required value="${param.deviceName}">
+                    <input type="text" name="deviceName" required maxlength="50" value="${param.deviceName}">
+
                 </div>
 
                 <div class="form-group">
@@ -122,6 +123,12 @@
                     // Kiểm tra các trường bắt buộc
                     if (deviceName === "") {
                         noteError.innerText = "Tên thiết bị không được để trống.";
+                        form["deviceName"].focus();
+                        return false;
+                    }
+
+                    if (deviceName.length > 50) {
+                        noteError.innerText = "Tên thiết bị không được vượt quá 50 ký tự.";
                         form["deviceName"].focus();
                         return false;
                     }
