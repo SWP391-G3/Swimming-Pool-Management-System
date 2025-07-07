@@ -48,7 +48,7 @@ public class ManagerFeedbackServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         // Kiểm tra session đăng nhập
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("currentUser");
@@ -79,6 +79,12 @@ public class ManagerFeedbackServlet extends HttpServlet {
                 response.sendRedirect("login.jsp");
                 return;
         }
+
+        // Lấy thông báo thành công/lỗi từ tham số trên URL
+        String success = request.getParameter("success");
+        String error = request.getParameter("error");
+        request.setAttribute("success", success);
+        request.setAttribute("error", error);
 
         // Lấy các tham số filter
         String keyword = request.getParameter("keyword");
@@ -118,7 +124,9 @@ public class ManagerFeedbackServlet extends HttpServlet {
         if (pageStr != null && !pageStr.isEmpty()) {
             try {
                 page = Integer.parseInt(pageStr);
-                if (page < 1) page = 1;
+                if (page < 1) {
+                    page = 1;
+                }
             } catch (NumberFormatException e) {
                 page = 1;
             }
@@ -129,14 +137,16 @@ public class ManagerFeedbackServlet extends HttpServlet {
         if (pageSizeStr != null && !pageSizeStr.isEmpty()) {
             try {
                 pageSize = Integer.parseInt(pageSizeStr);
-                if (pageSize < 1) pageSize = 10;
+                if (pageSize < 1) {
+                    pageSize = 10;
+                }
             } catch (NumberFormatException e) {
                 pageSize = 10;
             }
         }
 
         FeedbackDAO feedbackDAO = new FeedbackDAO();
-        
+
         try {
             // Lấy danh sách feedback
             int[] totalRows = new int[1];
@@ -159,7 +169,7 @@ public class ManagerFeedbackServlet extends HttpServlet {
             request.setAttribute("endP", totalPages); // Thêm attribute cho JSP
             request.setAttribute("page", page); // Thêm attribute cho JSP
             request.setAttribute("pageSize", pageSize); // Thêm attribute cho JSP
-            
+
             // Giữ lại các giá trị filter
             request.setAttribute("keyword", keyword);
             request.setAttribute("poolId", poolIdStr); // Giữ nguyên string để so sánh trong JSP
@@ -168,9 +178,9 @@ public class ManagerFeedbackServlet extends HttpServlet {
 
             // Forward đến JSP
             request.getRequestDispatcher("managerFeedback.jsp").forward(request, response);
-            
+
         } catch (SQLException e) {
-            
+
             request.setAttribute("error", "Lỗi cơ sở dữ liệu: " + e.getMessage());
             request.getRequestDispatcher("error.jsp").forward(request, response);
         }

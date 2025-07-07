@@ -20,26 +20,13 @@
         <title>Quản lý Phản hồi</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <link rel="stylesheet" href="./manager-css/manager-panel.css">
-        <link rel="stylesheet" href="./manager-css/managerFeedback-v1.css">
+        <link rel="stylesheet" href="./manager-css/managerFeedback-v3.css">
     </head>
 
     <body>
-        <c:if test="${not empty error}">
-            <div class="error-message" style="color:red; background:#fff0f0; padding:10px;">
-                ${error}
-            </div>
-        </c:if>
 
-        <c:if test="${not empty success}">
-            <div class="success-message" id="successMsg">${success}</div>
-            <script>
-                setTimeout(function () {
-                    var msg = document.getElementById('successMsg');
-                    if (msg)
-                        msg.style.display = 'none';
-                }, 3000); // 3000 ms = 3 giây
-            </script>
-        </c:if>
+        <div id="toast" class="toast"></div>
+        
 
         <div class="layout">
             <div class="sidebar">
@@ -107,7 +94,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Khách hàng</th>
-                                     <th>Email</th>
+                                    <th>Email</th>
                                     <th>Hồ bơi</th>
                                     <th>Đánh giá</th>
                                     <th>Nội dung</th>
@@ -157,12 +144,17 @@
                                                 <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy HH:mm"/>
                                             </td>
                                             <td>
-                                                <a href="javascript:void(0);" class="btn-view" title="Xem chi tiết"
+                                                <a href="javascript:void(0);" class="action-btn btn-view" title="Xem chi tiết"
                                                    onclick="showFeedbackDetail(${feedback.feedbackId})">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
+                                                <a href="managerReplyFeedbackServlet?id=${feedback.feedbackId}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&rating=${fn:escapeXml(rating)}&dateFilter=${fn:escapeXml(dateFilter)}&poolId=${fn:escapeXml(poolId)}"
+                                                   class="action-btn btn-reply"
+                                                   title="Phản hồi">
+                                                    <i class="fas fa-reply"></i>
+                                                </a>
                                                 <a href="managerDeleteFeedback?id=${feedback.feedbackId}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&rating=${fn:escapeXml(rating)}&dateFilter=${fn:escapeXml(dateFilter)}&poolId=${fn:escapeXml(poolId)}"
-                                                   class="btn-disable"
+                                                   class="action-btn btn-disable"
                                                    title="Xóa"
                                                    onclick="return confirm('Bạn có chắc chắn muốn xóa phản hồi này?');">
                                                     <i class="fas fa-trash"></i>
@@ -291,5 +283,28 @@
                 });
             });
         </script>
+
+
+
+        <script>
+            function showToast(message, type = 'success') {
+                const toast = document.getElementById('toast');
+                toast.className = 'toast show ' + type;
+                toast.innerHTML = message;
+                setTimeout(function () {
+                    toast.className = 'toast ' + type;
+                }, 3500);
+            }
+        </script>
+        <c:if test="${not empty success}">
+            <script>
+        showToast("<i class='fas fa-check-circle'></i> ${success}", "success");
+            </script>
+        </c:if>
+        <c:if test="${not empty error}">
+            <script>
+        showToast("<i class='fas fa-exclamation-circle'></i> ${error}", "error");
+            </script>
+        </c:if>
     </body>
 </html>

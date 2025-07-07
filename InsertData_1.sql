@@ -1120,3 +1120,19 @@ INSERT INTO Payment_RentItem (payment_id, service_id, amount, quantity) VALUES
 
 
 
+-- Tuấn Anh test 
+
+
+
+
+
+
+INSERT INTO Feedbacks (user_id, pool_id, rating, comment, created_at) VALUES
+
+(126, 1, 3, N'Test email gửi phản hồi.', GETDATE())
+
+
+
+
+
+

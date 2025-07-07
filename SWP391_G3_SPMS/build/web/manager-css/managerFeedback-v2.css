@@ -199,8 +199,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 
 /* View Button */
 .btn-view {
-  background: var(--primary-100);
-  color: var(--primary-700);
+  background: #38bdf8;
+  color:#0056b3 ;
 }
 
 .btn-view:hover {
@@ -211,7 +211,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 
 /* Reply Button */
 .btn-reply {
-  background: var(--success-100);
+  background: #dcfce7;
   color: var(--success-700);
 }
 
@@ -223,8 +223,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 
 /* Delete Button */
 .btn-disable {
-  background: var(--danger-100);
-  color: var(--danger-700);
+  background: #fee2e2;
+  color: #b91c1c;
 }
 
 .btn-disable:hover {
@@ -260,6 +260,39 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
   opacity: 1;
   bottom: calc(100% + 5px);
 }
+
+
+  .error-message {
+        color: #b8001f;
+        background: #ffeaea;
+        border: 1px solid #ffb3b3;
+        padding: 12px 20px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        font-weight: 600;
+        font-size: 15px;
+        box-shadow: 0 2px 8px rgba(255,0,0,0.03);
+        display: block;
+        animation: fadeInDown 0.5s;
+    }
+    .success-message {
+        color: #075e12;
+        background: #e7ffe9;
+        border: 1px solid #b3ffb3;
+        padding: 12px 20px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        font-weight: 600;
+        font-size: 15px;
+        box-shadow: 0 2px 8px rgba(0,128,0,0.03);
+        display: block;
+        animation: fadeInDown 0.5s;
+    }
+    @keyframes fadeInDown {
+        0% { opacity: 0; transform: translateY(-10px);}
+        100% { opacity: 1; transform: translateY(0);}
+    }
+
 
 /* css fillter  */
 

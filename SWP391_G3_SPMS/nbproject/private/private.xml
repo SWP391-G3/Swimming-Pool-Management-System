@@ -94,12 +94,15 @@
             <file>file:/E:/HK_5_SU2025/SWP-ITER3/SWP391_G3_SPMS/src/java/model/manager/PoolFeedBack.java</file>
             <file>file:/E:/HK_5_SU2025/SWP-ITER3/SWP391_G3_SPMS/web/manager-css/manager-device-v2.css</file>
             <file>file:/E:/HK_5_SU2025/SWP-ITER3/SWP391_G3_SPMS/web/managerAddDiscount.jsp</file>
+            <file>file:/E:/HK_5_SU2025/SWP-ITER3/SWP391_G3_SPMS/src/java/controller/manager/ManagerReplyFeedbackServlet.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP-ITER3/SWP391_G3_SPMS/src/java/util/EmailFeedbackUtil.java</file>
             <file>file:/E:/HK_5_SU2025/SWP-ITER3/SWP391_G3_SPMS/web/managerTicket.jsp</file>
             <file>file:/E:/HK_5_SU2025/SWP-ITER3/SWP391_G3_SPMS/src/java/model/manager/PoolService.java</file>
             <file>file:/E:/HK_5_SU2025/SWP-ITER3/SWP391_G3_SPMS/src/java/dal/DBContext.java</file>
             <file>file:/E:/HK_5_SU2025/SWP-ITER3/SWP391_G3_SPMS/src/java/model/customer/Feedback.java</file>
             <file>file:/E:/HK_5_SU2025/SWP-ITER3/SWP391_G3_SPMS/web/managerSidebar.jsp</file>
             <file>file:/E:/HK_5_SU2025/SWP-ITER3/SWP391_G3_SPMS/web/manager-css/managerFeedback-v1.css</file>
+            <file>file:/E:/HK_5_SU2025/SWP-ITER3/SWP391_G3_SPMS/src/java/controller/manager/ManagerListDeviceServlet.java</file>
             <file>file:/E:/HK_5_SU2025/SWP-ITER3/SWP391_G3_SPMS/src/java/controller/manager/ManagerUpdateDeviceServlet.java</file>
             <file>file:/E:/HK_5_SU2025/SWP-ITER3/SWP391_G3_SPMS/src/java/dao/manager/PoolServiceDAO.java</file>
             <file>file:/E:/HK_5_SU2025/SWP-ITER3/SWP391_G3_SPMS/src/java/controller/manager/ManagerFeedbackServlet.java</file>

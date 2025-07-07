@@ -86,7 +86,7 @@ public class FeedbackDAO extends DBContext {
                 .append("JOIN Users u ON f.user_id = u.user_id ")
                 .append("JOIN Pools p ON f.pool_id = p.pool_id ")
                 .append(baseWhere)
-                .append("ORDER BY f.created_at DESC ")
+                .append("ORDER BY f.created_at ASC ")
                 .append("OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
 
         params.add((page - 1) * pageSize);
@@ -147,31 +147,36 @@ public class FeedbackDAO extends DBContext {
     }
 
     public Feedback getFeedbackById(int id, int branchId) throws SQLException {
-        String sql = "SELECT f.*, u.full_name as user_name, u.images as user_image, p.pool_name "
-                + "FROM Feedbacks f "
-                + "JOIN Users u ON f.user_id = u.user_id "
-                + "JOIN Pools p ON f.pool_id = p.pool_id "
-                + "WHERE f.feedback_id = ? AND p.branch_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            stmt.setInt(2, branchId);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                Feedback fb = new Feedback();
-                fb.setFeedbackId(rs.getInt("feedback_id"));
-                fb.setUserId(rs.getInt("user_id"));
-                fb.setPoolId(rs.getInt("pool_id"));
-                fb.setRating(rs.getInt("rating"));
-                fb.setComment(rs.getString("comment"));
-                fb.setCreatedAt(rs.getTimestamp("created_at"));
-                fb.setUserName(rs.getString("user_name"));
-                fb.setUserImage(rs.getString("user_image"));
-                fb.setPoolName(rs.getString("pool_name"));
-                return fb;
-            }
+    String sql = "SELECT f.*, u.full_name as user_name, u.images as user_image, u.email as user_email, p.pool_name "
+            + "FROM Feedbacks f "
+            + "JOIN Users u ON f.user_id = u.user_id "
+            + "JOIN Pools p ON f.pool_id = p.pool_id "
+            + "WHERE f.feedback_id = ? AND p.branch_id = ?";
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        stmt.setInt(1, id);
+        stmt.setInt(2, branchId);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            Feedback fb = new Feedback();
+            fb.setFeedbackId(rs.getInt("feedback_id"));
+            fb.setUserId(rs.getInt("user_id"));
+            fb.setPoolId(rs.getInt("pool_id"));
+            fb.setRating(rs.getInt("rating"));
+            fb.setComment(rs.getString("comment"));
+            fb.setCreatedAt(rs.getTimestamp("created_at"));
+            fb.setUserName(rs.getString("user_name"));
+            fb.setUserImage(rs.getString("user_image"));
+            fb.setUserEmail(rs.getString("user_email")); // <-- Thêm dòng này!
+            fb.setPoolName(rs.getString("pool_name"));
+            return fb;
         }
-        return null;
     }
+    return null;
+}
+    
+    
+    
+    
 
     public static void main(String[] args) {
 
