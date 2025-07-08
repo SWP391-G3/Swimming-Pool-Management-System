@@ -80,8 +80,11 @@
             <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/HomePage/CustomerHomePageServlet.java</file>
             <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/WEB-INF/web.xml</file>
             <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/login.jsp</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/CustomerHomePage.jsp</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/HomePage.jsp</file>
             <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/login/RegisterServlet.java</file>
             <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/login/ResetPasswordServlet.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/login/LoginServlet.java</file>
             <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/login/LoginGoogle.java</file>
         </group>
     </open-files>
