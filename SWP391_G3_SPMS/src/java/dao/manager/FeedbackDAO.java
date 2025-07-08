@@ -166,7 +166,7 @@ public class FeedbackDAO extends DBContext {
             fb.setCreatedAt(rs.getTimestamp("created_at"));
             fb.setUserName(rs.getString("user_name"));
             fb.setUserImage(rs.getString("user_image"));
-            fb.setUserEmail(rs.getString("user_email")); // <-- Thêm dòng này!
+            fb.setUserEmail(rs.getString("user_email")); // 
             fb.setPoolName(rs.getString("pool_name"));
             return fb;
         }

@@ -33,11 +33,6 @@
             <c:remove var="error" scope="session"/>
         </c:if>
 
-        <c:if test="${not empty sessionScope.success}">
-            <div class="success-message">${sessionScope.success}</div>
-            <c:remove var="success" scope="session"/>
-        </c:if> 
-
 
         <c:if test="${not empty sessionScope.success}">
             <div class="success-message" id="successMsg">${sessionScope.success}</div>
@@ -192,13 +187,13 @@
                     <c:if test="${endP > 1}">
                         <div class="pagination">
                             <c:if test="${page > 1}">
-                                <a href="managerDiscountServlet?page=${page-1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&pageSize=${pageSize}">«</a>
+                                <a href="managerDiscountServlet?page=${page-1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&fromDate=${fromDate}&toDate=${toDate}&pageSize=${pageSize}">«</a>
                             </c:if>
                             <c:forEach begin="1" end="${endP}" var="i">
-                                <a href="managerDiscountServlet?page=${i}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&pageSize=${pageSize}" class="${i == page ? 'active' : ''}">${i}</a>
+                                <a href="managerDiscountServlet?page=${i}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&fromDate=${fromDate}&toDate=${toDate}&pageSize=${pageSize}" class="${i == page ? 'active' : ''}">${i}</a>
                             </c:forEach>
                             <c:if test="${page < endP}">
-                                <a href="managerDiscountServlet?page=${page+1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&pageSize=${pageSize}">»</a>
+                                <a href="managerDiscountServlet?page=${page+1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&fromDate=${fromDate}&toDate=${toDate}&pageSize=${pageSize}">»</a>
                             </c:if>
                         </div>
                     </c:if>

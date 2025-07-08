@@ -26,16 +26,8 @@
                 <div class="success-message">${success}</div>
             </c:if>
 
-            <!-- Debug giá trị truyền vào -->
-            <c:if test="${not empty discount}">
-                <div style="color:gray; font-size: 0.9em;">
-                    [DEBUG] Mã: ${discount.code} | Mô tả: ${discount.description} | % 
-                    <fmt:formatNumber value="${discount.percent}" type="number" groupingUsed="false" minFractionDigits="0" maxFractionDigits="2"/>
-                    | SL: ${discount.quantity} <br/>
-                    Từ: <fmt:formatDate value="${discount.validFrom}" pattern="yyyy-MM-dd'T'HH:mm"/> → <fmt:formatDate value="${discount.validTo}" pattern="yyyy-MM-dd'T'HH:mm"/> | Trạng thái: ${discount.status}
-                </div>
-            </c:if>
-
+            <!-- JSTL sau để định dạng ngày trước khi đưa vào trường <input type="datetime-local">: -->
+    
             <fmt:formatDate value="${discount.validFrom}" pattern="yyyy-MM-dd'T'HH:mm" var="validFromVal"/>
             <fmt:formatDate value="${discount.validTo}" pattern="yyyy-MM-dd'T'HH:mm" var="validToVal"/>
 

@@ -34,9 +34,15 @@ public class DiscountDAO extends DBContext {
             }
         }
         if (fromDate != null && toDate != null) {
-            sql += " AND valid_from <= ? AND valid_to >= ?";
-            params.add(new java.sql.Timestamp(toDate.getTime()));
+            sql += " AND valid_from >= ? AND valid_to <= ?";
             params.add(new java.sql.Timestamp(fromDate.getTime()));
+            params.add(new java.sql.Timestamp(toDate.getTime()));
+        }
+
+        if (fromDate != null && toDate != null) {
+            sql += " AND valid_to >= ? AND valid_from <= ?";
+            params.add(new java.sql.Timestamp(fromDate.getTime()));
+            params.add(new java.sql.Timestamp(toDate.getTime()));
         }
         PreparedStatement ps = connection.prepareStatement(sql);
         for (int i = 0; i < params.size(); i++) {
@@ -71,10 +77,17 @@ public class DiscountDAO extends DBContext {
             }
         }
         if (fromDate != null && toDate != null) {
-            sql += " AND valid_from <= ? AND valid_to >= ?";
-            params.add(new java.sql.Timestamp(toDate.getTime()));
+            sql += " AND valid_from >= ? AND valid_to <= ?";
             params.add(new java.sql.Timestamp(fromDate.getTime()));
+            params.add(new java.sql.Timestamp(toDate.getTime()));
         }
+
+        if (fromDate != null && toDate != null) {
+            sql += " AND valid_to >= ? AND valid_from <= ?";
+            params.add(new java.sql.Timestamp(fromDate.getTime()));
+            params.add(new java.sql.Timestamp(toDate.getTime()));
+        }
+
         sql += " ORDER BY created_at ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
         params.add((page - 1) * pageSize);
         params.add(pageSize);
@@ -117,50 +130,49 @@ public class DiscountDAO extends DBContext {
 
     // Thêm mới
     // Thêm parameter created_by cho Discount d
-public boolean insert(Discount d, int managerId) {
-    String sql = "INSERT INTO Discounts (discount_code, description, discount_percent, quantity, valid_from, valid_to, status, created_at, created_by) "
-               + "VALUES (?, ?, ?, ?, ?, ?, ?, GETDATE(), ?)";
-    try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-        ps.setString(1, d.getCode());
-        ps.setString(2, d.getDescription());
-        ps.setDouble(3, d.getPercent());
-        ps.setInt(4, d.getQuantity());
-        ps.setTimestamp(5, d.getValidFrom() == null ? null : new java.sql.Timestamp(d.getValidFrom().getTime()));
-        ps.setTimestamp(6, d.getValidTo() == null ? null : new java.sql.Timestamp(d.getValidTo().getTime()));
-        ps.setBoolean(7, d.isStatus());
-        ps.setInt(8, managerId);
-        int affected = ps.executeUpdate();
+    public boolean insert(Discount d, int managerId) {
+        String sql = "INSERT INTO Discounts (discount_code, description, discount_percent, quantity, valid_from, valid_to, status, created_at, created_by) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, GETDATE(), ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, d.getCode());
+            ps.setString(2, d.getDescription());
+            ps.setDouble(3, d.getPercent());
+            ps.setInt(4, d.getQuantity());
+            ps.setTimestamp(5, d.getValidFrom() == null ? null : new java.sql.Timestamp(d.getValidFrom().getTime()));
+            ps.setTimestamp(6, d.getValidTo() == null ? null : new java.sql.Timestamp(d.getValidTo().getTime()));
+            ps.setBoolean(7, d.isStatus());
+            ps.setInt(8, managerId);
+            int affected = ps.executeUpdate();
 
-        // Lấy discount_id vừa tạo
-        int discountId = -1;
-        try (ResultSet rs = ps.getGeneratedKeys()) {
-            if (rs.next()) {
-                discountId = rs.getInt(1);
+            // Lấy discount_id vừa tạo
+            int discountId = -1;
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    discountId = rs.getInt(1);
+                }
             }
+            // Ghi log
+            insertDiscountLog(discountId, managerId, "INSERT", null, d);
+
+            return affected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        // Ghi log
-        insertDiscountLog(discountId, managerId, "INSERT", null, d);
-
-        return affected > 0;
-    } catch (Exception e) {
-        e.printStackTrace();
+        return false;
     }
-    return false;
-}
 
-public boolean canManagerEditDiscount(int discountId, int managerId) {
-    String sql = "SELECT 1 FROM Discounts WHERE discount_id = ? AND created_by = ?";
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-        ps.setInt(1, discountId);
-        ps.setInt(2, managerId);
-        ResultSet rs = ps.executeQuery();
-        return rs.next();
-    } catch (Exception e) {
-        e.printStackTrace();
+    public boolean canManagerEditDiscount(int discountId, int managerId) {
+        String sql = "SELECT 1 FROM Discounts WHERE discount_id = ? AND created_by = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, discountId);
+            ps.setInt(2, managerId);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
-    return false;
-}
-
 
     // Lấy thông tin discount theo ID
     public Discount getDiscountById(int id) {
@@ -190,83 +202,81 @@ public boolean canManagerEditDiscount(int discountId, int managerId) {
 
     // Cập nhật voucher
     public boolean update(Discount d, int managerId) {
-    // Kiểm tra quyền trước khi update
-    if (!canManagerEditDiscount(d.getId(), managerId)) {
-        return false; // hoặc throw exception
-    }
-    // Lấy bản ghi cũ để log
-    Discount old = getDiscountById(d.getId());
+        // Kiểm tra quyền trước khi update
+        if (!canManagerEditDiscount(d.getId(), managerId)) {
+            return false; // hoặc throw exception
+        }
+        // Lấy bản ghi cũ để log
+        Discount old = getDiscountById(d.getId());
 
-    String sql = "UPDATE Discounts SET description=?, discount_percent=?, quantity=?, valid_from=?, valid_to=?, status=?, updated_at=GETDATE() WHERE discount_id=?";
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-        ps.setString(1, d.getDescription());
-        ps.setDouble(2, d.getPercent());
-        ps.setInt(3, d.getQuantity());
-        ps.setTimestamp(4, d.getValidFrom() == null ? null : new java.sql.Timestamp(d.getValidFrom().getTime()));
-        ps.setTimestamp(5, d.getValidTo() == null ? null : new java.sql.Timestamp(d.getValidTo().getTime()));
-        ps.setBoolean(6, d.isStatus());
-        ps.setInt(7, d.getId());
-        int affected = ps.executeUpdate();
-        // Ghi log
-        insertDiscountLog(d.getId(), managerId, "UPDATE", old, d);
-        return affected > 0;
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return false;
-}
-
-    public boolean deleteDiscount(int id, int managerId) {
-    // Kiểm tra quyền trước khi xóa
-    if (!canManagerEditDiscount(id, managerId)) {
+        String sql = "UPDATE Discounts SET description=?, discount_percent=?, quantity=?, valid_from=?, valid_to=?, status=?, updated_at=GETDATE() WHERE discount_id=?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, d.getDescription());
+            ps.setDouble(2, d.getPercent());
+            ps.setInt(3, d.getQuantity());
+            ps.setTimestamp(4, d.getValidFrom() == null ? null : new java.sql.Timestamp(d.getValidFrom().getTime()));
+            ps.setTimestamp(5, d.getValidTo() == null ? null : new java.sql.Timestamp(d.getValidTo().getTime()));
+            ps.setBoolean(6, d.isStatus());
+            ps.setInt(7, d.getId());
+            int affected = ps.executeUpdate();
+            // Ghi log
+            insertDiscountLog(d.getId(), managerId, "UPDATE", old, d);
+            return affected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return false;
     }
-    // Lấy bản ghi cũ để log
-    Discount old = getDiscountById(id);
 
-    String sql = "DELETE FROM Discounts WHERE discount_id = ?";
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-        ps.setInt(1, id);
-        int affected = ps.executeUpdate();
-        // Log xóa
-        insertDiscountLog(id, managerId, "DELETE", old, null);
-        return affected > 0;
-    } catch (Exception e) {
-        e.printStackTrace();
+    public boolean deleteDiscount(int id, int managerId) {
+        // Kiểm tra quyền trước khi xóa
+        if (!canManagerEditDiscount(id, managerId)) {
+            return false;
+        }
+        // Lấy bản ghi cũ để log
+        Discount old = getDiscountById(id);
+
+        String sql = "DELETE FROM Discounts WHERE discount_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            int affected = ps.executeUpdate();
+            // Log xóa
+            insertDiscountLog(id, managerId, "DELETE", old, null);
+            return affected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
-    return false;
-}
 
-    
     private void insertDiscountLog(int discountId, int managerId, String actionType, Discount oldD, Discount newD) {
-    String sql = "INSERT INTO Discount_Audit_Log (discount_id, manager_id, action_type, action_time, " +
-            "old_description, new_description, old_discount_percent, new_discount_percent, old_quantity, new_quantity, " +
-            "old_valid_from, new_valid_from, old_valid_to, new_valid_to, old_status, new_status) " +
-            "VALUES (?, ?, ?, GETDATE(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-        ps.setInt(1, discountId);
-        ps.setInt(2, managerId);
-        ps.setString(3, actionType);
+        String sql = "INSERT INTO Discount_Audit_Log (discount_id, manager_id, action_type, action_time, "
+                + "old_description, new_description, old_discount_percent, new_discount_percent, old_quantity, new_quantity, "
+                + "old_valid_from, new_valid_from, old_valid_to, new_valid_to, old_status, new_status) "
+                + "VALUES (?, ?, ?, GETDATE(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, discountId);
+            ps.setInt(2, managerId);
+            ps.setString(3, actionType);
 
-        ps.setString(4, oldD != null ? oldD.getDescription() : null);
-        ps.setString(5, newD != null ? newD.getDescription() : null);
-        ps.setObject(6, oldD != null ? oldD.getPercent() : null);
-        ps.setObject(7, newD != null ? newD.getPercent() : null);
-        ps.setObject(8, oldD != null ? oldD.getQuantity() : null);
-        ps.setObject(9, newD != null ? newD.getQuantity() : null);
-        ps.setTimestamp(10, oldD != null && oldD.getValidFrom() != null ? new java.sql.Timestamp(oldD.getValidFrom().getTime()) : null);
-        ps.setTimestamp(11, newD != null && newD.getValidFrom() != null ? new java.sql.Timestamp(newD.getValidFrom().getTime()) : null);
-        ps.setTimestamp(12, oldD != null && oldD.getValidTo() != null ? new java.sql.Timestamp(oldD.getValidTo().getTime()) : null);
-        ps.setTimestamp(13, newD != null && newD.getValidTo() != null ? new java.sql.Timestamp(newD.getValidTo().getTime()) : null);
-        ps.setObject(14, oldD != null ? oldD.isStatus() : null);
-        ps.setObject(15, newD != null ? newD.isStatus() : null);
+            ps.setString(4, oldD != null ? oldD.getDescription() : null);
+            ps.setString(5, newD != null ? newD.getDescription() : null);
+            ps.setObject(6, oldD != null ? oldD.getPercent() : null);
+            ps.setObject(7, newD != null ? newD.getPercent() : null);
+            ps.setObject(8, oldD != null ? oldD.getQuantity() : null);
+            ps.setObject(9, newD != null ? newD.getQuantity() : null);
+            ps.setTimestamp(10, oldD != null && oldD.getValidFrom() != null ? new java.sql.Timestamp(oldD.getValidFrom().getTime()) : null);
+            ps.setTimestamp(11, newD != null && newD.getValidFrom() != null ? new java.sql.Timestamp(newD.getValidFrom().getTime()) : null);
+            ps.setTimestamp(12, oldD != null && oldD.getValidTo() != null ? new java.sql.Timestamp(oldD.getValidTo().getTime()) : null);
+            ps.setTimestamp(13, newD != null && newD.getValidTo() != null ? new java.sql.Timestamp(newD.getValidTo().getTime()) : null);
+            ps.setObject(14, oldD != null ? oldD.isStatus() : null);
+            ps.setObject(15, newD != null ? newD.isStatus() : null);
 
-        ps.executeUpdate();
-    } catch (Exception e) {
-        e.printStackTrace();
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-}
-    
 
     // Dùng cho AJAX hiển thị chi tiết
     public Discount getDiscountByIdAjax(int id) {

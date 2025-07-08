@@ -26,7 +26,7 @@
     <body>
 
         <div id="toast" class="toast"></div>
-        
+
 
         <div class="layout">
             <div class="sidebar">
@@ -144,16 +144,13 @@
                                                 <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy HH:mm"/>
                                             </td>
                                             <td>
-                                                <a href="javascript:void(0);" class="action-btn btn-view" title="Xem chi tiết"
-                                                   onclick="showFeedbackDetail(${feedback.feedbackId})">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
+
                                                 <a href="managerReplyFeedbackServlet?id=${feedback.feedbackId}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&rating=${fn:escapeXml(rating)}&dateFilter=${fn:escapeXml(dateFilter)}&poolId=${fn:escapeXml(poolId)}"
                                                    class="action-btn btn-reply"
                                                    title="Phản hồi">
                                                     <i class="fas fa-reply"></i>
                                                 </a>
-                                                <a href="managerDeleteFeedback?id=${feedback.feedbackId}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&rating=${fn:escapeXml(rating)}&dateFilter=${fn:escapeXml(dateFilter)}&poolId=${fn:escapeXml(poolId)}"
+                                                <a href="managerDeleteFeedbackServlet?id=${feedback.feedbackId}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&rating=${fn:escapeXml(rating)}&dateFilter=${fn:escapeXml(dateFilter)}&poolId=${fn:escapeXml(poolId)}"
                                                    class="action-btn btn-disable"
                                                    title="Xóa"
                                                    onclick="return confirm('Bạn có chắc chắn muốn xóa phản hồi này?');">
@@ -185,15 +182,7 @@
             </div>
         </div>
 
-        <!-- Modal xem chi tiết feedback -->
-        <div id="feedbackDetailModal" class="modal" style="display:none;">
-            <div class="modal-content">
-                <span class="close" onclick="closeFeedbackModal()">&times;</span>
-                <div id="feedbackDetailBody">
-                    <!-- Nội dung sẽ được load ở đây -->
-                </div>
-            </div>
-        </div>
+
 
         <script>
             function toggleComment(button) {
@@ -208,46 +197,9 @@
                 }
             }
 
-            function showFeedbackDetail(feedbackId) {
-                var modal = document.getElementById('feedbackDetailModal');
-                var body = document.getElementById('feedbackDetailBody');
-                body.innerHTML = `
-                    <div class="loading-spinner">
-                        <div class="spinner"></div>
-                        <p>Đang tải chi tiết phản hồi...</p>
-                    </div>
-                `;
-                modal.style.display = 'flex';
-                setTimeout(() => modal.classList.add('show'), 10);
 
-                var params = new URLSearchParams({id: feedbackId});
-                fetch("managerFeedbackDetailAjax", {
-                    method: "POST",
-                    headers: {"Content-Type": "application/x-www-form-urlencoded"},
-                    body: params
-                })
-                        .then(res => res.text())
-                        .then(html => {
-                            body.innerHTML = html;
-                        })
-                        .catch(error => {
-                            body.innerHTML = `
-                                <div class="error-message">
-                                    <h3>Lỗi</h3>
-                                    <p>Không thể tải chi tiết phản hồi. Vui lòng thử lại.</p>
-                                </div>
-                            `;
-                        });
-            }
 
-            function closeFeedbackModal() {
-                var modal = document.getElementById('feedbackDetailModal');
-                modal.classList.remove('show');
-                setTimeout(() => {
-                    modal.style.display = 'none';
-                    document.getElementById('feedbackDetailBody').innerHTML = '';
-                }, 300);
-            }
+
 
             // Tự động submit form khi thay đổi filter
             document.addEventListener('DOMContentLoaded', function () {
@@ -298,12 +250,12 @@
         </script>
         <c:if test="${not empty success}">
             <script>
-        showToast("<i class='fas fa-check-circle'></i> ${success}", "success");
+                showToast("<i class='fas fa-check-circle'></i> ${success}", "success");
             </script>
         </c:if>
         <c:if test="${not empty error}">
             <script>
-        showToast("<i class='fas fa-exclamation-circle'></i> ${error}", "error");
+                showToast("<i class='fas fa-exclamation-circle'></i> ${error}", "error");
             </script>
         </c:if>
     </body>

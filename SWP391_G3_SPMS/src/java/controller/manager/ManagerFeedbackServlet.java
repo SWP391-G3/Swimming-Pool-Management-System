@@ -133,15 +133,15 @@ public class ManagerFeedbackServlet extends HttpServlet {
         }
 
         // Xử lý tham số pageSize
-        int pageSize = 10;
+        int pageSize = 5;
         if (pageSizeStr != null && !pageSizeStr.isEmpty()) {
             try {
                 pageSize = Integer.parseInt(pageSizeStr);
                 if (pageSize < 1) {
-                    pageSize = 10;
+                    pageSize = 5;
                 }
             } catch (NumberFormatException e) {
-                pageSize = 10;
+                pageSize = 5;
             }
         }
 
