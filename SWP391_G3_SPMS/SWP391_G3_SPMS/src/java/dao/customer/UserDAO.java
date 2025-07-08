@@ -16,7 +16,7 @@ import util.PasswordEncryption;
 public class UserDAO extends DBContext {
 
     public List<User> list;
-
+   
     public User getUserByID(int userId) {
         PreparedStatement stm = null;
         ResultSet rs = null;

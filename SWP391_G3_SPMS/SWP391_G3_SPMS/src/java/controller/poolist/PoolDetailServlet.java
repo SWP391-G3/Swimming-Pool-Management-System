@@ -20,7 +20,7 @@ public class PoolDetailServlet extends HttpServlet {
             throws ServletException, IOException {
         String poolIdStr = request.getParameter("poolId");
         if (poolIdStr == null || poolIdStr.isEmpty()) {
-            response.sendRedirect("homepage");
+            response.sendRedirect("customerViewPoolList");
             return;
         }
         try {
@@ -29,7 +29,7 @@ public class PoolDetailServlet extends HttpServlet {
             PoolsCustomer pool = dao.getPoolById(poolId);
             if (pool == null) {
 
-                response.sendRedirect("homepage");
+                response.sendRedirect("customerViewPoolList");
                 return;
             }
 
@@ -45,7 +45,7 @@ public class PoolDetailServlet extends HttpServlet {
             request.setAttribute("feedbacks", feedbacks);
             request.getRequestDispatcher("pool-detail.jsp").forward(request, response);
         } catch (NumberFormatException e) {
-            response.sendRedirect("homepage");
+            response.sendRedirect("customerViewPoolList");
         }
     }
 }

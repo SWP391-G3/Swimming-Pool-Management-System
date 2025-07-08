@@ -172,7 +172,7 @@
                 <c:if test="${not empty pool}">
                     <a class="btn-booking"
                        
-                       href="VietServletBookingVaoDay">
+                       href="booking?service=showBookingPage&poolId=${pool.pool_id}">
                         Đặt bể bơi
                     </a>
                 </c:if>

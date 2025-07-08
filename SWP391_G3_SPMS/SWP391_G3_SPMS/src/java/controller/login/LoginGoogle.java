@@ -87,10 +87,15 @@ public class LoginGoogle extends HttpServlet {
 
             }
             // 4. Set session and redirect
+          
             HttpSession session = request.getSession();
             session.setAttribute("currentUser", user);
 
-            response.sendRedirect("customerHome");
+
+            session.setAttribute("message", "Đăng nhập Google thành công!");
+
+
+            response.sendRedirect("customerHome");     
         } catch (GeneralSecurityException e) {
             throw new ServletException(e);
         }

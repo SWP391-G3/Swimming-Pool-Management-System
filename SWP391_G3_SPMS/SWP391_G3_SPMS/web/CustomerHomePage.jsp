@@ -37,6 +37,30 @@
     </head>
 
     <body class="main-layout">
+
+
+
+        <c:if test="${not empty sessionScope.message}">
+            <div id="loginSuccessToast"
+                 style="position:fixed;top:1.5rem;left:50%;transform:translateX(-50%);
+                 background:#38a169;color:#fff;padding:0.75rem 1.25rem;
+                 border-radius:0.5rem;box-shadow:0 4px 12px rgba(0,0,0,0.15);
+                 z-index:9999;font-weight:600;display:flex;align-items:center;gap:.5rem;">
+                ✅ ${sessionScope.message}
+                <button onclick="this.parentElement.style.display = 'none'"
+                        style="margin-left:0.75rem;font-weight:bold;">×</button>
+            </div>
+
+            <c:remove var="message" scope="session" />
+            <script>
+                setTimeout(() => {
+                    const toast = document.getElementById('loginSuccessToast');
+                    if (toast)
+                        toast.style.display = 'none';
+                }, 4000);
+            </script>
+        </c:if>
+
         <%@include file="header.jsp" %>
 
         <!-- banner -->
@@ -148,23 +172,24 @@
 
                 <!-- Danh sách bể bơi -->
                 <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                    <% 
+                    <%
                         List<Pool> listPool = (List<Pool>) request.getAttribute("listPool");
                         int count = 0;
-                        if(listPool != null){
-                        for(Pool p : listPool){
+                        if (listPool != null) {
+                            for (Pool p : listPool) {
                     %>
                     <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group border border-gray-200">
                         <div class="overflow-hidden">
-                            <img src="<%= p.getPool_image() %>" alt="Pool <%= count+1 %>" 
+                            <img src="<%= p.getPool_image()%>" alt="Pool <%= count + 1%>" 
                                  class="w-full h-60 object-cover transform group-hover:scale-105 group-hover:brightness-110 transition duration-500" />
                         </div>
                         <div class="p-5">
-                            <h3 class="text-xl font-bold text-[#33CCFF] mb-2">Bể Bơi <%= ++count %></h3>
-                            <p class="text-gray-700 text-sm leading-relaxed"><%= p.getPool_description() %></p>
+                            <h3 class="text-xl font-bold text-[#33CCFF] mb-2">Bể Bơi <%= ++count%></h3>
+                            <p class="text-gray-700 text-sm leading-relaxed"><%= p.getPool_description()%></p>
                         </div>
                     </div>
-                    <% }} %>
+                    <% }
+                        } %>
                 </div>
             </div>
         </div>
@@ -182,18 +207,18 @@
 
                 <!-- Lưới hình ảnh -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    <% 
+                    <%
                         List<Pool> listPool2 = (List<Pool>) request.getAttribute("listPool2");
-                        if(listPool2 != null){
-                            for(Pool p : listPool2){
+                        if (listPool2 != null) {
+                            for (Pool p : listPool2) {
                     %>
-                    <div class="relative group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition duration-300" data-index="<%= listPool2.indexOf(p) %>">
-                        <img src="<%= p.getPool_image() %>" 
+                    <div class="relative group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition duration-300" data-index="<%= listPool2.indexOf(p)%>">
+                        <img src="<%= p.getPool_image()%>" 
                              alt="Ảnh bể bơi" 
                              class="w-full h-52 object-cover transform group-hover:scale-110 group-hover:brightness-75 transition duration-500" />
                         <!-- Overlay -->
                         <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
-                            <span class="view-image-btn text-white font-semibold text-lg bg-black bg-opacity-50 px-4 py-2 rounded cursor-pointer" data-index="<%= listPool2.indexOf(p) %>">Xem ảnh</span>
+                            <span class="view-image-btn text-white font-semibold text-lg bg-black bg-opacity-50 px-4 py-2 rounded cursor-pointer" data-index="<%= listPool2.indexOf(p)%>">Xem ảnh</span>
                         </div>
                     </div>
                     <!-- Lightbox popup -->
@@ -204,7 +229,8 @@
                         <button id="nextBtn" class="absolute right-4 text-white text-4xl font-bold">&rsaquo;</button>
                     </div>
 
-                    <% }} %>
+                    <% }
+                        } %>
                 </div>
                 <script>
                     const images = [...document.querySelectorAll('.view-image-btn')].map(btn =>
@@ -269,21 +295,21 @@
 
                 <!-- Danh sách đánh giá -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <% 
+                    <%
                         List<FeedbackHomepage> listPool3 = (List<FeedbackHomepage>) request.getAttribute("listPool3");
-                        if(listPool3 != null){
-                            for(FeedbackHomepage f : listPool3){
+                        if (listPool3 != null) {
+                            for (FeedbackHomepage f : listPool3) {
                                 int rating = f.getRating();
                     %>
                     <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 flex flex-col overflow-hidden">
-                        <img src="<%= f.getPool_image() %>" alt="Hình ảnh bể bơi" class="w-full h-48 object-cover rounded-t-2xl" />
+                        <img src="<%= f.getPool_image()%>" alt="Hình ảnh bể bơi" class="w-full h-48 object-cover rounded-t-2xl" />
                         <div class="p-5 flex flex-col flex-grow">
-                            <h3 class="text-lg font-semibold text-[#33CCFF] mb-2"><%= f.getPool_name() %></h3>
+                            <h3 class="text-lg font-semibold text-[#33CCFF] mb-2"><%= f.getPool_name()%></h3>
                             <!-- Rating -->
                             <div class="flex items-center mb-3">
-                                <% for(int i = 1; i <= 5; i++) { %>
+                                <% for (int i = 1; i <= 5; i++) {%>
                                 <svg xmlns="http://www.w3.org/2000/svg" 
-                                     class="h-5 w-5 <%= i <= rating ? "text-yellow-400" : "text-gray-300" %>" 
+                                     class="h-5 w-5 <%= i <= rating ? "text-yellow-400" : "text-gray-300"%>" 
                                      viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.956a1 1 0 00.95.69h4.162c.969 0 
                                       1.371 1.24.588 1.81l-3.37 2.45a1 1 0 00-.364 1.118l1.286 3.957c.3.921-.755 
@@ -291,13 +317,14 @@
                                       1 0 00-.364-1.118l-3.37-2.45c-.784-.57-.38-1.81.588-1.81h4.162a1 1 
                                       0 00.951-.69l1.285-3.956z" />
                                 </svg>
-                                <% } %>
+                                <% }%>
                             </div>
                             <!-- Comment -->
-                            <p class="text-gray-600 text-sm flex-grow"><%= f.getComment() %></p>
+                            <p class="text-gray-600 text-sm flex-grow"><%= f.getComment()%></p>
                         </div>
                     </div>
-                    <% }} %>
+                    <% }
+                        }%>
                 </div>
             </div>
         </div>
