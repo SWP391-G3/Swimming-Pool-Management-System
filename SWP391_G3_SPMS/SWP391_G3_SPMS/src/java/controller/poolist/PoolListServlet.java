@@ -62,7 +62,7 @@ public class PoolListServlet extends HttpServlet {
             request.getRequestDispatcher("customerViewPoolList.jsp").forward(request, response);
             return;
         }
-//        request.getRequestDispatcher("viewpoolList.jsp").forward(request, response);
+        request.getRequestDispatcher("viewpoolList.jsp").forward(request, response);
     }
 
 }

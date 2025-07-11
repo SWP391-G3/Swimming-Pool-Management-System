@@ -74,18 +74,26 @@
             <file>file:/E:/HK_5_SU2025/SWP_ITER2/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dal/DBContext.java</file>
         </group>
         <group>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/pool_service_list.jsp</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/viewpoolList.jsp</file>
             <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/model/customer/Pool.java</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dao/customer/UserDAO.java</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/HomePage/HomeServlet.java</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/HomePage/CustomerHomePageServlet.java</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/WEB-INF/web.xml</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/login.jsp</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/CustomerHomePage.jsp</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/HomePage.jsp</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/login/RegisterServlet.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dao/customer/BookingServiceDAO.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dao/customer/DiscountDAO.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dao/customer/PaymentDAO.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/model/customer/PoolsCustomer.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/poolist/PoolListServlet.java</file>
             <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/login/ResetPasswordServlet.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dao/customer/BookingDetailDAO.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dao/customer/PoolsCustomerDAO.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/login/LogoutServlet.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/customerViewPoolList.jsp</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dao/customer/PoolDAO.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dao/customer/PoolServiceDAO.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/poolist/PoolDetailServlet.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dal/DBContext.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/pool-detail.jsp</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dao/customer/FeedbackDAO.java</file>
             <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/login/LoginServlet.java</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/login/LoginGoogle.java</file>
         </group>
     </open-files>
 </project-private>
