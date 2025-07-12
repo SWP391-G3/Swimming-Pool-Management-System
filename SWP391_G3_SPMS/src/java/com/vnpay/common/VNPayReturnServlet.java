@@ -1,8 +1,7 @@
 package com.vnpay.common;
 
 import com.google.gson.JsonObject;
-import dao.customer.BookingDetailDAO;
-import dao.customer.PaymentDAO;
+
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.ParseException;
@@ -16,9 +15,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import model.customer.BookingDetails;
+
+import java.sql.Time;
+import dao.customer.*;
+import jakarta.servlet.http.HttpSession;
+import model.customer.*;
+import util.EmailUtil;
 
 @WebServlet(name = "VNPayReturnServlet", urlPatterns = {"/vnpayreturn"})
 public class VNPayReturnServlet extends HttpServlet {
@@ -26,7 +31,7 @@ public class VNPayReturnServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        HttpSession session = request.getSession();
         // Lấy param và build map để check chữ ký
         Map<String, String> fields = new HashMap<>();
         Enumeration<String> params = request.getParameterNames();
@@ -86,6 +91,32 @@ public class VNPayReturnServlet extends HttpServlet {
                         paymentDAO.updatePaymentStatus(bookingId, "completed");
                         paymentSuccess = true;
                         errorMessage = "";
+
+                        // Lấy lại dữ liệu từ session
+                        User user = (User) session.getAttribute("currentUser");
+                        String email = (user != null) ? user.getEmail() : "";
+                        String customerName = (user != null) ? user.getFull_name() : "";
+
+                        BookingPageData bookingData = (BookingPageData) session.getAttribute("bookingPageData");
+                        if (bookingData != null) {
+                            String ticketInfo = buildTicketInfo(bookingData);
+
+                            try {
+                                EmailUtil.sendBookingConfirmation(
+                                        email,
+                                        customerName,
+                                        String.valueOf(bookingId),
+                                        bookingDate,
+                                        ticketInfo
+                                );
+                                // Xóa khỏi session sau khi gửi mail
+                                session.removeAttribute("bookingPageData");
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
+                        } else {
+                            errorMessage = "Dữ liệu booking đã hết hạn. Vui lòng thực hiện lại giao dịch.";
+                        }
                     } else {
                         errorMessage = "Cannot find booking information!";
                     }
@@ -195,30 +226,6 @@ public class VNPayReturnServlet extends HttpServlet {
             response.append(output);
         }
         in.close();
-
-        // Xử lý kết quả hoàn tiền và cập nhật trạng thái
-        String successMsg = null, errorMsg = null;
-        if (responseCode == 200 && response.toString().contains("\"vnp_ResponseCode\":\"00\"")) {
-            // Hoàn tiền thành công: cập nhật trạng thái booking và payment
-            try {
-                int bookingId = Integer.parseInt(vnp_TxnRef);
-                BookingDetailDAO bookingDAO = new BookingDetailDAO();
-                PaymentDAO paymentDAO = new PaymentDAO();
-                bookingDAO.cancelBooking(bookingId);
-                paymentDAO.updatePaymentStatus(bookingId, "refunded"); // trạng thái payment thành 'refunded'
-                successMsg = "Hoàn tiền thành công! Đơn booking đã bị huỷ.";
-            } catch (Exception e) {
-                errorMsg = "Hoàn tiền thành công nhưng lỗi khi cập nhật trạng thái booking/payment!";
-            }
-        } else {
-            errorMsg = "Hoàn tiền thất bại! " + response.toString();
-        }
-
-        req.setAttribute("successMsg", successMsg);
-        req.setAttribute("errorMsg", errorMsg);
-
-        // Trả về lại form (giữ lại các thông tin đã điền)
-        req.getRequestDispatcher("vnpayRefund.jsp").forward(req, resp);
     }
 
     private String buildHashString(Map<String, String> fields) {
@@ -292,5 +299,53 @@ public class VNPayReturnServlet extends HttpServlet {
             default:
                 return "Payment failed with code: " + responseCode;
         }
+    }
+
+    private String buildTicketInfo(BookingPageData bookingData) {
+        StringBuilder info = new StringBuilder();
+        info.append("Tên hồ bơi: ").append(
+                bookingData.getPool() != null ? bookingData.getPool().getPool_name() : ""
+        ).append("\n");
+        info.append("Địa chỉ: ").append(
+                bookingData.getPool() != null ? bookingData.getPool().getPool_address() : ""
+        ).append("\n");
+        info.append("Ngày sử dụng: ").append(
+                bookingData.getBookingDate() != null ? bookingData.getBookingDate().toString() : ""
+        ).append("\n");
+        info.append("Thời gian: ")
+                .append(bookingData.getStartTime() != null ? bookingData.getStartTime().toString() : "")
+                .append(" - ")
+                .append(bookingData.getEndTime() != null ? bookingData.getEndTime().toString() : "")
+                .append("\n");
+        info.append("Số người: ").append(bookingData.getSlotCount()).append("\n");
+
+        info.append("Danh sách vé:\n");
+        if (bookingData.getSelectedTickets() != null) {
+            for (TicketSelection t : bookingData.getSelectedTickets()) {
+                info.append("- ").append(t.getTypeName())
+                        .append(" x ").append(t.getQuantity())
+                        .append(" (").append(t.getPrice()).append("đ/vé)\n");
+            }
+        }
+
+        if (bookingData.getSelectedRents() != null && !bookingData.getSelectedRents().isEmpty()) {
+            info.append("Dịch vụ thuê kèm:\n");
+            for (PoolServiceSelection r : bookingData.getSelectedRents()) {
+                info.append("- ").append(r.getServiceName())
+                        .append(" x ").append(r.getQuantity())
+                        .append(" (").append(r.getPrice()).append("đ/lần)\n");
+            }
+        }
+
+        if (bookingData.getSelectedDiscount() != null) {
+            info.append("Voucher/giảm giá áp dụng: ")
+                    .append(bookingData.getSelectedDiscount().getDiscountCode())
+                    .append(" (-").append(bookingData.getDiscountAmount()).append("đ)\n");
+        }
+
+        info.append("Tổng tiền: ").append(bookingData.getTotalAmount()).append("đ\n");
+        info.append("Thành tiền sau giảm giá: ").append(bookingData.getFinalAmount()).append("đ\n");
+
+        return info.toString();
     }
 }

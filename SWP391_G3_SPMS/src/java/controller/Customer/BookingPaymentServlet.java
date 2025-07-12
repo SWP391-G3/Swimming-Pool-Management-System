@@ -133,7 +133,6 @@ public class BookingPaymentServlet extends HttpServlet {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            response.sendRedirect("payment-error.jsp");
         }
     }
 
