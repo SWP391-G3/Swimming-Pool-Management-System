@@ -542,4 +542,36 @@ public class UserDAO extends DBContext {
         }
     }
 
+    // Kiểm tra email đã tồn tại cho user khác userId chưa
+    public boolean isEmailExistsForOtherUser(String email, int userId) {
+        String sql = "SELECT user_id FROM Users WHERE email = ? AND user_id <> ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setString(1, email);
+            st.setInt(2, userId);
+            ResultSet rs = st.executeQuery();
+            boolean exists = rs.next();
+            rs.close();
+            return exists;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+// Kiểm tra phone đã tồn tại cho user khác userId chưa
+    public boolean isPhoneExistsForOtherUser(String phone, int userId) {
+        String sql = "SELECT user_id FROM Users WHERE phone = ? AND user_id <> ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setString(1, phone);
+            st.setInt(2, userId);
+            ResultSet rs = st.executeQuery();
+            boolean exists = rs.next();
+            rs.close();
+            return exists;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

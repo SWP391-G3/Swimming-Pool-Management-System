@@ -10,6 +10,7 @@
     User user = pageData.getUser();
     Pool pool = pageData.getPool();
     List<TicketType> ticketTypes = pageData.getTicketTypes();
+    Map<Integer, Integer> ticketTypeSlotMap = (java.util.Map<Integer, Integer>) request.getAttribute("ticketTypeSlotMap");
     List<PoolService> poolServices = pageData.getPoolServices();
     List<Discounts> discounts = pageData.getDiscounts();
 %>  
@@ -414,7 +415,11 @@
             // Cập nhật slotCount trước khi submit
             const slotCountInput = document.getElementById('inputSlotCount');
             if (slotCountInput) {
-            const totalSlotCount = selectedTickets.reduce((sum, t) => sum + t.quantity, 0);
+            const totalSlotCount = selectedTickets.reduce((sum, t) => {
+            const type = ticketTypes.find(tt => tt.id === t.id);
+            const slot = type ? type.slot : 1;
+            return sum + t.quantity * slot;
+            }, 0);
             slotCountInput.value = totalSlotCount;
             }
 
@@ -425,12 +430,14 @@
             return false;
             }
 
-
-
             // Validate: Số lượng vé tối đa 10
-            const totalTicketQty = selectedTickets.reduce((sum, t) => sum + t.quantity, 0);
-            if (totalTicketQty > 10) {
-            alert("Bạn chỉ được đặt tối đa 10 vé!");
+            const totalSlotCount = selectedTickets.reduce((sum, t) => {
+            const type = ticketTypes.find(tt => tt.id === t.id);
+            const slot = type ? type.slot : 1;
+            return sum + t.quantity * slot;
+            }, 0);
+            if (totalSlotCount > 10) {
+            alert("Bạn chỉ được đặt tối đa 10 người!");
             e.preventDefault();
             return false;
             }
@@ -438,14 +445,6 @@
             // Nếu muốn kiểm tra bắt buộc phải có ít nhất 1 vé
             if (selectedTickets.length === 0) {
             alert("Bạn phải chọn ít nhất 1 vé!");
-            e.preventDefault();
-            return false;
-            }
-
-            // Validate: Số lượng đồ thuê tối đa 10
-            const totalRentQty = selectedRents.reduce((sum, r) => sum + r.quantity, 0);
-            if (totalRentQty > 10) {
-            alert("Bạn chỉ được thuê tối đa 10 món!");
             e.preventDefault();
             return false;
             }
@@ -682,12 +681,14 @@
     <%
         for (int i = 0; i < ticketTypes.size(); i++) {
             TicketType t = ticketTypes.get(i);
+            int slot = ticketTypeSlotMap.getOrDefault(t.getTicketTypeId(), 1);
     %>
     {
     id: <%= t.getTicketTypeId()%>,
             name: "<%= t.getTypeName()%>",
             price: <%= t.getBasePrice() != null ? t.getBasePrice().intValue() : 0%>,
-            description: "<%= t.getDescription() != null ? t.getDescription().replace("\"", "\\\"") : ""%>"
+            description: "<%= t.getDescription() != null ? t.getDescription().replace("\"", "\\\"") : ""%>",
+            slot: <%= slot%>
     }<%= (i < ticketTypes.size() - 1) ? "," : ""%>
     <% } %>
     ];
@@ -858,23 +859,23 @@
     ticketListArea.appendChild(box);
     });
     }
-    
+
     // --------- Hoàn tiền ---------
     const policyBtn = document.getElementById("policyBtn");
     const policyModal = document.getElementById("policyModal");
     const closePolicyModal = document.getElementById("closePolicyModal");
     if (policyBtn && policyModal && closePolicyModal) {
-        policyBtn.onclick = function () {
-            policyModal.classList.remove("hidden");
-        };
-        closePolicyModal.onclick = function () {
-            policyModal.classList.add("hidden");
-        };
-        policyModal.onclick = function (e) {
-            if (e.target === policyModal) {
-                policyModal.classList.add("hidden");
-            }
-        };
+    policyBtn.onclick = function () {
+    policyModal.classList.remove("hidden");
+    };
+    closePolicyModal.onclick = function () {
+    policyModal.classList.add("hidden");
+    };
+    policyModal.onclick = function (e) {
+    if (e.target === policyModal) {
+    policyModal.classList.add("hidden");
+    }
+    };
     }
 
     // --------- Đồ thuê ---------
@@ -944,9 +945,19 @@
     plusBtn.className =
             "w-9 h-9 text-lg font-bold text-gray-700 hover:bg-gray-100 rounded-r transition";
     plusBtn.onclick = function () {
+    // Tính tổng số người (slot) đã đặt
+    const slotCount = selectedTickets.reduce((sum, t) => {
+    const type = ticketTypes.find(tt => tt.id === t.id);
+    const slot = type ? type.slot : 1;
+    return sum + t.quantity * slot;
+    }, 0);
+    if (rent.quantity < slotCount) {
     rent.quantity++;
     renderSelectedRents();
     updatePaymentDetail();
+    } else {
+    alert("Bạn chỉ được thuê tối đa " + slotCount + " " + rent.name + " (tương ứng tổng số người/vé đã đặt)!");
+    }
     };
     const qtySpan = document.createElement("span");
     qtySpan.className = "px-3 font-semibold";
@@ -1225,7 +1236,11 @@
     // Cập nhật giá trị input hidden slotCount
     const slotCountInput = document.getElementById('inputSlotCount');
     if (slotCountInput) {
-    const totalSlotCount = selectedTickets.reduce((sum, t) => sum + t.quantity, 0);
+    const totalSlotCount = selectedTickets.reduce((sum, t) => {
+    const type = ticketTypes.find(tt => tt.id === t.id);
+    const slot = type ? type.slot : 1;
+    return sum + t.quantity * slot;
+    }, 0);
     slotCountInput.value = totalSlotCount;
     }
 </script>

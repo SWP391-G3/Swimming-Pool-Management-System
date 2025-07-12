@@ -24,31 +24,58 @@
                     </div>
                 </div>
                 <section class="w-full bg-white border border-gray-200 rounded-xl shadow-lg p-10 flex flex-col gap-8">
+                    <!-- Hiển thị thông báo thành công/thất bại nếu có -->
+                    <c:if test="${not empty successMsg}">
+                        <div class="mb-6 px-4 py-3 bg-green-100 text-green-800 rounded text-center font-semibold">
+                            ${successMsg}
+                        </div>
+                    </c:if>
+                    <c:if test="${not empty errorMsg}">
+                        <div class="mb-6 px-4 py-3 bg-red-100 text-red-800 rounded text-center font-semibold">
+                            ${errorMsg}
+                        </div>
+                    </c:if>
                     <form action="vnpayrefund" id="frmrefund" method="POST" class="flex flex-col gap-8">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
-                                <label for="order_id" class="block mb-1 font-medium text-gray-700">Mã giao dịch cần hoàn</label>
-                                <input class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-100" id="order_id" name="order_id" type="text" value="${param.order_id}" readonly/>
+                                <label class="block mb-1 font-medium text-gray-700">Mã giao dịch cần hoàn</label>
+                                <div class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-100 text-gray-800">
+                                    ${order_id}
+                                </div>
+                                <input type="hidden" name="order_id" value="${order_id}" />
                             </div>
                             <div>
-                                <label for="amount" class="block mb-1 font-medium text-gray-700">Số tiền hoàn</label>
-                                <input class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-100" id="amount" name="amount" type="number" min="1" max="100000000" value="${param.amount}" readonly/>
+                                <label class="block mb-1 font-medium text-gray-700">Số tiền hoàn</label>
+                                <div class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-100 text-gray-800">
+                                    ${amount}
+                                </div>
+                                <input type="hidden" name="amount" value="${amount}" />
                             </div>
                             <div>
-                                <label for="trantype" class="block mb-1 font-medium text-gray-700">Kiểu hoàn tiền</label>
-                                <input class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-100" id="trantype" name="trantype" type="text" value="02" readonly/>
+                                <label class="block mb-1 font-medium text-gray-700">Kiểu hoàn tiền</label>
+                                <div class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-100 text-gray-800">
+                                    Chuyển khoản - VNPay
+                                </div>
+                                <input type="hidden" name="trantype" value="02" />
                             </div>
                             <div>
-                                <label for="trans_date" class="block mb-1 font-medium text-gray-700">Thời gian khởi tạo giao dịch</label>
-                                <input class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-100" id="trans_date" name="trans_date" type="text" value="${param.trans_date}" readonly/>
+                                <label class="block mb-1 font-medium text-gray-700">Thời gian khởi tạo giao dịch</label>
+                                <div class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-100 text-gray-800">
+                                    ${trans_date}
+                                </div>
+                                <input type="hidden" name="trans_date" value="${trans_date}" />
                             </div>
                         </div>
                         <div>
-                            <label for="user" class="block mb-1 font-medium text-gray-700">User khởi tạo hoàn</label>
-                            <input class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-100" id="user" name="user" type="text" value="${param.user}" readonly/>
+                            <label class="block mb-1 font-medium text-gray-700">Người yêu cầu hoàn tiền</label>
+                            <div class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-100 text-gray-800">
+                                ${user}
+                            </div>
+                            <input type="hidden" name="user" value="${user}" />
                         </div>
                         <div class="flex justify-end">
-                            <button type="submit" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-2 rounded-lg shadow transition text-lg active:scale-95">
+                            <button type="submit"
+                                    class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-2 rounded-lg shadow transition text-lg active:scale-95">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                 </svg>

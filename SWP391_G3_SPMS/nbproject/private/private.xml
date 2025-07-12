@@ -74,10 +74,7 @@
             <file>file:/E:/HK_5_SU2025/SWP_ITER2/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dal/DBContext.java</file>
         </group>
         <group>
-            <file>file:/C:/Users/Administrator/Desktop/SWP391_G3_SPMS/web/BookingPayment.jsp</file>
-            <file>file:/C:/Users/Administrator/Desktop/SWP391_G3_SPMS/src/java/controller/Customer/BookingPaymentServlet.java</file>
-            <file>file:/C:/Users/Administrator/Desktop/SWP391_G3_SPMS/src/java/com/vnpay/common/VNPayReturnServlet.java</file>
-            <file>file:/C:/Users/Administrator/Desktop/SWP391_G3_SPMS/src/java/com/vnpay/common/Config.java</file>
+            <file>file:/C:/Users/Administrator/Desktop/SWP391_G3_SPMS/web/Booking.jsp</file>
         </group>
     </open-files>
 </project-private>
