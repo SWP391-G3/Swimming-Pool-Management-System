@@ -45,6 +45,9 @@ public class ContactWithAdminDAO extends DBContext{
         } catch (SQLException e) {
             throw new RuntimeException("Can't query all ò contact",e);
         }
+        
     }
+    
+    
     
 }
