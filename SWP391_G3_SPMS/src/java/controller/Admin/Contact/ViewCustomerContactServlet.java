@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package controller.Admin.Contact;
 
 import dao.admin.ContactWithAdminDAO;
@@ -20,36 +19,39 @@ import model.admin.ContactWithAdmin;
  *
  * @author Lenovo
  */
-@WebServlet(name="ViewCustomerContactServlet", urlPatterns={"/adminViewCustomerContact"})
+@WebServlet(name = "ViewCustomerContactServlet", urlPatterns = {"/adminViewCustomerContact"})
 public class ViewCustomerContactServlet extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ViewCustomerContactServlet</title>");  
+            out.println("<title>Servlet ViewCustomerContactServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ViewCustomerContactServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet ViewCustomerContactServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    } 
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -57,15 +59,40 @@ public class ViewCustomerContactServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         ContactWithAdminDAO dao = new ContactWithAdminDAO();
-        List<ContactWithAdmin> list = dao.getAllContact();
+        int totalRecords = dao.getTotalRecordOfContact();
+        int page = 1;
+        int contactSize = 5;
+        int totalPages = (int) Math.ceil(totalRecords * 1.0 / contactSize);
+        if (totalPages == 0) {
+            totalPages = 1;
+        }
+        try {
+            String pageStr = request.getParameter("page");
+            if (pageStr != null) {
+                page = Integer.parseInt(pageStr);
+                if (page < 1) {
+                    page = 1;
+                } else if (page > totalPages) {
+                    page = totalPages;
+                }
+            }
+        } catch (NumberFormatException e) {
+            page = 1;
+        }
+        int start = (page - 1) * contactSize;
+        List<ContactWithAdmin> list = dao.getAllContact(start, contactSize);
         request.setAttribute("listContact", list);
+        request.setAttribute("totalrecords", totalRecords);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
         request.getRequestDispatcher("adminViewCustomerContact.jsp").forward(request, response);
-    } 
+    }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -73,12 +100,13 @@ public class ViewCustomerContactServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override

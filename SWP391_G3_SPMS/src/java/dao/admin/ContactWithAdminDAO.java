@@ -22,11 +22,16 @@ public class ContactWithAdminDAO extends DBContext{
         this.list = new ArrayList<>();
     }
     
-    public List<ContactWithAdmin> getAllContact(){
+    public List<ContactWithAdmin> getAllContact(int start,int totalSize){
         String sql = """
                      Select * from Contacts
+                     ORDER BY c.created_at DESC
+                     OFFSET ? ROWS
+                     FETCH NEXT ? ROWS ONLY;
                      """;
         try(PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
+            st.setInt(1, start);
+            st.setInt(2, totalSize);
             while (rs.next()) {                
                 ContactWithAdmin c = new ContactWithAdmin();
                 c.setContact_id(rs.getInt(1));
