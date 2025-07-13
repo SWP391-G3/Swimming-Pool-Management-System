@@ -296,7 +296,7 @@
                                         <i class="fas fa-eye mr-1"></i>Xem
                                     </a>
 
-                                    <a href="adminReplyContact?id=<%= c.getContact_id() %>" 
+                                    <a href="adminResponseContact?id=<%= c.getContact_id() %>" 
                                        class="inline-block bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs">
                                         <i class="fas fa-reply mr-1"></i>Phản hồi
                                     </a>

@@ -161,4 +161,32 @@ public class ContactWithAdminDAO extends DBContext {
         return count;
     }
 
+    public ContactWithAdmin getContactWithAdmin(int contact_id) {
+        String sql = """
+                     Select * from Contacts
+                     where contact_id = ?
+                     """;
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, contact_id);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                ContactWithAdmin c = new ContactWithAdmin();
+                c.setContact_id(rs.getInt(1));
+                c.setCustomer_id(rs.getInt(2));
+                c.setCustomer_name(rs.getString(3));
+                c.setCustomer_email(rs.getString(4));
+                c.setSubject(rs.getString(5));
+                c.setContent(rs.getString(6));
+                Date date = rs.getDate(7);
+                LocalDate createDate = (date != null) ? date.toLocalDate() : null;
+                c.setCreated_at(createDate);
+                c.setIs_resolved(rs.getBoolean(8));
+                return c;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(),e);
+        }
+        return null;
+    }
+
 }
