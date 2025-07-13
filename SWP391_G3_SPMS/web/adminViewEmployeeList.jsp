@@ -169,6 +169,18 @@
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                 </a>
 
+                <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3 mt-4">
+                    <i class="fas fa-phone"></i> Liên hệ 
+                </div>
+
+                <a href="adminViewCustomerContact" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                    <div class="nav-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <span class="font-medium text-sm">Liên hệ khách hàng</span>
+                    <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
+                </a>
+
                 <div class="mt-3 pt-3 border-t border-white/20">
                     <a href="LogoutServlet"
                        class="logout-btn nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10 font-semibold">
@@ -425,54 +437,54 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
-                                        // Thay thế đoạn JavaScript hiện tại bằng đoạn này:
-                                        $(document).ready(function () {
-                                            $('.btn-view-employee').click(function (e) {
-                                                e.preventDefault();
+                                    // Thay thế đoạn JavaScript hiện tại bằng đoạn này:
+                                    $(document).ready(function () {
+                                        $('.btn-view-employee').click(function (e) {
+                                            e.preventDefault();
 
-                                                const $this = $(this);
-                                                const isActive = $this.data('status') === "Đang hoạt động";
-                                                const staffId = $this.data('id');
-                                                const branchId = $this.data('branch-id');
+                                            const $this = $(this);
+                                            const isActive = $this.data('status') === "Đang hoạt động";
+                                            const staffId = $this.data('id');
+                                            const branchId = $this.data('branch-id');
 
-                                                // Gán dữ liệu vào modal
-                                                $('#empImage').attr('src', $this.data('image'));
-                                                $('#empFullName').text($this.data('full-name'));
-                                                $('#empEmail').text($this.data('email'));
-                                                $('#empAddress').text($this.data('address'));
-                                                $('#empDob').text($this.data('dob'));
-                                                $('#empGender').text($this.data('gender'));
-                                                $('#empArea').text($this.data('area'));
-                                                $('#empPool').text($this.data('pool'));
-                                                $('#empPosition').text($this.data('position'));
-                                                $('#empDescription').text($this.data('description'));
+                                            // Gán dữ liệu vào modal
+                                            $('#empImage').attr('src', $this.data('image'));
+                                            $('#empFullName').text($this.data('full-name'));
+                                            $('#empEmail').text($this.data('email'));
+                                            $('#empAddress').text($this.data('address'));
+                                            $('#empDob').text($this.data('dob'));
+                                            $('#empGender').text($this.data('gender'));
+                                            $('#empArea').text($this.data('area'));
+                                            $('#empPool').text($this.data('pool'));
+                                            $('#empPosition').text($this.data('position'));
+                                            $('#empDescription').text($this.data('description'));
 
-                                                // Gán trạng thái
-                                                const $status = $('#empStatus');
-                                                if (isActive) {
-                                                    $status
-                                                            .text('Đang hoạt động')
-                                                            .removeClass()
-                                                            .addClass('inline-block mt-1 text-sm font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700');
-                                                } else {
-                                                    $status
-                                                            .text('Đã khóa')
-                                                            .removeClass()
-                                                            .addClass('inline-block mt-1 text-sm font-semibold px-3 py-1 rounded-full bg-red-100 text-red-700');
-                                                }
+                                            // Gán trạng thái
+                                            const $status = $('#empStatus');
+                                            if (isActive) {
+                                                $status
+                                                        .text('Đang hoạt động')
+                                                        .removeClass()
+                                                        .addClass('inline-block mt-1 text-sm font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700');
+                                            } else {
+                                                $status
+                                                        .text('Đã khóa')
+                                                        .removeClass()
+                                                        .addClass('inline-block mt-1 text-sm font-semibold px-3 py-1 rounded-full bg-red-100 text-red-700');
+                                            }
 
-                                                // CÁCH 1: Sửa đoạn này - Set href trực tiếp thay vì dùng click handler
-                                                $('#updateLink').attr('href', 'adminEditEmployee?id=' + staffId + '&branchId=' + branchId);
+                                            // CÁCH 1: Sửa đoạn này - Set href trực tiếp thay vì dùng click handler
+                                            $('#updateLink').attr('href', 'adminEditEmployee?id=' + staffId + '&branchId=' + branchId);
 
-                                                // Hiện modal
-                                                $('#employeeDetailModal').removeClass('hidden');
-                                            });
+                                            // Hiện modal
+                                            $('#employeeDetailModal').removeClass('hidden');
                                         });
+                                    });
 
-                                        // Nút đóng modal
-                                        function closeModal() {
-                                            document.getElementById("employeeDetailModal").classList.add("hidden");
-                                        }
+                                    // Nút đóng modal
+                                    function closeModal() {
+                                        document.getElementById("employeeDetailModal").classList.add("hidden");
+                                    }
         </script>
 
         <script>
