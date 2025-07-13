@@ -74,7 +74,9 @@
             .animate-fade-in {
                 animation: fade-in 0.25s ease-out;
             }
-
+            .pagination a {
+                transition: all 0.2s ease-in-out;
+            }
         </style>
     </head>
     <body class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 text-gray-800 flex min-h-screen">
@@ -260,6 +262,42 @@
                         </tbody>
 
                     </table>
+                    <!-- Phân trang -->
+                    <div class="mt-6 flex justify-center p-3">
+                        <div class="mt-6 flex justify-center items-center space-x-2 text-sm">
+
+                            <%
+                                int currentPage = (int) request.getAttribute("currentPage");
+                                int totalPages = (int) request.getAttribute("totalPages");
+                                String baseUrl = "adminViewCustomerContact?page=";
+                            %>
+
+                            <!-- Previous -->
+                            <a href="<%= baseUrl + (currentPage > 1 ? (currentPage - 1) : 1) %>"
+                               class="px-3 py-1.5 rounded-md border text-gray-600 hover:bg-gray-100 <%= currentPage == 1 ? "opacity-50 cursor-not-allowed pointer-events-none" : "" %>">
+                                <i class="fas fa-angle-left mr-1"></i>Trước
+                            </a>
+
+                            <!-- Các trang -->
+                            <%
+                                for (int i = 1; i <= totalPages; i++) {
+                            %>
+                            <a href="<%= baseUrl + i %>"
+                               class="px-3 py-1.5 rounded-md border <%= (i == currentPage ? "bg-blue-500 text-white" : "text-gray-700 hover:bg-gray-100") %>">
+                                <%= i %>
+                            </a>
+                            <%
+                                }
+                            %>
+
+                            <!-- Next -->
+                            <a href="<%= baseUrl + (currentPage < totalPages ? (currentPage + 1) : totalPages) %>"
+                               class="px-3 py-1.5 rounded-md border text-gray-600 hover:bg-gray-100 <%= currentPage == totalPages ? "opacity-50 cursor-not-allowed pointer-events-none" : "" %>">
+                                Tiếp<i class="fas fa-angle-right ml-1"></i>
+                            </a>
+
+                        </div>
+                    </div>
             </main>
         </div>
 

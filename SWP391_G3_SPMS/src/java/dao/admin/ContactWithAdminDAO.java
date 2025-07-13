@@ -24,14 +24,15 @@ public class ContactWithAdminDAO extends DBContext{
     
     public List<ContactWithAdmin> getAllContact(int start,int totalSize){
         String sql = """
-                     Select * from Contacts
+                     Select * from Contacts as c
                      ORDER BY c.created_at DESC
                      OFFSET ? ROWS
                      FETCH NEXT ? ROWS ONLY;
                      """;
-        try(PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
+        try(PreparedStatement st = connection.prepareStatement(sql); ) {
             st.setInt(1, start);
             st.setInt(2, totalSize);
+            ResultSet rs = st.executeQuery();
             while (rs.next()) {                
                 ContactWithAdmin c = new ContactWithAdmin();
                 c.setContact_id(rs.getInt(1));
@@ -48,7 +49,7 @@ public class ContactWithAdminDAO extends DBContext{
             }
             return list;
         } catch (SQLException e) {
-            throw new RuntimeException("Can't query all ò contact",e);
+            throw new RuntimeException("Can't query all of contact",e);
         }
         
     }
