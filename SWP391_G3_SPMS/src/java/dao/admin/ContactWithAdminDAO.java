@@ -83,7 +83,7 @@ public class ContactWithAdminDAO extends DBContext {
 
         if (status != null && (status.equals("0") || status.equals("1"))) {
             sql += " AND is_resolved = ?";
-            params.add(Boolean.parseBoolean(status)); // convert to boolean
+            params.add(status); // convert to boolean
         }
 
         if (subject != null && !subject.trim().isEmpty()) {
@@ -188,5 +188,68 @@ public class ContactWithAdminDAO extends DBContext {
         }
         return null;
     }
-
+    
+    public void insertResponse(int contactId, int responderId, String content){
+        String sql = """
+          INSERT INTO Contact_Responses (contact_id, responder_id, response_content) VALUES (?, ?, ?)
+                     """;
+        try(PreparedStatement st = connection.prepareStatement(sql);) {
+            st.setInt(1, contactId);
+            st.setInt(2, responderId);
+            st.setString(3, content);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+    
+    public void updateIsResolved(int contactId){
+        String sql = """
+                     UPDATE Contacts SET is_resolved = 1 WHERE contact_id = ?
+                     """;
+        try(PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, contactId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+    
+    public boolean checkIsResolvedTrue(int contact_id){
+        String sql = """
+                     SELECT is_resolved 
+                     FROM Contacts 
+                     WHERE contact_id = ?;
+                     """;
+        boolean check = true;
+        try(PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, contact_id);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                check = rs.getBoolean(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return check;
+    }
+    
+    public void deleteContact(int contact_id){
+        String sql = """
+                     DELETE FROM Contacts 
+                     WHERE contact_id = ? ;
+                     """;
+        try(PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, contact_id);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+    
+    public static void main(String[] args) {
+        ContactWithAdminDAO dao = new ContactWithAdminDAO();
+        boolean test = dao.checkIsResolvedTrue(3);
+        System.out.println(test);
+    }
 }

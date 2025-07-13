@@ -331,6 +331,21 @@
                     </table>
                 </div>
 
+                <!-- Modal nhập lý do khóa -->
+                <div id="banReasonModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center px-4">
+                    <div class="bg-white w-full max-w-md rounded-xl p-6 shadow-xl animate-fade-in relative">
+                        <h2 class="text-xl font-bold mb-4">Nhập lý do khóa</h2>
+                        <textarea id="banReasonInput" rows="4" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-red-500"
+                                  placeholder="Nhập lý do khóa quản lý này..."></textarea>
+                        <div class="flex justify-end gap-3 mt-4">
+                            <button onclick="closeBanModal()"
+                                    class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded">Hủy</button>
+                            <button onclick="submitBanReason()"
+                                    class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded">Xác nhận</button>
+                        </div>
+                    </div>
+                </div>
+
 
                 <!-- Pagination -->
                 <div class="flex flex-wrap justify-center mt-6 gap-2">
@@ -355,60 +370,96 @@
         </div>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
-            $(document).ready(function () {
-                $('.lock-btn').click(function () {
-                    var button = $(this);
-                    var id = button.data('id');
-                    var currentStatus = button.data('status'); // true: đang hoạt động, false: đã khóa
-                    var newStatus = !currentStatus; // Đảo trạng thái
+                                let selectedManagerId = null;
+                                let isUnlocking = false;
 
-                    $.ajax({
-                        url: 'adminLockManager',
-                        type: 'POST',
-                        data: {
-                            id: id,
-                            status: newStatus // Gửi trạng thái mới muốn set
-                        },
-                        success: function (response) {
-                            if (response.success) {
-                                // Cập nhật lại data-status
-                                button.data('status', newStatus);
+                                $(document).ready(function () {
+                                    $('.lock-btn').click(function () {
+                                        const button = $(this);
+                                        selectedManagerId = button.data('id');
+                                        const currentStatus = button.data('status');
 
-                                // Đổi text, màu, icon
-                                if (newStatus) {
-                                    // Đang hoạt động => hiện nút "Khóa"
-                                    button
-                                            .removeClass('bg-green-600 hover:bg-green-700')
-                                            .addClass('bg-red-600 hover:bg-red-700')
-                                            .html('<i class="fa-solid fa-lock"></i> Khóa');
-                                    // Đổi màu trạng thái trong bảng (nếu muốn)
-                                    button.closest('tr').find('td:eq(6) span')
-                                            .removeClass('bg-red-100 text-red-700')
-                                            .addClass('bg-green-100 text-green-700')
-                                            .text('Đang hoạt động');
-                                } else {
-                                    // Đã khóa => hiện nút "Mở"
-                                    button
-                                            .removeClass('bg-red-600 hover:bg-red-700')
-                                            .addClass('bg-green-600 hover:bg-green-700')
-                                            .html('<i class="fa-solid fa-unlock"></i> Mở');
-                                    button.closest('tr').find('td:eq(6) span')
-                                            .removeClass('bg-green-100 text-green-700')
-                                            .addClass('bg-red-100 text-red-700')
-                                            .text('Đã khóa');
+                                        if (currentStatus) {
+                                            // Nếu đang hoạt động => cần nhập lý do để khóa
+                                            isUnlocking = false;
+                                            $('#banReasonModal').removeClass('hidden');
+                                        } else {
+                                            // Nếu đang bị khóa => mở lại luôn
+                                            isUnlocking = true;
+                                            sendLockRequest(selectedManagerId, true, "", button);
+                                        }
+                                    });
+                                });
+
+                                function submitBanReason() {
+                                    const reason = $('#banReasonInput').val().trim();
+                                    if (reason === "") {
+                                        alert("Vui lòng nhập lý do khóa.");
+                                        return;
+                                    }
+
+                                    const button = $(`.lock-btn[data-id='${selectedManagerId}']`);
+                                    sendLockRequest(selectedManagerId, false, reason, button);
+                                    closeBanModal();
                                 }
-                                alert('Cập nhật trạng thái thành công!');
-                            } else {
-                                alert('Thao tác thất bại!');
-                            }
-                        },
-                        error: function () {
-                            alert('Có lỗi xảy ra!');
-                        }
-                    });
-                });
-            });
+
+                                function closeBanModal() {
+                                    $('#banReasonModal').addClass('hidden');
+                                    $('#banReasonInput').val('');
+                                }
+
+                                function sendLockRequest(id, status, reason, button) {
+                                    $.ajax({
+                                        url: 'adminLockManager',
+                                        type: 'POST',
+                                        data: {
+                                            id: id,
+                                            status: status,
+                                            reason: reason
+                                        },
+                                        success: function (response) {
+                                            if (response.success) {
+                                                // Cập nhật lại trạng thái nút và hiển thị trong bảng
+                                                button.data('status', status);
+
+                                                if (status) {
+                                                    // Đang hoạt động
+                                                    button
+                                                            .removeClass('bg-green-600 hover:bg-green-700')
+                                                            .addClass('bg-red-600 hover:bg-red-700')
+                                                            .html('<i class="fa-solid fa-lock"></i> Khóa');
+
+                                                    button.closest('tr').find('td:eq(6) span')
+                                                            .removeClass('bg-red-100 text-red-700')
+                                                            .addClass('bg-green-100 text-green-700')
+                                                            .text('Đang hoạt động');
+                                                } else {
+                                                    // Đã khóa
+                                                    button
+                                                            .removeClass('bg-red-600 hover:bg-red-700')
+                                                            .addClass('bg-green-600 hover:bg-green-700')
+                                                            .html('<i class="fa-solid fa-unlock"></i> Mở');
+
+                                                    button.closest('tr').find('td:eq(6) span')
+                                                            .removeClass('bg-green-100 text-green-700')
+                                                            .addClass('bg-red-100 text-red-700')
+                                                            .text('Đã khóa');
+                                                }
+
+                                                alert('Cập nhật trạng thái thành công!');
+                                                location.reload();
+                                            } else {
+                                                alert('Cập nhật thất bại!');
+                                            }
+                                        },
+                                        error: function () {
+                                            alert('Đã xảy ra lỗi.');
+                                        }
+                                    });
+                                }
         </script>
+
+
 
 
     </body>

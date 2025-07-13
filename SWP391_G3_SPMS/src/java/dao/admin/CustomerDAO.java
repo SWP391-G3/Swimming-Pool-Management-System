@@ -10,6 +10,7 @@ import java.util.List;
 import model.admin.Customer;
 import java.sql.*;
 import java.time.LocalDate;
+import model.admin.AccountBanLog;
 
 /**
  *
@@ -280,6 +281,19 @@ public class CustomerDAO extends DBContext {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public void insert(AccountBanLog banLog) {
+        String sql = "INSERT INTO Account_Ban_Log (user_id, banned_by, reason, is_permanent) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, banLog.getUserId());
+            ps.setInt(2, banLog.getBannedBy());
+            ps.setString(3, banLog.getReason());
+            ps.setBoolean(4, banLog.isIsPermanent());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     public static void main(String[] args) {

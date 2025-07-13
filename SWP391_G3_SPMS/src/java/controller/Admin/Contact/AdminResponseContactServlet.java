@@ -12,7 +12,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.admin.ContactWithAdmin;
+import model.customer.User;
+import util.SendEmailContact;
 
 /**
  *
@@ -83,7 +86,23 @@ public class AdminResponseContactServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        int contact_id = Integer.parseInt(request.getParameter("contact_id"));
+        String responseContent = request.getParameter("response_content");
+        HttpSession session = request.getSession();
+       // User currentUser = (User) session.getAttribute("currentUser");
+        ContactWithAdminDAO dao = new ContactWithAdminDAO();
+        ContactWithAdmin cw = dao.getContactWithAdmin(contact_id);
+      //  int admin_id = currentUser.getUser_id();
+        String customer_email = cw.getCustomer_email();
+        String subject = "Phản hồi liên hệ từ hệ thống bể bơi";
+        try {
+            SendEmailContact.sendEmail(customer_email, subject, responseContent);          
+            dao.insertResponse(contact_id, 1, responseContent);          
+            dao.updateIsResolved(contact_id);           
+            response.sendRedirect("adminViewCustomerContact");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

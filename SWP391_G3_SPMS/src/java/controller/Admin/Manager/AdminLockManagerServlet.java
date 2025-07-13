@@ -12,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.admin.AccountBanLog;
 
 /**
  *
@@ -74,10 +75,17 @@ public class AdminLockManagerServlet extends HttpServlet {
             throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         boolean status = Boolean.parseBoolean(request.getParameter("status"));
-
+        String reason = request.getParameter("reason");
         ManagerDAO dao = new ManagerDAO();
         boolean updated = dao.updateManagerStatus(id, status);
-
+        if (!status && reason != null && !reason.trim().isEmpty()) {
+            AccountBanLog log = new AccountBanLog();
+            log.setUserId(id);
+            log.setBannedBy(1);
+            log.setReason(reason);
+            log.setIsPermanent(true);
+            dao.insert(log);
+        }
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
         out.print("{\"success\": " + updated + "}");

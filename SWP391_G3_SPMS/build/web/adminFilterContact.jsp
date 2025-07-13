@@ -308,10 +308,7 @@
                                        class="inline-block bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs">
                                         <i class="fas fa-reply mr-1"></i>Phản hồi
                                     </a>
-                                    <a href="adminDeleteContact?id=<%= c.getContact_id() %>" onclick="return confirm('Xác nhận xóa liên hệ?')"
-                                       class="inline-block bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs">
-                                        <i class="fas fa-trash mr-1"></i>Xóa
-                                    </a>
+   
                                 </td>
                             </tr>
                             <%

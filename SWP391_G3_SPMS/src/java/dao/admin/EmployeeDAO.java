@@ -8,6 +8,7 @@ import dal.DBContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
+import model.admin.AccountBanLog;
 import model.admin.Branch;
 import model.admin.Employee;
 import model.admin.StaffType;
@@ -420,6 +421,19 @@ public class EmployeeDAO extends DBContext {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public void insert(AccountBanLog banLog) {
+        String sql = "INSERT INTO Account_Ban_Log (user_id, banned_by, reason, is_permanent) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, banLog.getUserId());
+            ps.setInt(2, banLog.getBannedBy());
+            ps.setString(3, banLog.getReason());
+            ps.setBoolean(4, banLog.isIsPermanent());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     public static void main(String[] args) {
