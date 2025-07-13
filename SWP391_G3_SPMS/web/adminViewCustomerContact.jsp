@@ -60,6 +60,21 @@
             .animate-fade-in {
                 animation: fade-in 0.2s ease-out;
             }
+            @keyframes fade-in {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px) scale(0.98);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+
+            .animate-fade-in {
+                animation: fade-in 0.25s ease-out;
+            }
+
         </style>
     </head>
     <body class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 text-gray-800 flex min-h-screen">
@@ -214,10 +229,20 @@
                                     </span>
                                 </td>
                                 <td class="px-4 py-2 space-x-1">
-                                    <a href="adminViewContactDetail?id=<%= c.getContact_id() %>" 
+                                    <a href="#"
+                                       onclick="showPopupDetail(
+                                                       '<%= c.getContact_id() %>',
+                                                       '<%= c.getCustomer_name().replace("'", "\\'") %>',
+                                                       '<%= c.getCustomer_email().replace("'", "\\'") %>',
+                                                       '<%= c.getSubject().replace("'", "\\'") %>',
+                                                       '<%= c.getContent().replace("'", "\\'") %>',
+                                                       '<%= c.getCreated_at() %>',
+                                       <%= c.getIs_resolved() %>
+                                               )"
                                        class="inline-block bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-xs">
                                         <i class="fas fa-eye mr-1"></i>Xem
                                     </a>
+
                                     <a href="adminReplyContact?id=<%= c.getContact_id() %>" 
                                        class="inline-block bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs">
                                         <i class="fas fa-reply mr-1"></i>Phản hồi
@@ -237,6 +262,68 @@
                     </table>
             </main>
         </div>
+
+        <!-- Popup xem chi tiết -->
+        <div id="popupDetail" class="fixed inset-0 z-[9999] bg-black bg-opacity-50 flex items-center justify-center hidden">
+            <div class="bg-white w-[95%] max-w-xl rounded-2xl shadow-2xl p-6 relative animate-fade-in border border-blue-200">
+                <!-- Nút đóng -->
+                <button onclick="closePopup()" 
+                        class="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-2xl font-bold transition-all duration-200">
+                    &times;
+                </button>
+
+                <!-- Tiêu đề -->
+                <h3 class="text-xl font-bold mb-6 text-blue-600 flex items-center gap-2">
+                    <i class="fas fa-envelope-open-text"></i>
+                    Chi tiết liên hệ
+                </h3>
+
+                <!-- Nội dung popup -->
+                <div class="space-y-4 text-[15px] text-gray-800 leading-6 max-h-[60vh] overflow-y-auto pr-1.5">
+                    <p><span class="font-semibold text-gray-600">ID:</span> <span id="popupContactId"></span></p>
+                    <p><span class="font-semibold text-gray-600">Tên khách hàng:</span> <span id="popupName"></span></p>
+                    <p><span class="font-semibold text-gray-600">Email:</span> <span id="popupEmail"></span></p>
+                    <p><span class="font-semibold text-gray-600">Tiêu đề:</span> <span id="popupSubject"></span></p>
+                    <p><span class="font-semibold text-gray-600">Nội dung:</span> 
+                        <span id="popupContent"
+                              class="block bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-gray-700 mt-1 shadow-sm">
+                        </span>
+                    </p>
+                    <p><span class="font-semibold text-gray-600">Ngày gửi:</span> <span id="popupDate"></span></p>
+                    <p><span class="font-semibold text-gray-600">Trạng thái:</span> 
+                        <span id="popupStatus" class="inline-block px-2 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800"></span>
+                    </p>
+                </div>
+                <!-- Nút Phản hồi -->
+                <div class="mt-6 text-right">
+                    <a id="replyButton"
+                       href="#"
+                       class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-medium text-sm px-4 py-2 rounded-lg transition-all duration-200 shadow">
+                        <i class="fas fa-reply"></i> Phản hồi
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+
+        <script>
+            function showPopupDetail(contactId, name, email, subject, content, date, isResolved) {
+                document.getElementById("popupContactId").innerText = contactId;
+                document.getElementById("popupName").innerText = name;
+                document.getElementById("popupEmail").innerText = email;
+                document.getElementById("popupSubject").innerText = subject;
+                document.getElementById("popupContent").innerText = content;
+                document.getElementById("popupDate").innerText = date;
+                document.getElementById("popupStatus").innerText = isResolved ? "Đã phản hồi" : "Chưa phản hồi";
+                document.getElementById("popupDetail").classList.remove("hidden");
+            }
+
+            function closePopup() {
+                document.getElementById("popupDetail").classList.add("hidden");
+            }
+        </script>
+
 
     </body>
 </html>
