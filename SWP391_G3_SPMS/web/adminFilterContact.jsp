@@ -125,7 +125,7 @@
                     <i class="fas fa-chart-bar mr-2"></i>Thống kê
                 </div>
 
-                <a href="adminDashBoard" class="nav-item active-nav px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                <a href="adminDashBoard" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
                     <div class="nav-icon">
                         <i class="fa-solid fa-chart-line text-sm"></i>
                     </div>
@@ -167,7 +167,7 @@
                     <i class="fas fa-phone"></i> Liên hệ 
                 </div>
 
-                <a href="adminViewCustomerContact" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                <a href="adminViewCustomerContact" class="nav-item active-nav px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
                     <div class="nav-icon">
                         <i class="fas fa-phone"></i>
                     </div>
@@ -208,7 +208,7 @@
                     <div class="flex flex-col">
                         <label for="keyword" class="mb-1 font-semibold text-gray-600">Tìm kiếm tên / email:</label>
                         <input type="text" id="keyword" name="keyword"
-                               value="<%= request.getParameter("keyword") != null ? request.getParameter("keyword") : "" %>"
+                               value=""
                                class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-400 focus:border-blue-400 shadow-sm">
                     </div>
 
@@ -239,13 +239,21 @@
                         </select>
                     </div>
 
-                    <!-- Nút lọc -->
-                    <div class="flex">
+                    <!-- Nút lọc và đặt lại -->
+                    <div class="flex gap-3">
+                        <!-- Nút Lọc -->
                         <button type="submit"
-                                class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-lg shadow">
+                                class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md transition duration-200 ease-in-out">
                             <i class="fas fa-filter"></i> Lọc
                         </button>
+
+                        <!-- Nút Đặt lại -->
+                        <a href="adminViewCustomerContact"
+                           class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold px-5 py-2.5 rounded-xl shadow-md border border-gray-300 transition duration-200 ease-in-out">
+                            <i class="fas fa-rotate-left"></i> Đặt lại
+                        </a>
                     </div>
+
                 </form>
 
 

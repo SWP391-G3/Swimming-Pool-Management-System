@@ -125,7 +125,7 @@
                     <i class="fas fa-chart-bar mr-2"></i>Thống kê
                 </div>
 
-                <a href="adminDashBoard" class="nav-item active-nav px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                <a href="adminDashBoard" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
                     <div class="nav-icon">
                         <i class="fa-solid fa-chart-line text-sm"></i>
                     </div>
@@ -167,7 +167,7 @@
                     <i class="fas fa-phone"></i> Liên hệ 
                 </div>
 
-                <a href="adminViewCustomerContact" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                <a href="adminViewCustomerContact" class="nav-item active-nav px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
                     <div class="nav-icon">
                         <i class="fas fa-phone"></i>
                     </div>
