@@ -43,6 +43,19 @@
     </div>
     <ul class="menu">
 
+        
+        
+        <li>
+            <a href="profile"
+               <c:if test="${activeMenu eq 'profile'}">class="#"</c:if>>
+                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-pen-icon lucide-user-round-pen"><path d="M2 21a8 8 0 0 1 10.821-7.487"/><path d="M21.378 16.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/><circle cx="10" cy="8" r="5"/></svg>
+                   Thông tin cá nhân
+               </a>
+            </li>
+        
+        
+
+        
         <li>
             <a href="managerListDeviceServlet"
                <c:if test="${activeMenu eq 'device'}">class="active"</c:if>>
@@ -87,8 +100,8 @@
             <li>
                 <a href="managerDiscountServlet"
                 <c:if test="${activeMenu eq 'voucher'}">class="active"</c:if>>
-                    <svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="2" /><circle cx="8" cy="12" r="2" /><circle cx="16" cy="12" r="2" /></svg>
-                    Quản lý voucher
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ticket-check-icon lucide-ticket-check"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="m9 12 2 2 4-4"/></svg>
+                    Quản lý Voucher
                 </a>
             </li>
             
@@ -96,7 +109,7 @@
                 <a href="managerFeedbackServlet"
                 <c:if test="${activeMenu eq 'feedback'}">class="active"</c:if>>
                 <svg viewBox="0 0 24 24"><path d="M21 6H3v12h4v4l4-4h10z"/></svg>
-                Quản lý feedback
+                Quản lý Feedback
             </a>
         </li>
         <li>

@@ -102,9 +102,7 @@
                         </div>
                     </form>
 
-                    <a href="template/device_import_template.xlsx" download>
-                        <i class="fas fa-download"></i> Tải file mẫu Excel
-                    </a>
+                    
                 </div>
             </div>
 

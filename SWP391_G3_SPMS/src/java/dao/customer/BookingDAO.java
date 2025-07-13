@@ -114,4 +114,38 @@ public class BookingDAO extends DBContext {
         }
         return BigDecimal.ZERO;
     }
+
+    public Booking getBookingById(int bookingId) {
+        Booking booking = null;
+        String sql = "SELECT * FROM Booking WHERE booking_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, bookingId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                booking = new Booking();
+                booking.setBookingId(rs.getInt("booking_id"));
+                booking.setUserId(rs.getInt("user_id"));
+                booking.setPoolId(rs.getInt("pool_id"));
+
+                int discountId = rs.getInt("discount_id");
+                if (!rs.wasNull()) {
+                    booking.setDiscountId(discountId);
+                } else {
+                    booking.setDiscountId(null);
+                }
+
+                booking.setBookingDate(rs.getDate("booking_date"));
+                booking.setStartTime(rs.getTime("start_time"));
+                booking.setEndTime(rs.getTime("end_time"));
+                booking.setSlotCount(rs.getInt("slot_count"));
+                booking.setBookingStatus(rs.getString("booking_status"));
+                booking.setCreatedAt(rs.getTimestamp("created_at"));
+                booking.setUpdatedAt(rs.getTimestamp("updated_at"));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return booking;
+    }
 }

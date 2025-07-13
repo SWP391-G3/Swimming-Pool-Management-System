@@ -128,39 +128,53 @@
             <!-- Navigation Menu -->
             <div class="flex-1 space-y-1">
                 <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3">
-                    <i class="fas fa-bars mr-2"></i>Menu Chính
+                    <i class="fas fa-chart-bar mr-2"></i>Thống kê
                 </div>
+
+                <a href="adminDashBoard" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                    <div class="nav-icon">
+                        <i class="fa-solid fa-chart-line text-sm"></i>
+                    </div>
+                    <span class="font-medium text-sm">Dashboard</span>
+                    <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
+                </a>
+
+                <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3 mt-4">
+                    <i class="fas fa-bars mr-2"></i>Quản lý
+                </div>
+
                 <a href="adminPoolManagement" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-water text-sm"></i></div>
+                    <div class="nav-icon">
+                        <i class="fa-solid fa-water text-sm"></i>
+                    </div>
                     <span class="font-medium text-sm">Quản lý bể bơi</span>
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                 </a>
-                <a href="adminViewStaffCategory.jsp" class="nav-item active-nav px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-user-tie text-sm"></i></div>
+
+                <a href="adminViewEmployeeList"
+                   class="nav-item active-nav px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                    <div class="nav-icon">
+                        <i class="fa-solid fa-user-tie text-sm"></i>
+                    </div>
                     <span class="font-medium text-sm">Quản lý nhân viên</span>
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                 </a>
-                <a href="adminViewCustomerList" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-user-check text-sm"></i></div>
+
+                <a href="adminViewCustomerList"
+                   class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                    <div class="nav-icon">
+                        <i class="fa-solid fa-user-check text-sm"></i>
+                    </div>
                     <span class="font-medium text-sm">Quản lý khách hàng</span>
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                 </a>
-                <a href="#" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-chart-line text-sm"></i></div>
-                    <span class="font-medium text-sm">Thống kê & Báo cáo</span>
-                    <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
-                </a>
-                <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3 mt-4">
-                    <i class="fas fa-cog mr-2"></i>Hệ thống
-                </div>
-                <a href="#" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-gear text-sm"></i></div>
-                    <span class="font-medium text-sm">Cài đặt hệ thống</span>
-                    <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
-                </a>
+
                 <div class="mt-3 pt-3 border-t border-white/20">
-                    <a href="LogoutServlet" class="logout-btn nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 Światowy z-10 font-semibold">
-                        <div class="nav-icon"><i class="fa-solid fa-right-from-bracket text-sm"></i></div>
+                    <a href="LogoutServlet"
+                       class="logout-btn nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10 font-semibold">
+                        <div class="nav-icon">
+                            <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                        </div>
                         <span class="text-sm">Đăng xuất</span>
                         <i class="fas fa-sign-out-alt ml-auto text-sm"></i>
                     </a>
@@ -409,125 +423,125 @@
             </main>
         </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-                                    // Thay thế đoạn JavaScript hiện tại bằng đoạn này:
-                                    $(document).ready(function () {
-                                        $('.btn-view-employee').click(function (e) {
-                                            e.preventDefault();
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+                                        // Thay thế đoạn JavaScript hiện tại bằng đoạn này:
+                                        $(document).ready(function () {
+                                            $('.btn-view-employee').click(function (e) {
+                                                e.preventDefault();
 
-                                            const $this = $(this);
-                                            const isActive = $this.data('status') === "Đang hoạt động";
-                                            const staffId = $this.data('id');
-                                            const branchId = $this.data('branch-id');
+                                                const $this = $(this);
+                                                const isActive = $this.data('status') === "Đang hoạt động";
+                                                const staffId = $this.data('id');
+                                                const branchId = $this.data('branch-id');
 
-                                            // Gán dữ liệu vào modal
-                                            $('#empImage').attr('src', $this.data('image'));
-                                            $('#empFullName').text($this.data('full-name'));
-                                            $('#empEmail').text($this.data('email'));
-                                            $('#empAddress').text($this.data('address'));
-                                            $('#empDob').text($this.data('dob'));
-                                            $('#empGender').text($this.data('gender'));
-                                            $('#empArea').text($this.data('area'));
-                                            $('#empPool').text($this.data('pool'));
-                                            $('#empPosition').text($this.data('position'));
-                                            $('#empDescription').text($this.data('description'));
+                                                // Gán dữ liệu vào modal
+                                                $('#empImage').attr('src', $this.data('image'));
+                                                $('#empFullName').text($this.data('full-name'));
+                                                $('#empEmail').text($this.data('email'));
+                                                $('#empAddress').text($this.data('address'));
+                                                $('#empDob').text($this.data('dob'));
+                                                $('#empGender').text($this.data('gender'));
+                                                $('#empArea').text($this.data('area'));
+                                                $('#empPool').text($this.data('pool'));
+                                                $('#empPosition').text($this.data('position'));
+                                                $('#empDescription').text($this.data('description'));
 
-                                            // Gán trạng thái
-                                            const $status = $('#empStatus');
-                                            if (isActive) {
-                                                $status
-                                                        .text('Đang hoạt động')
-                                                        .removeClass()
-                                                        .addClass('inline-block mt-1 text-sm font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700');
-                                            } else {
-                                                $status
-                                                        .text('Đã khóa')
-                                                        .removeClass()
-                                                        .addClass('inline-block mt-1 text-sm font-semibold px-3 py-1 rounded-full bg-red-100 text-red-700');
-                                            }
+                                                // Gán trạng thái
+                                                const $status = $('#empStatus');
+                                                if (isActive) {
+                                                    $status
+                                                            .text('Đang hoạt động')
+                                                            .removeClass()
+                                                            .addClass('inline-block mt-1 text-sm font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700');
+                                                } else {
+                                                    $status
+                                                            .text('Đã khóa')
+                                                            .removeClass()
+                                                            .addClass('inline-block mt-1 text-sm font-semibold px-3 py-1 rounded-full bg-red-100 text-red-700');
+                                                }
 
-                                            // CÁCH 1: Sửa đoạn này - Set href trực tiếp thay vì dùng click handler
-                                            $('#updateLink').attr('href', 'adminEditEmployee?id=' + staffId + '&branchId=' + branchId);
+                                                // CÁCH 1: Sửa đoạn này - Set href trực tiếp thay vì dùng click handler
+                                                $('#updateLink').attr('href', 'adminEditEmployee?id=' + staffId + '&branchId=' + branchId);
 
-                                            // Hiện modal
-                                            $('#employeeDetailModal').removeClass('hidden');
+                                                // Hiện modal
+                                                $('#employeeDetailModal').removeClass('hidden');
+                                            });
                                         });
-                                    });
 
-                                    // Nút đóng modal
-                                    function closeModal() {
-                                        document.getElementById("employeeDetailModal").classList.add("hidden");
-                                    }
-    </script>
+                                        // Nút đóng modal
+                                        function closeModal() {
+                                            document.getElementById("employeeDetailModal").classList.add("hidden");
+                                        }
+        </script>
 
-    <script>
-        $(document).ready(function () {
-            $('.lock-btn').click(function () {
-                var button = $(this);
-                var id = button.data('id');
-                var currentStatus = button.data('status'); // true: đang hoạt động, false: đã khóa
-                var newStatus = !currentStatus; // Đảo trạng thái
+        <script>
+            $(document).ready(function () {
+                $('.lock-btn').click(function () {
+                    var button = $(this);
+                    var id = button.data('id');
+                    var currentStatus = button.data('status'); // true: đang hoạt động, false: đã khóa
+                    var newStatus = !currentStatus; // Đảo trạng thái
 
-                // Debug: In ra console để kiểm tra
-                console.log('ID:', id);
-                console.log('Current Status:', currentStatus);
-                console.log('New Status:', newStatus);
+                    // Debug: In ra console để kiểm tra
+                    console.log('ID:', id);
+                    console.log('Current Status:', currentStatus);
+                    console.log('New Status:', newStatus);
 
-                $.ajax({
-                    url: 'adminLockStaff',
-                    type: 'POST',
-                    data: {
-                        id: id,
-                        status: newStatus // Gửi trạng thái mới muốn set
-                    },
-                    success: function (response) {
-                        console.log('Response:', response); // Debug response
+                    $.ajax({
+                        url: 'adminLockStaff',
+                        type: 'POST',
+                        data: {
+                            id: id,
+                            status: newStatus // Gửi trạng thái mới muốn set
+                        },
+                        success: function (response) {
+                            console.log('Response:', response); // Debug response
 
-                        if (response.success) {
-                            // Cập nhật lại data-status
-                            button.data('status', newStatus);
+                            if (response.success) {
+                                // Cập nhật lại data-status
+                                button.data('status', newStatus);
 
-                            // Đổi text, màu, icon
-                            if (newStatus) {
-                                // Đang hoạt động => hiện nút "Khóa"
-                                button
-                                        .removeClass('')
-                                        .addClass('')
-                                        .html('<i class="fa-solid fa-lock"></i>');
+                                // Đổi text, màu, icon
+                                if (newStatus) {
+                                    // Đang hoạt động => hiện nút "Khóa"
+                                    button
+                                            .removeClass('')
+                                            .addClass('')
+                                            .html('<i class="fa-solid fa-lock"></i>');
 
-                                // Sửa chỉ số cột: cột trạng thái là td:eq(5), không phải td:eq(6)
-                                button.closest('tr').find('td:eq(5) span')
-                                        .removeClass('bg-red-100 text-red-700')
-                                        .addClass('bg-green-100 text-green-700')
-                                        .text('Đang hoạt động');
+                                    // Sửa chỉ số cột: cột trạng thái là td:eq(5), không phải td:eq(6)
+                                    button.closest('tr').find('td:eq(5) span')
+                                            .removeClass('bg-red-100 text-red-700')
+                                            .addClass('bg-green-100 text-green-700')
+                                            .text('Đang hoạt động');
+                                } else {
+                                    // Đã khóa => hiện nút "Mở"
+                                    button
+                                            .removeClass('')
+                                            .addClass('')
+                                            .html('<i class="fa-solid fa-unlock"></i>');
+
+                                    // Sửa chỉ số cột: cột trạng thái là td:eq(5), không phải td:eq(6)
+                                    button.closest('tr').find('td:eq(5) span')
+                                            .removeClass('bg-green-100 text-green-700')
+                                            .addClass('bg-red-100 text-red-700')
+                                            .text('Đã khóa');
+                                }
+
+                                alert('Cập nhật trạng thái thành công!');
                             } else {
-                                // Đã khóa => hiện nút "Mở"
-                                button
-                                        .removeClass('')
-                                        .addClass('')
-                                        .html('<i class="fa-solid fa-unlock"></i>');
-
-                                // Sửa chỉ số cột: cột trạng thái là td:eq(5), không phải td:eq(6)
-                                button.closest('tr').find('td:eq(5) span')
-                                        .removeClass('bg-green-100 text-green-700')
-                                        .addClass('bg-red-100 text-red-700')
-                                        .text('Đã khóa');
+                                alert('Thao tác thất bại: ' + (response.message || 'Lỗi không xác định'));
                             }
-
-                            alert('Cập nhật trạng thái thành công!');
-                        } else {
-                            alert('Thao tác thất bại: ' + (response.message || 'Lỗi không xác định'));
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('AJAX Error:', xhr.responseText); // Debug lỗi
+                            alert('Có lỗi xảy ra: ' + error);
                         }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('AJAX Error:', xhr.responseText); // Debug lỗi
-                        alert('Có lỗi xảy ra: ' + error);
-                    }
+                    });
                 });
             });
-        });
-    </script>
+        </script>
 
-</body>
+    </body>
 </html>

@@ -12,6 +12,9 @@
     String successMsg = (String) request.getAttribute("successMsg");
     String errorMsg = (String) request.getAttribute("errorMsg");
     NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+    boolean canCancel = (Boolean) request.getAttribute("canCancel");
+    boolean canRefund = request.getAttribute("canRefund") != null ? (Boolean) request.getAttribute("canRefund") : false;
+    long minutesSinceCancel = request.getAttribute("minutesSinceCancel") != null ? (Long) request.getAttribute("minutesSinceCancel") : Long.MAX_VALUE;
     if (bookingDetail == null) {
 %>
 <div class="text-red-600 font-bold">Không tìm thấy thông tin booking!</div>
@@ -19,21 +22,6 @@
         return;
     }
     String statusRaw = bookingDetail.getBookingStatus();
-    boolean canCancelStatus = "pending".equalsIgnoreCase(statusRaw) || "confirmed".equalsIgnoreCase(statusRaw)
-        || "Đã xác nhận".equalsIgnoreCase(statusRaw) || "Chờ xác nhận".equalsIgnoreCase(statusRaw);
-
-    boolean canCancelDate = false;
-    try {
-        java.sql.Date sqlDate = bookingDetail.getBookingDate();
-        if (sqlDate != null) {
-            LocalDate bookingDate = sqlDate.toLocalDate();
-            LocalDate today = LocalDate.now();
-            canCancelDate = bookingDate.isAfter(today);
-        }
-    } catch (Exception e) {
-        canCancelDate = false;
-    }
-    boolean canCancel = canCancelStatus && canCancelDate;
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,14 +36,12 @@
     <body class="bg-gray-50 min-h-screen font-['Inter'] antialiased">
         <%@include file="header.jsp" %>
         <div class="container mx-auto px-4 py-8">
-            <!-- Nút quay về -->
             <a href="booking_history" class="inline-flex items-center text-blue-600 font-medium mb-8 hover:underline">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" >
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
                 Lịch sử đặt bể
             </a>
-            <!-- Hero Image Section -->
             <div class="relative w-full h-44 md:h-56 mb-8 rounded-lg overflow-hidden shadow-lg">
                 <img src="https://images.pexels.com/photos/261185/pexels-photo-261185.jpeg?auto=compress&fit=crop&w=900&q=80" alt="Pool Banner" class="w-full h-full object-cover"/>
                 <div class="absolute inset-0 bg-gradient-to-b from-black/30 to-black/10"></div>
@@ -65,88 +51,99 @@
             </div>
             <section class="bg-white border border-gray-200 rounded-lg p-8 shadow-sm w-full relative">
                 <!-- Nút Huỷ đặt bể -->
-                <% if (canCancel) { %>
+                <% if (canCancel) {%>
                 <form method="post" action="booking_detail"
                       onsubmit="return confirm('Bạn chắc chắn muốn huỷ đặt bể này?');"
                       class="absolute top-8 right-8">
-                    <input type="hidden" name="bookingId" value="<%= bookingDetail.getBookingId() %>"/>
-                    <input type="hidden" name="action" value="cancelBooking"/>
+                    <input type="hidden" name="bookingId" value="<%= bookingDetail.getBookingId()%>"/>
+                    <input type="hidden" name="service" value="cancelBooking"/>
                     <button type="submit"
                             class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-md shadow transition-colors">
                         Huỷ đặt bể
                     </button>
                 </form>
-                <% } %>
+                <% } else if (canRefund) { %>
+                <form method="post" action="booking_detail"
+                      onsubmit="return confirm('Bạn chắc chắn muốn yêu cầu hoàn tiền cho đơn này?');"
+                      class="absolute top-8 right-8">
+                    <input type="hidden" name="bookingId" value="<%= bookingDetail.getBookingId()%>"/>
+                    <input type="hidden" name="service" value="requestRefund"/>
+                    <button type="submit"
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-md shadow transition-colors">
+                        Yêu cầu hoàn tiền
+                    </button>
+                </form>
+                <% }%>
                 <h2 class="text-xl font-bold mb-6 text-blue-700">Thông tin đặt bể</h2>
                 <div class="mb-6 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-2 gap-4">
                     <div>
                         <div class="text-gray-500 text-sm">Mã đặt</div>
-                        <div class="font-medium text-gray-900">#B<%= bookingDetail.getBookingId() %></div>
+                        <div class="font-medium text-gray-900">#B<%= bookingDetail.getBookingId()%></div>
                     </div>
                     <div>
                         <div class="text-gray-500 text-sm">Tên hồ bơi</div>
-                        <div class="font-medium text-gray-900"><%= bookingDetail.getPoolName() %></div>
+                        <div class="font-medium text-gray-900"><%= bookingDetail.getPoolName()%></div>
                     </div>
                     <div>
                         <div class="text-gray-500 text-sm">Thời gian đặt</div>
-                        <div class="font-medium text-gray-900"><%= bookingDetail.getBookingDate() %></div>
+                        <div class="font-medium text-gray-900"><%= bookingDetail.getBookingDate()%></div>
                     </div>
                     <div>
                         <div class="text-gray-500 text-sm">Trạng thái</div>
                         <div>
                             <%
-                            String statusLabel = "Chưa xác nhận";
-                            String badgeClass = "bg-yellow-100 text-yellow-800";
-                            if ("confirmed".equalsIgnoreCase(statusRaw) || "Đã xác nhận".equalsIgnoreCase(statusRaw)) {
-                                statusLabel = "Đã xác nhận";
-                                badgeClass = "bg-emerald-100 text-emerald-800";
-                            } else if ("pending".equalsIgnoreCase(statusRaw) || "Chưa xác nhận".equalsIgnoreCase(statusRaw)) {
-                                statusLabel = "Chưa xác nhận";
-                                badgeClass = "bg-yellow-100 text-yellow-800";
-                            } else if ("cancelled".equalsIgnoreCase(statusRaw) || "Đã huỷ".equalsIgnoreCase(statusRaw) || "Đã hủy".equalsIgnoreCase(statusRaw)) {
-                                statusLabel = "Đã huỷ";
-                                badgeClass = "bg-red-100 text-red-800";
-                            }
+                                String statusLabel = "Chưa xác nhận";
+                                String badgeClass = "bg-yellow-100 text-yellow-800";
+                                if ("confirmed".equalsIgnoreCase(statusRaw) || "Đã xác nhận".equalsIgnoreCase(statusRaw)) {
+                                    statusLabel = "Đã xác nhận";
+                                    badgeClass = "bg-emerald-100 text-emerald-800";
+                                } else if ("pending".equalsIgnoreCase(statusRaw) || "Chưa xác nhận".equalsIgnoreCase(statusRaw)) {
+                                    statusLabel = "Chưa xác nhận";
+                                    badgeClass = "bg-yellow-100 text-yellow-800";
+                                } else if ("cancelled".equalsIgnoreCase(statusRaw) || "Đã huỷ".equalsIgnoreCase(statusRaw) || "Đã hủy".equalsIgnoreCase(statusRaw)) {
+                                    statusLabel = "Đã huỷ";
+                                    badgeClass = "bg-red-100 text-red-800";
+                                }
                             %>
-                            <span class="<%= badgeClass %> px-3 py-1 rounded-full text-sm font-medium">
-                                <%= statusLabel %>
+                            <span class="<%= badgeClass%> px-3 py-1 rounded-full text-sm font-medium">
+                                <%= statusLabel%>
                             </span>
                         </div>
                     </div>
                     <div>
                         <div class="text-gray-500 text-sm">Địa chỉ</div>
                         <div class="font-medium text-gray-900">
-                            <%= bookingDetail.getPoolAddressDetail() %>
+                            <%= bookingDetail.getPoolAddressDetail()%>
                         </div>
                     </div>
 
                     <!-- Số lượng vé -->
                     <div>
                         <div class="text-gray-500 text-sm">Số lượng vé</div>
-                        <div class="font-medium text-gray-900"><%= bookingDetail.getTicketCount() %></div>
+                        <div class="font-medium text-gray-900"><%= bookingDetail.getTicketCount()%></div>
                     </div>
                     <!-- Giờ bắt đầu -->
                     <div>
                         <div class="text-gray-500 text-sm">Giờ bắt đầu</div>
                         <div class="font-medium text-gray-900">
-                            <%= bookingDetail.getStartTime() != null ? bookingDetail.getStartTime().toString() : "" %>
+                            <%= bookingDetail.getStartTime() != null ? bookingDetail.getStartTime().toString() : ""%>
                         </div>
                     </div>
                     <!-- Mã giảm giá -->
                     <div>
                         <div class="text-gray-500 text-sm">Mã giảm giá</div>
                         <div class="font-medium text-gray-900">
-                            <%= bookingDetail.getDiscountCode() != null ? bookingDetail.getDiscountCode() : "Không áp dụng" %>
-                            <% if (bookingDetail.getDiscountPercent() != null && bookingDetail.getDiscountPercent().compareTo(java.math.BigDecimal.ZERO) > 0) { %>
-                            (Giảm <%= bookingDetail.getDiscountPercent() %>%)
-                            <% } %>
+                            <%= bookingDetail.getDiscountCode() != null ? bookingDetail.getDiscountCode() : "Không áp dụng"%>
+                            <% if (bookingDetail.getDiscountPercent() != null && bookingDetail.getDiscountPercent().compareTo(java.math.BigDecimal.ZERO) > 0) {%>
+                            (Giảm <%= bookingDetail.getDiscountPercent()%>%)
+                            <% }%>
                         </div>
                     </div>
                     <!-- Giờ kết thúc -->
                     <div>
                         <div class="text-gray-500 text-sm">Giờ kết thúc</div>
                         <div class="font-medium text-gray-900">
-                            <%= bookingDetail.getEndTime() != null ? bookingDetail.getEndTime().toString() : "" %>
+                            <%= bookingDetail.getEndTime() != null ? bookingDetail.getEndTime().toString() : ""%>
                         </div>
                     </div>
 
@@ -167,18 +164,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% for (Ticket ticket : tickets) { %>
+                        <% for (Ticket ticket : tickets) {%>
                         <tr>
-                            <td class="py-2 px-4 border-b text-center font-mono"><%= ticket.getTicketCode() %></td>
-                            <td class="py-2 px-4 border-b text-center"><%= ticket.getQuantity() %></td>        
-                            <td class="py-2 px-4 border-b text-center"><%= currencyFormat.format(ticket.getTicketPrice()) %></td>
-                            <td class="py-2 px-4 border-b text-center"><%= ticket.getIssuedAt() != null ? ticket.getIssuedAt() : "" %></td>
+                            <td class="py-2 px-4 border-b text-center font-mono"><%= ticket.getTicketCode()%></td>
+                            <td class="py-2 px-4 border-b text-center"><%= ticket.getQuantity()%></td>        
+                            <td class="py-2 px-4 border-b text-center"><%= currencyFormat.format(ticket.getTicketPrice())%></td>
+                            <td class="py-2 px-4 border-b text-center"><%= ticket.getIssuedAt() != null ? ticket.getIssuedAt() : ""%></td>
                         </tr>
                         <% } %>
                     </tbody>
                 </table>
                 <%
-                    } else {
+                } else {
                 %>
                 <div class="text-gray-500 italic mb-8">Không có vé nào trong booking này.</div>
                 <%
@@ -190,7 +187,7 @@
                     <div class="text-right">
                         <div class="text-gray-500 text-base font-medium">Tổng tiền</div>
                         <div class="text-3xl md:text-4xl font-extrabold text-blue-700 mt-1 mb-2">
-                            <%= bookingDetail.getAmount() != null ? currencyFormat.format(bookingDetail.getAmount()) : "" %>
+                            <%= bookingDetail.getAmount() != null ? currencyFormat.format(bookingDetail.getAmount()) : ""%>
                         </div>
                     </div>
                 </div>
@@ -205,13 +202,13 @@
                     <div class="text-red-600 font-medium mb-2">Bạn đã gửi đánh giá cho hồ bơi này.</div>
                     <% } else if (userFeedback != null) { %>
                     <div class="mb-4 italic text-gray-700 text-center text-lg font-semibold">Cảm ơn quý khách đã đánh giá</div>
-                    <% } else { %>
+                    <% } else {%>
                     <form action="booking_detail" method="post" class="mb-4" id="rateForm">
-                        <input type="hidden" name="bookingId" value="<%= bookingDetail.getBookingId() %>"/>
-                        <input type="hidden" name="poolId" value="<%= bookingDetail.getPoolId() %>"/>
+                        <input type="hidden" name="bookingId" value="<%= bookingDetail.getBookingId()%>"/>
+                        <input type="hidden" name="poolId" value="<%= bookingDetail.getPoolId()%>"/>
                         <div class="flex items-center gap-3 mb-4">
                             <div class="flex gap-1 text-2xl text-yellow-400 cursor-pointer">
-                                <% for (int i=1; i<=5; i++) { %>
+                                <% for (int i = 1; i <= 5; i++) {%>
                                 <input type="radio" id="star<%=i%>" name="rating" value="<%=i%>" style="display:none;" required>
                                 <label for="star<%=i%>" style="cursor:pointer;font-size:2rem; color: #d1d5db;">&#9733;</label>
                                 <% } %>
@@ -241,7 +238,7 @@
                             });
                         });
                     </script>
-                    <% } %>
+                    <% }%>
                 </div>
             </section>
         </div>

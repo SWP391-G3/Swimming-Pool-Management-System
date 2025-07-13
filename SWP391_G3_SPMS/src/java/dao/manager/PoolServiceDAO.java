@@ -10,6 +10,7 @@ import model.manager.PoolService;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import model.manager.ServiceReport;
 
 public class PoolServiceDAO extends DBContext {
 
@@ -221,4 +222,288 @@ public class PoolServiceDAO extends DBContext {
         return 0;
     }
 
+    public List<PoolService> filterServicesByPoolName(
+            String name, Double minPrice, Double maxPrice, String poolName, int offset, int limit
+    ) throws SQLException {
+        List<PoolService> list = new ArrayList<>();
+        if (poolName == null || poolName.trim().isEmpty()) {
+            return list;
+        }
+
+        StringBuilder sql = new StringBuilder(
+                "SELECT s.* "
+                + "FROM Pool_Service s "
+                + "JOIN Pools p ON s.pool_id = p.pool_id "
+                + "WHERE p.pool_name = ? "
+        );
+        if (name != null && !name.trim().isEmpty()) {
+            sql.append("AND s.service_name LIKE ? ");
+        }
+        if (minPrice != null) {
+            sql.append("AND s.price >= ? ");
+        }
+        if (maxPrice != null) {
+            sql.append("AND s.price <= ? ");
+        }
+        sql.append("ORDER BY s.pool_service_id ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        try (PreparedStatement st = connection.prepareStatement(sql.toString())) {
+            int idx = 1;
+            st.setString(idx++, poolName);
+            if (name != null && !name.trim().isEmpty()) {
+                st.setString(idx++, "%" + name + "%");
+            }
+            if (minPrice != null) {
+                st.setDouble(idx++, minPrice);
+            }
+            if (maxPrice != null) {
+                st.setDouble(idx++, maxPrice);
+            }
+            st.setInt(idx++, offset);
+            st.setInt(idx++, limit);
+
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                list.add(new PoolService(
+                        rs.getInt("pool_service_id"),
+                        rs.getInt("pool_id"),
+                        rs.getString("service_name"),
+                        rs.getString("description"),
+                        rs.getDouble("price"),
+                        rs.getString("service_image"),
+                        rs.getInt("quantity"),
+                        rs.getString("service_status")
+                ));
+            }
+        }
+        return list;
+    }
+    
+    public List<ServiceReport> filterServiceReportsByStaff(int staffId, String status, int offset, int limit) throws SQLException {
+    List<ServiceReport> list = new ArrayList<>();
+    StringBuilder sql = new StringBuilder(
+        "SELECT sr.*, p.pool_name, b.branch_name " +
+        "FROM Service_Reports sr " +
+        "JOIN Pools p ON sr.pool_id = p.pool_id " +
+        "LEFT JOIN Branchs b ON sr.branch_id = b.branch_id " +
+        "WHERE sr.staff_id = ? "
+    );
+    List<Object> params = new ArrayList<>();
+    params.add(staffId);
+
+    if (status != null && !status.trim().isEmpty()) {
+        sql.append("AND sr.status = ? ");
+        params.add(status.trim());
+    }
+    sql.append("ORDER BY sr.report_date DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ");
+    params.add(offset);
+    params.add(limit);
+
+    try (PreparedStatement st = connection.prepareStatement(sql.toString())) {
+        int idx = 1;
+        for (Object param : params) {
+            if (param instanceof String) {
+                st.setString(idx++, (String) param);
+            } else if (param instanceof Integer) {
+                st.setInt(idx++, (Integer) param);
+            }
+        }
+        ResultSet rs = st.executeQuery();
+        while (rs.next()) {
+            ServiceReport r = new ServiceReport();
+            r.setReportId(rs.getInt("report_id"));
+            r.setStaffId(rs.getInt("staff_id"));
+            r.setPoolId(rs.getInt("pool_id"));
+            r.setBranchId(rs.getInt("branch_id"));
+            r.setServiceId(rs.getInt("service_id"));
+            r.setServiceName(rs.getString("service_name"));
+            r.setReportReason(rs.getString("report_reason"));
+            r.setSuggestion(rs.getString("suggestion"));
+            r.setStatus(rs.getString("status"));
+            r.setReportDate(rs.getTimestamp("report_date"));
+            r.setPoolName(rs.getString("pool_name"));
+            r.setBranchName(rs.getString("branch_name"));
+            list.add(r);
+        }
+    }
+    return list;
+}
+
+public int countServiceReportsByStaff(int staffId, String status) throws SQLException {
+    StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Service_Reports WHERE staff_id = ? ");
+    List<Object> params = new ArrayList<>();
+    params.add(staffId);
+    if (status != null && !status.trim().isEmpty()) {
+        sql.append("AND status = ? ");
+        params.add(status.trim());
+    }
+    try (PreparedStatement st = connection.prepareStatement(sql.toString())) {
+        int idx = 1;
+        for (Object param : params) {
+            if (param instanceof String) {
+                st.setString(idx++, (String) param);
+            } else if (param instanceof Integer) {
+                st.setInt(idx++, (Integer) param);
+            }
+        }
+        ResultSet rs = st.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+    }
+    return 0;
+}
+
+    public int countFilteredByPoolName(
+            String name, Double minPrice, Double maxPrice, String poolName
+    ) throws SQLException {
+        if (poolName == null || poolName.trim().isEmpty()) {
+            return 0;
+        }
+
+        StringBuilder sql = new StringBuilder(
+                "SELECT COUNT(*) "
+                + "FROM Pool_Service s "
+                + "JOIN Pools p ON s.pool_id = p.pool_id "
+                + "WHERE p.pool_name = ? "
+        );
+        if (name != null && !name.trim().isEmpty()) {
+            sql.append("AND s.service_name LIKE ? ");
+        }
+        if (minPrice != null) {
+            sql.append("AND s.price >= ? ");
+        }
+        if (maxPrice != null) {
+            sql.append("AND s.price <= ? ");
+        }
+
+        try (PreparedStatement st = connection.prepareStatement(sql.toString())) {
+            int idx = 1;
+            st.setString(idx++, poolName);
+            if (name != null && !name.trim().isEmpty()) {
+                st.setString(idx++, "%" + name + "%");
+            }
+            if (minPrice != null) {
+                st.setDouble(idx++, minPrice);
+            }
+            if (maxPrice != null) {
+                st.setDouble(idx++, maxPrice);
+            }
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
+    public List<ServiceReport> filterServiceReports(
+            String name, Integer poolId, String status, Integer branchId, int offset, int limit
+    ) throws SQLException {
+        List<ServiceReport> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+                "SELECT sr.*, p.pool_name, s.full_name AS staff_name, b.branch_name "
+                + "FROM Service_Reports sr "
+                + "JOIN Pools p ON sr.pool_id = p.pool_id "
+                + "LEFT JOIN Users s ON sr.staff_id = s.user_id "
+                + "LEFT JOIN Branchs b ON sr.branch_id = b.branch_id "
+                + "WHERE 1=1 "
+        );
+        List<Object> params = new ArrayList<>();
+
+        if (name != null && !name.trim().isEmpty()) {
+            sql.append("AND sr.service_name LIKE ? ");
+            params.add("%" + name.trim() + "%");
+        }
+        if (poolId != null) {
+            sql.append("AND sr.pool_id = ? ");
+            params.add(poolId);
+        }
+        if (branchId != null) {
+            sql.append("AND sr.branch_id = ? ");
+            params.add(branchId);
+        }
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append("AND sr.status = ? ");
+            params.add(status.trim());
+        }
+        sql.append("ORDER BY sr.report_date DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ");
+        params.add(offset);
+        params.add(limit);
+
+        try (PreparedStatement st = connection.prepareStatement(sql.toString())) {
+            int idx = 1;
+            for (Object param : params) {
+                if (param instanceof String) {
+                    st.setString(idx++, (String) param);
+                } else if (param instanceof Integer) {
+                    st.setInt(idx++, (Integer) param);
+                }
+            }
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                ServiceReport r = new ServiceReport();
+                r.setReportId(rs.getInt("report_id"));
+                r.setStaffId(rs.getInt("staff_id"));
+                r.setPoolId(rs.getInt("pool_id"));
+                r.setBranchId(rs.getInt("branch_id"));
+                r.setServiceId(rs.getInt("service_id"));
+                r.setServiceName(rs.getString("service_name"));
+                r.setReportReason(rs.getString("report_reason"));
+                r.setSuggestion(rs.getString("suggestion"));
+                r.setStatus(rs.getString("status"));
+                r.setReportDate(rs.getTimestamp("report_date"));
+                r.setPoolName(rs.getString("pool_name"));
+                r.setStaffName(rs.getString("staff_name"));
+                r.setBranchName(rs.getString("branch_name"));
+                list.add(r);
+            }
+        }
+        return list;
+    }
+
+    public int countServiceReports(String name, Integer poolId, String status, Integer branchId) throws SQLException {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Service_Reports WHERE 1=1 ");
+        List<Object> params = new ArrayList<>();
+        if (name != null && !name.trim().isEmpty()) {
+            sql.append("AND service_name LIKE ? ");
+            params.add("%" + name.trim() + "%");
+        }
+        if (poolId != null) {
+            sql.append("AND pool_id = ? ");
+            params.add(poolId);
+        }
+        if (branchId != null) {
+            sql.append("AND branch_id = ? ");
+            params.add(branchId);
+        }
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append("AND status = ? ");
+            params.add(status.trim());
+        }
+        try (PreparedStatement st = connection.prepareStatement(sql.toString())) {
+            int idx = 1;
+            for (Object param : params) {
+                if (param instanceof String) {
+                    st.setString(idx++, (String) param);
+                } else if (param instanceof Integer) {
+                    st.setInt(idx++, (Integer) param);
+                }
+            }
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
+    public boolean updateReportStatus(int reportId, String newStatus) throws SQLException {
+        String sql = "UPDATE Service_Reports SET status = ? WHERE report_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setString(1, newStatus);
+            st.setInt(2, reportId);
+            return st.executeUpdate() > 0;
+        }
+    }
 }

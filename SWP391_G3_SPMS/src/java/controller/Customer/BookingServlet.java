@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.Map;
+
 /**
  *
  * @author LAZYVL
@@ -34,14 +36,12 @@ public class BookingServlet extends HttpServlet {
         }
         if (service.equals("showBookingPage")) {
             try {
-//            String poolIdRaw = request.getParameter("poolId");
-//            if (poolIdRaw == null) {
-//                response.getWriter().println("Thiếu poolId trên URL hoặc form!");
-//                return;
-//            }
-//            int poolId = Integer.parseInt(poolIdRaw);
-
-                int poolId = 2; //Hardcode để tsst
+                String poolIdRaw = request.getParameter("poolId");
+                if (poolIdRaw == null) {
+                    response.getWriter().println("Thiếu poolId trên URL hoặc form!");
+                    return;
+                }
+                int poolId = Integer.parseInt(poolIdRaw);
 
                 // Lấy thông tin pool
                 PoolDAO poolDAO = new PoolDAO();
@@ -50,6 +50,14 @@ public class BookingServlet extends HttpServlet {
                 // Lấy danh sách loại vé
                 TicketTypeDAO ticketTypeDAO = new TicketTypeDAO();
                 List<TicketType> ticketTypes = ticketTypeDAO.getTicketTypesByPoolId(poolId);
+
+                // ===> Lấy map ticketTypeId -> slot
+                Map<Integer, Integer> ticketTypeSlotMap = new java.util.HashMap<>();
+                for (TicketType t : ticketTypes) {
+                    TicketSlot slotObj = ticketTypeDAO.getTicketSlotByTicketTypeId(t.getTicketTypeId());
+                    int slot = (slotObj != null) ? slotObj.getTicketSlot() : 1;
+                    ticketTypeSlotMap.put(t.getTicketTypeId(), slot);
+                }
 
                 // Lấy danh sách dịch vụ thuê đồ
                 PoolServiceDAO poolServiceDAO = new PoolServiceDAO();
@@ -68,6 +76,7 @@ public class BookingServlet extends HttpServlet {
                 pageData.setDiscounts(discounts);
 
                 request.setAttribute("pageData", pageData);
+                request.setAttribute("ticketTypeSlotMap", ticketTypeSlotMap);
                 request.getRequestDispatcher("Booking.jsp").forward(request, response);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -79,14 +88,12 @@ public class BookingServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//            String poolIdRaw = request.getParameter("poolId");
-//            if (poolIdRaw == null) {
-//                response.getWriter().println("Thiếu poolId trên URL hoặc form!");
-//                return;
-//            }
-//            int poolId = Integer.parseInt(poolIdRaw);
-
-        int poolId = 2; //Hardcode để tsst
+        String poolIdRaw = request.getParameter("poolId");
+        if (poolIdRaw == null) {
+            response.getWriter().println("Thiếu poolId trên URL hoặc form!");
+            return;
+        }
+        int poolId = Integer.parseInt(poolIdRaw);
         String bookingDateStr = request.getParameter("bookingDate");
         String startTimeStr = request.getParameter("startTime");
         String endTimeStr = request.getParameter("endTime");
@@ -172,7 +179,7 @@ public class BookingServlet extends HttpServlet {
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
-        
+
         // Tính tổng số người (slot) từ các vé
         int totalPerson = 0;
 

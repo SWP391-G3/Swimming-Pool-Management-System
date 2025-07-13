@@ -74,4 +74,27 @@ public class FeedbackDAO extends DBContext {
 
         return list;
     }
+    
+    
+     public List<Feedback> getFeedbacksByPoolId(int poolId) {
+        List<Feedback> list = new ArrayList<>();
+        String sql = "SELECT * FROM Feedbacks WHERE pool_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, poolId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Feedback feedback = new Feedback();
+                feedback.setFeedbackId(rs.getInt("feedback_id"));
+                feedback.setUserId(rs.getInt("user_id"));
+                feedback.setPoolId(rs.getInt("pool_id"));
+                feedback.setRating(rs.getInt("rating"));
+                feedback.setComment(rs.getString("comment"));
+                feedback.setCreatedAt(rs.getTimestamp("created_at"));
+                list.add(feedback);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

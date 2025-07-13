@@ -128,39 +128,53 @@
                 <!-- Navigation Menu -->
                 <div class="flex-1 space-y-1">
                     <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3">
-                        <i class="fas fa-bars mr-2"></i>Menu Chính
+                        <i class="fas fa-chart-bar mr-2"></i>Thống kê
                     </div>
+
+                    <a href="adminDashBoard" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                        <div class="nav-icon">
+                            <i class="fa-solid fa-chart-line text-sm"></i>
+                        </div>
+                        <span class="font-medium text-sm">Dashboard</span>
+                        <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
+                    </a>
+
+                    <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3 mt-4">
+                        <i class="fas fa-bars mr-2"></i>Quản lý
+                    </div>
+
                     <a href="adminPoolManagement" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                        <div class="nav-icon"><i class="fa-solid fa-water text-sm"></i></div>
+                        <div class="nav-icon">
+                            <i class="fa-solid fa-water text-sm"></i>
+                        </div>
                         <span class="font-medium text-sm">Quản lý bể bơi</span>
                         <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                     </a>
-                    <a href="adminViewStaffCategory.jsp" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                        <div class="nav-icon"><i class="fa-solid fa-user-tie text-sm"></i></div>
+
+                    <a href="adminViewManagerList"
+                       class="nav-item active-nav px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                        <div class="nav-icon">
+                            <i class="fa-solid fa-user-tie text-sm"></i>
+                        </div>
                         <span class="font-medium text-sm">Quản lý nhân viên</span>
                         <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                     </a>
-                    <a href="adminViewCustomerList" class="nav-item active-nav px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                        <div class="nav-icon"><i class="fa-solid fa-user-check text-sm"></i></div>
+
+                    <a href="adminViewCustomerList"
+                       class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                        <div class="nav-icon">
+                            <i class="fa-solid fa-user-check text-sm"></i>
+                        </div>
                         <span class="font-medium text-sm">Quản lý khách hàng</span>
                         <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                     </a>
-                    <a href="#" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                        <div class="nav-icon"><i class="fa-solid fa-chart-line text-sm"></i></div>
-                        <span class="font-medium text-sm">Thống kê & Báo cáo</span>
-                        <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
-                    </a>
-                    <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3 mt-4">
-                        <i class="fas fa-cog mr-2"></i>Hệ thống
-                    </div>
-                    <a href="#" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                        <div class="nav-icon"><i class="fa-solid fa-gear text-sm"></i></div>
-                        <span class="font-medium text-sm">Cài đặt hệ thống</span>
-                        <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
-                    </a>
+
                     <div class="mt-3 pt-3 border-t border-white/20">
-                        <a href="LogoutServlet" class="logout-btn nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 Światowy z-10 font-semibold">
-                            <div class="nav-icon"><i class="fa-solid fa-right-from-bracket text-sm"></i></div>
+                        <a href="LogoutServlet"
+                           class="logout-btn nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10 font-semibold">
+                            <div class="nav-icon">
+                                <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                            </div>
                             <span class="text-sm">Đăng xuất</span>
                             <i class="fas fa-sign-out-alt ml-auto text-sm"></i>
                         </a>
@@ -263,7 +277,17 @@
                                     <td class="p-3 border"><%= m.getEmail() %></td>
                                     <td class="p-3 border"><%= m.getPhone() %></td>
                                     <td class="p-3 border"><%= m.getAddress() %></td>
-                                    <td class="p-3 border"><%= m.getBranch_name() != null ? m.getBranch_name() : "Chưa phân công" %></td>
+                                    <td class="p-3 border">
+                                        <% if (m.getBranch_name() != null) { %>
+                                        <span class="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                                            <%= m.getBranch_name() %>
+                                        </span>
+                                        <% } else { %>
+                                        <span class="px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">
+                                            Chưa phân công
+                                        </span>
+                                        <% } %>
+                                    </td>
                                     <td class="p-3 border">
                                         <span class="px-3 py-1 rounded-full text-xs font-medium <%= m.getStatus() ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700" %>">
                                             <%= m.getStatus() ? "Đang hoạt động" : "Đã khóa" %>
@@ -291,13 +315,13 @@
                     <!-- Pagination -->
                     <div class="flex flex-wrap justify-center mt-6 gap-2">
                         <% if (currentPage > 1) { %>
-                        <a class="px-3 py-1 bg-blue-500 text-white rounded" href="managers?page=<%= currentPage - 1 %>">Trước</a>
+                        <a class="px-3 py-1 bg-blue-500 text-white rounded" href="adminFilterManager?page=<%= currentPage - 1 %>">Trước</a>
                         <% }
                         for (int i = startPage; i <= endPage; i++) { %>
-                        <a class="px-3 py-1 <%= (i == currentPage ? "bg-green-600 text-white" : "bg-gray-300 text-gray-800") %> rounded" href="managers?page=<%= i %>"><%= i %></a>
+                        <a class="px-3 py-1 <%= (i == currentPage ? "bg-green-600 text-white" : "bg-gray-300 text-gray-800") %> rounded" href="adminFilterManager?page=<%= i %>"><%= i %></a>
                         <% }
                             if (currentPage < totalPages) { %>
-                        <a class="px-3 py-1 bg-blue-500 text-white rounded" href="managers?page=<%= currentPage + 1 %>">Tiếp</a>
+                        <a class="px-3 py-1 bg-blue-500 text-white rounded" href="adminFilterManager?page=<%= currentPage + 1 %>">Tiếp</a>
                         <% } %>
 
                         <form action="adminFilterManager" method="get" class="flex items-center gap-2 ml-4">

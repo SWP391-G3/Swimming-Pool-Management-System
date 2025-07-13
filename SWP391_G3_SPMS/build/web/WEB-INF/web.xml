@@ -17,10 +17,6 @@
         <servlet-class>controller.Customer.BookingHistoryServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>BookingDetailServlet</servlet-name>
-        <servlet-class>controller.Customer.BookingDetailServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>managerTicketServlet</servlet-name>
         <servlet-class>controller.manager.ManagerTicketServlet</servlet-class>
     </servlet>
@@ -43,6 +39,10 @@
     <servlet>
         <servlet-name>BookingPaymentServlet</servlet-name>
         <servlet-class>controller.Customer.BookingPaymentServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BookingDetailServlet</servlet-name>
+        <servlet-class>controller.Customer.BookingDetailServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>CustomerAccountInfor</servlet-name>
@@ -110,7 +110,6 @@
         <servlet-name>BookingPaymentServlet</servlet-name>
         <url-pattern>/payment</url-pattern>
     </servlet-mapping>
-    
     <!-- Start Page -->
     <welcome-file-list>
         <welcome-file>LandingPage.jsp</welcome-file>

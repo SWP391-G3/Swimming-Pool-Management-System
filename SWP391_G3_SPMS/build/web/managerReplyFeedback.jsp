@@ -16,7 +16,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Phản hồi khách hàng</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-        <link rel="stylesheet" href="./manager-css/managerReplyFeedback-v1.css">
+        <link rel="stylesheet" href="./manager-css/managerReplyFeedback-v2.css">
         
         <c:if test="${not empty errorMsg}">
   <div style="background:#ffe0e0;color:#b10000;padding:12px 18px;margin-bottom:18px;
@@ -28,6 +28,10 @@
     </head>
     <body>
         <div class="reply-container">
+            
+            
+            
+            
             <div class="header">
                 <h2><i class="fas fa-reply"></i> Phản hồi khách hàng</h2>
                 <p>Gửi phản hồi cho khách hàng về đánh giá của họ</p>

@@ -52,7 +52,7 @@
             </div>
             <!-- Main content -->
             <div class="main-content" style="flex:1;">
-                <form class="filter-form" method="get" action="homepage">
+                <form class="filter-form" method="get" action="customerViewPoolList">
                     <c:if test="${param.searchLocation != null}">
                         <input type="hidden" name="searchLocation" value="${param.searchLocation}" />
                     </c:if>
@@ -89,6 +89,11 @@
                         <option value="21:00" ${param.closeTime == '21:00' ? 'selected' : ''}>21:00</option>
                     </select>
 
+                    <button type="button" onclick="resetFilters()" 
+                            style="width: 100px;  color: #1976d2; border: 1px solid #1976d2; border-radius: 6px; padding: 4px; margin-left: 8px;">
+                        Reset
+                    </button>
+
 
                     <button type="submit" style=" width: 100px;
                             background: #1976d2;
@@ -108,13 +113,12 @@
                                 alt="${pool.pool_name}" 
                                 class="pool-img" 
                                 style="cursor:pointer"
-                                onclick="window.location.href = 'pool-detail?poolId=${pool.pool_id}'" 
+                                onclick="window.location.href = 'pool-detapil?poolId=${pool.pool_id}'" 
                                 />
 
                             <div class="pool-info">
                                 <h3>${pool.pool_name}</h3>
                                 <p><strong>Mô tả: </strong> ${pool.pool_description}</p>
-                                <p><strong>Đường:</strong> ${pool.pool_road}</p>
                                 <p><strong>Sức chứa:</strong> ${pool.max_slot}</p>
                                 <p><strong>Giờ mở cửa:</strong> ${pool.open_time} - ${pool.close_time}</p>
                                 <a href="booking?service=showBookingPage&poolId=${pool.pool_id}" class="btn-booking">Đặt bơi</a>
@@ -141,7 +145,7 @@
             </div>
         </div>
 
-        <%@include file="footer.jsp" %>
+    <%@include file="footer.jsp" %>
 
     </body>
 
@@ -154,6 +158,19 @@
             url.searchParams.set('page', 1); // Reset page về 1 mỗi khi đổi location
 
             // Redirect với đủ params
+            window.location.href = url.pathname + '?' + url.searchParams.toString();
+        }
+
+        function resetFilters() {
+            const url = new URL(window.location.href);
+            // Xóa các param filter
+            url.searchParams.delete('searchName');
+            url.searchParams.delete('capacity');
+            url.searchParams.delete('openTime');
+            url.searchParams.delete('closeTime');
+            url.searchParams.delete('searchLocation');
+            url.searchParams.set('page', 1);
+            // Reload lại trang
             window.location.href = url.pathname + '?' + url.searchParams.toString();
         }
 

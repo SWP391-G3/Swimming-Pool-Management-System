@@ -13,8 +13,8 @@
     List<PoolServiceSelection> selectedRents = pageData.getSelectedRents();
     Discounts selectedDiscount = pageData.getSelectedDiscount();
     String bookingDate = pageData.getBookingDate() != null ? pageData.getBookingDate().toString() : "";
-    String startTime = pageData.getStartTime() != null ? pageData.getStartTime().toString().substring(0,5) : "";
-    String endTime = pageData.getEndTime() != null ? pageData.getEndTime().toString().substring(0,5) : "";
+    String startTime = pageData.getStartTime() != null ? pageData.getStartTime().toString().substring(0, 5) : "";
+    String endTime = pageData.getEndTime() != null ? pageData.getEndTime().toString().substring(0, 5) : "";
     int slotCount = pageData.getSlotCount();
 
     BigDecimal total = pageData.getFinalAmount();
@@ -54,22 +54,22 @@
                     <div>
                         <div class="text-base font-semibold mb-2">Người đặt</div>
                         <div class="text-sm text-gray-500 mb-1">Họ và tên</div>
-                        <div class="font-medium mb-2"><%= user.getFull_name() %></div>
+                        <div class="font-medium mb-2"><%= user.getFull_name()%></div>
                         <div class="text-sm text-gray-500 mb-1">Số điện thoại</div>
-                        <div class="font-medium mb-2"><%= user.getPhone() != null ? user.getPhone() : "" %></div>
+                        <div class="font-medium mb-2"><%= user.getPhone() != null ? user.getPhone() : ""%></div>
                         <div class="text-sm text-gray-500 mb-1">Địa điểm bể</div>
                         <div class="font-medium break-words">
-                            <%= pool.getPool_road() + ", " + pool.getPool_address() %>
+                            <%= pool.getPool_road() + ", " + pool.getPool_address()%>
                         </div>
                     </div>
                     <div>
                         <div class="text-base font-semibold mb-2">Thông tin bể bơi</div>
                         <div class="text-sm text-gray-500 mb-1">Tên bể</div>
-                        <div class="font-medium mb-2"><%= pool.getPool_name() %></div>
+                        <div class="font-medium mb-2"><%= pool.getPool_name()%></div>
                         <div class="text-sm text-gray-500 mb-1">Thời gian</div>
                         <div style="background: #f5f6fa; padding: 10px 20px; border-radius: 8px; display: inline-block;">
-                            <p><%= startTime %> – <%= endTime %></p>
-                            <p><%= bookingDate %></p>
+                            <p><%= startTime%> – <%= endTime%></p>
+                            <p><%= bookingDate%></p>
                         </div>
                     </div>
                 </div>
@@ -90,31 +90,31 @@
                             <tbody class="divide-y">
                                 <%-- Vé đã chọn --%>
                                 <%
-                                if (selectedTickets != null) {
-                                    for (TicketSelection t : selectedTickets) {
+                                    if (selectedTickets != null) {
+                                        for (TicketSelection t : selectedTickets) {
                                 %>
                                 <tr>
-                                    <td class="py-2"><%= t.getTypeName() %></td>
-                                    <td class="py-2 text-center">x<%= t.getQuantity() %></td>
-                                    <td class="py-2 text-right"><%= String.format("%,d", t.getPrice().intValue() * t.getQuantity()) %> đ</td>
+                                    <td class="py-2"><%= t.getTypeName()%></td>
+                                    <td class="py-2 text-center">x<%= t.getQuantity()%></td>
+                                    <td class="py-2 text-right"><%= String.format("%,d", t.getPrice().intValue() * t.getQuantity())%> đ</td>
                                 </tr>
                                 <%
+                                        }
                                     }
-                                }
                                 %>
                                 <%-- Dịch vụ thuê đã chọn --%>
                                 <%
-                                if (selectedRents != null) {
-                                    for (PoolServiceSelection r : selectedRents) {
+                                    if (selectedRents != null) {
+                                        for (PoolServiceSelection r : selectedRents) {
                                 %>
                                 <tr>
-                                    <td class="py-2"><%= r.getServiceName() %></td>
-                                    <td class="py-2 text-center">x<%= r.getQuantity() %></td>
-                                    <td class="py-2 text-right"><%= String.format("%,d", r.getPrice().intValue() * r.getQuantity()) %> đ</td>
+                                    <td class="py-2"><%= r.getServiceName()%></td>
+                                    <td class="py-2 text-center">x<%= r.getQuantity()%></td>
+                                    <td class="py-2 text-right"><%= String.format("%,d", r.getPrice().intValue() * r.getQuantity())%> đ</td>
                                 </tr>
                                 <%
+                                        }
                                     }
-                                }
                                 %>
                             </tbody>
                         </table>
@@ -126,28 +126,29 @@
                 <div class="flex flex-col gap-2">
                     <div class="flex justify-between items-center text-base">
                         <span class="font-medium">Tổng</span>
-                        <span class="font-semibold text-gray-700"><%= String.format("%,.0f đ", total) %></span>
+                        <span class="font-semibold text-gray-700"><%= String.format("%,.0f đ", total)%></span>
                     </div>
                     <div class="flex justify-between items-center text-base">
                         <span class="font-medium">Ưu đãi</span>
-                        <% if (selectedDiscount!= null && discountAmount != null) { %>
-                        <span class="text-green-700 font-semibold">(<%= selectedDiscount.getDiscountCode() %>) -<%= String.format("%,.0f đ", discountAmount) %> </span>
+                        <% if (selectedDiscount != null && discountAmount != null) {%>
+                        <span class="text-green-700 font-semibold">(<%= selectedDiscount.getDiscountCode()%>) -<%= String.format("%,.0f đ", discountAmount)%> </span>
                         <% } else { %>
                         <span class="text-gray-500 text-sm">Không áp dụng ưu đãi</span>
-                        <% } %>
+                        <% }%>
                     </div>
                 </div>
                 <div class="border-b"></div>
                 <!-- Tổng tiền cuối cùng -->
                 <div class="flex justify-between items-center text-xl md:text-2xl font-bold mt-2 mb-1">
                     <span>Tổng tiền</span>
-                    <span class="text-blue-700"><%= String.format("%,.0f đ", finalAmount) %></span>
+                    <span class="text-blue-700"><%= String.format("%,.0f đ", finalAmount)%></span>
                 </div>
             </div>
 
             <!-- Nút thanh toán -->
             <div class="mt-8">
                 <form action="payment" method="post">
+                    <input type="hidden" name="totalBill" value="${finalAmount}"><!--  TOTAL BILL-->
                     <button class="w-full bg-blue-600 text-white text-lg font-bold py-4 rounded-2xl shadow hover:bg-blue-700 transition" type="submit">
                         THANH TOÁN
                     </button>
