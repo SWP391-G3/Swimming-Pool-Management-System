@@ -199,6 +199,57 @@
         <div class="flex-1 ml-72 p-6 space-y-8 overflow-y-auto">
             <main>
                 <h2 class="text-xl font-bold mb-4">Danh sách liên hệ khách hàng</h2>
+
+                <!-- Bộ lọc tìm kiếm -->
+                <form action="adminViewCustomerContact" method="get"
+                      class="mb-6 bg-white p-6 rounded-2xl shadow-md grid grid-cols-1 md:grid-cols-4 gap-4 items-end text-sm border border-blue-100">
+
+                    <!-- Từ khóa tên/email -->
+                    <div class="flex flex-col">
+                        <label for="keyword" class="mb-1 font-semibold text-gray-600">Tìm kiếm tên / email:</label>
+                        <input type="text" id="keyword" name="keyword"
+                               value="<%= request.getParameter("keyword") != null ? request.getParameter("keyword") : "" %>"
+                               class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-400 focus:border-blue-400 shadow-sm">
+                    </div>
+
+                    <!-- Lọc theo trạng thái -->
+                    <div class="flex flex-col">
+                        <label for="status" class="mb-1 font-semibold text-gray-600">Trạng thái:</label>
+                        <select id="status" name="status"
+                                class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-400 focus:border-blue-400 shadow-sm">
+                            <option value="">Tất cả</option>
+                            <option value="1" <%= "1".equals(request.getParameter("status")) ? "selected" : "" %>>Đã phản hồi</option>
+                            <option value="0" <%= "0".equals(request.getParameter("status")) ? "selected" : "" %>>Chưa phản hồi</option>
+                        </select>
+                    </div>
+
+                    <!-- Lọc theo tiêu đề -->
+                    <div class="flex flex-col">
+                        <label for="subject" class="mb-1 font-semibold text-gray-600">Tiêu đề:</label>
+                        <select id="subject" name="subject"
+                                class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-400 focus:border-blue-400 shadow-sm">
+                            <option value="">Tất cả</option>
+                            <%
+                                String selectedSubject = request.getParameter("subject");
+                            %>
+                            <option value="Chất lượng bể bơi" <%= "Chất lượng bể bơi".equals(selectedSubject) ? "selected" : "" %>>Chất lượng bể bơi</option>
+                            <option value="Thái độ phục vụ" <%= "Thái độ phục vụ".equals(selectedSubject) ? "selected" : "" %>>Thái độ phục vụ</option>
+                            <option value="Cơ sở vật chất" <%= "Cơ sở vật chất".equals(selectedSubject) ? "selected" : "" %>>Cơ sở vật chất</option>
+                            <option value="Góp ý khác" <%= "Góp ý khác".equals(selectedSubject) ? "selected" : "" %>>Góp ý khác</option>
+                        </select>
+                    </div>
+
+                    <!-- Nút lọc -->
+                    <div class="flex">
+                        <button type="submit"
+                                class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-lg shadow">
+                            <i class="fas fa-filter"></i> Lọc
+                        </button>
+                    </div>
+                </form>
+
+
+
                 <div class="table-container bg-white shadow-md rounded-lg overflow-hidden">
                     <table class="min-w-full divide-y divide-gray-200 text-sm text-left">                    
                         <thead class="bg-blue-100 text-gray-700 font-semibold">
