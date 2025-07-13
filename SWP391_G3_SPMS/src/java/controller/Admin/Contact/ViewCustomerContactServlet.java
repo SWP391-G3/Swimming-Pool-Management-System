@@ -5,6 +5,7 @@
 
 package controller.Admin.Contact;
 
+import dao.admin.ContactWithAdminDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,6 +13,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
+import model.admin.ContactWithAdmin;
 
 /**
  *
@@ -55,7 +58,10 @@ public class ViewCustomerContactServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        ContactWithAdminDAO dao = new ContactWithAdminDAO();
+        List<ContactWithAdmin> list = dao.getAllContact();
+        request.setAttribute("listContact", list);
+        request.getRequestDispatcher("adminViewCustomerContact.jsp").forward(request, response);
     } 
 
     /** 
