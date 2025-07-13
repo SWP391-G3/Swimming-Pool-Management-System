@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/web/lib/kotlinx-coroutines-core-jvm-1.7.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/web/lib/jakarta.servlet.jsp.jstl-2.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/web/lib/jaxb-api-2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/web/lib/jakarta.servlet.jsp.jstl-api-2.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/web/lib/javax.json-1.1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/web/lib/okhttp-4.12.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/web/lib/okio-3.9.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/web/lib/gson-2.8.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/web/lib/sqljdbc42.jar!/" />
+      <root url="jar://$PROJECT_DIR$/web/lib/javax.json-api-1.1.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
