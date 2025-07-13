@@ -50,7 +50,7 @@ public class ContactWithAdminDAO extends DBContext {
             }
             return list;
         } catch (SQLException e) {
-            throw new RuntimeException("Can't query all of contact", e);
+            throw new RuntimeException("Can't query all of contact" + e.getMessage(), e);
         }
 
     }
@@ -71,34 +71,35 @@ public class ContactWithAdminDAO extends DBContext {
     }
 
     public List<ContactWithAdmin> searchContacts(String keyword, String status, String subject, int page, int pageSize) {
+        List<Object> params = new ArrayList<>();
+
         String sql = "SELECT * FROM Contacts WHERE 1=1";
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql += " AND (name LIKE ? OR email LIKE ?)";
+            params.add("%" + keyword.trim() + "%");
+            params.add("%" + keyword.trim() + "%");
+        }
+
+        if (status != null && (status.equals("0") || status.equals("1"))) {
+            sql += " AND is_resolved = ?";
+            params.add(Boolean.parseBoolean(status)); // convert to boolean
+        }
+
+        if (subject != null && !subject.trim().isEmpty()) {
+            sql += " AND subject = ?";
+            params.add(subject.trim());
+        }
+
+        sql += " ORDER BY created_at DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        params.add((page - 1) * pageSize);
+        params.add(pageSize);
+
         try (PreparedStatement st = connection.prepareStatement(sql)) {
-
-            List<Object> params = new ArrayList<>();
-
-            if (keyword != null && !keyword.trim().isEmpty()) {
-                sql += " AND (customer_name LIKE ? OR customer_email LIKE ?)";
-                params.add("%" + keyword + "%");
-                params.add("%" + keyword + "%");
-            }
-
-            if (status != null && (status.equals("0") || status.equals("1"))) {
-                sql += " AND is_resolved = ?";
-                params.add(status);
-            }
-
-            if (subject != null && !subject.isEmpty()) {
-                sql += " AND subject = ?";
-                params.add(subject);
-            }
-
-            sql += " ORDER BY created_at DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
-            params.add((page - 1) * pageSize);
-            params.add(pageSize);
-
             for (int i = 0; i < params.size(); i++) {
                 st.setObject(i + 1, params.get(i));
             }
+
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 ContactWithAdmin c = new ContactWithAdmin();
@@ -115,8 +116,8 @@ public class ContactWithAdminDAO extends DBContext {
                 list.add(c);
             }
 
-        } catch (Exception e) {
-            throw new RuntimeException("Can't query for search contact",e);
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't query for search contact" + e.getMessage(), e);
         }
 
         return list;
@@ -128,7 +129,7 @@ public class ContactWithAdminDAO extends DBContext {
         List<Object> params = new ArrayList<>();
 
         if (keyword != null && !keyword.trim().isEmpty()) {
-            sql += " AND (customer_name LIKE ? OR customer_email LIKE ?)";
+            sql += " AND (name LIKE ? OR email LIKE ?)";
             params.add("%" + keyword + "%");
             params.add("%" + keyword + "%");
         }
@@ -155,7 +156,7 @@ public class ContactWithAdminDAO extends DBContext {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Can't query for search contacts", e);
+            throw new RuntimeException("Can't query for search contacts" + e.getMessage(), e);
         }
         return count;
     }
