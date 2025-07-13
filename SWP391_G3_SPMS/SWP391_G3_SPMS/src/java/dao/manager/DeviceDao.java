@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import model.manager.Device;
 import java.sql.SQLException;
 import model.manager.Pooldevice;
+import model.staff.DeviceReport;
 
 public class DeviceDao extends DBContext {
 
@@ -127,6 +128,35 @@ public class DeviceDao extends DBContext {
         return count;
     }
 
+    public int countDevicesWithPoolName(String keyword, String status, int branchId, String PoolName) {
+        int count = 0;
+        String sql = "SELECT COUNT(*) "
+                + "FROM Pool_Device d "
+                + "JOIN Pools p ON d.pool_id = p.pool_id "
+                + "WHERE p.branch_id = ? "
+                + (PoolName != null ? "AND p.pool_name = ? " : "")
+                + "AND (? IS NULL OR d.device_name LIKE ?) "
+                + "AND (? IS NULL OR d.device_status = ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            int idx = 1;
+            ps.setInt(idx++, branchId);
+            if (PoolName != null) {
+                ps.setString(idx++, PoolName);
+            }
+            ps.setString(idx++, (keyword == null || keyword.isEmpty()) ? null : keyword);
+            ps.setString(idx++, (keyword == null || keyword.isEmpty()) ? null : "%" + keyword + "%");
+            ps.setString(idx++, (status == null || status.isEmpty()) ? null : status);
+            ps.setString(idx++, (status == null || status.isEmpty()) ? null : status);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
 // Lấy danh sách thiết bị theo trang có thể lọc theo hồ bơi , từ khóa , trạng thái
     public List<Device> getDevicesByPageAndPool(String keyword, String status, int page, int pageSize, int branchId, Integer poolId) {
         List<Device> devices = new ArrayList<>();
@@ -186,6 +216,124 @@ public class DeviceDao extends DBContext {
             e.printStackTrace();
         }
         return false;
+    }
+
+// Lấy danh sách thiết bị theo trang có thể lọc theo hồ bơi , từ khóa , trạng thái
+    public List<Device> getDevicesByPageAndPoolName(String keyword, String status, int page, int pageSize, int branchId, String PoolName) {
+        List<Device> devices = new ArrayList<>();
+        String sql = "SELECT d.device_id, d.device_image, d.device_name, d.pool_id, p.pool_name, d.quantity, d.device_status, d.notes "
+                + "FROM Pool_Device d "
+                + "JOIN Pools p ON d.pool_id = p.pool_id "
+                + "WHERE p.branch_id = ? "
+                + (PoolName != null ? "AND p.pool_name = ? " : "")
+                + "AND (? IS NULL OR d.device_name LIKE ?) "
+                + "AND (? IS NULL OR d.device_status = ?) "
+                + "ORDER BY d.device_id "
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            int idx = 1;
+            ps.setInt(idx++, branchId);
+            if (PoolName != null) {
+                ps.setString(idx++, PoolName);
+            }
+            ps.setString(idx++, (keyword == null || keyword.isEmpty()) ? null : keyword);
+            ps.setString(idx++, (keyword == null || keyword.isEmpty()) ? null : "%" + keyword + "%");
+            ps.setString(idx++, (status == null || status.isEmpty()) ? null : status);
+            ps.setString(idx++, (status == null || status.isEmpty()) ? null : status);
+            ps.setInt(idx++, (page - 1) * pageSize);
+            ps.setInt(idx++, pageSize);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Device device = new Device(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getInt(4),
+                        rs.getString(5),
+                        rs.getInt(6),
+                        rs.getString(7),
+                        rs.getString(8)
+                );
+                devices.add(device);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return devices;
+    }
+
+    public List<DeviceReport> filterDeviceReportsByStaff(int staffId, String status, int offset, int limit) throws SQLException {
+        List<DeviceReport> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+                "SELECT dr.*, p.pool_name, b.branch_name "
+                + "FROM Device_Reports dr "
+                + "JOIN Pools p ON dr.pool_id = p.pool_id "
+                + "LEFT JOIN Branchs b ON dr.branch_id = b.branch_id "
+                + "WHERE dr.staff_id = ? "
+        );
+        List<Object> params = new ArrayList<>();
+        params.add(staffId);
+
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append("AND dr.status = ? ");
+            params.add(status.trim());
+        }
+        sql.append("ORDER BY dr.report_date DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ");
+        params.add(offset);
+        params.add(limit);
+
+        try (PreparedStatement st = connection.prepareStatement(sql.toString())) {
+            int idx = 1;
+            for (Object param : params) {
+                if (param instanceof String) {
+                    st.setString(idx++, (String) param);
+                } else if (param instanceof Integer) {
+                    st.setInt(idx++, (Integer) param);
+                }
+            }
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                DeviceReport r = new DeviceReport();
+                r.setReportId(rs.getInt("report_id"));
+                r.setStaffId(rs.getInt("staff_id"));
+                r.setPoolId(rs.getInt("pool_id"));
+                r.setBranchId(rs.getInt("branch_id"));
+                r.setDeviceId(rs.getInt("device_id"));
+                r.setDeviceName(rs.getString("device_name"));
+                r.setReportReason(rs.getString("report_reason"));
+                r.setSuggestion(rs.getString("suggestion"));
+                r.setStatus(rs.getString("status"));
+                r.setReportDate(rs.getTimestamp("report_date"));
+                list.add(r);
+            }
+        }
+        return list;
+    }
+
+    // Đếm tổng số báo cáo thiết bị của 1 staff, có filter status
+    public int countDeviceReportsByStaff(int staffId, String status) throws SQLException {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Device_Reports WHERE staff_id = ? ");
+        List<Object> params = new ArrayList<>();
+        params.add(staffId);
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append("AND status = ? ");
+            params.add(status.trim());
+        }
+        try (PreparedStatement st = connection.prepareStatement(sql.toString())) {
+            int idx = 1;
+            for (Object param : params) {
+                if (param instanceof String) {
+                    st.setString(idx++, (String) param);
+                } else if (param instanceof Integer) {
+                    st.setInt(idx++, (Integer) param);
+                }
+            }
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
     }
 
     public static void main(String[] args) {
