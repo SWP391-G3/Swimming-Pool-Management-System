@@ -191,7 +191,7 @@
                 <div class="header">
                     <h2>Quản lý dịch vụ hồ bơi</h2>
                     <button class="btn-add" onclick="window.location.href = 'pool-service?action=add'">+ Thêm dịch vụ</button>
-
+<button class="btn-add" onclick="window.location.href = 'service-reports'"> Xem báo cáo</button>
                 </div>
                 <!-- Bộ lọc -->
                 <form class="filter-form" method="get" action="pool-service">
