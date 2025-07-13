@@ -201,7 +201,7 @@
                 <h2 class="text-xl font-bold mb-4">Danh sách liên hệ khách hàng</h2>
 
                 <!-- Bộ lọc tìm kiếm -->
-                <form action="adminViewCustomerContact" method="get"
+                <form action="adminFilterContact" method="get"
                       class="mb-6 bg-white p-6 rounded-2xl shadow-md grid grid-cols-1 md:grid-cols-4 gap-4 items-end text-sm border border-blue-100">
 
                     <!-- Từ khóa tên/email -->
