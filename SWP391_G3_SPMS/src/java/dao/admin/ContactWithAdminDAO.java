@@ -48,6 +48,20 @@ public class ContactWithAdminDAO extends DBContext{
         
     }
     
+    public int getTotalRecordOfContact(){
+        String sql = """
+                     select count(*) from Contacts
+                     """;
+        int count = 0;
+        try(PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
+            if (rs.next()) {
+                count = rs.getInt(1);           
+            }        
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't query total record of contact",e);
+        }
+        return count;
+    }
     
     
 }
