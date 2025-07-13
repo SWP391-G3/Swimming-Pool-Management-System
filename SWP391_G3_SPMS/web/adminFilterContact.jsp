@@ -389,7 +389,7 @@
                 <div class="space-y-4 text-[15px] text-gray-800 leading-6 max-h-[60vh] overflow-y-auto pr-1.5">
                     <p><span class="font-semibold text-gray-600">ID:</span> <span id="popupContactId"></span></p>
                     <p><span class="font-semibold text-gray-600">Tên khách hàng:</span> <span id="popupName"></span></p>
-                    <p><span class="font-semibold text-gray-600">Email:</span> <span id="popupEmail"></span></p>
+                    <p><span class="font-semibold text-gray-600">Email:</span> <span id="popupEmail" class="inline-block px-2 py-1 rounded-full text-xs font-semibold bg-blue-200 text-blue-500"></span></p>
                     <p><span class="font-semibold text-gray-600">Tiêu đề:</span> <span id="popupSubject"></span></p>
                     <p><span class="font-semibold text-gray-600">Nội dung:</span> 
                         <span id="popupContent"
