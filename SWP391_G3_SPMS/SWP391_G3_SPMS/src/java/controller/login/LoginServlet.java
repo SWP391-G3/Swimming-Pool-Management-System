@@ -53,7 +53,7 @@ public class LoginServlet extends HttpServlet {
                         response.sendRedirect("managerPanel.jsp");
                         break;
                     case 3:
-                        response.sendRedirect("staff.jsp");
+                        response.sendRedirect("staffManager");
                         break;
                     case 4:
                         response.sendRedirect("customerHome");

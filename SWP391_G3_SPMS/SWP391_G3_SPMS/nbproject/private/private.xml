@@ -74,10 +74,19 @@
             <file>file:/E:/HK_5_SU2025/SWP_ITER2/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dal/DBContext.java</file>
         </group>
         <group>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/pool_service_list.jsp</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dao/manager/PoolServiceDAO.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/poolist/PoolListServlet.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/manager/ServiceReportListServlet.java</file>
             <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/model/manager/PoolService.java</file>
             <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/manager/PoolServiceServlet.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/customerViewPoolList.jsp</file>
             <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/model/manager/ServiceReport.java</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/manager/ServiceReportListServlet.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/poolist/PoolDetailServlet.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dal/DBContext.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/pool-detail.jsp</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dao/manager/ServiceReport.java</file>
+            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/serviceReportList.jsp</file>
         </group>
     </open-files>
 </project-private>
