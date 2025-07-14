@@ -63,7 +63,7 @@ public class ServiceReportListServlet extends HttpServlet {
                 } catch (NumberFormatException ignore) {
                 }
             }
-            int page = 1, pageSize = 10;
+            int page = 1, pageSize = 5;
             try {
                 if (pageStr != null && !pageStr.isEmpty()) {
                     page = Integer.parseInt(pageStr);

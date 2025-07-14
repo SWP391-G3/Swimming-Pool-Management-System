@@ -23,7 +23,7 @@ public class PoolsCustomer {
     private String pool_image;
     private LocalDate created_at;
     private LocalDate updated_at;
-     private String list_image;
+  
     
     
     
@@ -62,23 +62,7 @@ public class PoolsCustomer {
         this.pool_description = pool_description;
     }
 
-    public String getList_image() {
-        return list_image;
-    }
-
-    public void setList_image(String list_image) {
-        this.list_image = list_image;
-    }
-    
-    public List<String> getListImageList() {
-        if (list_image == null || list_image.trim().isEmpty()) return new ArrayList<>();
-        String[] arr = list_image.split(",");
-        List<String> result = new ArrayList<>();
-        for (String s : arr) {
-            if (s != null && !s.trim().isEmpty()) result.add(s.trim());
-        }
-        return result;
-    }
+  
     
     public int getPool_id() {
         return pool_id;
@@ -175,5 +159,7 @@ public class PoolsCustomer {
     public void setUpdated_at(LocalDate updated_at) {
         this.updated_at = updated_at;
     }
+
+   
 
 }
