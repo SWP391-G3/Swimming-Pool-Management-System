@@ -58,7 +58,7 @@
                                                     xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:6px;">
                         <path d="M13 3a9 9 0 1 0 7.44 14.03l1.43 1.43a1 1 0 1 0 1.42-1.42l-1.43-1.43A9 9 0 0 0 13 3zm0 16a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm-.5-10v4.25l3.5 2.08a1 1 0 0 1-1 1.74l-4-2.4V9a1 1 0 1 1 2 0z" fill="#3b82f6"/>
                     </svg>
-                    Lịch sử  báo cáo dịch vụ</a>
+                    Lịch sử báo cáo dịch vụ</a>
             </li>
         </c:if>
 

@@ -299,6 +299,21 @@
                 background: #fafafa;
                 pointer-events: none;
             }
+
+
+            .btn-detail {
+                background: linear-gradient(90deg, #42a5f5 0%, #1e88e5 100%);
+                color: #fff;
+                padding: 6px 16px;
+                font-size: 0.96em;
+                font-weight: 500;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: background 0.2s, transform 0.15s, box-shadow 0.15s;
+                box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+
+            }
         </style>
     </head>
     <body>
@@ -368,21 +383,21 @@
                                         </td>
                                         <td>
                                             <button type="button"
-    class="btn-detail"
-    onclick="showReportDetail(
-        '${fn:escapeXml(report.serviceName)}',
-        '${fn:escapeXml(report.reportReason)}',
-        '${fn:escapeXml(report.suggestion)}',
-        '${report.reportDate}',
-        '${report.status}',
-        ${report.serviceId},
-        '${fn:escapeXml(report.poolName)}',
-        '${fn:escapeXml(report.staffName)}',
-        '${fn:escapeXml(report.branchName)}',
-        ${report.reportId}      <!-- thêm dòng này -->
-    )">
-    Chi tiết
-</button>
+                                                    class="btn-detail"
+                                                    onclick="showReportDetail(
+                        '${fn:escapeXml(report.serviceName)}',
+                        '${fn:escapeXml(report.reportReason)}',
+                        '${fn:escapeXml(report.suggestion)}',
+                        '${report.reportDate}',
+                        '${report.status}',
+                                                    ${report.serviceId},
+                        '${fn:escapeXml(report.poolName)}',
+                        '${fn:escapeXml(report.staffName)}',
+                        '${fn:escapeXml(report.branchName)}',
+                                                    ${report.reportId}
+                )">
+                                                Chi tiết
+                                            </button>
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -441,85 +456,85 @@
                 <div><b>Lý do báo cáo:</b> <span id="modalReportReason"></span></div>
                 <div><b>Gợi ý xử lý:</b> <span id="modalSuggestion"></span></div>
                 <div style="display: flex; gap: 10px; margin-top:20px;">
-                    <button id="modalApproveBtn" class="custom-modal-action" style="display:none;">Đã kiểm tra</button>
-                    <button id="modalEditBtn" class="custom-modal-action" style="background: #ffe5c7; color: #dd6c00; border:1px solid #ffc107;"
-                            onmouseover="this.style.background = '#ffd17a';" onmouseout="this.style.background = '#ffe5c7';">
-                        Cập nhật dịch vụ
-                    </button>
+                    <button id="modalApproveBtn" class="custom-modal-action" style="display:none;">Phê duyệt báo cáo</button>
+
                 </div>
             </div>
         </div>
 
     </body>
     <script>
-    let currentReportId = null;
-    function showReportDetail(serviceName, reportReason, suggestion, reportDate, status, serviceId, poolName, staffName, branchName, reportId) {
-        document.getElementById('modalServiceName').innerText = serviceName;
-        document.getElementById('modalReportReason').innerText = reportReason;
-        document.getElementById('modalSuggestion').innerText = suggestion;
-        document.getElementById('modalReportDate').innerText = reportDate;
-        document.getElementById('modalPoolName').innerText = poolName;
-        document.getElementById('modalStaffName').innerText = staffName;
-        document.getElementById('modalBranchName').innerText = branchName;
-        currentReportId = reportId;
-        let statusLabel = '';
-        if (status === 'pending') statusLabel = 'Chờ duyệt';
-        else if (status === 'approved') statusLabel = 'Đã duyệt';
-        else if (status === 'rejected') statusLabel = 'Từ chối';
-        else statusLabel = status;
-        document.getElementById('modalStatus').innerText = statusLabel;
+        let currentReportId = null;
+        function showReportDetail(serviceName, reportReason, suggestion, reportDate, status, serviceId, poolName, staffName, branchName, reportId) {
+            document.getElementById('modalServiceName').innerText = serviceName;
+            document.getElementById('modalReportReason').innerText = reportReason;
+            document.getElementById('modalSuggestion').innerText = suggestion;
+            document.getElementById('modalReportDate').innerText = reportDate;
+            document.getElementById('modalPoolName').innerText = poolName;
+            document.getElementById('modalStaffName').innerText = staffName;
+            document.getElementById('modalBranchName').innerText = branchName;
+            currentReportId = reportId;
+            let statusLabel = '';
+            if (status === 'pending')
+                statusLabel = 'Chờ duyệt';
+            else if (status === 'approved')
+                statusLabel = 'Đã duyệt';
+            else if (status === 'rejected')
+                statusLabel = 'Từ chối';
+            else
+                statusLabel = status;
+            document.getElementById('modalStatus').innerText = statusLabel;
 
-        // Show/Hide "Đã kiểm tra" button chỉ nếu là pending
-        if (status === 'pending') {
-            document.getElementById('modalApproveBtn').style.display = '';
-            document.getElementById('modalApproveBtn').onclick = function() {
-                approveReport(currentReportId);
-            }
-        } else {
-            document.getElementById('modalApproveBtn').style.display = 'none';
-        }
-        // Link cập nhật dịch vụ
-        document.getElementById('modalEditBtn').onclick = function () {
-            window.location.href = 'pool-service?action=edit&id=' + serviceId;
-        };
-        document.getElementById('reportDetailModal').style.display = 'flex';
-    }
-
-    function closeReportDetail() {
-        document.getElementById('reportDetailModal').style.display = 'none';
-    }
-var ctx = "${pageContext.request.contextPath}";
-    function approveReport(reportId) {
-        if (!reportId) return;
-        const formData = new URLSearchParams();
-        formData.append("action", "done");
-        formData.append("id", reportId);
-
-        fetch(ctx + '/service-reports', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: formData.toString()
-        })
-        .then(response => response.text()) // đổi sang text để debug lỗi
-        .then(text => {
-            try {
-                let data = JSON.parse(text);
-                if (data.success) {
-                    alert('Đã duyệt báo cáo!');
-                    location.reload();
-                } else {
-                    alert('Có lỗi xảy ra khi duyệt báo cáo!');
+            // Show/Hide "Đã kiểm tra" button chỉ nếu là pending
+            if (status === 'pending') {
+                document.getElementById('modalApproveBtn').style.display = '';
+                document.getElementById('modalApproveBtn').onclick = function () {
+                    approveReport(currentReportId);
                 }
-            } catch (e) {
-                alert("Server response lỗi: " + text);
+            } else {
+                document.getElementById('modalApproveBtn').style.display = 'none';
             }
-        })
-        .catch(() => {
-            alert('Có lỗi kết nối khi duyệt báo cáo!');
-        });
-    }
-</script>
+            // Link cập nhật dịch vụ
+
+            document.getElementById('reportDetailModal').style.display = 'flex';
+        }
+
+        function closeReportDetail() {
+            document.getElementById('reportDetailModal').style.display = 'none';
+        }
+                var ctx = "${pageContext.request.contextPath}";
+        function approveReport(reportId) {
+            if (!reportId)
+                return;
+            const formData = new URLSearchParams();
+            formData.append("action", "done");
+            formData.append("id", reportId);
+
+            fetch(ctx + '/service-reports', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData.toString()
+            })
+                    .then(response => response.text()) // đổi sang text để debug lỗi
+                    .then(text => {
+                        try {
+                            let data = JSON.parse(text);
+                            if (data.success) {
+                                alert('Đã duyệt báo cáo!');
+                                location.reload();
+                            } else {
+                                alert('Có lỗi xảy ra khi duyệt báo cáo!');
+                            }
+                        } catch (e) {
+                            alert("Server response lỗi: " + text);
+                        }
+                    })
+                    .catch(() => {
+                        alert('Có lỗi kết nối khi duyệt báo cáo!');
+                    });
+        }
+    </script>
 
 </html>
