@@ -201,23 +201,25 @@ public class DeviceDao extends DBContext {
 //        System.out.println(a1);
 
 // Test lấy danh sách báo cáo thiết bị
-        String keyword = ""; // hoặc từ khóa muốn test
-        String status = "";  // hoặc "pending"/"done"
-        String poolId = "";  // hoặc poolId cụ thể (vd: "1")
-        int page = 1;
-        int pageSize = 10;
-        int branchId = 1;    // Hà Nội, đổi theo user test
+//        String keyword = ""; // hoặc từ khóa muốn test
+//        String status = "";  // hoặc "pending"/"done"
+//        String poolId = "";  // hoặc poolId cụ thể (vd: "1")
+//        int page = 1;
+//        int pageSize = 10;
+//        int branchId = 1;    // Hà Nội, đổi theo user test
+//
+//        List<ManagerDeviceReport> reports = dao.getDeviceReports(keyword, status, poolId, page, pageSize, branchId);
+//
+//        System.out.println("===== TEST getDeviceReports =====");
+//        System.out.println("Total reports: " + reports.size());
+//        for (ManagerDeviceReport report : reports) {
+//            System.out.println(report); // nếu đã override toString() sẽ ra thông tin chi tiết
+//            // hoặc in từng trường nếu chưa override toString()
+//            // System.out.println("Report ID: " + report.getReportId() + ", Device: " + report.getDeviceName());
+//        }
+        ManagerDeviceReport a2 = dao.getReportById(1);
 
-        List<ManagerDeviceReport> reports = dao.getDeviceReports(keyword, status, poolId, page, pageSize, branchId);
-
-        System.out.println("===== TEST getDeviceReports =====");
-        System.out.println("Total reports: " + reports.size());
-        for (ManagerDeviceReport report : reports) {
-            System.out.println(report); // nếu đã override toString() sẽ ra thông tin chi tiết
-            // hoặc in từng trường nếu chưa override toString()
-            // System.out.println("Report ID: " + report.getReportId() + ", Device: " + report.getDeviceName());
-        }
-
+        System.out.println(a2);
     }
 
     // của Hùng
@@ -408,7 +410,7 @@ public class DeviceDao extends DBContext {
             params.add(Integer.parseInt(poolId));
         }
 
-        sql.append("ORDER BY dr.report_date DESC ")
+        sql.append("ORDER BY dr.report_date ASC ")
                 .append("OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
 
         params.add((page - 1) * pageSize);
@@ -425,7 +427,7 @@ public class DeviceDao extends DBContext {
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                ManagerDeviceReport report = new ManagerDeviceReport(); // Đổi từ DeviceReport
+                ManagerDeviceReport report = new ManagerDeviceReport();
                 report.setReportId(rs.getInt("report_id"));
                 report.setStaffId(rs.getInt("staff_id"));
                 report.setPoolId(rs.getInt("pool_id"));
@@ -535,9 +537,10 @@ public class DeviceDao extends DBContext {
 
 // Lấy thông tin báo cáo theo ID
     public ManagerDeviceReport getReportById(int reportId) {
-        String sql = "SELECT dr.*, s.full_name as staff_name, p.pool_name, b.branch_name "
+        String sql = "SELECT dr.*, u.full_name AS staff_name, p.pool_name, b.branch_name "
                 + "FROM Device_Reports dr "
                 + "LEFT JOIN Staffs s ON dr.staff_id = s.staff_id "
+                + "LEFT JOIN Users u ON s.user_id = u.user_id "
                 + "LEFT JOIN Pools p ON dr.pool_id = p.pool_id "
                 + "LEFT JOIN Branchs b ON dr.branch_id = b.branch_id "
                 + "WHERE dr.report_id = ?";
@@ -546,13 +549,22 @@ public class DeviceDao extends DBContext {
             ps.setInt(1, reportId);
 
             ResultSet rs = ps.executeQuery();
+
             if (rs.next()) {
-                ManagerDeviceReport report = new ManagerDeviceReport(); // Đổi từ DeviceReport
+                ManagerDeviceReport report = new ManagerDeviceReport();
                 report.setReportId(rs.getInt("report_id"));
                 report.setStaffId(rs.getInt("staff_id"));
                 report.setPoolId(rs.getInt("pool_id"));
                 report.setBranchId(rs.getInt("branch_id"));
-                report.setDeviceId(rs.getObject("device_id", Integer.class));
+
+                // Sửa đoạn này:
+                int rawDeviceId = rs.getInt("device_id");
+                if (rs.wasNull()) {
+                    report.setDeviceId(null);
+                } else {
+                    report.setDeviceId(rawDeviceId);
+                }
+
                 report.setDeviceName(rs.getString("device_name"));
                 report.setReportReason(rs.getString("report_reason"));
                 report.setSuggestion(rs.getString("suggestion"));
@@ -566,11 +578,79 @@ public class DeviceDao extends DBContext {
 
                 return report;
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return null;
+    }
+
+    // Xử lí phần lịch sử báo cáo
+    public boolean updateManagerNote(int reportId, String managerNote, int managerId) {
+        String sql = "UPDATE Device_Reports SET manager_note = ?, processed_at = GETDATE(), processed_by = ? WHERE report_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, managerNote);
+            ps.setInt(2, managerId);
+            ps.setInt(3, reportId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<ManagerDeviceReport> getReportsByDeviceId(int deviceId) {
+        List<ManagerDeviceReport> list = new ArrayList<>();
+        String sql = "SELECT dr.*, u.full_name as staff_name, m.full_name as manager_name, p.pool_name, b.branch_name "
+                + "FROM Device_Reports dr "
+                + "LEFT JOIN Staffs s ON dr.staff_id = s.staff_id "
+                + "LEFT JOIN Users u ON s.user_id = u.user_id "
+                + "LEFT JOIN Users m ON dr.processed_by = m.user_id "
+                + "LEFT JOIN Pools p ON dr.pool_id = p.pool_id "
+                + "LEFT JOIN Branchs b ON dr.branch_id = b.branch_id "
+                + "WHERE dr.device_id = ? "
+                + "ORDER BY dr.report_date DESC";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, deviceId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ManagerDeviceReport report = new ManagerDeviceReport();
+                report.setReportId(rs.getInt("report_id"));
+                report.setStaffId(rs.getInt("staff_id"));
+                report.setPoolId(rs.getInt("pool_id"));
+                report.setBranchId(rs.getInt("branch_id"));
+
+                // Xử lý device_id nullable
+                int rawDeviceId = rs.getInt("device_id");
+                if (rs.wasNull()) {
+                    report.setDeviceId(null);
+                } else {
+                    report.setDeviceId(rawDeviceId);
+                }
+
+                report.setDeviceName(rs.getString("device_name"));
+                report.setReportReason(rs.getString("report_reason"));
+                report.setSuggestion(rs.getString("suggestion"));
+                report.setReportDate(rs.getTimestamp("report_date"));
+                report.setStatus(rs.getString("status"));
+
+                // Thông tin join
+                report.setStaffName(rs.getString("staff_name"));
+                report.setPoolName(rs.getString("pool_name"));
+                report.setBranchName(rs.getString("branch_name"));
+
+                // Lịch sử xử lý
+                report.setManagerNote(rs.getString("manager_note"));
+                report.setProcessedAt(rs.getTimestamp("processed_at"));
+                report.setProcessedByName(rs.getString("manager_name"));
+
+                list.add(report);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
 }

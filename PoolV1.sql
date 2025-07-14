@@ -522,3 +522,14 @@ END;
 
 
 
+-- Tuấn Anh thên trường vào Device_Reports
+
+ALTER TABLE Device_Reports
+    ADD manager_note NVARCHAR(255),
+        processed_at DATETIME,
+        processed_by INT NULL,
+    CONSTRAINT FK_DeviceReports_Manager FOREIGN KEY (processed_by) REFERENCES Users(user_id);
+
+
+
+

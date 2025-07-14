@@ -1,139 +1,100 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model.manager;
 
-import java.sql.Timestamp; 
+import java.sql.Timestamp;
 
-/**
- *
- * @author Tuan Anh
- */
 public class ManagerDeviceReport {
-    
     private int reportId, staffId, poolId, branchId;
     private Integer deviceId; // Có thể null
     private String deviceName, reportReason, suggestion, status;
-    private java.sql.Timestamp reportDate;
+    private Timestamp reportDate;
 
-    // --- Thêm các trường hiển thị ---
+    // --- Các trường hiển thị ---
     private String poolName;      // Tên hồ bơi
     private String staffName;     // Tên nhân viên tạo báo cáo
     private String branchName;    // Tên chi nhánh
 
+    // --- Trường xử lý báo cáo ---
+    private String managerNote;   // Ghi chú xử lý
+    private Timestamp processedAt; // Thời gian xử lý
+    private Integer processedBy;   // ID người xử lý
+    private String processedByName; // Tên manager xử lý
+
     // Constructor
     public ManagerDeviceReport() {}
 
-    // Getter/Setter cho các trường mới
-    public String getPoolName() {
-        return poolName;
+    // Getter/Setter cho các trường mới (manager xử lý)
+    public String getManagerNote() {
+        return managerNote;
+    }
+    public void setManagerNote(String managerNote) {
+        this.managerNote = managerNote;
     }
 
-    public void setPoolName(String poolName) {
-        this.poolName = poolName;
+    public Timestamp getProcessedAt() {
+        return processedAt;
+    }
+    public void setProcessedAt(Timestamp processedAt) {
+        this.processedAt = processedAt;
     }
 
-    public String getStaffName() {
-        return staffName;
+    public Integer getProcessedBy() {
+        return processedBy;
+    }
+    public void setProcessedBy(Integer processedBy) {
+        this.processedBy = processedBy;
     }
 
-    public void setStaffName(String staffName) {
-        this.staffName = staffName;
+    public String getProcessedByName() {
+        return processedByName;
+    }
+    public void setProcessedByName(String processedByName) {
+        this.processedByName = processedByName;
     }
 
-    public String getBranchName() {
-        return branchName;
-    }
+    // Getter/Setter cho các trường hiển thị
+    public String getPoolName() { return poolName; }
+    public void setPoolName(String poolName) { this.poolName = poolName; }
 
-    public void setBranchName(String branchName) {
-        this.branchName = branchName;
-    }
+    public String getStaffName() { return staffName; }
+    public void setStaffName(String staffName) { this.staffName = staffName; }
+
+    public String getBranchName() { return branchName; }
+    public void setBranchName(String branchName) { this.branchName = branchName; }
 
     // Getter/Setter cho các trường cơ bản
-    public int getReportId() {
-        return reportId;
-    }
+    public int getReportId() { return reportId; }
+    public void setReportId(int reportId) { this.reportId = reportId; }
 
-    public void setReportId(int reportId) {
-        this.reportId = reportId;
-    }
+    public int getStaffId() { return staffId; }
+    public void setStaffId(int staffId) { this.staffId = staffId; }
 
-    public int getStaffId() {
-        return staffId;
-    }
+    public int getPoolId() { return poolId; }
+    public void setPoolId(int poolId) { this.poolId = poolId; }
 
-    public void setStaffId(int staffId) {
-        this.staffId = staffId;
-    }
+    public int getBranchId() { return branchId; }
+    public void setBranchId(int branchId) { this.branchId = branchId; }
 
-    public int getPoolId() {
-        return poolId;
-    }
+    public Integer getDeviceId() { return deviceId; }
+    public void setDeviceId(Integer deviceId) { this.deviceId = deviceId; }
 
-    public void setPoolId(int poolId) {
-        this.poolId = poolId;
-    }
+    public String getDeviceName() { return deviceName; }
+    public void setDeviceName(String deviceName) { this.deviceName = deviceName; }
 
-    public int getBranchId() {
-        return branchId;
-    }
+    public String getReportReason() { return reportReason; }
+    public void setReportReason(String reportReason) { this.reportReason = reportReason; }
 
-    public void setBranchId(int branchId) {
-        this.branchId = branchId;
-    }
+    public String getSuggestion() { return suggestion; }
+    public void setSuggestion(String suggestion) { this.suggestion = suggestion; }
 
-    public Integer getDeviceId() {
-        return deviceId;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public void setDeviceId(Integer deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    public String getDeviceName() {
-        return deviceName;
-    }
-
-    public void setDeviceName(String deviceName) {
-        this.deviceName = deviceName;
-    }
-
-    public String getReportReason() {
-        return reportReason;
-    }
-
-    public void setReportReason(String reportReason) {
-        this.reportReason = reportReason;
-    }
-
-    public String getSuggestion() {
-        return suggestion;
-    }
-
-    public void setSuggestion(String suggestion) {
-        this.suggestion = suggestion;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public java.sql.Timestamp getReportDate() {
-        return reportDate;
-    }
-
-    public void setReportDate(java.sql.Timestamp reportDate) { // Thay vì Timestamp
-        this.reportDate = reportDate;
-    }
+    public Timestamp getReportDate() { return reportDate; }
+    public void setReportDate(Timestamp reportDate) { this.reportDate = reportDate; }
 
     @Override
     public String toString() {
-        return "DeviceReport{" +
+        return "ManagerDeviceReport{" +
                 "reportId=" + reportId +
                 ", staffId=" + staffId +
                 ", poolId=" + poolId +
@@ -147,12 +108,10 @@ public class ManagerDeviceReport {
                 ", poolName='" + poolName + '\'' +
                 ", staffName='" + staffName + '\'' +
                 ", branchName='" + branchName + '\'' +
+                ", managerNote='" + managerNote + '\'' +
+                ", processedAt=" + processedAt +
+                ", processedBy=" + processedBy +
+                ", processedByName='" + processedByName + '\'' +
                 '}';
     }
-    
-    
-    
-    
-    
-    
 }

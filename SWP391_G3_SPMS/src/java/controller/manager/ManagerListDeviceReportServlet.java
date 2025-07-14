@@ -76,10 +76,10 @@ public class ManagerListDeviceReportServlet extends HttpServlet {
             }
         }
 
-        // Khởi tạo DAO
+        
         DeviceDao deviceDao = new DeviceDao();
 
-        // SỬA DÒNG NÀY - Đổi từ DeviceReport thành ManagerDeviceReport
+        
         List<ManagerDeviceReport> reports = deviceDao.getDeviceReports(keyword, status, poolId, page, pageSize, branchId);
 
         // Lấy tổng số báo cáo để tính phân trang
@@ -89,7 +89,7 @@ public class ManagerListDeviceReportServlet extends HttpServlet {
         // Lấy danh sách hồ bơi cho dropdown
         List<Pooldevice> pools = deviceDao.getPoolsByBranchId(branchId);
 
-        // DEBUG
+        
         System.out.println("=== DEBUG INFO ===");
         System.out.println("Branch ID: " + branchId);
         System.out.println("User ID: " + (currentUser != null ? currentUser.getUser_id() : "null"));
@@ -99,7 +99,7 @@ public class ManagerListDeviceReportServlet extends HttpServlet {
             ManagerDeviceReport first = reports.get(0);
             System.out.println("First report: ID=" + first.getReportId() + ", Device=" + first.getDeviceName());
         }
-        System.out.println("===================");
+        
 
         // Set attributes
         request.setAttribute("reports", reports);

@@ -205,36 +205,34 @@ body {
 
 /* Các thành phần trong bảng */
 .thumb {
-    width: 48px;
-    height: 48px;
+    width: 46px;
+    height: 46px;
     object-fit: cover;
-    border-radius: var(--border-radius-sm);
-    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+    box-shadow: 0 2px 8px rgba(56,189,248,0.12);
+    border: 1.5px solid #e0f2fe;
 }
 
 .status {
     display: inline-block;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.875rem;
-    font-weight: 600;
+    padding: 5px 16px;
+    border-radius: 13px;
+    font-size: var(--status-size);
+    font-weight: 700;
+    letter-spacing: .01em;
 }
-
-.status-available {
-    background: var(--success-bg);
-    color: var(--success);
+.status.available {
+    background: #d1fae5;
+    color: #059669;
 }
-
-.status-maintenance {
-    background: var(--warning-bg);
-    color: var(--warning);
+.status.maintenance {
+    background: #fef3c7;
+    color: #b45309;
 }
-
-.status-broken {
+.status.broken {
     background: var(--danger-bg);
     color: var(--danger);
 }
-
 /* Nút hành động */
 .action-buttons-cell {
     display: flex;

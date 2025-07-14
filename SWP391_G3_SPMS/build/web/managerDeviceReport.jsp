@@ -19,7 +19,7 @@
         <title>Báo cáo thiết bị</title>
         <link rel="stylesheet" href="./manager-css/manager-deviceReport-v2.css">
         <link rel="stylesheet" href="./manager-css/manager-panel.css">
-       
+
     </head>
     <body>
         <div class="layout">
@@ -58,7 +58,7 @@
                     <a href="managerListDeviceServlet" class="btn-back-to-device">← Quay lại quản lý thiết bị</a>
 
 
-                    
+
 
                     <form class="filter-group" method="get" action="managerListDeviceReportServlet" id="searchForm">
                         <h2>Báo cáo thiết bị</h2>
@@ -145,31 +145,18 @@
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>
+                                       
+
                                         <td>
                                             <c:if test="${report.status == 'pending'}">
-                                                <!-- Nút cập nhật device ID -->
-                                                <a href="managerUpdateDeviceServlet?id=${report.deviceId}
-                                                   &poolId=${poolId}
-                                                   &keyword=${keyword}
-                                                   &status=${status}
-                                                   &page=${page}
-                                                   &pageSize=${pageSize}" class="btn-action btn-update">Cập nhật</a>
-
-                                                <!-- Nút đã duyệt -->
-                                                <form action="managerApproveDeviceReportServlet" method="post" style="display:inline;">
-                                                    <input type="hidden" name="reportId" value="${report.reportId}">
-                                                    <input type="hidden" name="poolId" value="${poolId}">
-                                                    <input type="hidden" name="keyword" value="${keyword}">
-                                                    <input type="hidden" name="status" value="${status}">
-                                                    <input type="hidden" name="page" value="${page}">
-                                                    <input type="hidden" name="pageSize" value="${pageSize}">
-                                                    <button type="submit" class="btn-approve" onclick="return confirm('Bạn chắc chắn muốn duyệt báo cáo này?')">Đã duyệt</button>
-                                                </form>
+                                                <a href="managerProcessDeviceReportServlet?reportId=${report.reportId}" class="btn-action btn-update">Xử lý</a>
                                             </c:if>
                                             <c:if test="${report.status == 'done'}">
                                                 <span style="color: green; font-style: italic;">Đã xử lý</span>
                                             </c:if>
                                         </td>
+
+                                       
                                     </tr>
                                 </c:forEach>
                             </c:otherwise>
