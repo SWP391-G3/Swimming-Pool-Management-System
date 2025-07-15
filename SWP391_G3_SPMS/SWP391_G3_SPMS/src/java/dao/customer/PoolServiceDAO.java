@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.customer.PoolService;
+
 /**
  *
  * @author LAZYVL
@@ -20,7 +21,7 @@ public class PoolServiceDAO extends DBContext {
 
     public List<PoolService> getServicesByPoolId(int poolId) {
         List<PoolService> list = new ArrayList<>();
-        String sql = "SELECT * FROM Pool_Service WHERE pool_id = ?";
+        String sql = "SELECT * FROM Pool_Service WHERE pool_id = ? AND service_status = 'available'";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, poolId);
@@ -63,6 +64,31 @@ public class PoolServiceDAO extends DBContext {
                 String status = rs.getString("service_status");
 
                 return new PoolService(poolServiceId, poolIdDb, serviceName, description, price, image, quantity, status);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public PoolService getServiceById(int serviceId) {
+        String sql = "SELECT pool_service_id, pool_id, service_name, description, price, service_image, quantity, service_status "
+                + "FROM Pool_Service WHERE pool_service_id = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, serviceId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                int poolServiceId = rs.getInt("pool_service_id");
+                int poolId = rs.getInt("pool_id");
+                String serviceName = rs.getString("service_name");
+                String description = rs.getString("description");
+                BigDecimal price = rs.getBigDecimal("price");
+                String image = rs.getString("service_image");
+                int quantity = rs.getInt("quantity");
+                String status = rs.getString("service_status");
+
+                return new PoolService(poolServiceId, poolId, serviceName, description, price, image, quantity, status);
             }
         } catch (SQLException e) {
             e.printStackTrace();

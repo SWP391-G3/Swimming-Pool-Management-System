@@ -21,7 +21,11 @@ public class BookingDAO extends DBContext {
 
         try {
             PreparedStatement st = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-            st.setInt(1, booking.getUserId());
+            if (booking.getUserId() != null) {
+                st.setInt(1, booking.getUserId());
+            } else {
+                st.setNull(1, java.sql.Types.INTEGER);
+            }
             st.setInt(2, booking.getPoolId());
             // discount_id
             if (booking.getDiscountId() != null) {

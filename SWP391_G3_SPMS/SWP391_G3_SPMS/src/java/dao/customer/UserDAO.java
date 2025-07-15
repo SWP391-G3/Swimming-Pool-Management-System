@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -572,6 +573,88 @@ public class UserDAO extends DBContext {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public User getUserByPhone(String phone) {
+        String sql = "SELECT * FROM Users WHERE phone = ? AND role_id = 4"; // role_id = 3 là customer
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, phone);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                User user = new User();
+                user.setUser_id(rs.getInt("user_id"));
+                user.setUsername(rs.getString("username"));
+                user.setFull_name(rs.getString("full_name"));
+                user.setEmail(rs.getString("email"));
+                user.setPhone(rs.getString("phone"));
+                user.setAddress(rs.getString("address"));
+                user.setRole_id(rs.getInt("role_id"));
+                user.setStatus(rs.getBoolean("status"));
+                user.setDob(rs.getDate("dob"));
+                user.setGender(rs.getString("gender"));
+                user.setImages(rs.getString("images"));
+                return user;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<User> searchCustomersByPhone(String phone) {
+        List<User> customers = new ArrayList<>();
+        String sql = "SELECT * FROM Users WHERE phone LIKE ? AND role_id = 4 ORDER BY full_name";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, "%" + phone + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User user = new User();
+                user.setUser_id(rs.getInt("user_id"));
+                user.setFull_name(rs.getString("full_name"));
+                user.setPhone(rs.getString("phone"));
+                user.setEmail(rs.getString("email"));
+                customers.add(user);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return customers;
+    }
+
+    public User getUser(int userId) {
+        String sql = "SELECT user_id, full_name, email, phone, password, role, status, created_at, updated_at "
+                + "FROM Users WHERE user_id = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, userId);
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                User u = new User();
+                u.setUser_id(rs.getInt("user_id"));
+                u.setUsername(rs.getString("username"));
+                u.setPassword(rs.getString("password"));
+                u.setFull_name(rs.getString("full_name"));
+                u.setEmail(rs.getString("email"));
+                u.setPhone(rs.getString("phone"));
+                u.setAddress(rs.getString("address"));
+                u.setRole_id(rs.getInt("role_id"));
+                u.setStatus(rs.getBoolean("status"));
+                u.setDob(rs.getDate("dob"));
+                u.setGender(rs.getString("gender"));
+                u.setImages(rs.getString("images"));
+
+                // Xử lý an toàn created_at
+                java.sql.Date createdDate = rs.getDate("created_at");
+
+                return u;
+            }
+            rs.close();
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

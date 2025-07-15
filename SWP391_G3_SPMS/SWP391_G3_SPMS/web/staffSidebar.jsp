@@ -24,7 +24,7 @@
     <ul class="menu">
         <c:if test="${staff != null && staff.staffTypeId == 2 || staff.staffTypeId == 1}">
             <li>
-                <a href="checkin"
+                <a href="checkin_list"
                    <c:if test="${activeMenu eq 'checkin'}">class="active"</c:if>>
                        <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="2"/><rect x="7" y="14" width="10" height="6" rx="1.5" fill="#38bdf8" opacity="0.7"/><circle cx="12" cy="12" r="2" fill="#38bdf8"/></svg>
                        Check-in
@@ -54,7 +54,7 @@
 
         <c:if test="${staff != null && staff.staffTypeId == 2}">
             <li>
-                <a href="staffDeviceReport" <c:if test="${activeMenu eq 'device-history'}">class="active"</c:if>> <svg width="19" height="19" viewBox="0 0 24 24" fill="none"
+                <a href="staff_sale" <c:if test="${activeMenu eq 'device-history'}">class="active"</c:if>> <svg width="19" height="19" viewBox="0 0 24 24" fill="none"
                                                                                                                        xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:6px;">
                             <path d="M13 3a9 9 0 1 0 7.44 14.03l1.43 1.43a1 1 0 1 0 1.42-1.42l-1.43-1.43A9 9 0 0 0 13 3zm0 16a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm-.5-10v4.25l3.5 2.08a1 1 0 0 1-1 1.74l-4-2.4V9a1 1 0 1 1 2 0z" fill="#3b82f6"/>
                         </svg>

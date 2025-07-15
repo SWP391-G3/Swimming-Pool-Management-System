@@ -307,6 +307,10 @@ CREATE TABLE Service_Reports (
     suggestion NVARCHAR(255),
     report_date DATETIME NOT NULL DEFAULT GETDATE(),
     status NVARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'done')),
+	manager_note NVARCHAR(255),
+	processed_at DATETIME,
+	processed_by INT NULL,
+	CONSTRAINT FK_ServiceReports_Manager FOREIGN KEY (processed_by) REFERENCES Users(user_id),
     CONSTRAINT FK_ServiceReports_Staff FOREIGN KEY (staff_id) REFERENCES Staffs(staff_id),
     CONSTRAINT FK_ServiceReports_Pool FOREIGN KEY (pool_id) REFERENCES Pools(pool_id),
     CONSTRAINT FK_ServiceReports_Branch FOREIGN KEY (branch_id) REFERENCES Branchs(branch_id),
@@ -325,6 +329,10 @@ CREATE TABLE Device_Reports (
     suggestion NVARCHAR(255),
     report_date DATETIME NOT NULL DEFAULT GETDATE(),
     status NVARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'done')), -- Chỉ “pending” hoặc “done”
+	manager_note NVARCHAR(255),
+	processed_at DATETIME,
+	processed_by INT NULL,
+	CONSTRAINT FK_DeviceReports_Manager FOREIGN KEY (processed_by) REFERENCES Users(user_id),
     CONSTRAINT FK_DeviceReports_Staff FOREIGN KEY (staff_id)  REFERENCES Staffs(staff_id),
     CONSTRAINT FK_DeviceReports_Pool FOREIGN KEY (pool_id)   REFERENCES Pools(pool_id),
     CONSTRAINT FK_DeviceReports_Branch FOREIGN KEY (branch_id) REFERENCES Branchs(branch_id),
@@ -342,53 +350,63 @@ CREATE TABLE Customer_Checkin (
     CONSTRAINT FK_CustomerCheckin_Booking FOREIGN KEY (bookingId) REFERENCES Booking(booking_id)
 );
 
+-- Bảng Sale_Ticket_Directly - Quản lý bán vé trực tiếp tại quầy
+CREATE TABLE Sale_Ticket_Directly (
+    sale_id INT IDENTITY(1,1) PRIMARY KEY,
+    customer_name NVARCHAR(100) NOT NULL,-- Thông tin khách hàng (bắt buộc)
+    customer_phone NVARCHAR(15) NOT NULL,
+    customer_email NVARCHAR(100) NULL,
+    user_id INT NULL,-- Liên kết với user nếu khách hàng có tài khoản
+    staff_id INT NOT NULL,-- Thông tin nhân viên và địa điểm
+    pool_id INT NOT NULL,
+    branch_id INT NOT NULL,
+    booking_id INT NOT NULL,-- Thông tin booking được tạo
+    total_amount DECIMAL(10,2) NOT NULL,-- Thông tin giao dịch
+    payment_method NVARCHAR(20) NOT NULL DEFAULT 'Cash' CHECK (payment_method IN ('Cash', 'Bank_transfers')),
+    payment_status NVARCHAR(20) NOT NULL DEFAULT 'completed' CHECK (payment_status IN ('completed', 'refunded')),
+    sale_date DATETIME NOT NULL DEFAULT GETDATE(),-- Thông tin thời gian
+    created_at DATETIME NOT NULL DEFAULT GETDATE(),
+    notes NVARCHAR(255) NULL,-- Ghi chú
+    CONSTRAINT FK_SaleTicketDirectly_User FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    CONSTRAINT FK_SaleTicketDirectly_Staff FOREIGN KEY (staff_id) REFERENCES Staffs(staff_id),
+    CONSTRAINT FK_SaleTicketDirectly_Pool FOREIGN KEY (pool_id) REFERENCES Pools(pool_id),
+    CONSTRAINT FK_SaleTicketDirectly_Branch FOREIGN KEY (branch_id) REFERENCES Branchs(branch_id),
+    CONSTRAINT FK_SaleTicketDirectly_Booking FOREIGN KEY (booking_id) REFERENCES Booking(booking_id)
+);
 
+CREATE TABLE Contact_Responses (
+    response_id INT IDENTITY(1,1) PRIMARY KEY,
+    contact_id INT NOT NULL,                             -- Liên hệ được phản hồi
+    responder_id INT NOT NULL,                           -- Người phản hồi (Admin)
+    response_content NVARCHAR(2000) NOT NULL,            -- Nội dung phản hồi
+    response_time DATETIME NOT NULL DEFAULT GETDATE(),   -- Thời gian phản hồi
+    CONSTRAINT FK_Response_Contact FOREIGN KEY (contact_id) REFERENCES Contacts(contact_id),
+    CONSTRAINT FK_Response_Responder FOREIGN KEY (responder_id) REFERENCES Users(user_id)
+);
 
+-- thêm để update việc tại sao lại  ban account
+CREATE TABLE Account_Ban_Log (
+    ban_id INT IDENTITY(1,1) PRIMARY KEY,
+    user_id INT NOT NULL,                   -- Người bị ban
+    banned_by INT NOT NULL,                 -- Người thực hiện ban
+    reason NVARCHAR(255) NOT NULL,          -- Lý do ban
+    is_permanent BIT NOT NULL DEFAULT 1,    -- 1: vĩnh viễn, 0: tạm thời
+    created_at DATETIME DEFAULT GETDATE(),  -- Thời gian ban
 
+    CONSTRAINT FK_Ban_User FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    CONSTRAINT FK_Ban_By FOREIGN KEY (banned_by) REFERENCES Users(user_id)
+);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+CREATE TABLE PoolImage ( 
+    image_id INT PRIMARY KEY IDENTITY(1,1),
+    pool_id INT NOT NULL REFERENCES Pools(pool_id),
+    pool_image NVARCHAR(MAX)
+);
 
 
 
 
 -- Phần này chạy sau
--- Tạo view hỗ trợ tổng tiền theo booking
-GO
-CREATE VIEW vw_BookingTotalAmount AS
-SELECT 
-    b.booking_id,
-    SUM(ISNULL(pt.amount * pt.quantity, 0)) AS total_ticket_amount,
-    SUM(ISNULL(pr.amount * pr.quantity, 0)) AS total_rent_amount,
-    SUM(ISNULL(pt.amount * pt.quantity, 0) + ISNULL(pr.amount * pr.quantity, 0)) AS total_amount
-FROM Booking b
-	LEFT JOIN Payments p ON b.booking_id = p.booking_id
-	LEFT JOIN Payment_Ticket pt ON p.payment_id = pt.payment_id
-	LEFT JOIN Payment_RentItem pr ON p.payment_id = pr.payment_id
-GROUP BY b.booking_id;
-
 -- Trigger sinh mã ticket_code tự động sau khi insert
 GO
 CREATE TRIGGER trg_AutoGenerate_TicketCode
@@ -405,131 +423,5 @@ BEGIN
     JOIN Ticket_Types tt ON t.ticket_type_id = tt.ticket_type_id
     WHERE t.ticket_code IS NULL;
 END;
-
--- View hiển thị chi tiết các loại vé trong mỗi booking (tổng hợp theo loại vé)
-GO
-CREATE VIEW vw_Booking_TicketDetails AS
-SELECT 
-    b.booking_id,
-    u.full_name AS customer_name,
-    p.payment_method,
-    tt.type_name AS ticket_type,
-    pt.amount AS unit_price,
-    SUM(pt.quantity) AS quantity,
-    SUM(pt.amount * pt.quantity) AS total_price
-FROM Booking b
-JOIN Users u ON b.user_id = u.user_id
-JOIN Payments p ON b.booking_id = p.booking_id
-JOIN Payment_Ticket pt ON p.payment_id = pt.payment_id
-JOIN Ticket t ON pt.ticket_id = t.ticket_id
-JOIN Ticket_Types tt ON t.ticket_type_id = tt.ticket_type_id
-GROUP BY b.booking_id, u.full_name, p.payment_method, tt.type_name, pt.amount;
-
--- View hiển thị chi tiết từng vé của mỗi booking (mỗi dòng là 1 vé cụ thể)
-GO
-CREATE VIEW vw_TicketPerBookingDetail AS
-SELECT 
-    b.booking_id,
-    u.full_name AS customer_name,
-    p.payment_method,
-    t.ticket_code,
-    tt.type_name AS ticket_type,
-    pt.amount AS ticket_price,
-    pt.quantity,
-    (pt.amount * pt.quantity) AS total_price,
-    t.issued_at
-FROM Booking b
-JOIN Users u ON b.user_id = u.user_id
-JOIN Payments p ON b.booking_id = p.booking_id
-JOIN Payment_Ticket pt ON p.payment_id = pt.payment_id
-JOIN Ticket t ON pt.ticket_id = t.ticket_id
-JOIN Ticket_Types tt ON t.ticket_type_id = tt.ticket_type_id;
-
--- View hiển thị chi tiết Combo gồm những gì
-GO
-CREATE VIEW vw_Combo_Structure AS
-SELECT 
-    ct.type_name AS combo_name,
-    it.type_name AS included_name,
-    cd.quantity
-FROM Combo_Detail cd
-JOIN Ticket_Types ct ON cd.combo_type_id = ct.ticket_type_id
-JOIN Ticket_Types it ON cd.included_type_id = it.ticket_type_id;
-
---Stored Procedure – Xử lý giảm giá khi thanh toán
-GO
-CREATE PROCEDURE CreatePaymentWithDiscount
-    @booking_id INT,
-    @payment_method NVARCHAR(50),
-    @transaction_reference NVARCHAR(100) = NULL
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    DECLARE 
-        @discount_percent DECIMAL(5,2) = 0,
-        @discount_amount DECIMAL(10,2) = 0,
-        @total_before_discount DECIMAL(10,2) = 0,
-        @total_after_discount DECIMAL(10,2) = 0,
-        @discount_id INT;
-
-    -- Lấy discount_id từ Booking
-    SELECT @discount_id = discount_id FROM Booking WHERE booking_id = @booking_id;
-
-    -- Lấy tổng tiền gốc từ các vé + vật dụng thuê
-    SELECT @total_before_discount = 
-        ISNULL(SUM(pt.amount * pt.quantity), 0)
-        FROM Payments p
-        JOIN Payment_Ticket pt ON p.payment_id = pt.payment_id
-        WHERE p.booking_id = @booking_id;
-
-    SELECT @total_before_discount = @total_before_discount + 
-        ISNULL(SUM(pr.amount * pr.quantity), 0)
-        FROM Payments p
-        JOIN Payment_RentItem pr ON p.payment_id = pr.payment_id
-        WHERE p.booking_id = @booking_id;
-
-    -- Nếu có mã giảm giá thì lấy phần trăm
-    IF @discount_id IS NOT NULL
-    BEGIN
-        SELECT @discount_percent = discount_percent
-        FROM Discounts
-        WHERE discount_id = @discount_id
-          AND status = 1
-          AND GETDATE() BETWEEN valid_from AND valid_to;
-    END
-
-    -- Tính tiền giảm và tổng tiền cuối cùng
-    SET @discount_amount = @total_before_discount * (@discount_percent / 100.0);
-    SET @total_after_discount = @total_before_discount - @discount_amount;
-
-    -- Tạo bản ghi Payment
-    INSERT INTO Payments (
-        booking_id,
-        payment_method,
-        payment_status,
-        payment_date,
-        transaction_reference,
-        created_at,
-        discount_amount,
-        total_amount
-    )
-    VALUES (
-        @booking_id,
-        @payment_method,
-        'pending',
-        GETDATE(),
-        @transaction_reference,
-        GETDATE(),
-        @discount_amount,
-        @total_after_discount
-    );
-END;
-
---EXEC CreatePaymentWithDiscount 
---    @booking_id = 101, 
---    @payment_method = 'Cash',
---    @transaction_reference = 'TXN20250614-0001';
-
 
 
