@@ -8,10 +8,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import model.customer.User;
 import model.manager.Pooldevice;
-import model.manager.ManagerDeviceReport; // SỬA IMPORT NÀY
+import model.manager.ManagerDeviceReport;
 
 @WebServlet(name = "ManagerListDeviceReportServlet", urlPatterns = {"/managerListDeviceReportServlet"})
 public class ManagerListDeviceReportServlet extends HttpServlet {
@@ -60,7 +62,9 @@ public class ManagerListDeviceReportServlet extends HttpServlet {
         if (pageStr != null && !pageStr.isEmpty()) {
             try {
                 page = Integer.parseInt(pageStr);
-                if (page < 1) page = 1;
+                if (page < 1) {
+                    page = 1;
+                }
             } catch (NumberFormatException e) {
                 page = 1;
             }
@@ -69,17 +73,19 @@ public class ManagerListDeviceReportServlet extends HttpServlet {
         if (pageSizeStr != null && !pageSizeStr.isEmpty()) {
             try {
                 pageSize = Integer.parseInt(pageSizeStr);
-                if (pageSize < 1) pageSize = 5;
-                if (pageSize > 50) pageSize = 50;
+                if (pageSize < 1) {
+                    pageSize = 5;
+                }
+                if (pageSize > 50) {
+                    pageSize = 50;
+                }
             } catch (NumberFormatException e) {
                 pageSize = 5;
             }
         }
 
-        
         DeviceDao deviceDao = new DeviceDao();
 
-        
         List<ManagerDeviceReport> reports = deviceDao.getDeviceReports(keyword, status, poolId, page, pageSize, branchId);
 
         // Lấy tổng số báo cáo để tính phân trang
@@ -89,7 +95,6 @@ public class ManagerListDeviceReportServlet extends HttpServlet {
         // Lấy danh sách hồ bơi cho dropdown
         List<Pooldevice> pools = deviceDao.getPoolsByBranchId(branchId);
 
-        
         System.out.println("=== DEBUG INFO ===");
         System.out.println("Branch ID: " + branchId);
         System.out.println("User ID: " + (currentUser != null ? currentUser.getUser_id() : "null"));
@@ -100,6 +105,24 @@ public class ManagerListDeviceReportServlet extends HttpServlet {
             System.out.println("First report: ID=" + first.getReportId() + ", Device=" + first.getDeviceName());
         }
         
+        // THAY ĐỔI: Sử dụng String thay vì Integer làm key
+        Map<String, List<ManagerDeviceReport>> allDevicesReportsHistory = new HashMap<>();
+        for (ManagerDeviceReport report : reports) {
+            Integer deviceId = report.getDeviceId();
+            if (deviceId != null) {
+                String deviceIdStr = String.valueOf(deviceId); // Chuyển đổi sang String
+                if (!allDevicesReportsHistory.containsKey(deviceIdStr)) {
+                    List<ManagerDeviceReport> deviceHistory = deviceDao.getReportsByDeviceId(deviceId);
+                    allDevicesReportsHistory.put(deviceIdStr, deviceHistory);
+                    
+                    // Debug: In ra thông tin lịch sử
+                    System.out.println("Device ID: " + deviceIdStr + " has " + deviceHistory.size() + " history reports");
+                }
+            }
+        }
+        
+        System.out.println("Total devices with history: " + allDevicesReportsHistory.size());
+        request.setAttribute("allDevicesReportsHistory", allDevicesReportsHistory);
 
         // Set attributes
         request.setAttribute("reports", reports);
