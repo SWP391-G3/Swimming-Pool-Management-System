@@ -1,7 +1,7 @@
 package controller.staff;
 
 import dao.manager.DeviceDao;
-import dao.manager.StaffDAO;
+import dao.staff.StaffDAO;
 import java.io.IOException;
 import java.util.List;
 import jakarta.servlet.ServletException;

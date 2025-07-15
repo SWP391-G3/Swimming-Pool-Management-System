@@ -304,6 +304,8 @@ public class DeviceDao extends DBContext {
                 r.setSuggestion(rs.getString("suggestion"));
                 r.setStatus(rs.getString("status"));
                 r.setReportDate(rs.getTimestamp("report_date"));
+                String managerNote = rs.getString("manager_note"); // Sử dụng đúng tên cột
+                r.setManagerNote(managerNote != null ? managerNote : ""); // Gán chuỗi rỗng nếu null
                 list.add(r);
             }
         }

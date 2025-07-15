@@ -180,6 +180,60 @@
                 color: #999;
                 cursor: not-allowed;
             }
+
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+
+            .header-buttons {
+                display: flex;
+                gap: 10px;
+            }
+
+            .btn-add {
+                background: #4caf50;
+                color: #fff;
+                border: none;
+                padding: 8px 20px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: 500;
+                transition: background 0.2s ease;
+            }
+            .btn-add:hover {
+                background: #388e3c;
+            }
+
+            .btn-edit {
+                background: #42a5f5;
+                color: #fff;
+                border: none;
+                padding: 6px 16px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: 500;
+                margin-right: 6px;
+            }
+            .btn-edit:hover {
+                background: #1e88e5;
+            }
+
+            .btn-delete {
+                background: #ef5350;
+                color: #fff;
+                border: none;
+                padding: 6px 16px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: 500;
+            }
+            .btn-delete:hover {
+                background: #d32f2f;
+            }
+
         </style>
     </head>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -191,7 +245,8 @@
                 <div class="header">
                     <h2>Quản lý dịch vụ hồ bơi</h2>
                     <button class="btn-add" onclick="window.location.href = 'pool-service?action=add'">+ Thêm dịch vụ</button>
-<button class="btn-add" onclick="window.location.href = 'service-reports'"> Xem báo cáo</button>
+                    <button class="btn-add" onclick="window.location.href = 'managerListServiceReportServlet'">+ Xem báo cáo</button>
+
                 </div>
                 <!-- Bộ lọc -->
                 <form class="filter-form" method="get" action="pool-service">
