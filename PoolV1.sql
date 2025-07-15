@@ -331,6 +331,17 @@ CREATE TABLE Device_Reports (
     CONSTRAINT FK_DeviceReports_Device FOREIGN KEY (device_id) REFERENCES Pool_Device(device_id)
 );
 
+CREATE TABLE Customer_Checkin (
+    checkinId INT IDENTITY(1,1) PRIMARY KEY,       -- Sử dụng IDENTITY cho SQL Server
+    userId INT NOT NULL,
+    bookingId INT NOT NULL,
+    checkinStatus TINYINT NOT NULL DEFAULT 0,      -- 0: chưa check-in, 1: đã check-in
+    checkinTime DATETIME DEFAULT NULL,
+    CONSTRAINT UQ_CustomerCheckin_User_Booking UNIQUE (userId, bookingId),
+    CONSTRAINT FK_CustomerCheckin_User FOREIGN KEY (userId) REFERENCES Users(user_id),
+    CONSTRAINT FK_CustomerCheckin_Booking FOREIGN KEY (bookingId) REFERENCES Booking(booking_id)
+);
+
 
 
 

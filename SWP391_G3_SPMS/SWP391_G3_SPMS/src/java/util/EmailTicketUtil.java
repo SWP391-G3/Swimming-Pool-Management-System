@@ -175,17 +175,17 @@ public class EmailTicketUtil {
                 + "<div style='margin: 24px 0 8px 0; border-bottom: 1px solid #e5e7eb;'></div>"
                 + "<div style='font-size: 16px; display: flex; justify-content: space-between; margin-bottom: 8px;'>"
                 + "<span style='font-weight: 500;'>Tổng </span>"
-                + "<span style='font-weight: 600; color: #333;'>" + String.format("%,.0f đ", total) + "</span>"
+                + "<span style='font-weight: 600; color: #333;'>" + String.format(" %,.0f đ", total) + "</span>"
                 + "</div>"
                 + "<div style='font-size: 16px; display: flex; justify-content: space-between; margin-bottom: 8px;'>"
                 + "<span style='font-weight: 500;'>Ưu đãi </span>"
                 + (selectedDiscount != null && discountAmount != null
-                        ? "<span style='color: #198754; font-weight: 600;'>(" + selectedDiscount.getDiscountCode() + ") -" + String.format("%,.0f đ", discountAmount) + "</span>"
-                        : "<span style='color: #888; font-size: 14px;'>Không áp dụng ưu đãi</span>")
+                        ? "<span style='color: #198754; font-weight: 600;'>(" + selectedDiscount.getDiscountCode() + ") -" + String.format(" %,.0f đ", discountAmount) + "</span>"
+                        : "<span style='color: #888; font-size: 14px;'> Không áp dụng ưu đãi</span>")
                 + "</div>"
                 + "<div style='font-size: 22px; font-weight: bold; color: #2563eb; display: flex; justify-content: space-between; margin-top: 8px;'>"
                 + "<span>Tổng tiền </span>"
-                + "<span>" + String.format("%,.0f đ", finalAmount) + "</span>"
+                + "<span>" + String.format(" %,.0f đ", finalAmount) + "</span>"
                 + "</div>"
                 + "<p style='margin-top: 32px;'>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</p>"
                 + "<p style='color: #666; font-size: 14px; margin-top: 18px;'>"

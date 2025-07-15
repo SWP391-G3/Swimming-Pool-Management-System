@@ -47,8 +47,8 @@ public class StaffManager extends HttpServlet {
             response.sendRedirect("staffListDeviceServlet");
         } else if (staffTypeId == 4) {
             response.sendRedirect("staffPoolService");
-        } else {
-            response.sendRedirect("notFound.jsp");
+        } else if (staffTypeId == 2){
+            response.sendRedirect("checkin_list");
         }
     }
 

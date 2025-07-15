@@ -7,6 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import model.customer.Ticket;
+import model.staff.StaffCheckinInfo;
 
 /**
  *
@@ -239,6 +240,226 @@ public class BookingDetailDAO extends DBContext {
         PreparedStatement st = connection.prepareStatement(sql);
         st.setInt(1, bookingId);
         st.executeUpdate();
+    }
+
+    public List<StaffCheckinInfo> getBookingList(String fromDate, String toDate, String search, String status) {
+        List<StaffCheckinInfo> list = new ArrayList<>();
+        String sql = "SELECT b.booking_id, u.full_name, b.booking_date, b.start_time, b.end_time, c.checkinTime, c.checkinStatus "
+                + "FROM Booking b "
+                + "JOIN Users u ON b.user_id = u.user_id "
+                + "LEFT JOIN Customer_Checkin c ON b.booking_id = c.bookingId AND c.checkinStatus = 1 "
+                + "WHERE b.booking_date BETWEEN ? AND ? AND b.booking_status = 'confirmed' ";
+
+        if (search != null && !search.isEmpty()) {
+            sql += "AND (u.full_name LIKE ? OR b.booking_id LIKE ?) ";
+        }
+
+        // Lọc trạng thái checkin
+        if ("checkedin".equals(status)) {
+            sql += "AND c.checkinStatus = 1 ";
+        } else if ("notcheckedin".equals(status)) {
+            sql += "AND (c.checkinStatus IS NULL) ";
+        }
+
+        sql += "ORDER BY b.booking_date DESC, b.start_time";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            int idx = 1;
+            ps.setString(idx++, fromDate);
+            ps.setString(idx++, toDate);
+            if (search != null && !search.isEmpty()) {
+                ps.setString(idx++, "%" + search + "%");
+                ps.setString(idx++, "%" + search + "%");
+            }
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                StaffCheckinInfo info = new StaffCheckinInfo();
+                info.setBookingId(rs.getInt("booking_id"));
+                info.setUserName(rs.getString("full_name"));
+                info.setBookingDate(rs.getString("booking_date"));
+                info.setStartTime(rs.getString("start_time"));
+                info.setEndTime(rs.getString("end_time"));
+                info.setCheckinTime(rs.getString("checkinTime"));
+                info.setChecked(rs.getObject("checkinStatus") != null && rs.getInt("checkinStatus") == 1);
+                list.add(info);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
+    // Thêm phương thức này vào BookingDetailDAO
+    public List<StaffCheckinInfo> getBookingByPoolId(int poolId, String fromDate, String toDate, String search, String status) {
+        List<StaffCheckinInfo> list = new ArrayList<>();
+        String sql = "SELECT b.booking_id, u.full_name, b.booking_date, b.start_time, b.end_time, "
+                + "c.checkinTime, CASE WHEN c.bookingId IS NOT NULL THEN 1 ELSE 0 END AS checked "
+                + "FROM Booking b "
+                + "JOIN Users u ON b.user_id = u.user_id "
+                + "LEFT JOIN Customer_Checkin c ON b.booking_id = c.bookingId AND c.checkinStatus = 1 "
+                + "WHERE b.pool_id = ? AND b.booking_status = 'confirmed' ";
+
+        // Nếu có fromDate và toDate thì filter theo ngày
+        if (fromDate != null && !fromDate.isEmpty() && toDate != null && !toDate.isEmpty()) {
+            sql += "AND b.booking_date BETWEEN ? AND ? ";
+        }
+
+        // Tìm kiếm theo tên hoặc bookingId
+        if (search != null && !search.isEmpty()) {
+            sql += "AND (u.full_name LIKE ? OR b.booking_id LIKE ?) ";
+        }
+
+        // Lọc theo trạng thái check-in
+        if (status != null && !status.isEmpty()) {
+            if ("checkedin".equals(status)) {
+                sql += "AND c.bookingId IS NOT NULL ";
+            } else if ("notcheckedin".equals(status)) {
+                sql += "AND c.bookingId IS NULL ";
+            }
+        }
+
+        sql += "ORDER BY b.booking_date DESC, b.start_time DESC";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            int idx = 1;
+            ps.setInt(idx++, poolId);
+
+            if (fromDate != null && !fromDate.isEmpty() && toDate != null && !toDate.isEmpty()) {
+                ps.setString(idx++, fromDate);
+                ps.setString(idx++, toDate);
+            }
+
+            if (search != null && !search.isEmpty()) {
+                ps.setString(idx++, "%" + search + "%");
+                ps.setString(idx++, "%" + search + "%");
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                StaffCheckinInfo info = new StaffCheckinInfo();
+                info.setBookingId(rs.getInt("booking_id"));
+                info.setUserName(rs.getString("full_name"));
+                info.setBookingDate(rs.getString("booking_date"));
+                info.setStartTime(rs.getString("start_time"));
+                info.setEndTime(rs.getString("end_time"));
+                info.setCheckinTime(rs.getString("checkinTime"));
+                info.setChecked(rs.getInt("checked") == 1);
+                list.add(info);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<StaffCheckinInfo> getBookingByPoolIdWithPagination(int poolId, String fromDate, String toDate,
+            String search, String status, int offset, int limit) {
+        List<StaffCheckinInfo> list = new ArrayList<>();
+        String sql = "SELECT b.booking_id, u.full_name, b.booking_date, b.start_time, b.end_time, "
+                + "c.checkinTime, CASE WHEN c.bookingId IS NOT NULL THEN 1 ELSE 0 END AS checked "
+                + "FROM Booking b "
+                + "JOIN Users u ON b.user_id = u.user_id "
+                + "LEFT JOIN Customer_Checkin c ON b.booking_id = c.bookingId AND c.checkinStatus = 1 "
+                + "WHERE b.pool_id = ? AND b.booking_status = 'confirmed' ";
+
+        if (fromDate != null && !fromDate.isEmpty() && toDate != null && !toDate.isEmpty()) {
+            sql += "AND b.booking_date BETWEEN ? AND ? ";
+        }
+
+        if (search != null && !search.isEmpty()) {
+            sql += "AND (u.full_name LIKE ? OR b.booking_id LIKE ?) ";
+        }
+
+        if (status != null && !status.isEmpty()) {
+            if ("checkedin".equals(status)) {
+                sql += "AND c.bookingId IS NOT NULL ";
+            } else if ("notcheckedin".equals(status)) {
+                sql += "AND c.bookingId IS NULL ";
+            }
+        }
+
+        sql += "ORDER BY b.booking_date DESC, b.start_time DESC "
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            int idx = 1;
+            ps.setInt(idx++, poolId);
+
+            if (fromDate != null && !fromDate.isEmpty() && toDate != null && !toDate.isEmpty()) {
+                ps.setString(idx++, fromDate);
+                ps.setString(idx++, toDate);
+            }
+
+            if (search != null && !search.isEmpty()) {
+                ps.setString(idx++, "%" + search + "%");
+                ps.setString(idx++, "%" + search + "%");
+            }
+
+            ps.setInt(idx++, offset);
+            ps.setInt(idx++, limit);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                StaffCheckinInfo info = new StaffCheckinInfo();
+                info.setBookingId(rs.getInt("booking_id"));
+                info.setUserName(rs.getString("full_name"));
+                info.setBookingDate(rs.getString("booking_date"));
+                info.setStartTime(rs.getString("start_time"));
+                info.setEndTime(rs.getString("end_time"));
+                info.setCheckinTime(rs.getString("checkinTime"));
+                info.setChecked(rs.getInt("checked") == 1);
+                list.add(info);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
+    public int countBookingByPoolId(int poolId, String fromDate, String toDate, String search, String status) {
+        String sql = "SELECT COUNT(*) FROM Booking b "
+                + "JOIN Users u ON b.user_id = u.user_id "
+                + "LEFT JOIN Customer_Checkin c ON b.booking_id = c.bookingId AND c.checkinStatus = 1 "
+                + "WHERE b.pool_id = ? AND b.booking_status = 'confirmed' ";
+
+        if (fromDate != null && !fromDate.isEmpty() && toDate != null && !toDate.isEmpty()) {
+            sql += "AND b.booking_date BETWEEN ? AND ? ";
+        }
+
+        if (search != null && !search.isEmpty()) {
+            sql += "AND (u.full_name LIKE ? OR b.booking_id LIKE ?) ";
+        }
+
+        if (status != null && !status.isEmpty()) {
+            if ("checkedin".equals(status)) {
+                sql += "AND c.bookingId IS NOT NULL ";
+            } else if ("notcheckedin".equals(status)) {
+                sql += "AND c.bookingId IS NULL ";
+            }
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            int idx = 1;
+            ps.setInt(idx++, poolId);
+
+            if (fromDate != null && !fromDate.isEmpty() && toDate != null && !toDate.isEmpty()) {
+                ps.setString(idx++, fromDate);
+                ps.setString(idx++, toDate);
+            }
+
+            if (search != null && !search.isEmpty()) {
+                ps.setString(idx++, "%" + search + "%");
+                ps.setString(idx++, "%" + search + "%");
+            }
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
     }
 
 //    public static void main(String[] args) throws SQLException {
