@@ -695,7 +695,7 @@
             </div>
         </div>
 
-       <!-- Render ẩn lịch sử cho từng deviceId - KEEP TABLE WRAPPER -->
+       <!-- Render ẩn lịch sử cho từng deviceId  -->
         <div id="historyHiddenRows" style="display:none;">
             <c:forEach var="deviceHistory" items="${allDevicesReportsHistory}">
                 <c:set var="deviceId" value="${deviceHistory.key}" />

@@ -207,7 +207,8 @@ public class ManagerEditDiscountServlet extends HttpServlet {
             d.setValidTo(validTo);
             d.setStatus(checkedStatus);
             d.setCode(discountCode);
-
+            
+            // Cập nhập Voucher
             boolean result = dao.update(d, managerId); // Truyền managerId vào DAO
 
             if (result) {

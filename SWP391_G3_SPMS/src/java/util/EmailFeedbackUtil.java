@@ -64,8 +64,7 @@ public class EmailFeedbackUtil {
         return lastError;
     }
     
-    public static String createResponseTemplate(String customerName, String poolName, 
-                                               String originalComment, String adminResponse) {
+    public static String createResponseTemplate(String customerName, String poolName, String originalComment, String adminResponse) {
         return "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>"
                 + "<h2 style='color: #2c5aa0;'>Phản hồi từ Hệ thống Quản lý Hồ bơi</h2>"
                 + "<p>Xin chào <strong>" + customerName + "</strong>,</p>"

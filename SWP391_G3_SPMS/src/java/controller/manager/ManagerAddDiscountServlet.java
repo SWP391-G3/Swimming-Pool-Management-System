@@ -167,10 +167,11 @@ public class ManagerAddDiscountServlet extends HttpServlet {
         d.setValidTo(java.sql.Timestamp.valueOf(validTo));
         d.setStatus(true);
 
-// Lấy id của manager hiện tại (lưu ý: currentUser.getUser_id() hoặc currentUser.getId() tùy model bạn)
-        int managerId = currentUser.getUser_id(); // hoặc getId() tùy tên hàm getter của bạn
+        // Lấy id của manager hiện tại 
+        int managerId = currentUser.getUser_id();
 
-        boolean result = dao.insert(d, managerId); // TRUYỀN THÊM managerId vào DAO
+        // Add Voucher
+        boolean result = dao.insert(d, managerId); // Truyền thêm managerId vào DAO
 
         if (result) {
             // Tính lại số lượng voucher và số trang cuối cùng

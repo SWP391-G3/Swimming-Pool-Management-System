@@ -10,6 +10,26 @@
 <%
     request.setAttribute("activeMenu", "device");
 %>
+
+<%
+  request.setAttribute("activeMenu", "device");
+
+  // === ĐOẠN NÀY ĐẢM BẢO THÔNG BÁO CHỈ HIỆN 1 LẦN ===
+  List<String> importErrors = (List<String>) session.getAttribute("importErrors");
+  String importSuccess = (String) session.getAttribute("importSuccess");
+  if (importErrors != null) {
+      request.setAttribute("importErrors", importErrors);
+      session.removeAttribute("importErrors");
+  }
+  if (importSuccess != null) {
+      request.setAttribute("importSuccess", importSuccess);
+      session.removeAttribute("importSuccess");
+  }
+%>
+
+
+
+
 <!DOCTYPE html>
 <html lang="vi">
     <head>
@@ -18,6 +38,26 @@
         <link rel="stylesheet" href="./manager-css/manager-device-v5.css">
         <link rel="stylesheet" href="./manager-css/manager-panel.css">
     </head>
+
+
+
+
+    <c:if test="${not empty importSuccess}">
+        <div class="alert alert-success" id="successAlert">
+            ${importSuccess}
+        </div>
+    </c:if>
+    <c:if test="${not empty importErrors}">
+        <div class="alert alert-error" id="errorAlert">
+            <ul style="margin: 0; padding-left: 20px;">
+                <c:forEach var="err" items="${importErrors}">
+                    <li>${err}</li>
+                    </c:forEach>
+            </ul>
+        </div>
+    </c:if>
+
+
     <body>
         <div class="layout">
             <!-- Sidebar  --> 
@@ -25,42 +65,33 @@
 
             <div class="content-panel">
 
-                <c:if test="${not empty importSuccess}">
-                    <div class="alert alert-success" id="successAlert">
-                        ${importSuccess}
-                    </div>
-                </c:if>
-                <c:if test="${not empty importErrors}">
-                    <div class="alert alert-error" id="errorAlert">
-                        <ul style="margin: 0; padding-left: 20px;">
-                            <c:forEach var="err" items="${importErrors}">
-                                <li>${err}</li>
-                                </c:forEach>
-                        </ul>
-                    </div>
-                </c:if>
 
-                <script>
-                    window.onload = function () {
-                        var successAlert = document.getElementById('successAlert');
-                        if (successAlert) {
-                            setTimeout(function () {
-                                successAlert.style.display = 'none';
-                            }, 3000);
-                        }
-                        var errorAlert = document.getElementById('errorAlert');
-                        if (errorAlert) {
-                            setTimeout(function () {
-                                errorAlert.style.display = 'none';
-                            }, 3000);
-                        }
-                    };
-                </script>
 
                 <div class="header">
                     <h2>Quản lý thiết bị hồ bơi</h2>
 
-                   
+
+
+
+                    <script>
+                        window.onload = function () {
+                            var successAlert = document.getElementById('successAlert');
+                            if (successAlert) {
+                                setTimeout(function () {
+                                    successAlert.style.display = 'none';
+                                }, 3000);
+                            }
+                            var errorAlert = document.getElementById('errorAlert');
+                            if (errorAlert) {
+                                setTimeout(function () {
+                                    errorAlert.style.display = 'none';
+                                }, 3000);
+                            }
+                        };
+                    </script>
+
+
+
 
                     <div class="header-controls">
                         <form class="search-form" method="get" action="managerListDeviceServlet" id="searchForm">

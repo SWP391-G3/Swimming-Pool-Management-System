@@ -105,7 +105,7 @@ public class ManagerListDeviceReportServlet extends HttpServlet {
             System.out.println("First report: ID=" + first.getReportId() + ", Device=" + first.getDeviceName());
         }
         
-        // THAY ĐỔI: Sử dụng String thay vì Integer làm key
+        
         Map<String, List<ManagerDeviceReport>> allDevicesReportsHistory = new HashMap<>();
         for (ManagerDeviceReport report : reports) {
             Integer deviceId = report.getDeviceId();

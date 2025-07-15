@@ -56,7 +56,7 @@ public class ManagerDiscountServlet extends HttpServlet {
             return;
         }
 
-        // ===== Bỏ xác định branchId, voucher áp dụng toàn hệ thống =====
+        //  Bỏ xác định branchId, voucher áp dụng toàn hệ thống 
         String keyword = request.getParameter("keyword") != null ? request.getParameter("keyword") : "";
         String status = request.getParameter("status") != null ? request.getParameter("status") : "all";
         String fromDateStr = request.getParameter("fromDate");

@@ -224,7 +224,7 @@
 
                                         <div class="field-group">
                                             <label>Số lượng thiết bị:</label>
-                                            <input type="number" name="quantity" min="1" value="${device.quantity}" class="form-control">
+                                            <input type="number" name="quantity" min="1" max="1000" value="${device.quantity}" class="form-control">
                                         </div>
 
                                         <div class="field-group">
@@ -292,5 +292,27 @@
                 </div>
             </c:if>
         </div>
+        
+        
+        <script>
+            document.querySelector('form[action="managerProcessDeviceReportServlet"]').addEventListener('submit', function(e) {
+    const quantityInput = this.querySelector('input[name="quantity"]');
+    const noteInput = this.querySelector('textarea[name="managerNote"]');
+    let errorMsg = "";
+
+    if (quantityInput.value > 1000) {
+        errorMsg += "Số lượng thiết bị không được vượt quá 1000.\n";
+    }
+    if (noteInput.value.length > 255) {
+        errorMsg += "Ghi chú xử lý không được vượt quá 255 ký tự.\n";
+    }
+    if (errorMsg) {
+        alert(errorMsg);
+        e.preventDefault();
+    }
+});</script>
+        
+        
+        
     </body>
 </html>
