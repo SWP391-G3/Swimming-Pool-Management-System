@@ -292,7 +292,7 @@
                                                 </div>
                                                 <div class="field-group">
                                                     <label>Số lượng dịch vụ:</label>
-                                                    <input type="number" name="quantity" min="1" value="${service.quantity}" class="form-control">
+                                                    <input type="number" name="quantity" min="1" value="${service.quantity}" class="form-control" required>
                                                 </div>
                                                 <div class="field-group">
                                                     <label>Ghi chú xử lý:</label>
