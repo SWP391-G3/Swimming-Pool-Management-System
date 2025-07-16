@@ -236,7 +236,7 @@
                             </thead>
                             <tbody>
                                 <% 
-                                    if (listCustomer != null && !listCustomer.isEmpty()) {
+                                    if (listCustomer != null) {
                                         for (Customer c : listCustomer) {
                                 %>
                                 <tr class="hover:bg-gray-100">
@@ -257,10 +257,10 @@
                                            data-full-name="<%= c.getFull_name() %>"
                                            data-email="<%= c.getEmail() %>"
                                            data-phone="<%= c.getPhone() %>"
-                                           data-address="<%= c.getAddress() %>"
-                                           data-dob="<%= c.getDob() %>"
+                                           data-address="<%= c.getAddress() != null ? c.getAddress() : "Chưa cập nhật" %>"
+                                           data-dob="<%= c.getDob() != null ? c.getDob() : "Chưa cập nhật" %>"
                                            data-gender="<%= c.getGender().equalsIgnoreCase("male") ? "Nam" : c.getGender().equalsIgnoreCase("female") ? "Nữ" : "Khác" %>"
-                                           data-image="<%= c.getImages() %>"
+                                           data-image="<%= c.getImages() != null ? c.getImages() : "" %>"
                                            data-status="<%= c.getStatus() %>">
                                             <i class="fa-solid fa-eye"></i> Xem
                                         </a>
@@ -458,21 +458,24 @@
                             <input type="number" name="pageSize" min="1" placeholder="Số lượng/trang" class="w-30 px-2 py-1 border rounded text-center" value="">
                             <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Đến</button>
                         </form>
+                        <% 
+                            int pageSize = (int) request.getAttribute("pageSize");
+                        %>
 
                         <%
                             if (currentPage > 1) {
                         %>
-                        <a class="px-3 py-1 bg-blue-500 text-white rounded" href="adminViewCustomerList?page=<%= currentPage - 1 %>">Trước</a>
+                        <a class="px-3 py-1 bg-blue-500 text-white rounded" href="adminViewCustomerList?page=<%= currentPage - 1 %>&pageSize=<%= pageSize %>">Trước</a>
                         <%
                             }
                             for (int i = startPage; i <= endPage; i++) {
                         %>
-                        <a class="px-3 py-1 <%= (i == currentPage ? "bg-green-600 text-white" : "bg-gray-300 text-gray-800") %> rounded" href="adminViewCustomerList?page=<%= i %>"><%= i %></a>
+                        <a class="px-3 py-1 <%= (i == currentPage ? "bg-green-600 text-white" : "bg-gray-300 text-gray-800") %> rounded" href="adminViewCustomerList?page=<%= i %>&pageSize=<%= pageSize %>"><%= i %></a>
                         <%
                             }
                             if (currentPage < totalPages) {
                         %>
-                        <a class="px-3 py-1 bg-blue-500 text-white rounded" href="adminViewCustomerList?page=<%= currentPage + 1 %>">Tiếp</a>
+                        <a class="px-3 py-1 bg-blue-500 text-white rounded" href="adminViewCustomerList?page=<%= currentPage + 1 %>&pageSize=<%= pageSize %>">Tiếp</a>
                         <%
                             }
                         %>
