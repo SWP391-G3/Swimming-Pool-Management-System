@@ -217,7 +217,7 @@
 
                             <div>
                                 <label class="block mb-1 font-semibold">Ngày sinh</label>
-                                <input type="date" name="dob" value="<%= c.getDob() %>" class="w-full border px-3 py-2 rounded" />
+                                <input type="date" required name="dob" value="<%= c.getDob() %>" class="w-full border px-3 py-2 rounded" />
                             </div>
 
                             <div>

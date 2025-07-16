@@ -15,7 +15,7 @@ CREATE TABLE Users (
     phone NVARCHAR(15),                                   -- Số điện thoại
     address NVARCHAR(255),                                -- Địa chỉ
     role_id INT NOT NULL,                                 -- Vai trò (Admin, Staff, Customer...)
-    status BIT NOT NULL DEFAULT 1,                        -- Trạng thái hoạt động (1: hoạt động, 0: bị khóa)
+    status BIT NULL DEFAULT 1,                        -- Trạng thái hoạt động (1: hoạt động, 0: bị khóa)
     dob DATE,                                              -- Ngày sinh
     gender NVARCHAR(10),                                   -- Giới tính
     images NVARCHAR(255),                                  -- Ảnh đại diện
