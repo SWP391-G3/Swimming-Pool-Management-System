@@ -58,7 +58,10 @@ public class DiscountDAO extends DBContext {
     // Lấy danh sách voucher phân trang, lọc, tìm kiếm
     public List<Discount> getDiscountList(String keyword, String status, Date fromDate, Date toDate, int page, int pageSize) throws SQLException {
         List<Discount> list = new ArrayList<>();
-        String sql = "SELECT * FROM Discounts WHERE 1=1";
+        String sql = "SELECT d.*, u.username, u.full_name, u.email "
+                + "FROM Discounts d "
+                + "JOIN Users u ON d.created_by = u.user_id "
+                + "WHERE 1=1";
         List<Object> params = new ArrayList<>();
         if (keyword != null && !keyword.isEmpty()) {
             sql += " AND (discount_code LIKE ? OR description LIKE ?)";
@@ -109,6 +112,9 @@ public class DiscountDAO extends DBContext {
             d.setStatus(rs.getBoolean("status"));
             d.setCreatedAt(rs.getTimestamp("created_at"));
             d.setUpdatedAt(rs.getTimestamp("updated_at"));
+            d.setCreatedByUsername(rs.getString("username")); // Bạn cần thêm trường này vào class Discount
+            d.setCreatedByFullName(rs.getString("full_name"));
+            d.setCreatedByEmail(rs.getString("email"));
             list.add(d);
         }
         return list;
@@ -317,17 +323,8 @@ public class DiscountDAO extends DBContext {
             DiscountDAO dao = new DiscountDAO();
             List<Discount> discounts = dao.getDiscountList(keyword, status, fromDate, toDate, page, pageSize);
 
-            // In kết quả ra console
-            for (Discount d : discounts) {
-                System.out.println("ID: " + d.getId()
-                        + ", Code: " + d.getCode()
-                        + ", Description: " + d.getDescription()
-                        + ", Percent: " + d.getPercent()
-                        + ", Quantity: " + d.getQuantity()
-                        + ", Valid: " + d.getValidFrom() + " to " + d.getValidTo()
-                        + ", Status: " + (d.isStatus() ? "Active" : "Inactive")
-                        + ", Created: " + d.getCreatedAt());
-            }
+            System.out.println(discounts);
+
         } catch (Exception e) {
         }
 

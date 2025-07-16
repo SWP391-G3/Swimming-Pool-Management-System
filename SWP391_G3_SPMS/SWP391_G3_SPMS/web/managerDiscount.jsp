@@ -1,3 +1,4 @@
+
 <%-- 
     Document   : managerDiscount
     Created on : Jun 23, 2025, 1:24:34 PM
@@ -108,6 +109,7 @@
                                 <th>Ngày kết thúc</th>
                                 <th>Trạng thái</th>
                                 <th>Ngày tạo</th>
+                                <th>Người tạo</th>
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
@@ -158,6 +160,13 @@
                                             <td>
                                                 <fmt:formatDate value="${discount.createdAt}" pattern="dd/MM/yyyy HH:mm"/>
                                             </td>
+
+                                            <td>
+                                                <c:out value="${discount.createdByFullName}" />
+                                                <br/>
+                                                <span style="color: #888;">${discount.createdByUsername}</span>
+                                            </td>
+
                                             <td>
                                                 <a href="javascript:void(0);" class="btn-edit btn-view" title="Xem chi tiết"
                                                    onclick="showDiscountDetail(${discount.id})">
