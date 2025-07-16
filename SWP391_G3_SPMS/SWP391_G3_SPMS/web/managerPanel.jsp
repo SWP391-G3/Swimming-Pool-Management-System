@@ -39,11 +39,6 @@
                     <p class="desc">Truy cập nhanh các chức năng dành cho quản lý.</p>
                 </div>
                 <div class="dashboard-cards">
-                    
-                    <a href="profile" class="dashboard-card">
-                        <div class="dashboard-card-title">Thông tin cá nhân</div>
-                        <div class="dashboard-card-desc">Xem và chỉnh sửa thông tin của bạn.</div>
-                    </a>
                     <a href="managerListDeviceServlet" class="dashboard-card">
                         <div class="dashboard-card-title">Quản lý thiết bị</div>
                         <div class="dashboard-card-desc">Theo dõi, thêm thiết bị, bảo trì thiết bị bể bơi.</div>

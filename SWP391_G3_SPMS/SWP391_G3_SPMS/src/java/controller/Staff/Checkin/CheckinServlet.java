@@ -64,7 +64,7 @@ public class CheckinServlet extends HttpServlet {
 
                         if (diffMin < -15) {
                             message = "Chưa thể check-in! Vui lòng đợi đến 15 phút trước thời gian booking.";
-                        } else if (diffMin > 15) {
+                        } else if (diffMin > 60) {//Khong qua 1 tieng
                             message = "Đã quá thời gian check-in cho booking này!";
                         } else {
                             // Thực hiện check-in

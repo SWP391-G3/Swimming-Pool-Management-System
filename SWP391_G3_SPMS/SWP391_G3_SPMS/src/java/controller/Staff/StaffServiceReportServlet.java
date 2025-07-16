@@ -30,7 +30,7 @@ public class StaffServiceReportServlet extends HttpServlet {
         String pageStr = request.getParameter("page");
         String pageSizeStr = request.getParameter("pageSize");
 
-        int page = 1, pageSize = 10;
+        int page = 1, pageSize = 5;
         try {
             if (pageStr != null && !pageStr.isEmpty()) {
                 page = Integer.parseInt(pageStr);

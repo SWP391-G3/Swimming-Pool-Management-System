@@ -113,7 +113,8 @@
                                 alt="${pool.pool_name}" 
                                 class="pool-img" 
                                 style="cursor:pointer"
-                                onclick="window.location.href = 'pool-detapil?poolId=${pool.pool_id}'" 
+                               onclick="window.location.href = '${pageContext.request.contextPath}/pool-detail?poolId=${pool.pool_id}'"
+
                                 />
 
                             <div class="pool-info">

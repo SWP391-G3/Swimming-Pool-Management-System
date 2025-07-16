@@ -15,200 +15,212 @@
         <link rel="stylesheet" href="./manager-css/manager-device-v3.css">
         <link rel="stylesheet" href="./manager-css/manager-panel.css">
         <style>
-            .content-panel {
-                padding: 20px 40px;
-            }
-            .staff-info-box {
-                background: #f4f7fa;
-                padding: 14px 22px;
-                border-radius: 10px;
-                margin-bottom: 22px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                gap: 15px;
-                background: #c4d8f4
-            }
-            .staff-info-list {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 25px;
-                align-items: center;
-            }
-            .staff-info-item b {
-                color: #1976d2;
-            }
-            .logout-btn {
-                background: #e53e3e;
-                color: white;
-                border: none;
-                padding: 8px 20px;
-                border-radius: 7px;
-                font-weight: 600;
-                font-size: 1em;
-                cursor: pointer;
-                transition: background 0.18s;
-                text-decoration: none
-            }
-            .logout-btn:hover {
-                background: #b91c1c;
-            }
-            /* CSS còn lại giữ nguyên */
-            .filter-form {
-                display: flex;
-                gap: 10px;
-                margin-bottom: 20px;
-                flex-wrap: wrap;
-            }
-            .filter-form input, .filter-form select {
-                padding: 6px 12px;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-            }
-            .btn-filter {
-                background: #2690ff;
-                color: #fff;
-                border: none;
-                padding: 6px 18px;
-                border-radius: 4px;
-                cursor: pointer;
-                font-weight: 500;
-            }
-            .btn-filter:hover {
-                background: #1976d2;
-            }
-            .btn-reset {
-                background: #ede7f6;
-                color: #8e24aa;
-                border: none;
-                padding: 6px 18px;
-                border-radius: 4px;
-                cursor: pointer;
-                font-weight: 500;
-                margin-left: 2px;
-                text-decoration: none;
-                display: inline-block;
-            }
-            .btn-reset:hover {
-                background: #d1c4e9;
-                color: #6d1b7b;
-            }
-            .service-card-grid {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 22px;
-                margin-bottom: 28px;
-                justify-content: center;
-            }
-            .service-card {
-                background: #fff;
-                border-radius: 10px;
-                box-shadow: 0 4px 16px 0 rgba(34,34,34,0.07);
-                padding: 22px 18px 18px 18px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                min-height: 220px;
-                position: relative;
-                transition: box-shadow 0.18s;
-                max-width: 380px;
-                width: 100%;
-            }
-            .service-card:hover {
-                box-shadow: 0 8px 24px 0 rgba(52, 152, 219, 0.14);
-            }
-            .service-thumb img {
-                width: 64px;
-                height: 64px;
-                object-fit: cover;
-                border-radius: 8px;
-                margin-bottom: 12px;
-                background: #fafbfd;
-                border: 1px solid #e0e0e0;
-            }
-            .service-title {
-                font-weight: 700;
-                font-size: 1.12em;
-                margin-bottom: 8px;
-                text-align: center;
-            }
-            .service-info {
-                font-size: 0.99em;
-                margin-bottom: 4px;
-                color: #444;
-                text-align: center;
-            }
-            .status-badge {
-                display: inline-block;
-                padding: 4px 12px;
-                border-radius: 15px;
-                font-size: 0.97em;
-                font-weight: 500;
-                color: #fff;
-            }
-            .status-active {
-                background: #43a047;
-            }
-            .status-maintenance {
-                background: #f9a825;
-            }
-            .status-inactive {
-                background: #e53935;
-            }
-            .btn-detail {
-                margin-top: 13px;
-                padding: 6px 26px;
-                border-radius: 6px;
-                background: #2690ff;
-                color: #fff;
-                border: none;
-                cursor: pointer;
-                font-weight: 500;
-                transition: background 0.18s;
-                font-size: 1em;
-            }
-            .btn-detail:hover {
-                background: #1976d2;
-            }
-            .no-service {
-                width: 100%;
-                text-align: center;
-                color: #888;
-                font-style: italic;
-                font-size: 1.11em;
-                margin-top: 38px;
-            }
-            .pagination {
-                margin-top: 20px;
-                text-align: center;
-            }
-            .pagination a, .pagination span {
-                margin: 0 3px;
-                padding: 6px 12px;
-                border: 1px solid #ccc;
-                text-decoration: none;
-                border-radius: 4px;
-                color: #333;
-                background: #fff;
-                font-weight: 500;
-            }
-            .pagination a:hover {
-                background: #e3f0fd;
-                color: #1a73e8;
-                border-color: #1a73e8;
-            }
-            .pagination .active {
-                background-color: #1976d2;
-                color: white;
-                font-weight: bold;
-                border-color: #1976d2;
-            }
-            .pagination .disabled {
-                color: #aaa;
-                border-color: #eee;
-                background: #fafafa;
-                pointer-events: none;
-            }
+            body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f4f6f8;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    .content-panel {
+        padding: 30px 50px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .header h2 {
+        color: #1e3a8a;
+        font-size: 2rem;
+        margin-bottom: 24px;
+    }
+
+    .filter-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 28px;
+        align-items: center;
+    }
+
+    .filter-form input,
+    .filter-form select {
+        padding: 10px 14px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 1rem;
+        background: #fff;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-filter,
+    .btn-reset {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        border: none;
+        transition: background 0.2s ease;
+    }
+
+    .btn-filter {
+        background: #3b82f6;
+        color: #fff;
+    }
+
+    .btn-filter:hover {
+        background: #2563eb;
+    }
+
+    .btn-reset {
+        background: #f0f0f0;
+        color: #6b21a8;
+        border: 1px solid #d1d5db;
+    }
+
+    .btn-reset:hover {
+        background: #e9e9e9;
+        color: #4c1d95;
+    }
+
+    .service-card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+
+    .service-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+        padding: 24px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .service-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .service-thumb img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+        background: #f9fafb;
+        transition: transform 0.2s ease;
+    }
+
+    .service-card:hover .service-thumb img {
+        transform: scale(1.05);
+    }
+
+    .service-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 12px 0 6px;
+        color: #1f2937;
+        text-align: center;
+    }
+
+    .service-info {
+        font-size: 0.95rem;
+        color: #4b5563;
+        margin: 2px 0;
+        text-align: center;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 5px 14px;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: white;
+    }
+
+    .status-active {
+        background: #22c55e;
+    }
+
+    .status-maintenance {
+        background: #facc15;
+        color: #111827;
+    }
+
+    .status-inactive {
+        background: #ef4444;
+    }
+
+    .btn-detail {
+        margin-top: 16px;
+        padding: 8px 24px;
+        border-radius: 8px;
+        background: #3b82f6;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: background 0.2s ease;
+    }
+
+    .btn-detail:hover {
+        background: #2563eb;
+    }
+
+    .no-service {
+        width: 100%;
+        text-align: center;
+        color: #9ca3af;
+        font-style: italic;
+        font-size: 1.1rem;
+        margin-top: 48px;
+    }
+
+    .pagination {
+        margin-top: 32px;
+        text-align: center;
+    }
+
+    .pagination a,
+    .pagination span {
+        margin: 0 5px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #374151;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        transition: background 0.2s ease;
+    }
+
+    .pagination a:hover {
+        background: #e0f2fe;
+        color: #2563eb;
+        border-color: #2563eb;
+    }
+
+    .pagination .active {
+        background-color: #2563eb;
+        color: white;
+        border-color: #2563eb;
+    }
+
+    .pagination .disabled {
+        color: #9ca3af;
+        border-color: #f3f4f6;
+        background: #f9fafb;
+        pointer-events: none;
+    }
         </style>
     </head>
     <body>
@@ -264,7 +276,7 @@
                                     </div>
                                     <button class="btn-detail"
                                             onclick="window.location.href = 'staffPoolServiceDetail?id=${ps.poolServiceId}'">
-                                        Xem chi tiết
+                                        Báo cáo
                                     </button>
                                 </div>
                             </c:forEach>

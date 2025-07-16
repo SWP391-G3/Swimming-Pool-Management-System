@@ -207,6 +207,9 @@ public class ManagerUpdateDeviceServlet extends HttpServlet {
             Device d = new Device(id, imagePath, name, poolId, null, quantity, status, notes);
             dao.updateDevice(d);
 
+            
+            request.getSession().setAttribute("importSuccess", "Cập nhật thiết bị thành công!");
+            
             String redirectUrl = "managerListDeviceServlet?page=" + (returnPage != null ? returnPage : "1");
 
             if (returnPoolId != null) {

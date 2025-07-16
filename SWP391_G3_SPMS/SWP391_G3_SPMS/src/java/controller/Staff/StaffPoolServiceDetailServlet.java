@@ -1,4 +1,4 @@
-package controller.Staff;
+package controller.staff;
 
 import dao.customer.PoolDAO;
 import dao.manager.PoolServiceDAO;

@@ -141,6 +141,18 @@
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                 </a>
 
+                <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3 mt-4">
+                    <i class="fas fa-phone"></i> Liên hệ 
+                </div>
+
+                <a href="adminViewCustomerContact" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                    <div class="nav-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <span class="font-medium text-sm">Liên hệ khách hàng</span>
+                    <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
+                </a>
+
                 <div class="mt-3 pt-3 border-t border-white/20">
                     <a href="LogoutServlet"
                        class="logout-btn nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10 font-semibold">

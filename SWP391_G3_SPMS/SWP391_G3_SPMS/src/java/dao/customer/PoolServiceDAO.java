@@ -11,7 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import model.customer.Pool;
 import model.customer.PoolService;
+import model.manager.ServiceReport;
 
 /**
  *
@@ -92,6 +94,56 @@ public class PoolServiceDAO extends DBContext {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+    
+      public List<Pool> getAllPoolsByBranch(int branchId) throws SQLException {
+        List<Pool> list = new ArrayList<>();
+        String sql = "SELECT pool_id, pool_name FROM Pools WHERE branch_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, branchId);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Pool pool = new Pool(
+                        rs.getInt("pool_id"),
+                        rs.getString("pool_name"),
+                        null, null, 0, null, null, false, null, null, null, null, branchId
+                );
+                list.add(pool);
+            }
+        }
+        return list;
+    }
+      
+       public ServiceReport getReportById(int reportId) throws SQLException {
+        String query = "SELECT sr.*, p.pool_name, u.full_name AS staff_name "
+                + "FROM service_reports sr "
+                + "LEFT JOIN pools p ON sr.pool_id = p.pool_id "
+                + "LEFT JOIN Users u ON sr.staff_id = u.user_id "
+                + "WHERE sr.report_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, reportId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                ServiceReport report = new ServiceReport();
+                report.setReportId(rs.getInt("report_id"));
+                report.setStaffId(rs.getInt("staff_id"));
+                report.setPoolId(rs.getInt("pool_id"));
+                report.setBranchId(rs.getInt("branch_id"));
+                report.setServiceId(rs.getInt("service_id"));
+                report.setServiceName(rs.getString("service_name"));
+                report.setReportReason(rs.getString("report_reason"));
+                report.setSuggestion(rs.getString("suggestion"));
+                report.setStatus(rs.getString("status"));
+                report.setReportDate(rs.getTimestamp("report_date"));
+                report.setPoolName(rs.getString("pool_name"));
+                report.setStaffName(rs.getString("staff_name"));
+                report.setManagerNote(rs.getString("manager_note"));
+                report.setProcessedAt(rs.getTimestamp("processed_at"));
+                report.setProcessedBy(rs.getInt("processed_by"));
+                return report;
+            }
         }
         return null;
     }

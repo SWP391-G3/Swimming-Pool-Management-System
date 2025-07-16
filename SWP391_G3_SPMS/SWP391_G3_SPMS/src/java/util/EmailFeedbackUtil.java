@@ -64,8 +64,7 @@ public class EmailFeedbackUtil {
         return lastError;
     }
     
-    public static String createResponseTemplate(String customerName, String poolName, 
-                                               String originalComment, String adminResponse) {
+    public static String createResponseTemplate(String customerName, String poolName, String originalComment, String adminResponse) {
         return "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>"
                 + "<h2 style='color: #2c5aa0;'>Phản hồi từ Hệ thống Quản lý Hồ bơi</h2>"
                 + "<p>Xin chào <strong>" + customerName + "</strong>,</p>"
@@ -80,8 +79,8 @@ public class EmailFeedbackUtil {
                 + "</div>"
                 + "<p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</p>"
                 + "<p style='color: #666; font-size: 14px; margin-top: 30px;'>"
-                + "Đây là email do Tuấn Anh làm, vui lòng không trả lời email này.<br>"
-                + "Nếu bạn có thắc mắc, vui lòng liên hệ hotline: hẹ hẹ"
+                + "Đây là email do Manager Tuấn Anh làm, vui lòng không trả lời email này.<br>"
+                + "Nếu bạn có thắc mắc, vui lòng liên hệ hotline: 686868"
                 + "</p>"
                 + "</div>";
     }

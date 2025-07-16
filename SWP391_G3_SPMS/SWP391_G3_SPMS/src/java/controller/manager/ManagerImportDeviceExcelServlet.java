@@ -66,7 +66,7 @@ public class ManagerImportDeviceExcelServlet extends HttpServlet {
                         continue; // bỏ header
                     }
                     try {
-                        String deviceName = getCellString(row.getCell(0));
+                        String deviceName = getCellString(row.getCell(0));    // row.getCell(0) nghĩa là: lấy ô (cell) ở cột số 0 của dòng hiện tại.
                         int quantity = (int) row.getCell(1).getNumericCellValue();
                         String status = getCellString(row.getCell(2));
                         String notes = getCellString(row.getCell(3));

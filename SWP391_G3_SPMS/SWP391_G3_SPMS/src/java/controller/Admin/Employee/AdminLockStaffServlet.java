@@ -12,6 +12,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.admin.AccountBanLog;
+import model.customer.User;
 
 /**
  *
@@ -74,11 +76,18 @@ public class AdminLockStaffServlet extends HttpServlet {
             throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         boolean status = Boolean.parseBoolean(request.getParameter("status"));
-
+        String reason = request.getParameter("reason");
         EmployeeDAO dao = new EmployeeDAO();
         int userId = dao.getUserIdByStaffId(id);
         boolean updated = dao.updateStaffStatus(userId, status);
-
+        if (!status && reason != null && !reason.trim().isEmpty()) {
+            AccountBanLog log = new AccountBanLog();
+            log.setUserId(userId);
+            log.setBannedBy(1);
+            log.setReason(reason);
+            log.setIsPermanent(true);
+            dao.insert(log);
+        }
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
         out.print("{\"success\": " + updated + "}");

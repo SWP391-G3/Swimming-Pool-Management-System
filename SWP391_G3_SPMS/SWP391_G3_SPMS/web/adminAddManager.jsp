@@ -154,6 +154,18 @@
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                 </a>
 
+                <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3 mt-4">
+                    <i class="fas fa-phone"></i> Liên hệ 
+                </div>
+
+                <a href="adminViewCustomerContact" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                    <div class="nav-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <span class="font-medium text-sm">Liên hệ khách hàng</span>
+                    <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
+                </a>
+
                 <div class="mt-3 pt-3 border-t border-white/20">
                     <a href="LogoutServlet"
                        class="logout-btn nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10 font-semibold">
@@ -192,37 +204,37 @@
                     <form action="adminAddManager" method="post"  class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-semibold mb-1">Tên đăng nhập</label>
-                            <input name="username" required type="text" class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-400">
+                            <input name="username" value="${param.username}" required type="text" class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-400">
                         </div>
 
                         <div>
                             <label class="block text-sm font-semibold mb-1">Mật khẩu</label>
-                            <input name="password" required type="password" class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-400">
+                            <input name="password" value="${param.password}" required type="password" class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-400">
                         </div>
 
                         <div>
                             <label class="block text-sm font-semibold mb-1">Họ và tên</label>
-                            <input name="full_name" required type="text" class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-400">
+                            <input name="full_name" value="${param.full_name}" required type="text" class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-400">
                         </div>
 
                         <div>
                             <label class="block text-sm font-semibold mb-1">Email</label>
-                            <input name="email" required type="email" class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-400">
+                            <input name="email"  value="${param.email}" required type="email" class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-400">
                         </div>
 
                         <div>
                             <label class="block text-sm font-semibold mb-1">Điện thoại</label>
-                            <input name="phone" type="text" class="w-full p-3 rounded-xl border border-gray-300">
+                            <input name="phone" value="${param.phone}" type="text" class="w-full p-3 rounded-xl border border-gray-300">
                         </div>
 
                         <div>
                             <label class="block text-sm font-semibold mb-1">Địa chỉ</label>
-                            <input name="address" type="text" class="w-full p-3 rounded-xl border border-gray-300">
+                            <input name="address" value="${param.address}" type="text" class="w-full p-3 rounded-xl border border-gray-300">
                         </div>
 
                         <div>
                             <label class="block text-sm font-semibold mb-1">Ngày sinh</label>
-                            <input name="dob" type="date" class="w-full p-3 rounded-xl border border-gray-300">
+                            <input name="dob" value="${param.dob}" type="date" class="w-full p-3 rounded-xl border border-gray-300">
                         </div>
 
                         <div>
@@ -233,12 +245,6 @@
                                 <option value="Nữ">Nữ</option>
                                 <option value="Khác">Khác</option>
                             </select>
-                        </div>
-
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-semibold mb-1">Ảnh đại diện</label>
-                            <input type="file" name="imageFile" accept="image/*"
-                                   class="w-full p-2 rounded-xl border border-gray-300 file:bg-blue-700 file:text-white file:px-4 file:py-2 file:rounded-lg file:border-0 file:font-semibold">
                         </div>
 
                         <div class="md:col-span-2">
@@ -314,7 +320,7 @@
                 let errorMsg = "";
 
                 const username = document.querySelector("input[name='username']").value.trim();
-                const password = document.querySelector("input[name='password']").value.trim();
+                const password = document.querySelector("input[name='password']").value;
                 const fullName = document.querySelector("input[name='full_name']").value.trim();
                 const email = document.querySelector("input[name='email']").value.trim();
                 const phone = document.querySelector("input[name='phone']").value.trim();
@@ -323,46 +329,56 @@
                 const gender = document.querySelector("select[name='gender']").value;
                 const branch = document.querySelector("select[name='branchId']").value;
 
-                if (username.length < 4) {
-                    errorMsg += "Tên đăng nhập phải có ít nhất 4 ký tự.<br/>";
-                }
-                if (password.length < 6) {
-                    errorMsg += "Mật khẩu phải có ít nhất 9 ký tự.<br/>";
-                }
-                if (fullName.length < 2) {
-                    errorMsg += "Họ và tên phải có ít nhất 2 ký tự.<br/>";
-                }
+                const usernameRegex = /^[a-zA-Z0-9_]{5,20}$/;
+                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,30}$/;
+                const fullNameRegex = /^[A-Za-zÀ-ỹà-ỹ\s']{2,}$/;
                 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-                if (!emailRegex.test(email)) {
-                    errorMsg += "Email không đúng định dạng. Định dạng hợp lệ như: ten@example.com<br/>";
-                }
                 const phoneRegex = /^0\d{9}$/;
+
+                if (!usernameRegex.test(username)) {
+                    errorMsg += "Tên đăng nhập phải từ 5-20 ký tự, chỉ gồm chữ, số hoặc dấu gạch dưới.<br/>";
+                }
+
+                if (!passwordRegex.test(password)) {
+                    errorMsg += "Mật khẩu phải dài tối thiểu 8 ký tự, có ít nhất 1 chữ hoa, 1 chữ thường và 1 số.<br/>";
+                }
+
+                if (!fullNameRegex.test(fullName)) {
+                    errorMsg += "Họ và tên phải có ít nhất 2 ký tự, chỉ chứa chữ và khoảng trắng.<br/>";
+                }
+
+                if (!emailRegex.test(email)) {
+                    errorMsg += "Email không đúng định dạng. VD: ten@example.com<br/>";
+                }
+
                 if (!phoneRegex.test(phone)) {
                     errorMsg += "Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số.<br/>";
                 }
+
+                if (address.length < 5) {
+                    errorMsg += "Địa chỉ phải có ít nhất 5 ký tự.<br/>";
+                }
+
                 if (dob) {
                     const today = new Date();
                     const inputDate = new Date(dob);
-
-                    // Tính tuổi
                     let age = today.getFullYear() - inputDate.getFullYear();
                     const m = today.getMonth() - inputDate.getMonth();
                     if (m < 0 || (m === 0 && today.getDate() < inputDate.getDate())) {
-                        age--; // Chưa tới sinh nhật trong năm nay
+                        age--;
                     }
-
                     if (age < 14) {
                         errorMsg += "Tuổi phải từ 14 tuổi trở lên.<br/>";
                     }
-
                     if (inputDate > today) {
-                        errorMsg += "Ngày sinh không hợp lệ (sau ngày hiện tại).<br/>";
+                        errorMsg += "Ngày sinh không hợp lệ (trong tương lai).<br/>";
                     }
                 }
 
                 if (gender === "") {
                     errorMsg += "Vui lòng chọn giới tính.<br/>";
                 }
+
                 if (branch === "") {
                     errorMsg += "Vui lòng chọn chi nhánh quản lý.<br/>";
                 }
@@ -374,6 +390,7 @@
                 }
             });
         </script>
+
 
         <script>
             function closeErrorModal() {

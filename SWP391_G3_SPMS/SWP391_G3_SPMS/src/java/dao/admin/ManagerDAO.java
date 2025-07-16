@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
 import java.time.LocalDate;
+import model.admin.AccountBanLog;
 import model.customer.User;
 import model.admin.Branch;
 import model.admin.Manager;
@@ -59,8 +60,9 @@ public class ManagerDAO extends DBContext {
                 Manager manager = new Manager(manager_id, full_name, email, phone, address, status, created_at, branch_id, branch_name);
                 list.add(manager);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+
         }
         return list;
     }
@@ -72,8 +74,9 @@ public class ManagerDAO extends DBContext {
             if (rs.next()) {
                 return rs.getInt(1);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+
         }
         return 0;
     }
@@ -112,8 +115,9 @@ public class ManagerDAO extends DBContext {
                 return rs.getInt(1);
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+
         }
         return 0;
     }
@@ -173,8 +177,8 @@ public class ManagerDAO extends DBContext {
                 list.add(m);
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
         }
         return list;
     }
@@ -186,9 +190,8 @@ public class ManagerDAO extends DBContext {
             st.setInt(2, id);
             int rowsUpdated = st.executeUpdate();
             return rowsUpdated > 0;
-        } catch (Exception e) {
-            e.printStackTrace(); // hoặc log ra logger nếu có
-            return false;
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -218,9 +221,8 @@ public class ManagerDAO extends DBContext {
             psBranch.executeUpdate();
 
             return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -256,8 +258,8 @@ public class ManagerDAO extends DBContext {
                     return m;
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
         }
         return null;
     }
@@ -273,8 +275,8 @@ public class ManagerDAO extends DBContext {
                 b.setBranch_name(rs.getString("branch_name"));
                 list.add(b);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
         }
         return list;
     }
@@ -303,8 +305,8 @@ public class ManagerDAO extends DBContext {
             if (rs.next()) {
                 userId = rs.getInt(1);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
         }
         return userId;
     }
@@ -316,9 +318,8 @@ public class ManagerDAO extends DBContext {
             ps.setInt(2, branchId);
             int rows = ps.executeUpdate();
             return rows > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -333,8 +334,8 @@ public class ManagerDAO extends DBContext {
                 b.setBranch_name(rs.getString("branch_name"));
                 list.add(b);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
         }
         return list;
     }
@@ -349,17 +350,125 @@ public class ManagerDAO extends DBContext {
                     return count > 0; // true nếu trùng
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
         }
         return false;
     }
-    
+
+    public void insert(AccountBanLog banLog) {
+        String sql = "INSERT INTO Account_Ban_Log (user_id, banned_by, reason, is_permanent) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, banLog.getUserId());
+            ps.setInt(2, banLog.getBannedBy());
+            ps.setString(3, banLog.getReason());
+            ps.setBoolean(4, banLog.isIsPermanent());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public boolean isUsernameExists(String username) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE username = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(" Error of method isUsernameExists " + e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean isBranchManagedByOther(int branchId, int currentManagerId) {
+        String sql = """
+        SELECT 1 FROM Branchs 
+        WHERE branch_id = ? AND manager_id IS NOT NULL AND manager_id != ?
+    """;
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, branchId);
+            st.setInt(2, currentManagerId);
+            ResultSet rs = st.executeQuery();
+            return rs.next(); // true nếu đã có manager khác quản lý chi nhánh này
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String getBranchNameById(int id) {
+        String sql = """
+                     SELECT 
+                         branch_name
+                     FROM Branchs
+                     WHERE branch_id = ?;
+                     """;
+        try (PreparedStatement st = connection.prepareStatement(sql);) {
+            st.setInt(1, id);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getString(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return null;
+    }
+
+    public String getBranchNameByManagerId(int id) {
+        String sql = """
+                     SELECT 
+                         branch_name
+                     FROM Branchs
+                     WHERE manager_id = ?;
+                     """;
+        try (PreparedStatement st = connection.prepareStatement(sql);) {
+            st.setInt(1, id);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getString(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return null;
+    }
+
+    public void changeBranchWhenLockManager(int manager_id, String branchName) {
+        String sql = """
+                     UPDATE Branchs SET manager_id = NULL WHERE manager_id = ? and branch_name = ?
+                     """;
+        try (PreparedStatement st = connection.prepareStatement(sql);) {
+            st.setInt(1, manager_id);
+            st.setString(2, branchName);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+    }
+
+    public void changeBranchWhenUnLockManager(int manager_id, String branchName) {
+        String sql = """
+                     UPDATE Branchs SET manager_id = ? where branch_name = ?
+                     """;
+        try (PreparedStatement st = connection.prepareStatement(sql);) {
+            st.setInt(1, manager_id);
+            st.setString(2, branchName);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+    }
 
     public static void main(String[] args) {
         ManagerDAO dao = new ManagerDAO();
+        boolean check =  dao.updateManagerStatus(2, true);
         int count = dao.countManagers("manager", "Hà Nội", "true");
-        System.out.println(count);
+        System.out.println(check);
     }
 
 }

@@ -245,7 +245,7 @@ public class StaffDAO extends DBContext {
         return false;
     }
     
-    public StaffJoinedTable getStaffByUserId(int userId) {
+   public StaffJoinedTable getStaffByUserId(int userId) {
         String sql = "SELECT s.staff_id, s.user_id, s.branch_id, b.branch_name, s.pool_id, p.pool_name, " +
                      "s.staff_type_id, st.type_name, st.description " +
                      "FROM Staffs s " +

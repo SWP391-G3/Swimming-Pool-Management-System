@@ -63,11 +63,10 @@ public class AdminUpdateManagerServlet extends HttpServlet {
             throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
 
-        ManagerDAO managerDAO = new ManagerDAO();
-        Manager manager = managerDAO.getManagerById(id);
+        ManagerDAO dao = new ManagerDAO();
+        Manager manager = dao.getManagerById(id);
 
-        ManagerDAO branchDAO = new ManagerDAO();
-        List<Branch> branchList = branchDAO.getAllBranches(); // Lấy từ DB
+        List<Branch> branchList = dao.getAllBranches(); // Lấy từ DB
 
         request.setAttribute("manager", manager);
         request.setAttribute("branchList", branchList); // Truyền list Branch
@@ -88,62 +87,68 @@ public class AdminUpdateManagerServlet extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
-        // Lấy dữ liệu từ form
-        int managerId = Integer.parseInt(request.getParameter("manager_id"));
-        String fullName = request.getParameter("full_name");
-        String email = request.getParameter("email");
-        String phone = request.getParameter("phone");
-        String address = request.getParameter("address");
-        boolean status = Boolean.parseBoolean(request.getParameter("status"));
-        int branchId = Integer.parseInt(request.getParameter("branch_id"));
+        try {
+            // Lấy dữ liệu từ form
+            int managerId = Integer.parseInt(request.getParameter("manager_id"));
+            String fullName = request.getParameter("full_name");
+            String email = request.getParameter("email");
+            String phone = request.getParameter("phone");
+            String address = request.getParameter("address");
+            boolean status = Boolean.parseBoolean(request.getParameter("status"));
+            int branchId = Integer.parseInt(request.getParameter("branch_id"));
 
-        // Tạo đối tượng Manager
-        Manager manager = new Manager();
-        manager.setManager_id(managerId);
-        manager.setFull_name(fullName);
-        manager.setEmail(email);
-        manager.setPhone(phone);
-        manager.setAddress(address);
-        manager.setStatus(status);
-        manager.setBranch_id(branchId);
+            // DAO
+            ManagerDAO dao = new ManagerDAO();
+            String currentBranch = dao.getBranchNameById(branchId);
+            if (dao.isBranchManagedByOther(branchId, managerId)) {
+                Manager manager = dao.getManagerById(managerId);
+                List<Branch> branchList = dao.getAllBranches(); // Lấy từ DB
+                request.setAttribute("error", currentBranch +" đã có manager, không thể cập nhật chi nhánh cho manager!!!");
+                request.setAttribute("manager", manager);
+                request.setAttribute("branchList", branchList); // Truyền list Branch
+                request.getRequestDispatcher("adminUpdateManager.jsp").forward(request, response);
+                return;
+            }
+            Manager m = dao.getManagerById(managerId);
+            // Lấy email hiện tại của manager đang cập nhật
+            String currentEmail = m.getEmail();
 
-        ManagerDAO branchDAO = new ManagerDAO();
-        List<Branch> branchList = branchDAO.getAllBranches();
-//        String error = "";
-//        for (Branch branch : branchList) {
-//            if (branch.getBranch_id() == branchId) {
-//                error = "Khu vực này đã có manager";
-//                break;
-//            }
-//        }
-//        if (!error.isEmpty()) {
-//            ManagerDAO managerDAO = new ManagerDAO();
-//            Manager fullManager = managerDAO.getManagerById(managerId);
-//            branchList = managerDAO.getAllBranches();
-//            request.setAttribute("manager", fullManager);
-//            request.setAttribute("branchList", branchList);
-//            request.setAttribute("error", "Khu vực này đã có manager!");
-//
-//            request.getRequestDispatcher("adminUpdateManager.jsp").forward(request, response);
-//            return;
-//        }
+            // Nếu đổi email và email đã tồn tại ở người khác → báo lỗi
+            if (!email.equalsIgnoreCase(currentEmail) && dao.isEmailExists(email)) {
+                Manager fullManager = dao.getManagerById(managerId);
+                List<Branch> branchList = dao.getAllBranches();
 
-        // Gọi DAO
-        ManagerDAO dao = new ManagerDAO();
-        boolean success = dao.updateManager(manager);
+                request.setAttribute("error", "Email đã tồn tại!");
+                request.setAttribute("manager", fullManager);
+                request.setAttribute("branchList", branchList);
+                request.getRequestDispatcher("adminUpdateManager.jsp").forward(request, response);
+                return;
+            }
 
-        // Điều hướng sau khi update
-        if (success) {
-            response.sendRedirect("adminViewManagerList"); // load lại danh sách manager
-        } else {
-            ManagerDAO managerDAO = new ManagerDAO();
-            Manager fullManager = managerDAO.getManagerById(managerId);
-            branchList = managerDAO.getAllBranches();
-            request.setAttribute("manager", fullManager);
-            request.setAttribute("branchList", branchList);
-            request.setAttribute("error", "Cập nhật thất bại!");
+            // Tạo đối tượng Manager
+            Manager manager = new Manager();
+            manager.setManager_id(managerId);
+            manager.setFull_name(fullName);
+            manager.setEmail(email);
+            manager.setPhone(phone);
+            manager.setAddress(address);
+            manager.setStatus(status);
+            manager.setBranch_id(branchId);
 
-            request.getRequestDispatcher("adminUpdateManager.jsp").forward(request, response);
+            boolean success = dao.updateManager(manager);
+
+            if (success) {
+                response.sendRedirect("adminViewManagerList");
+            } else {
+                Manager fullManager = dao.getManagerById(managerId);
+                List<Branch> branchList = dao.getAllBranches();
+                request.setAttribute("manager", fullManager);
+                request.setAttribute("branchList", branchList);
+                request.setAttribute("error", "Cập nhật thất bại!");
+                request.getRequestDispatcher("adminUpdateManager.jsp").forward(request, response);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 

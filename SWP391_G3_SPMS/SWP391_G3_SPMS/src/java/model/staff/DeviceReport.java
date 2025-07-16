@@ -4,10 +4,10 @@
  */
 package model.staff;
 
-
 import java.util.Date;
 
 public class DeviceReport {
+
     private int reportId;
     private int staffId;
     private int poolId;
@@ -18,12 +18,14 @@ public class DeviceReport {
     private String suggestion;
     private Date reportDate;
     private String status;
+    private String managerNote; // Thêm ghi chú của quản lý
 
     // Constructors
-    public DeviceReport() {}
+    public DeviceReport() {
+    }
 
     public DeviceReport(int reportId, int staffId, int poolId, int branchId, int deviceId, String deviceName,
-                        String reportReason, String suggestion, Date reportDate, String status) {
+            String reportReason, String suggestion, Date reportDate, String status, String managerNote) {
         this.reportId = reportId;
         this.staffId = staffId;
         this.poolId = poolId;
@@ -34,12 +36,14 @@ public class DeviceReport {
         this.suggestion = suggestion;
         this.reportDate = reportDate;
         this.status = status;
+        this.managerNote = managerNote;
     }
 
     // Getter & Setter
     public int getReportId() {
         return reportId;
     }
+
     public void setReportId(int reportId) {
         this.reportId = reportId;
     }
@@ -47,6 +51,7 @@ public class DeviceReport {
     public int getStaffId() {
         return staffId;
     }
+
     public void setStaffId(int staffId) {
         this.staffId = staffId;
     }
@@ -54,6 +59,7 @@ public class DeviceReport {
     public int getPoolId() {
         return poolId;
     }
+
     public void setPoolId(int poolId) {
         this.poolId = poolId;
     }
@@ -61,6 +67,7 @@ public class DeviceReport {
     public int getBranchId() {
         return branchId;
     }
+
     public void setBranchId(int branchId) {
         this.branchId = branchId;
     }
@@ -68,6 +75,7 @@ public class DeviceReport {
     public int getDeviceId() {
         return deviceId;
     }
+
     public void setDeviceId(int deviceId) {
         this.deviceId = deviceId;
     }
@@ -75,6 +83,7 @@ public class DeviceReport {
     public String getDeviceName() {
         return deviceName;
     }
+
     public void setDeviceName(String deviceName) {
         this.deviceName = deviceName;
     }
@@ -82,6 +91,7 @@ public class DeviceReport {
     public String getReportReason() {
         return reportReason;
     }
+
     public void setReportReason(String reportReason) {
         this.reportReason = reportReason;
     }
@@ -89,6 +99,7 @@ public class DeviceReport {
     public String getSuggestion() {
         return suggestion;
     }
+
     public void setSuggestion(String suggestion) {
         this.suggestion = suggestion;
     }
@@ -96,6 +107,7 @@ public class DeviceReport {
     public Date getReportDate() {
         return reportDate;
     }
+
     public void setReportDate(Date reportDate) {
         this.reportDate = reportDate;
     }
@@ -103,7 +115,16 @@ public class DeviceReport {
     public String getStatus() {
         return status;
     }
+
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getManagerNote() {
+        return managerNote;
+    }
+
+    public void setManagerNote(String managerNote) {
+        this.managerNote = managerNote;
     }
 }

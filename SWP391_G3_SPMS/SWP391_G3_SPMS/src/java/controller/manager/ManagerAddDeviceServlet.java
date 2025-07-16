@@ -169,9 +169,9 @@ public class ManagerAddDeviceServlet extends HttpServlet {
 
         try {
             int poolId = Integer.parseInt(request.getParameter("poolId"));
-            
+
             String name = request.getParameter("deviceName").trim();
-        
+
             // Kiểm tra tên thiết bị đã tồn tại trong cùng hồ bơi 
             if (deviceDAO.isDeviceNameExistsInPool(poolId, name)) {
                 request.setAttribute("error", "Tên thiết bị này đã tồn tại trong hồ bơi.");
@@ -210,7 +210,7 @@ public class ManagerAddDeviceServlet extends HttpServlet {
                 fileName = java.nio.file.Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
                 // Đường dẫn thư mục lưu file (tùy chỉnh path này cho phù hợp dự án của bạn)
                 String uploadDir = getServletContext().getRealPath("images/uploads/devices");
-               // String uploadPath = getServletContext().getRealPath("/images/uploads/devices");
+                // String uploadPath = getServletContext().getRealPath("/images/uploads/devices");
 
                 java.io.File dir = new java.io.File(uploadDir);
                 if (!dir.exists()) {
@@ -225,6 +225,8 @@ public class ManagerAddDeviceServlet extends HttpServlet {
             Device d = new Device(0, imagePath, name, poolId, null, quantity, status, notes);
             deviceDAO.addDevice(d);
 
+           
+
             int count = deviceDAO.countDevicesWithPool(
                     returnKeyword, returnStatus, branchId, filterPoolId);
 
@@ -233,7 +235,12 @@ public class ManagerAddDeviceServlet extends HttpServlet {
                 endPage++;
             }
 
+            request.getSession().setAttribute("importSuccess", "Thêm thiết bị thành công!");
             String redirectUrl = "managerListDeviceServlet?page=" + endPage;
+            
+            
+             
+            
 
             if (returnPoolId != null) {
                 redirectUrl += "&poolId=" + returnPoolId;

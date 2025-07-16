@@ -103,7 +103,7 @@
                         <div class="flex-1">
                             <h4 class="text-sm font-semibold text-white"><%= userName %></h4>
                             <p class="text-xs text-blue-100">Administrator</p>
-                            <a href="#" class="text-xs text-yellow-300 hover:text-yellow-200 hover:underline transition-colors">
+                            <a href="adminProfile?service=showProfile" class="text-xs text-yellow-300 hover:text-yellow-200 hover:underline transition-colors">
                                 <i class="fas fa-user-edit mr-1"></i>Xem chi tiết
                             </a>
                         </div>
@@ -151,6 +151,18 @@
                             <i class="fa-solid fa-user-check text-sm"></i>
                         </div>
                         <span class="font-medium text-sm">Quản lý khách hàng</span>
+                        <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
+                    </a>
+
+                    <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3 mt-4">
+                        <i class="fas fa-phone"></i> Liên hệ 
+                    </div>
+
+                    <a href="adminViewCustomerContact" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                        <div class="nav-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <span class="font-medium text-sm">Liên hệ khách hàng</span>
                         <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                     </a>
 

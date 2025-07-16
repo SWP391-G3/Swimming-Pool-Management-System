@@ -176,6 +176,18 @@
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                 </a>
 
+                <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3 mt-4">
+                    <i class="fas fa-phone"></i> Liên hệ 
+                </div>
+
+                <a href="adminViewCustomerContact" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                    <div class="nav-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <span class="font-medium text-sm">Liên hệ khách hàng</span>
+                    <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
+                </a>
+
                 <div class="mt-3 pt-3 border-t border-white/20">
                     <a href="LogoutServlet"
                        class="logout-btn nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10 font-semibold">
@@ -334,7 +346,13 @@
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
                                             <a href="adminEditEmployee?id=<%= e.getStaffId() %>&branchId=<%= e.getBranchId() %>" class="text-yellow-500 hover:text-yellow-700" title="Sửa"><i class="fa-solid fa-pen"></i></a>
-                                            <a href="adminToggleEmployeeStatus?id=<%= e.getStaffId() %>" class="text-red-500 hover:text-red-700" title="Khóa/Mở"><i class="fa-solid fa-lock"></i></a>
+                                            <button 
+                                                class="lock-btn" 
+                                                data-id="<%= e.getStaffId() %>" 
+                                                data-name="<%= e.getFullName() %>" 
+                                                data-status="<%= e.getStatus() %>">
+                                                <i class="fa-solid <%= e.getStatus() ? "fa-lock" : "fa-unlock" %>"></i>
+                                            </button>   
                                         </div>
                                     </td>
                                 </tr>
@@ -390,6 +408,22 @@
                         </div>
                     </div>
 
+                    <!-- Ban popup -->
+                    <div id="banReasonModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-40 flex items-center justify-center">
+                        <div class="bg-white rounded-lg p-6 shadow-lg w-full max-w-md space-y-4">
+                            <h2 class="text-lg font-bold text-gray-800">Nhập lý do khóa nhân viên</h2>
+                            <p id="banTargetText" class="text-sm text-gray-600"></p>
+                            <textarea id="banReasonInput" rows="4"
+                                      class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                      placeholder="Nhập lý do..."></textarea>
+                            <div class="flex justify-end gap-3 pt-2">
+                                <button onclick="closeBanModal()" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800">Hủy</button>
+                                <button id="confirmBanBtn" class="px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white">Xác nhận khóa</button>
+                            </div>
+                        </div>
+                    </div>
+
+
                     <!-- Pagination -->
                     <div class="flex flex-wrap justify-center mt-8 gap-2 text-sm">
                         <% if (currentPage > 1) { %>
@@ -427,57 +461,126 @@
 
                     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                     <script>
-                                // Thay thế đoạn JavaScript hiện tại bằng đoạn này:
-                                $(document).ready(function () {
-                                    $('.btn-view-employee').click(function (e) {
-                                        e.preventDefault();
+                                    // Thay thế đoạn JavaScript hiện tại bằng đoạn này:
+                                    $(document).ready(function () {
+                                        $('.btn-view-employee').click(function (e) {
+                                            e.preventDefault();
 
-                                        const $this = $(this);
-                                        const isActive = $this.data('status') === "Đang hoạt động";
-                                        const staffId = $this.data('id');
-                                        const branchId = $this.data('branch-id');
+                                            const $this = $(this);
+                                            const isActive = $this.data('status') === "Đang hoạt động";
+                                            const staffId = $this.data('id');
+                                            const branchId = $this.data('branch-id');
 
-                                        // Gán dữ liệu vào modal
-                                        $('#empImage').attr('src', $this.data('image'));
-                                        $('#empFullName').text($this.data('full-name'));
-                                        $('#empEmail').text($this.data('email'));
-                                        $('#empAddress').text($this.data('address'));
-                                        $('#empDob').text($this.data('dob'));
-                                        $('#empGender').text($this.data('gender'));
-                                        $('#empArea').text($this.data('area'));
-                                        $('#empPool').text($this.data('pool'));
-                                        $('#empPosition').text($this.data('position'));
-                                        $('#empDescription').text($this.data('description'));
+                                            // Gán dữ liệu vào modal
+                                            $('#empImage').attr('src', $this.data('image'));
+                                            $('#empFullName').text($this.data('full-name'));
+                                            $('#empEmail').text($this.data('email'));
+                                            $('#empAddress').text($this.data('address'));
+                                            $('#empDob').text($this.data('dob'));
+                                            $('#empGender').text($this.data('gender'));
+                                            $('#empArea').text($this.data('area'));
+                                            $('#empPool').text($this.data('pool'));
+                                            $('#empPosition').text($this.data('position'));
+                                            $('#empDescription').text($this.data('description'));
 
-                                        // Gán trạng thái
-                                        const $status = $('#empStatus');
-                                        if (isActive) {
-                                            $status
-                                                    .text('Đang hoạt động')
-                                                    .removeClass()
-                                                    .addClass('inline-block mt-1 text-sm font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700');
-                                        } else {
-                                            $status
-                                                    .text('Đã khóa')
-                                                    .removeClass()
-                                                    .addClass('inline-block mt-1 text-sm font-semibold px-3 py-1 rounded-full bg-red-100 text-red-700');
-                                        }
+                                            // Gán trạng thái
+                                            const $status = $('#empStatus');
+                                            if (isActive) {
+                                                $status
+                                                        .text('Đang hoạt động')
+                                                        .removeClass()
+                                                        .addClass('inline-block mt-1 text-sm font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700');
+                                            } else {
+                                                $status
+                                                        .text('Đã khóa')
+                                                        .removeClass()
+                                                        .addClass('inline-block mt-1 text-sm font-semibold px-3 py-1 rounded-full bg-red-100 text-red-700');
+                                            }
 
-                                        // CÁCH 1: Sửa đoạn này - Set href trực tiếp thay vì dùng click handler
-                                        $('#updateLink').attr('href', 'adminEditEmployee?id=' + staffId + '&branchId=' + branchId);
-                                        $('#toggleStatusLink').attr('href', 'adminToggleEmployeeStatus?id=' + staffId);
+                                            // CÁCH 1: Sửa đoạn này - Set href trực tiếp thay vì dùng click handler
+                                            $('#updateLink').attr('href', 'adminEditEmployee?id=' + staffId + '&branchId=' + branchId);
+                                            $('#toggleStatusLink').attr('href', 'adminToggleEmployeeStatus?id=' + staffId);
 
-                                        // Hiện modal
-                                        $('#employeeDetailModal').removeClass('hidden');
+                                            // Hiện modal
+                                            $('#employeeDetailModal').removeClass('hidden');
+                                        });
                                     });
-                                });
 
-                                // Nút đóng modal
-                                function closeModal() {
-                                    document.getElementById("employeeDetailModal").classList.add("hidden");
-                                }
+                                    // Nút đóng modal
+                                    function closeModal() {
+                                        document.getElementById("employeeDetailModal").classList.add("hidden");
+                                    }
+
+
                     </script>
 
+                    <script>
+                        $(document).ready(function () {
+                            let selectedStaffId = null;
+                            let selectedStatus = null;
+
+                            $('.lock-btn').click(function () {
+                                const button = $(this);
+                                const id = button.data('id');
+                                const name = button.data('name');
+                                const currentStatus = button.data('status');
+
+                                if (currentStatus) {
+                                    // Nếu đang hoạt động → yêu cầu lý do để khóa
+                                    selectedStaffId = id;
+                                    selectedStatus = false; // khóa
+
+                                    $('#banReasonInput').val('');
+                                    $('#banTargetText').text(`Bạn đang thực hiện KHÓA nhân viên "${name}". Vui lòng nhập lý do:`);
+                                    $('#banReasonModal').removeClass('hidden');
+                                } else {
+                                    // Nếu đang khóa → không cần lý do, mở khóa luôn
+                                    updateStatus(id, true, null, $(this));
+                                }
+                            });
+
+                            // Nút xác nhận trong modal
+                            $('#confirmBanBtn').click(function () {
+                                const reason = $('#banReasonInput').val().trim();
+                                if (!reason) {
+                                    alert('Vui lòng nhập lý do khóa.');
+                                    return;
+                                }
+
+                                updateStatus(selectedStaffId, selectedStatus, reason);
+                                closeBanModal();
+                            });
+                        });
+
+                        function closeBanModal() {
+                            $('#banReasonModal').addClass('hidden');
+                        }
+
+
+                        function updateStatus(id, newStatus, reason = null, buttonElement = null) {
+                            $.ajax({
+                                url: 'adminLockStaff',
+                                type: 'POST',
+                                data: {
+                                    id: id,
+                                    status: newStatus,
+                                    reason: reason
+                                },
+                                success: function (response) {
+                                    if (response.success) {
+                                        alert('Cập nhật trạng thái thành công!');
+                                        location.reload(); // Reload lại trang để hiển thị cập nhật
+                                    } else {
+                                        alert('Lỗi khi cập nhật trạng thái!');
+                                    }
+                                },
+                                error: function () {
+                                    alert('Đã xảy ra lỗi.');
+                                }
+                            });
+                        }
+
+                    </script>
 
                 </div>
             </main>

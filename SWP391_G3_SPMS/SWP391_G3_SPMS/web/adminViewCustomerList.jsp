@@ -148,6 +148,18 @@
                         <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                     </a>
 
+                    <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3 mt-4">
+                        <i class="fas fa-phone"></i> Liên hệ 
+                    </div>
+
+                    <a href="adminViewCustomerContact" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                        <div class="nav-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <span class="font-medium text-sm">Liên hệ khách hàng</span>
+                        <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
+                    </a>
+
                     <div class="mt-3 pt-3 border-t border-white/20">
                         <a href="LogoutServlet"
                            class="logout-btn nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10 font-semibold">
@@ -316,96 +328,127 @@
                         </div>
                     </div>
 
+                    <!-- Ban Reason Modal -->
+                    <div id="banReasonModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+                        <div class="bg-white w-full max-w-md rounded-xl shadow-lg p-6 relative">
+                            <button onclick="closeBanModal()" class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl">&times;</button>
+                            <h3 class="text-xl font-bold mb-4 text-red-600 text-center">Nhập lý do khóa tài khoản</h3>
+
+                            <form id="banForm" >
+                                <input type="hidden" name="userId" id="banUserId" />
+                                <textarea name="reason" id="banReason" rows="4" required
+                                          class="w-full border rounded p-2 text-sm"
+                                          placeholder="Nhập lý do khóa tài khoản..."></textarea>
+                                <div class="flex justify-end gap-2 mt-4">
+                                    <button type="button" onclick="closeBanModal()" class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded">Hủy</button>
+                                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">Xác nhận khóa</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
 
 
                     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                     <script>
-                                    $(document).ready(function () {
-                                        $('.toggle-status-btn').click(function (e) {
-                                            e.preventDefault();
-                                            var $btn = $(this);
-                                            var userId = $btn.data('user-id');
-                                            var userStatus = $btn.data('user-status');
+                                        $(document).ready(function () {
+                                            $('.toggle-status-btn').click(function (e) {
+                                                e.preventDefault();
+                                                const $btn = $(this);
+                                                const userId = $btn.data('user-id');
+                                                const isActive = $btn.hasClass('bg-red-500'); // Nếu đang là nút Khóa → trạng thái hiện tại là Hoạt động
+
+                                                if (isActive) {
+                                                    // Đang hoạt động → hiện modal nhập lý do khóa
+                                                    $('#banUserId').val(userId);
+                                                    $('#banReason').val('');
+                                                    $('#banReasonModal').removeClass('hidden');
+                                                } else {
+                                                    // Đang bị khóa → mở khóa luôn
+                                                    $.ajax({
+                                                        url: 'adminLockCustomer',
+                                                        type: 'GET',
+                                                        data: {
+                                                            userId: userId,
+                                                            userStatus: false // mở khóa
+                                                        },
+                                                        success: function () {
+                                                            location.reload();
+                                                        },
+                                                        error: function () {
+                                                            alert('Có lỗi xảy ra, vui lòng thử lại!');
+                                                        }
+                                                    });
+                                                }
+                                            });
+
+
+                                            // Xử lý modal xem chi tiết như cũ (GIỮ NGUYÊN):
+                                            $('.view-btn').click(function (e) {
+                                                e.preventDefault();
+                                                const isActive = $(this).data('status');
+                                                const $status = $('#modalStatus');
+                                                const userId = $(this).data('user-id');
+                                                $('#modalFullName').text($(this).data('full-name'));
+                                                $('#modalEmail').text($(this).data('email'));
+                                                $('#modalPhone').text($(this).data('phone'));
+                                                $('#modalAddress').text($(this).data('address'));
+                                                $('#modalDob').text($(this).data('dob'));
+                                                $('#modalGender').text($(this).data('gender'));
+                                                $('#modalImage').attr('src', $(this).data('image'));
+                                                if (isActive) {
+                                                    $status.text('Hoạt Động')
+                                                            .removeClass()
+                                                            .addClass('px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700');
+                                                } else {
+                                                    $status.text('Bị khóa')
+                                                            .removeClass()
+                                                            .addClass('px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700');
+                                                }
+                                                $('#historyBtn').attr('href', 'adminViewCustomerHistory?userId=' + userId);
+                                                $('#updateBtn').attr('href', 'adminUpdateCustomer?userId=' + userId);
+                                                $('#customerModal').removeClass('hidden');
+                                            });
+                                        });
+
+                                        $('#banForm').submit(function (e) {
+                                            e.preventDefault(); // chặn hành vi submit mặc định
+
+                                            const userId = $('#banUserId').val();
+                                            const reason = $('#banReason').val();
+
                                             $.ajax({
                                                 url: 'adminLockCustomer',
-                                                type: 'GET',
+                                                method: 'GET',
                                                 data: {
                                                     userId: userId,
-                                                    userStatus: userStatus
+                                                    userStatus: true,
+                                                    reason: reason
                                                 },
-                                                success: function (response) {
-                                                    // Cập nhật lại trạng thái trên giao diện
-                                                    // Đảo trạng thái
-                                                    var newStatus = !userStatus;
-                                                    $btn.data('user-status', newStatus);
-                                                    // Đổi màu nút và icon, text
-                                                    if (newStatus) {
-                                                        $btn.removeClass('bg-green-500').addClass('bg-red-500');
-                                                        $btn.find('i').removeClass('fa-lock-open').addClass('fa-lock');
-                                                        $btn.html('<i class="fa-solid fa-lock"></i> Khóa');
-                                                        // Đổi trạng thái text
-                                                        $btn.closest('tr').find('td:nth-child(6) span')
-                                                                .removeClass('text-red-700 bg-red-100')
-                                                                .addClass('text-green-700 bg-green-100')
-                                                                .text('Hoạt Động');
+                                                success: function (data) {
+                                                    if (data.success) {
+                                                        closeBanModal();
+                                                        location.reload(); // reload danh sách khách hàng
                                                     } else {
-                                                        $btn.removeClass('bg-red-500').addClass('bg-green-500');
-                                                        $btn.find('i').removeClass('fa-lock').addClass('fa-lock-open');
-                                                        $btn.html('<i class="fa-solid fa-lock-open"></i> Mở');
-                                                        $btn.closest('tr').find('td:nth-child(6) span')
-                                                                .removeClass('text-green-700 bg-green-100')
-                                                                .addClass('text-red-700 bg-red-100')
-                                                                .text('Bị khóa');
+                                                        alert("Có lỗi khi khóa tài khoản.");
                                                     }
                                                 },
                                                 error: function () {
-                                                    alert('Có lỗi xảy ra, vui lòng thử lại!');
+                                                    alert("Lỗi hệ thống, vui lòng thử lại!");
                                                 }
                                             });
                                         });
-                                    });
-                                    $('.view-btn').click(function (e) {
-                                        e.preventDefault();
 
-                                        const isActive = $(this).data('status'); // true hoặc false
-                                        const $status = $('#modalStatus');
-                                        const userId = $(this).data('user-id');
 
-                                        // Gán dữ liệu
-                                        $('#modalFullName').text($(this).data('full-name'));
-                                        $('#modalEmail').text($(this).data('email'));
-                                        $('#modalPhone').text($(this).data('phone'));
-                                        $('#modalAddress').text($(this).data('address'));
-                                        $('#modalDob').text($(this).data('dob'));
-                                        $('#modalGender').text($(this).data('gender'));
-                                        $('#modalImage').attr('src', $(this).data('image'));
 
-                                        // Gán trạng thái và màu
-                                        if (isActive) {
-                                            $status
-                                                    .text('Hoạt Động')
-                                                    .removeClass()
-                                                    .addClass('px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700');
-                                        } else {
-                                            $status
-                                                    .text('Bị khóa')
-                                                    .removeClass()
-                                                    .addClass('px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700');
+
+
+                                        function closeBanModal() {
+                                            $('#banReasonModal').addClass('hidden');
                                         }
 
-                                        // Gán link cho lịch sử và cập nhật
-                                        $('#historyBtn').attr('href', 'adminViewCustomerHistory?userId=' + userId);
-                                        $('#updateBtn').attr('href', 'adminUpdateCustomer?userId=' + userId);
-
-                                        // Hiện modal
-                                        $('#customerModal').removeClass('hidden');
-                                    });
-
-
-
-                                    function closeModal() {
-                                        $('#customerModal').addClass('hidden');
-                                    }
+                                        function closeModal() {
+                                            $('#customerModal').addClass('hidden');
+                                        }
 
                     </script>
 

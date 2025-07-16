@@ -298,7 +298,7 @@
                     font-size:1rem;
                 }
             }
-           
+
         </style>
     </head>
     <body>
@@ -308,30 +308,24 @@
                 <div class="btn-wrapper">
                     <a href="customerViewPoolList" class="back-link">&#8592; Trang chủ</a>
 
-                    <c:if test="${not empty pool}">
-                        <a class="btn-booking"
-
-                           href="booking?service=showBookingPage&poolId=${pool.pool_id}">
-                            Đặt bể bơi
-                        </a>
-                    </c:if>
+                 
                 </div>
                 <c:if test="${not empty pool}">
                     <!-- CAROUSEL -->
                     <c:choose>
-                        <c:when test="${not empty pool.listImageList && fn:length(pool.listImageList) > 0}">
+                        <c:when test="${not empty imageList && fn:length(imageList) > 0}">
                             <div class="carousel-wrap">
                                 <button class="carousel-arrow left" onclick="prevImg()" type="button">&#8592;</button>
                                 <img id="carouselImg"
                                      class="carousel-img"
-                                     src="${pool.listImageList[0]}"
+                                     src="${imageList[0]}"
                                      alt="Ảnh hồ bơi"/>
                                 <button class="carousel-arrow right" onclick="nextImg()" type="button">&#8594;</button>
                                 <div class="carousel-dots" id="carouselDots"></div>
                             </div>
                             <script>
                                 var imgs = [
-                                <c:forEach var="img" items="${pool.listImageList}" varStatus="status">
+                                <c:forEach var="img" items="${imageList}" varStatus="status">
                                 "${img}"<c:if test="${!status.last}">,</c:if>
                                 </c:forEach>
                                 ];
@@ -364,6 +358,7 @@
                             <img class="carousel-img" src="${pool.pool_image}" alt="${pool.pool_name}"/>
                         </c:otherwise>
                     </c:choose>
+
                     <!-- Chi tiết -->
                     <div class="info-row" style="margin-top: 12px"><span class="info-label">Tên hồ bơi:</span> <span class="info-value">${pool.pool_name}</span></div>
                     <div class="info-row"><span class="info-label">Đường</span> <span class="info-value">${pool.pool_road}</span></div>
@@ -376,6 +371,13 @@
                         <span class="info-value">${pool.close_time}</span>
                     </div>
                     <div class="info-row"><span class="info-label">Description:</span> <span class="info-value">${pool.pool_description}</span></div>
+                       <c:if test="${not empty pool}">
+                        <a class="btn-booking"
+
+                           href="booking?service=showBookingPage&poolId=${pool.pool_id}">
+                            Đặt bể bơi
+                        </a>
+                    </c:if>
                     <!-- Feedback dưới chi tiết -->
                     <div class="feedback-section">
                         <div class="feedback-title">Đánh giá của khách hàng</div>

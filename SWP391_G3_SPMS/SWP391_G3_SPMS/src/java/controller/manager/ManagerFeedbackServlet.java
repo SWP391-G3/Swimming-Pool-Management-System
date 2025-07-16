@@ -161,19 +161,19 @@ public class ManagerFeedbackServlet extends HttpServlet {
             int totalPages = (int) Math.ceil((double) totalRows[0] / pageSize);
 
             // Set attributes cho JSP
-            request.setAttribute("feedbackList", feedbacks); // Sửa tên attribute
-            request.setAttribute("poolList", pools); // Sửa tên attribute
+            request.setAttribute("feedbackList", feedbacks); 
+            request.setAttribute("poolList", pools); 
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("currentPage", page);
             request.setAttribute("totalRows", totalRows[0]);
-            request.setAttribute("endP", totalPages); // Thêm attribute cho JSP
-            request.setAttribute("page", page); // Thêm attribute cho JSP
-            request.setAttribute("pageSize", pageSize); // Thêm attribute cho JSP
+            request.setAttribute("endP", totalPages); 
+            request.setAttribute("page", page); 
+            request.setAttribute("pageSize", pageSize); 
 
             // Giữ lại các giá trị filter
             request.setAttribute("keyword", keyword);
-            request.setAttribute("poolId", poolIdStr); // Giữ nguyên string để so sánh trong JSP
-            request.setAttribute("rating", ratingStr); // Giữ nguyên string để so sánh trong JSP
+            request.setAttribute("poolId", poolIdStr); 
+            request.setAttribute("rating", ratingStr); 
             request.setAttribute("dateFilter", dateFilter);
 
             // Forward đến JSP

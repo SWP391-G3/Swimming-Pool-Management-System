@@ -43,12 +43,12 @@ public class LoginServlet extends HttpServlet {
 
                 HttpSession session = request.getSession();
                 session.setAttribute("currentUser", user);
-
+                session.setAttribute("message", "Đăng nhập thành công!"); 
                 int roleId = user.getRole_id();
 
                 switch (roleId) {
                     case 1:
-                        response.sendRedirect("adminPoolManagement");
+                        response.sendRedirect("adminDashBoard");
                         break;
                     case 2:
                         response.sendRedirect("managerPanel.jsp"); 
