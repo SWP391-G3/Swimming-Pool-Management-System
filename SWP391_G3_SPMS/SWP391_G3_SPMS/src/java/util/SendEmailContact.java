@@ -53,4 +53,37 @@ public class SendEmailContact {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    public static String sendEmailContactTemplate(String reason) {
+        return """
+        <!DOCTYPE html>
+        <html lang=\\"vi\\">
+        <head>
+            <meta charset=\\"UTF-8\\">
+            <title>Phản hồi liên hệ - Hệ thống quản lý hồ bơi</title>
+        </head>
+        <body style=\\"font-family: 'Segoe UI', sans-serif; background-color: #f2f6fc; padding: 0; margin: 0;\\">
+            <div style=\\"max-width: 600px; margin: 30px auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow: hidden;\\">
+                <div style=\\"background: linear-gradient(90deg, #0ea5e9, #38bdf8); color: white; padding: 20px; text-align: center;\\">
+                    <h2 style=\\"margin: 0;\\">Hệ thống quản lý hồ bơi</h2>
+                    <p style=\\"margin: 0; font-size: 14px;\\">Cảm ơn bạn đã liên hệ với chúng tôi!</p>
+                </div>
+                <div style=\\"padding: 30px;\\">
+                    <h3 style=\\"color: #0ea5e9;\\">📩 Phản hồi từ hệ thống</h3>
+                    <p>Xin chào quý khách,</p>
+                    <p>Chúng tôi đã nhận được yêu cầu liên hệ từ bạn. Nội dung phản hồi của chúng tôi như sau:</p>
+                    <div style=\\"background-color: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 15px; margin: 20px 0; border-radius: 4px;\\">
+    """ + "<p style=\\\"margin: 0; font-size: 15px;\\\">" + reason + "</p>" + """
+                    </div>
+                    <p>Nếu bạn có thêm bất kỳ câu hỏi nào, đừng ngần ngại liên hệ lại. Chúng tôi luôn sẵn sàng hỗ trợ bạn!</p>
+                    <p style=\\"margin-top: 30px;\\">Trân trọng,<br><strong>Đội ngũ hỗ trợ hồ bơi</strong></p>
+                </div>
+                <div style=\\"background-color: #e0f2fe; padding: 15px; text-align: center; font-size: 13px; color: #0369a1;\\">
+                    &copy; 2025 Hệ thống quản lý hồ bơi. Mọi quyền được bảo lưu.
+                </div>
+            </div>
+        </body>
+        </html>
+    """;
+    }
 }

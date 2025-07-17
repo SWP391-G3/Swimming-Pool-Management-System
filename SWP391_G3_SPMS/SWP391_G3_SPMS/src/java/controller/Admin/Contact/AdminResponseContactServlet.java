@@ -90,13 +90,14 @@ public class AdminResponseContactServlet extends HttpServlet {
         String responseContent = request.getParameter("response_content");
         HttpSession session = request.getSession();
        // User currentUser = (User) session.getAttribute("currentUser");
+       String reply = SendEmailContact.sendEmailContactTemplate(responseContent);
         ContactWithAdminDAO dao = new ContactWithAdminDAO();
         ContactWithAdmin cw = dao.getContactWithAdmin(contact_id);
       //  int admin_id = currentUser.getUser_id();
         String customer_email = cw.getCustomer_email();
         String subject = "Phản hồi liên hệ từ hệ thống bể bơi";
         try {
-            SendEmailContact.sendEmail(customer_email, subject, responseContent);          
+            SendEmailContact.sendEmail(customer_email, subject, reply);          
             dao.insertResponse(contact_id, 1, responseContent);          
             dao.updateIsResolved(contact_id);           
             response.sendRedirect("adminViewCustomerContact");
