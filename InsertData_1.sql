@@ -1118,21 +1118,156 @@ INSERT INTO Payment_RentItem (payment_id, service_id, amount, quantity) VALUES
 (9, 3, 70000.00, 1),
 (10, 1, 50000.00, 1);
 
+INSERT INTO PoolImage (pool_id, pool_image) VALUES
+(1,N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(1,N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(1,N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(1,N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(1,N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
+
+(2,N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(2,N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(2,N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(2,N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(2,N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
+
+(3,N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(3,N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(3,N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(3,N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(3,N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
+
+(4,N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(4,N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(4,N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(4,N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(4,N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
+
+(5,N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(5,N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(5,N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(5,N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(5,N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
+
+(6,N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(6,N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(6,N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(6,N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(6,N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
+
+(7,N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(7,N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(7,N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(7,N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(7,N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
+
+(8,N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(8,N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(8,N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(8,N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(8,N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
+
+(9,N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(9,N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(9,N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(9,N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(9,N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
+
+(10,N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(10,N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(10,N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(10,N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(10,N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
 
 
--- Tuấn Anh test 
+(11, N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(11, N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(11, N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(11, N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(11, N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
 
+(12, N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(12, N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(12, N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(12, N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(12, N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
 
+(13, N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(13, N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(13, N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(13, N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(13, N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
 
+(14, N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(14, N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(14, N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(14, N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(14, N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
 
+(15, N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(15, N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(15, N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(15, N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(15, N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
 
+(16, N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(16, N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(16, N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(16, N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(16, N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
 
-INSERT INTO Feedbacks (user_id, pool_id, rating, comment, created_at) VALUES
+(17, N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(17, N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(17, N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(17, N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(17, N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
 
-(126, 1, 3, N'Test email gửi phản hồi.', GETDATE())
+(18, N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(18, N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(18, N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(18, N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(18, N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
 
+(19, N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(19, N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(19, N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(19, N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(19, N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
 
+(20, N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(20, N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(20, N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(20, N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(20, N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
 
+(21, N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(21, N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(21, N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(21, N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(21, N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
 
+(22, N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(22, N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(22, N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(22, N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(22, N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
+
+(23, N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(23, N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(23, N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(23, N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(23, N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
+
+(24, N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(24, N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(24, N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(24, N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(24, N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg'),
+
+(25, N'https://seapoolvn.com/wp-content/uploads/2019/09/thiet-ke-be-boi-chan-may.jpg'),
+(25, N'https://hopphatsauna.com/sites/default/files/styles/anh_detail/public/2023-09/be-boi-khu-nghi-duong.jpg?itok=jBhTBAyw'),
+(25, N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
+(25, N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
+(25, N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg');
 
 
