@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller.manager;
 
 import dao.manager.DiscountDAO;
@@ -13,53 +9,24 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.customer.User;
 
-/**
- *
- * @author Tuan Anh
- */
 @WebServlet(name = "ManagerDeleteDiscountServlet", urlPatterns = {"/managerDeleteDiscountServlet"})
 public class ManagerDeleteDiscountServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ManagerDeleteDiscountServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ManagerDeleteDiscountServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
+
+        // Lấy user hiện tại
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+        int managerId = currentUser.getUser_id(); // hoặc getId() tùy model
+
         String idRaw = request.getParameter("id");
         String page = request.getParameter("page");
         String pageSize = request.getParameter("pageSize");
@@ -69,11 +36,17 @@ public class ManagerDeleteDiscountServlet extends HttpServlet {
         try {
             int id = Integer.parseInt(idRaw);
             DiscountDAO dao = new DiscountDAO();
-            boolean success = dao.deleteDiscount(id);
-            if (success) {
-                session.setAttribute("success", "Xóa mã giảm giá thành công!");
+            // Kiểm tra quyền trước khi xóa
+            boolean canEdit = dao.canManagerEditDiscount(id, managerId);
+            if (!canEdit) {
+                session.setAttribute("error", "Bạn không phải người tạo mã giảm giá này, không có quyền xóa!");
             } else {
-                session.setAttribute("error", "Không thể xóa mã giảm giá (có thể đã bị xóa hoặc lỗi hệ thống)!");
+                boolean success = dao.deleteDiscount(id, managerId);
+                if (success) {
+                    session.setAttribute("success", "Xóa mã giảm giá thành công!");
+                } else {
+                    session.setAttribute("error", "Không thể xóa mã giảm giá (có thể đã bị xóa hoặc lỗi hệ thống)!");
+                }
             }
         } catch (Exception e) {
             session.setAttribute("error", "ID không hợp lệ hoặc lỗi hệ thống!");
@@ -86,21 +59,15 @@ public class ManagerDeleteDiscountServlet extends HttpServlet {
 
         response.sendRedirect(redirectUrl);
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        doGet(request, response); // Xử lý giống GET
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
-
+    }
 }

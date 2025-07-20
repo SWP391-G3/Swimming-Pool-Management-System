@@ -30,6 +30,7 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+       
 
         UserDAO dao = new UserDAO();
         User user = dao.getUserByUsername(username); // Lấy user theo username
@@ -47,16 +48,16 @@ public class LoginServlet extends HttpServlet {
 
                 switch (roleId) {
                     case 1:
-                        response.sendRedirect("adminPoolManagement");
+                        response.sendRedirect("adminDashBoard");
                         break;
                     case 2:
-                        response.sendRedirect("managerPanel.jsp");
+                        response.sendRedirect("managerPanel.jsp"); 
                         break;
                     case 3:
                         response.sendRedirect("staffManager");
                         break;
                     case 4:
-                        response.sendRedirect("customerHome");
+                        response.sendRedirect("customerHome");                     
                         break;
                     default:
                         response.sendRedirect("LandingPage.jsp");

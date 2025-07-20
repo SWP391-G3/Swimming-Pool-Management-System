@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller.login;
 
 import dao.customer.UserDAO;
@@ -14,9 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Random;
 import model.customer.User;
 import util.HashUtils;
@@ -43,7 +37,6 @@ public class RegisterServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -68,7 +61,6 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
     }
 
     /**
@@ -80,10 +72,8 @@ public class RegisterServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
 
@@ -98,6 +88,8 @@ public class RegisterServlet extends HttpServlet {
             String fullName = request.getParameter("full_name");
             String email = request.getParameter("email");
             String phone = request.getParameter("phone");
+            String dobStr = request.getParameter("dob");
+            String address = request.getParameter("address");
 
             if (!password.equals(confirmPassword)) {
                 request.setAttribute("error", "Mật khẩu xác nhận không khớp.");
@@ -129,9 +121,23 @@ public class RegisterServlet extends HttpServlet {
                 return;
             }
 
+            // Validate date of birth (must be over 14 years)
+            if (dobStr == null || dobStr.isEmpty()) {
+                request.setAttribute("error", "Ngày sinh là bắt buộc.");
+                request.getRequestDispatcher("register.jsp").forward(request, response);
+                return;
+            }
+            LocalDate dob = LocalDate.parse(dobStr);
+            LocalDate minDob = LocalDate.now().minusYears(14);
+            if (dob.isAfter(minDob)) {
+                request.setAttribute("error", "Bạn phải từ 14 tuổi trở lên.");
+                request.getRequestDispatcher("register.jsp").forward(request, response);
+                return;
+            }
+
             // Lưu user tạm vào session (chưa hashPassword)
-            User tempUser = new User(0, username, password, fullName, email, phone, null,
-                    4, true, null, null, null, LocalDate.now(), null);
+            User tempUser = new User(0, username, password, fullName, email, phone, address,
+                    4, true, java.sql.Date.valueOf(dob), null, null, LocalDate.now(), null);
             session.setAttribute("tempUser", tempUser);
 
             // Gửi OTP

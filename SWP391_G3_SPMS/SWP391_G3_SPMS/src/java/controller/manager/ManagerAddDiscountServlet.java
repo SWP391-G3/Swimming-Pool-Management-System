@@ -16,8 +16,6 @@ import jakarta.servlet.http.HttpSession;
 import model.customer.User;
 import model.manager.Discount;
 
-
-
 /**
  *
  * @author Tuan Anh
@@ -169,7 +167,11 @@ public class ManagerAddDiscountServlet extends HttpServlet {
         d.setValidTo(java.sql.Timestamp.valueOf(validTo));
         d.setStatus(true);
 
-        boolean result = dao.insert(d);
+        // Lấy id của manager hiện tại 
+        int managerId = currentUser.getUser_id();
+
+        // Add Voucher
+        boolean result = dao.insert(d, managerId); // Truyền thêm managerId vào DAO
 
         if (result) {
             // Tính lại số lượng voucher và số trang cuối cùng

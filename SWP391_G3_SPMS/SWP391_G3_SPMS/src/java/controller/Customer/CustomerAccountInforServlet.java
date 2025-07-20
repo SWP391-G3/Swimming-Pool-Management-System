@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
+
 /**
  *
  * @author LAZYVL
@@ -126,6 +127,20 @@ public class CustomerAccountInforServlet extends HttpServlet {
                 // Cập nhật thông tin user
                 User userFromDb = userDAO.getUserByID(userId);
                 if (userFromDb != null) {
+                    // Validate email/phone
+                    if (userDAO.isEmailExistsForOtherUser(email, userId)) {
+                        request.setAttribute("user", userFromDb);
+                        request.setAttribute("error", "Email đã được sử dụng bởi tài khoản khác. Vui lòng chọn email khác!");
+                        request.getRequestDispatcher("EditAccountInfo.jsp").forward(request, response);
+                        return;
+                    }
+                    if (userDAO.isPhoneExistsForOtherUser(phone, userId)) {
+                        request.setAttribute("user", userFromDb);
+                        request.setAttribute("error", "Số điện thoại đã được sử dụng bởi tài khoản khác. Vui lòng chọn số khác!");
+                        request.getRequestDispatcher("EditAccountInfo.jsp").forward(request, response);
+                        return;
+                    }
+                    
                     userFromDb.setFull_name(fullName);
                     userFromDb.setEmail(email);
                     userFromDb.setPhone(phone);

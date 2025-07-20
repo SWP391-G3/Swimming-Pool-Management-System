@@ -7,7 +7,6 @@ import model.customer.User;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  *
  * @author LAZYVL
@@ -62,11 +61,11 @@ public class FeedbackDAO extends DBContext {
                 // Giả sử có các cột id, comment, rating
                 list.add(new Feedback(
                         rs.getInt("feedback_id"),
-                        rs.getInt("user_id"),
-                        rs.getInt("pool_id"),
-                        rs.getInt("rating"),
-                        rs.getString("comment"),
-                        rs.getTimestamp("created_at")
+                    rs.getInt("user_id"),
+                    rs.getInt("pool_id"),
+                    rs.getInt("rating"),
+                    rs.getString("comment"),
+                    rs.getTimestamp("created_at")
                 ));
             }
         } catch (SQLException e) {
@@ -75,8 +74,9 @@ public class FeedbackDAO extends DBContext {
 
         return list;
     }
-
-    public List<Feedback> getFeedbacksByPoolId(int poolId) {
+    
+    
+     public List<Feedback> getFeedbacksByPoolId(int poolId) {
         List<Feedback> list = new ArrayList<>();
         String sql = "SELECT * FROM Feedbacks WHERE pool_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {

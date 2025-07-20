@@ -139,4 +139,9 @@ public class TicketTypeDAO extends DBContext {
         }
         return null;
     }
+    
+    public static void main(String[] args) {
+        TicketTypeDAO dao = new TicketTypeDAO();
+        System.out.println(dao.getTicketTypesByPoolId(2));
+    }
 }

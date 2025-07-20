@@ -107,7 +107,7 @@
                     <% } %>
                     <!-- Hiển thị báo thành công -->
                     <% if (successMsg != null) { %>
-                    <div class="mb-6 p-4 bg-emerald-100 text-emerald-800 rounded">
+                    <div class="mb-6 p-4 bg-emerald-100 text-emerald-800 rounded" id="successMessage">
                         <%= successMsg %>
                     </div>
                     <% } %>
@@ -409,6 +409,16 @@
 
                 return true; // Cho phép submit
             }
+
+            // Ẩn thông báo thành công sau 10 giây
+            window.addEventListener('DOMContentLoaded', () => {
+                const successDiv = document.getElementById('successMessage');
+                if (successDiv) {
+                    setTimeout(() => {
+                        successDiv.style.display = 'none';
+                    }, 10000); // 10,000 milliseconds = 10 seconds
+                }
+            });
         </script>
 
     </body>

@@ -106,7 +106,7 @@ public class AdminUpdateCustomerServlet extends HttpServlet {
             customerID = Integer.parseInt(userId_Raw);
             status = Boolean.parseBoolean(statusRaw);
             dob = LocalDate.parse(dobRaw);
-            Customer c = new Customer(customerID, full_name, email, phone, "", 0, dob, gender, null, "", status,0);
+            Customer c = new Customer(customerID, full_name, email, phone, "", 4, dob, gender, null, "", status,0);
             dao.updateCustomer(c);
             response.sendRedirect("adminViewCustomerList"); 
         } catch (Exception e) {

@@ -91,29 +91,46 @@ public class AdminAddManagerServlet extends HttpServlet {
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
-        String dobStr = request.getParameter("dob"); // yyyy-MM-dd
+        String dobStr = request.getParameter("dob");
         String gender = request.getParameter("gender");
         String branchIdRaw = request.getParameter("branchId");
 
+        ManagerDAO dao = new ManagerDAO();
+
+        // Kiểm tra chi nhánh
         if (branchIdRaw == null || branchIdRaw.isEmpty()) {
             request.setAttribute("error", "Vui lòng chọn chi nhánh quản lý.");
-            ManagerDAO dao = new ManagerDAO();
-            List<Branch> availableBranchs = dao.getAvailableBranches();
-            request.setAttribute("availableBranchs", availableBranchs); // đúng tên như JSP
+            request.setAttribute("availableBranchs", dao.getAvailableBranches());
             request.getRequestDispatcher("adminAddManager.jsp").forward(request, response);
             return;
         }
 
         int branchId = Integer.parseInt(branchIdRaw);
 
-        // Parse dob -> java.sql.Date
+        // Parse ngày sinh
         java.sql.Date dob = null;
         try {
             if (dobStr != null && !dobStr.isEmpty()) {
-                dob = java.sql.Date.valueOf(dobStr); // convert từ chuỗi yyyy-MM-dd
+                dob = java.sql.Date.valueOf(dobStr);
             }
         } catch (IllegalArgumentException e) {
             dob = null;
+        }
+
+        // Kiểm tra username đã tồn tại chưa
+        if (dao.isUsernameExists(username)) {
+            request.setAttribute("availableBranchs", dao.getAvailableBranches());
+            request.setAttribute("error", "Tên đăng nhập đã tồn tại, vui lòng chọn tên khác.");
+            request.getRequestDispatcher("adminAddManager.jsp").forward(request, response);
+            return;
+        }
+
+        // Kiểm tra email đã tồn tại chưa
+        if (dao.isEmailExists(email)) {
+            request.setAttribute("availableBranchs", dao.getAvailableBranches());
+            request.setAttribute("error", "Email đã tồn tại, vui lòng sử dụng email khác.");
+            request.getRequestDispatcher("adminAddManager.jsp").forward(request, response);
+            return;
         }
 
         // Tạo đối tượng User
@@ -127,30 +144,17 @@ public class AdminAddManagerServlet extends HttpServlet {
         managerUser.setDob(dob);
         managerUser.setGender(gender);
 
-        // Gọi DAO
-        ManagerDAO dao = new ManagerDAO();
-
-        if (dao.isEmailExists(email)) {
-            List<Branch> availableBranchs = dao.getAvailableBranches();
-            request.setAttribute("availableBranchs", availableBranchs);
-            request.setAttribute("error", "Thêm mới thất bại! Email đã tồn tại!.");
-            request.getRequestDispatcher("adminAddManager.jsp").forward(request, response);
-            return;
-        }
-
+        // Thêm user và gán chi nhánh
         int userId = dao.insertManagerUser(managerUser);
-
         boolean success = false;
         if (userId > 0) {
             success = dao.assignManagerToBranch(userId, branchId);
         }
 
-        // Điều hướng
         if (success) {
             response.sendRedirect("adminViewManagerList");
         } else {
-            List<Branch> availableBranchs = dao.getAvailableBranches();
-            request.setAttribute("availableBranchs", availableBranchs);
+            request.setAttribute("availableBranchs", dao.getAvailableBranches());
             request.setAttribute("error", "Thêm mới thất bại! Có thể chi nhánh đã có người quản lý hoặc lỗi dữ liệu.");
             request.getRequestDispatcher("adminAddManager.jsp").forward(request, response);
         }

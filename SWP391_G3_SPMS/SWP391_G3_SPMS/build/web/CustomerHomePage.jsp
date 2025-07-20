@@ -34,10 +34,12 @@
         <!--[if lt IE 9]>
            <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     </head>
 
     <body class="main-layout">
-
+        <%@include file="header.jsp" %>
 
 
         <c:if test="${not empty sessionScope.message}">
@@ -46,7 +48,9 @@
                  background:#38a169;color:#fff;padding:0.75rem 1.25rem;
                  border-radius:0.5rem;box-shadow:0 4px 12px rgba(0,0,0,0.15);
                  z-index:9999;font-weight:600;display:flex;align-items:center;gap:.5rem;">
-                ✅ ${sessionScope.message}
+                <i class="fa-solid fa-circle-check" ></i>
+
+                 ${sessionScope.message}
                 <button onclick="this.parentElement.style.display = 'none'"
                         style="margin-left:0.75rem;font-weight:bold;">×</button>
             </div>
@@ -60,9 +64,6 @@
                 }, 4000);
             </script>
         </c:if>
-
-
-        <%@include file="header.jsp" %>
 
         <!-- banner -->
         <section class="relative w-full overflow-hidden">

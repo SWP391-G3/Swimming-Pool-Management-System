@@ -1,3 +1,4 @@
+
 <%-- 
     Document   : managerDiscount
     Created on : Jun 23, 2025, 1:24:34 PM
@@ -26,6 +27,13 @@
 
     </head>
     <body>
+
+        <!-- Thông báo ra nếu ko phải discount do manager tạo -->
+        <c:if test="${not empty sessionScope.error}">
+            <div class="error-message">${sessionScope.error}</div>
+            <c:remove var="error" scope="session"/>
+        </c:if>
+
 
         <c:if test="${not empty sessionScope.success}">
             <div class="success-message" id="successMsg">${sessionScope.success}</div>
@@ -101,6 +109,7 @@
                                 <th>Ngày kết thúc</th>
                                 <th>Trạng thái</th>
                                 <th>Ngày tạo</th>
+                                <th>Người tạo</th>
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
@@ -151,6 +160,13 @@
                                             <td>
                                                 <fmt:formatDate value="${discount.createdAt}" pattern="dd/MM/yyyy HH:mm"/>
                                             </td>
+
+                                            <td>
+                                                <c:out value="${discount.createdByFullName}" />
+                                                <br/>
+                                                <span style="color: #888;">${discount.createdByUsername}</span>
+                                            </td>
+
                                             <td>
                                                 <a href="javascript:void(0);" class="btn-edit btn-view" title="Xem chi tiết"
                                                    onclick="showDiscountDetail(${discount.id})">
@@ -180,13 +196,13 @@
                     <c:if test="${endP > 1}">
                         <div class="pagination">
                             <c:if test="${page > 1}">
-                                <a href="managerDiscountServlet?page=${page-1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&pageSize=${pageSize}">«</a>
+                                <a href="managerDiscountServlet?page=${page-1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&fromDate=${fromDate}&toDate=${toDate}&pageSize=${pageSize}">«</a>
                             </c:if>
                             <c:forEach begin="1" end="${endP}" var="i">
-                                <a href="managerDiscountServlet?page=${i}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&pageSize=${pageSize}" class="${i == page ? 'active' : ''}">${i}</a>
+                                <a href="managerDiscountServlet?page=${i}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&fromDate=${fromDate}&toDate=${toDate}&pageSize=${pageSize}" class="${i == page ? 'active' : ''}">${i}</a>
                             </c:forEach>
                             <c:if test="${page < endP}">
-                                <a href="managerDiscountServlet?page=${page+1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&pageSize=${pageSize}">»</a>
+                                <a href="managerDiscountServlet?page=${page+1}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}&fromDate=${fromDate}&toDate=${toDate}&pageSize=${pageSize}">»</a>
                             </c:if>
                         </div>
                     </c:if>
@@ -194,74 +210,74 @@
             </div>
         </div>
 
-       
+
 
     </body>
 </html>
 
 
 <link rel="stylesheet" href="./manager-css/managerDetailDiscount.css">
- <!-- Modal xem chi tiết -->
-        <div id="discountDetailModal" class="modal" style="display:none;">
-            <div class="modal-content">
-                <span class="close" onclick="closeDiscountModal()">&times;</span>
-                <div id="discountDetailBody">
-                    <!-- Nội dung sẽ được load ở đây -->
-                </div>
-            </div>
+<!-- Modal xem chi tiết -->
+<div id="discountDetailModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeDiscountModal()">&times;</span>
+        <div id="discountDetailBody">
+            <!-- Nội dung sẽ được load ở đây -->
         </div>
+    </div>
+</div>
 
-        <script>
-            const searchInput = document.querySelector('input[name="keyword"]');
-            const searchForm = document.getElementById('searchForm');
-            let timeout = null;
+<script>
+    const searchInput = document.querySelector('input[name="keyword"]');
+    const searchForm = document.getElementById('searchForm');
+    let timeout = null;
 
-            searchInput.addEventListener('input', function () {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    document.querySelector('input[name="page"]').value = 1; // reset về trang 1
-                    searchForm.submit();
-                }, 400);
-            });
-
-            function showDiscountDetail(discountId) {
-    var modal = document.getElementById('discountDetailModal');
-    var body = document.getElementById('discountDetailBody');
-    body.innerHTML = `
-        <div class="loading-spinner">
-            <div class="spinner"></div>
-            <p>Đang tải chi tiết...</p>
-        </div>
-    `;
-    modal.style.display = 'flex';
-    setTimeout(() => modal.classList.add('show'), 10);
-
-    var params = new URLSearchParams({id: discountId});
-    fetch("managerDetailDiscountAjax", {
-        method: "POST",
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: params
-    })
-    .then(res => res.text())
-    .then(html => {
-        body.innerHTML = html;
-    })
-    .catch(error => {
-        body.innerHTML = `
-            <div class="error-message">
-                <h3>Error</h3>
-                <p>Không tải được chi tiết voucher.</p>
-            </div>
-        `;
+    searchInput.addEventListener('input', function () {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            document.querySelector('input[name="page"]').value = 1; // reset về trang 1
+            searchForm.submit();
+        }, 400);
     });
-}
 
-function closeDiscountModal() {
-    var modal = document.getElementById('discountDetailModal');
-    modal.classList.remove('show');
-    setTimeout(() => {
-        modal.style.display = 'none';
-        document.getElementById('discountDetailBody').innerHTML = '';
-    }, 300);
-}
-        </script>
+    function showDiscountDetail(discountId) {
+        var modal = document.getElementById('discountDetailModal');
+        var body = document.getElementById('discountDetailBody');
+        body.innerHTML = `
+<div class="loading-spinner">
+    <div class="spinner"></div>
+    <p>Đang tải chi tiết...</p>
+</div>
+`;
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('show'), 10);
+
+        var params = new URLSearchParams({id: discountId});
+        fetch("managerDetailDiscountAjax", {
+            method: "POST",
+            headers: {"Content-Type": "application/x-www-form-urlencoded"},
+            body: params
+        })
+                .then(res => res.text())
+                .then(html => {
+                    body.innerHTML = html;
+                })
+                .catch(error => {
+                    body.innerHTML = `
+    <div class="error-message">
+        <h3>Error</h3>
+        <p>Không tải được chi tiết voucher.</p>
+    </div>
+`;
+                });
+    }
+
+    function closeDiscountModal() {
+        var modal = document.getElementById('discountDetailModal');
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+            document.getElementById('discountDetailBody').innerHTML = '';
+        }, 300);
+    }
+</script>

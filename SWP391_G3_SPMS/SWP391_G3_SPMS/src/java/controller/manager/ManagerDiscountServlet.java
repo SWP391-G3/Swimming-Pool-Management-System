@@ -56,8 +56,7 @@ public class ManagerDiscountServlet extends HttpServlet {
             return;
         }
 
-        // ===== Bỏ xác định branchId, voucher áp dụng toàn hệ thống =====
-
+        //  Bỏ xác định branchId, voucher áp dụng toàn hệ thống 
         String keyword = request.getParameter("keyword") != null ? request.getParameter("keyword") : "";
         String status = request.getParameter("status") != null ? request.getParameter("status") : "all";
         String fromDateStr = request.getParameter("fromDate");
@@ -66,12 +65,32 @@ public class ManagerDiscountServlet extends HttpServlet {
         String pageStr = request.getParameter("page");
 
         int pageSize = 5, page = 1;
-        try { if (pageSizeStr != null) pageSize = Integer.parseInt(pageSizeStr); } catch (Exception e) {}
-        try { if (pageStr != null) page = Integer.parseInt(pageStr); } catch (Exception e) {}
+        try {
+            if (pageSizeStr != null) {
+                pageSize = Integer.parseInt(pageSizeStr);
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (pageStr != null) {
+                page = Integer.parseInt(pageStr);
+            }
+        } catch (Exception e) {
+        }
 
         Date fromDate = null, toDate = null;
-        try { if (fromDateStr != null && !fromDateStr.isEmpty()) fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(fromDateStr); } catch (Exception e) {}
-        try { if (toDateStr != null && !toDateStr.isEmpty()) toDate = new SimpleDateFormat("yyyy-MM-dd").parse(toDateStr); } catch (Exception e) {}
+        try {
+            if (fromDateStr != null && !fromDateStr.isEmpty()) {
+                fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(fromDateStr);
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (toDateStr != null && !toDateStr.isEmpty()) {
+                toDate = new SimpleDateFormat("yyyy-MM-dd").parse(toDateStr);
+            }
+        } catch (Exception e) {
+        }
 
         try {
             DiscountDAO discountDAO = new DiscountDAO();
@@ -91,7 +110,6 @@ public class ManagerDiscountServlet extends HttpServlet {
             // Forward đúng đường dẫn JSP
             request.getRequestDispatcher("managerDiscount.jsp").forward(request, response);
 
-            
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("error", "Lỗi khi lấy danh sách voucher");

@@ -9,6 +9,7 @@ import jakarta.mail.internet.*;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
+
 public class EmailUtil {
 
     public static void sendOTP(String toEmail, String otpCode, String purpose) throws MessagingException, UnsupportedEncodingException {

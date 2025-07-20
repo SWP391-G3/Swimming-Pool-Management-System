@@ -13,13 +13,26 @@
     Integer currentPage = (Integer) request.getAttribute("page");
     Integer totalPages = (Integer) request.getAttribute("totalPage");
 
-    if (search == null) search = "";
-    if (expiryStatus == null) expiryStatus = "all";
-    if (expiryFrom == null) expiryFrom = "";
-    if (expiryTo == null) expiryTo = "";
-    if (sort == null) sort = "newest";
-    if (currentPage == null) currentPage = 1;
-    if (totalPages == null) totalPages = 1;
+    if (search == null) {
+        search = "";
+    }
+    if (expiryStatus == null) {
+        expiryStatus = "all";
+    }
+    if (expiryFrom == null) {
+        expiryFrom = "";
+    }
+    if (expiryTo == null) {
+        expiryTo = "";
+    }
+    if (sort == null) {
+        sort = "newest";
+    }
+    if (currentPage == null) {
+        currentPage = 1;
+    }
+    if (totalPages == null)
+        totalPages = 1;
 %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -67,7 +80,7 @@
                                     type="text"
                                     id="search"
                                     name="search"
-                                    value="<%= search %>"
+                                    value="<%= search%>"
                                     maxlength="100"
                                     class="w-full border border-gray-300 rounded-md px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                     placeholder="Nhập mã hoặc nội dung voucher"
@@ -79,16 +92,16 @@
                             <label class="block text-gray-600 mb-1 font-medium" for="expiryStatus">Hạn sử dụng</label>
                             <select id="expiryStatus" name="expiryStatus"
                                     class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                                <option value="all" <%= "all".equals(expiryStatus) ? "selected" : "" %>>Tất cả</option>
-                                <option value="active" <%= "active".equals(expiryStatus) ? "selected" : "" %>>Còn hạn</option>
-                                <option value="expiring" <%= "expiring".equals(expiryStatus) ? "selected" : "" %>>Sắp hết hạn (7 ngày)</option>
-                                <option value="expired" <%= "expired".equals(expiryStatus) ? "selected" : "" %>>Đã hết hạn</option>
-                                <option value="range" <%= "range".equals(expiryStatus) ? "selected" : "" %>>Chọn khoảng ngày</option>
+                                <option value="all" <%= "all".equals(expiryStatus) ? "selected" : ""%>>Tất cả</option>
+                                <option value="active" <%= "active".equals(expiryStatus) ? "selected" : ""%>>Còn hạn</option>
+                                <option value="expiring" <%= "expiring".equals(expiryStatus) ? "selected" : ""%>>Sắp hết hạn (7 ngày)</option>
+                                <option value="expired" <%= "expired".equals(expiryStatus) ? "selected" : ""%>>Đã hết hạn</option>
+                                <option value="range" <%= "range".equals(expiryStatus) ? "selected" : ""%>>Chọn khoảng ngày</option>
                             </select>
-                            <div id="expiryRangeFields" style="<%= "range".equals(expiryStatus) ? "" : "display:none;" %>" class="mt-2 flex gap-2">
-                                <input type="date" name="expiryFrom" id="expiryFrom" value="<%= expiryFrom %>"
+                            <div id="expiryRangeFields" style="<%= "range".equals(expiryStatus) ? "" : "display:none;"%>" class="mt-2 flex gap-2">
+                                <input type="date" name="expiryFrom" id="expiryFrom" value="<%= expiryFrom%>"
                                        class="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Từ ngày" />
-                                <input type="date" name="expiryTo" id="expiryTo" value="<%= expiryTo %>"
+                                <input type="date" name="expiryTo" id="expiryTo" value="<%= expiryTo%>"
                                        class="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Đến ngày" />
                             </div>
                             <span class="text-red-500 text-sm hidden" id="errExpiry"></span>
@@ -100,9 +113,9 @@
                                 name="sort"
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 >
-                                <option value="newest" <%= "newest".equals(sort) ? "selected" : "" %>>Mới nhất</option>
-                                <option value="expiry" <%= "expiry".equals(sort) ? "selected" : "" %>>Sắp hết hạn</option>
-                                <option value="value" <%= "value".equals(sort) ? "selected" : "" %>>Giá trị giảm giá cao</option>
+                                <option value="newest" <%= "newest".equals(sort) ? "selected" : ""%>>Mới nhất</option>
+                                <option value="expiry" <%= "expiry".equals(sort) ? "selected" : ""%>>Sắp hết hạn</option>
+                                <option value="value" <%= "value".equals(sort) ? "selected" : ""%>>Giá trị giảm giá cao</option>
                             </select>
                             <span class="text-red-500 text-sm hidden" id="errSort"></span>
                         </div>
@@ -118,8 +131,8 @@
                 <!-- Main voucher list -->
                 <section class="flex-1 bg-white border border-gray-200 rounded-lg p-8 shadow-sm">
                     <h2 class="text-2xl font-bold mb-6 text-blue-700">Danh sách voucher</h2>
-                    <% if (error != null) { %>
-                    <div class="text-red-600"><%= error %></div>
+                    <% if (error != null) {%>
+                    <div class="text-red-600"><%= error%></div>
                     <% } %>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <%
@@ -127,62 +140,66 @@
                                 for (DiscountDetail voucher : vouchers) {
                                     Boolean usedDiscount = voucher.getUsedDiscount();
                         %>
-                        <div class="border border-yellow-300 bg-yellow-50 rounded-lg p-5 flex flex-col gap-3 shadow hover:shadow-md transition">
+                        <div class="border border-yellow-300 bg-yellow-50 rounded-lg p-5 flex flex-col gap-3 shadow hover:shadow-md transition relative">
                             <div class="flex items-center justify-between">
-                                <span class="font-semibold text-yellow-700 text-lg">#<%= voucher.getDiscountCode() %></span>
-                                <a href="voucher_detail?code=<%= voucher.getDiscountCode() %>"
+                                <span class="font-semibold text-yellow-700 text-lg">#<%= voucher.getDiscountCode()%></span>
+                                <a href="voucher_detail?code=<%= voucher.getDiscountCode()%>"
                                    class="text-blue-600 text-sm font-medium hover:underline">Chi tiết</a>
                             </div>
-                            <div class="text-gray-800 text-base"><%= voucher.getDescription() %></div>
+                            <div class="text-gray-800 text-base"><%= voucher.getDescription()%></div>
                             <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500">
                                 <span>Hết hạn: <span class="font-medium text-gray-700">
-                                        <%= voucher.getValidTo().toLocalDate().toString() %>
+                                        <%= voucher.getValidTo().toLocalDate().toString()%>
                                     </span></span>
                                 <span>Đã dùng: <span class="font-semibold text-blue-700">
-                                        <%= String.format("%.1f", voucher.getUsedPercent()) %>%
+                                        <%= String.format("%.1f", voucher.getUsedPercent())%>%
                                     </span></span>
-                                    <% 
-                                    if (usedDiscount != null && usedDiscount) { %>
+                                    <% if (usedDiscount != null && usedDiscount) { %>
                                 <span class="px-2 py-1 bg-green-200 text-green-700 rounded">Chưa dùng</span>
-                                <% }  %>
+                                <% } %>
                             </div>
+                            <!-- Nút nhỏ và nằm góc phải dưới trong thẻ -->
+                            <a href="customerViewPoolList"
+                               class="absolute right-4 bottom-4 bg-blue-600 text-white px-4 py-2 rounded font-bold text-sm shadow hover:bg-blue-700 transition-colors">
+                                Áp dụng
+                            </a>
                         </div>
                         <%
-                                }
-                            } else {
+                            }
+                        } else {
                         %>
                         <div class="text-gray-500 col-span-2 text-center">Không có voucher nào phù hợp.</div>
-                        <% } %>
+                        <% }%>
                     </div>
                     <!-- Pagination -->
                     <div class="flex flex-col md:flex-row md:justify-between items-center mt-8 gap-3">
                         <div class="flex flex-wrap gap-1">
                             <form id="pageGoForm" method="get" action="voucher" class="flex items-center gap-2">
                                 <input type="hidden" name="service" value="showVoucher"/>
-                                <input type="hidden" name="search" value="<%= search %>"/>
-                                <input type="hidden" name="expiryStatus" value="<%= expiryStatus %>"/>
-                                <input type="hidden" name="expiryFrom" value="<%= expiryFrom %>"/>
-                                <input type="hidden" name="expiryTo" value="<%= expiryTo %>"/>
-                                <input type="hidden" name="sort" value="<%= sort %>"/>
+                                <input type="hidden" name="search" value="<%= search%>"/>
+                                <input type="hidden" name="expiryStatus" value="<%= expiryStatus%>"/>
+                                <input type="hidden" name="expiryFrom" value="<%= expiryFrom%>"/>
+                                <input type="hidden" name="expiryTo" value="<%= expiryTo%>"/>
+                                <input type="hidden" name="sort" value="<%= sort%>"/>
                                 <span>Đi đến trang:</span>
-                                <input type="number" id="pageInput" name="page" min="1" max="<%= totalPages %>" value="<%= currentPage %>"
+                                <input type="number" id="pageInput" name="page" min="1" max="<%= totalPages%>" value="<%= currentPage%>"
                                        class="border border-gray-300 rounded px-2 py-1 w-16" />
                                 <span class="text-red-500 text-sm hidden" id="errPage"></span>
-                                <span>/ <%= totalPages %></span>
+                                <span>/ <%= totalPages%></span>
                                 <button style="display:none"></button>
                             </form>
                             <%
                                 int startPage = Math.max(1, currentPage - 2);
                                 int endPage = Math.min(totalPages, currentPage + 2);
-                                if (startPage > 1) { 
+                                if (startPage > 1) {
                             %>
                             <form method="get" action="voucher" style="display:inline;">
                                 <input type="hidden" name="service" value="showVoucher"/>
-                                <input type="hidden" name="search" value="<%= search %>"/>
-                                <input type="hidden" name="expiryStatus" value="<%= expiryStatus %>"/>
-                                <input type="hidden" name="expiryFrom" value="<%= expiryFrom %>"/>
-                                <input type="hidden" name="expiryTo" value="<%= expiryTo %>"/>
-                                <input type="hidden" name="sort" value="<%= sort %>"/>
+                                <input type="hidden" name="search" value="<%= search%>"/>
+                                <input type="hidden" name="expiryStatus" value="<%= expiryStatus%>"/>
+                                <input type="hidden" name="expiryFrom" value="<%= expiryFrom%>"/>
+                                <input type="hidden" name="expiryTo" value="<%= expiryTo%>"/>
+                                <input type="hidden" name="sort" value="<%= sort%>"/>
                                 <input type="hidden" name="page" value="1"/>
                                 <button class="px-3 py-1 rounded border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 transition">1</button>
                             </form>
@@ -195,14 +212,14 @@
                             %>
                             <form method="get" action="voucher" style="display:inline;">
                                 <input type="hidden" name="service" value="showVoucher"/>
-                                <input type="hidden" name="search" value="<%= search %>"/>
-                                <input type="hidden" name="expiryStatus" value="<%= expiryStatus %>"/>
-                                <input type="hidden" name="expiryFrom" value="<%= expiryFrom %>"/>
-                                <input type="hidden" name="expiryTo" value="<%= expiryTo %>"/>
-                                <input type="hidden" name="sort" value="<%= sort %>"/>
-                                <input type="hidden" name="page" value="<%= i %>"/>
-                                <button class="px-3 py-1 rounded border border-gray-300 <% if (i == currentPage) { %>bg-blue-600 text-white font-semibold<% } else { %>bg-white text-gray-600 hover:bg-gray-100<% } %> transition">
-                                    <%= i %>
+                                <input type="hidden" name="search" value="<%= search%>"/>
+                                <input type="hidden" name="expiryStatus" value="<%= expiryStatus%>"/>
+                                <input type="hidden" name="expiryFrom" value="<%= expiryFrom%>"/>
+                                <input type="hidden" name="expiryTo" value="<%= expiryTo%>"/>
+                                <input type="hidden" name="sort" value="<%= sort%>"/>
+                                <input type="hidden" name="page" value="<%= i%>"/>
+                                <button class="px-3 py-1 rounded border border-gray-300 <% if (i == currentPage) { %>bg-blue-600 text-white font-semibold<% } else { %>bg-white text-gray-600 hover:bg-gray-100<% }%> transition">
+                                    <%= i%>
                                 </button>
                             </form>
                             <%
@@ -214,41 +231,41 @@
                             %>
                             <form method="get" action="voucher" style="display:inline;">
                                 <input type="hidden" name="service" value="showVoucher"/>
-                                <input type="hidden" name="search" value="<%= search %>"/>
-                                <input type="hidden" name="expiryStatus" value="<%= expiryStatus %>"/>
-                                <input type="hidden" name="expiryFrom" value="<%= expiryFrom %>"/>
-                                <input type="hidden" name="expiryTo" value="<%= expiryTo %>"/>
-                                <input type="hidden" name="sort" value="<%= sort %>"/>
-                                <input type="hidden" name="page" value="<%= totalPages %>"/>
-                                <button class="px-3 py-1 rounded border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 transition"><%= totalPages %></button>
+                                <input type="hidden" name="search" value="<%= search%>"/>
+                                <input type="hidden" name="expiryStatus" value="<%= expiryStatus%>"/>
+                                <input type="hidden" name="expiryFrom" value="<%= expiryFrom%>"/>
+                                <input type="hidden" name="expiryTo" value="<%= expiryTo%>"/>
+                                <input type="hidden" name="sort" value="<%= sort%>"/>
+                                <input type="hidden" name="page" value="<%= totalPages%>"/>
+                                <button class="px-3 py-1 rounded border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 transition"><%= totalPages%></button>
                             </form>
                             <%
                                 }
                             %>
                             <form method="get" action="voucher" style="display:inline;">
                                 <input type="hidden" name="service" value="showVoucher"/>
-                                <input type="hidden" name="search" value="<%= search %>"/>
-                                <input type="hidden" name="expiryStatus" value="<%= expiryStatus %>"/>
-                                <input type="hidden" name="expiryFrom" value="<%= expiryFrom %>"/>
-                                <input type="hidden" name="expiryTo" value="<%= expiryTo %>"/>
-                                <input type="hidden" name="sort" value="<%= sort %>"/>
-                                <input type="hidden" name="page" value="<%= (currentPage < totalPages) ? (currentPage + 1) : totalPages %>"/>
+                                <input type="hidden" name="search" value="<%= search%>"/>
+                                <input type="hidden" name="expiryStatus" value="<%= expiryStatus%>"/>
+                                <input type="hidden" name="expiryFrom" value="<%= expiryFrom%>"/>
+                                <input type="hidden" name="expiryTo" value="<%= expiryTo%>"/>
+                                <input type="hidden" name="sort" value="<%= sort%>"/>
+                                <input type="hidden" name="page" value="<%= (currentPage < totalPages) ? (currentPage + 1) : totalPages%>"/>
                                 <button class="px-3 py-1 rounded border border-gray-300 bg-gray-100 text-gray-500 hover:bg-gray-200 transition"
-                                        <%= (currentPage >= totalPages) ? "disabled" : "" %>>Next</button>
+                                        <%= (currentPage >= totalPages) ? "disabled" : ""%>>Next</button>
                             </form>
                         </div>
                         <!-- Ô nhập số trang -->
                         <form method="get" action="voucher" class="flex items-center gap-2">
                             <input type="hidden" name="service" value="showVoucher"/>
-                            <input type="hidden" name="search" value="<%= search %>"/>
-                            <input type="hidden" name="expiryStatus" value="<%= expiryStatus %>"/>
-                            <input type="hidden" name="expiryFrom" value="<%= expiryFrom %>"/>
-                            <input type="hidden" name="expiryTo" value="<%= expiryTo %>"/>
-                            <input type="hidden" name="sort" value="<%= sort %>"/>
+                            <input type="hidden" name="search" value="<%= search%>"/>
+                            <input type="hidden" name="expiryStatus" value="<%= expiryStatus%>"/>
+                            <input type="hidden" name="expiryFrom" value="<%= expiryFrom%>"/>
+                            <input type="hidden" name="expiryTo" value="<%= expiryTo%>"/>
+                            <input type="hidden" name="sort" value="<%= sort%>"/>
                             <span>Đi đến trang:</span>
-                            <input type="number" name="page" min="1" max="<%= totalPages %>" value="<%= currentPage %>"
+                            <input type="number" name="page" min="1" max="<%= totalPages%>" value="<%= currentPage%>"
                                    class="border border-gray-300 rounded px-2 py-1 w-16" onchange="this.form.submit()"/>
-                            <span>/ <%= totalPages %></span>
+                            <span>/ <%= totalPages%></span>
                         </form>
                     </div>
                 </section>

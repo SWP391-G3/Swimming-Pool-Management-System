@@ -12,6 +12,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import model.admin.AccountBanLog;
+import model.customer.User;
 
 /**
  *
@@ -58,16 +61,40 @@ public class AdminLockCustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
         try {
             int userId = Integer.parseInt(request.getParameter("userId"));
             boolean currentStatus = Boolean.parseBoolean(request.getParameter("userStatus"));
             boolean newStatus = !currentStatus;
-
+            HttpSession session = request.getSession();
+//          User currentUser = (User) session.getAttribute("currentUser");
+//          int adminId = currentUser.getUser_id();
             CustomerDAO dao = new CustomerDAO();
+
+            // Nếu đang hoạt động → thực hiện KHÓA
+            if (currentStatus) {
+                String reason = request.getParameter("reason"); // có thể null nếu không gửi đúng
+                if (reason == null || reason.trim().isEmpty()) {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    response.getWriter().write("{\"success\":false, \"error\":\"Missing reason\"}");
+                    return;
+                }
+
+                // Lưu log khóa
+                AccountBanLog cb = new AccountBanLog();
+                cb.setUserId(userId);
+                cb.setBannedBy(1); // sau này nên lấy từ session
+                cb.setReason(reason);
+                cb.setIsPermanent(true);
+                dao.insert(cb);
+            }
+
+            // Cập nhật trạng thái tài khoản
             dao.lockCustomer(userId, newStatus);
 
-            // Trả về JSON kết quả
-            response.setContentType("application/json");
+            // Gửi phản hồi JSON
             response.getWriter().write("{\"success\":true, \"newStatus\":" + newStatus + "}");
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,7 +114,7 @@ public class AdminLockCustomerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
     }
 
     /**

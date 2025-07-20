@@ -31,9 +31,7 @@
             <!-- Navigation -->
             <nav class="hidden md:flex space-x-6 text-base font-medium items-center">
                 <a href="<%= homeUrl %>" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Trang Chủ</a>
-                <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Giới Thiệu</a>
                 <a href="customerViewPoolList" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Bể Bơi</a>
-                <a href="#" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Đánh Giá</a>
                 <a href="contact" class="text-gray-700 hover:text-[#33CCFF] hover:underline underline-offset-4 transition duration-300">Liên Hệ</a>
                 <% if (currentUser != null) { %>
                 <!-- Nếu đã đăng nhập -->

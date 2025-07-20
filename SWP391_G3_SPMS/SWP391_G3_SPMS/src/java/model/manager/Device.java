@@ -99,4 +99,11 @@ public class Device {
     public void setNotes(String notes) {
         this.notes = notes;
     }
+
+    @Override
+    public String toString() {
+        return "Device{" + "deviceId=" + deviceId + ", deviceImage=" + deviceImage + ", deviceName=" + deviceName + ", poolId=" + poolId + ", poolName=" + poolName + ", quantity=" + quantity + ", deviceStatus=" + deviceStatus + ", notes=" + notes + '}';
+    }
+    
+    
 }

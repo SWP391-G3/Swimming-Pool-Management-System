@@ -8,6 +8,7 @@ import dal.DBContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
+import model.admin.AccountBanLog;
 import model.admin.Branch;
 import model.admin.Employee;
 import model.admin.StaffType;
@@ -88,7 +89,7 @@ public class EmployeeDAO extends DBContext {
                 list.add(emp);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
         return list;
     }
@@ -101,7 +102,7 @@ public class EmployeeDAO extends DBContext {
                 return rs.getInt(1);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
         return 0;
     }
@@ -140,7 +141,7 @@ public class EmployeeDAO extends DBContext {
                 listStaffTypes.add(s);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
         return listStaffTypes;
     }
@@ -224,7 +225,7 @@ public class EmployeeDAO extends DBContext {
                 list.add(emp);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
 
         return list;
@@ -275,7 +276,7 @@ public class EmployeeDAO extends DBContext {
                 count = rs.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
 
         return count;
@@ -325,7 +326,7 @@ public class EmployeeDAO extends DBContext {
                 return emp;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
         return null;
     }
@@ -337,9 +338,8 @@ public class EmployeeDAO extends DBContext {
             st.setInt(2, id);
             int rowsUpdated = st.executeUpdate();
             return rowsUpdated > 0;
-        } catch (Exception e) {
-            e.printStackTrace(); // hoặc log ra logger nếu có
-            return false;
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -357,7 +357,7 @@ public class EmployeeDAO extends DBContext {
                 return result;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
         return 0;
     }
@@ -380,9 +380,8 @@ public class EmployeeDAO extends DBContext {
 
             int rowsUpdated = st.executeUpdate();
             return rowsUpdated > 0;
-        } catch (Exception e) {
-            e.printStackTrace(); // hoặc log lỗi
-            return false;
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -400,9 +399,8 @@ public class EmployeeDAO extends DBContext {
 
             int rowsUpdated = st.executeUpdate();
             return rowsUpdated > 0;
-        } catch (Exception e) {
-            e.printStackTrace(); // hoặc ghi log
-            return false;
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -416,10 +414,38 @@ public class EmployeeDAO extends DBContext {
                     return count > 0; // true nếu trùng
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
         }
         return false;
+    }
+
+    public boolean isEmailExistsForOtherUser(String email, int currentUserId) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE email = ? AND user_id != ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setInt(2, currentUserId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return false;
+    }
+
+    public void insert(AccountBanLog banLog) {
+        String sql = "INSERT INTO Account_Ban_Log (user_id, banned_by, reason, is_permanent) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, banLog.getUserId());
+            ps.setInt(2, banLog.getBannedBy());
+            ps.setString(3, banLog.getReason());
+            ps.setBoolean(4, banLog.isIsPermanent());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     public static void main(String[] args) {

@@ -11,7 +11,7 @@ import java.util.Date;
  * @author Tuan Anh
  */
 public class Discount {
-    
+
     private int id;
     private String code;
     private String description;
@@ -22,11 +22,14 @@ public class Discount {
     private boolean status;
     private Date createdAt;
     private Date updatedAt;
+    private String createdByUsername;
+    private String createdByFullName;
+    private String createdByEmail;
 
     public Discount() {
     }
 
-    public Discount(int id, String code, String description, double percent, int quantity, Date validFrom, Date validTo, boolean status, Date createdAt, Date updatedAt) {
+    public Discount(int id, String code, String description, double percent, int quantity, Date validFrom, Date validTo, boolean status, Date createdAt, Date updatedAt, String createdByUsername, String createdByFullName, String createdByEmail) {
         this.id = id;
         this.code = code;
         this.description = description;
@@ -37,6 +40,9 @@ public class Discount {
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.createdByUsername = createdByUsername;
+        this.createdByFullName = createdByFullName;
+        this.createdByEmail = createdByEmail;
     }
 
     public int getId() {
@@ -119,10 +125,32 @@ public class Discount {
         this.updatedAt = updatedAt;
     }
 
+    public String getCreatedByUsername() {
+        return createdByUsername;
+    }
+
+    public void setCreatedByUsername(String createdByUsername) {
+        this.createdByUsername = createdByUsername;
+    }
+
+    public String getCreatedByFullName() {
+        return createdByFullName;
+    }
+
+    public void setCreatedByFullName(String createdByFullName) {
+        this.createdByFullName = createdByFullName;
+    }
+
+    public String getCreatedByEmail() {
+        return createdByEmail;
+    }
+
+    public void setCreatedByEmail(String createdByEmail) {
+        this.createdByEmail = createdByEmail;
+    }
+
     @Override
     public String toString() {
-        return "Discount{" + "id=" + id + ", code=" + code + ", description=" + description + ", percent=" + percent + ", quantity=" + quantity + ", validFrom=" + validFrom + ", validTo=" + validTo + ", status=" + status + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + '}';
+        return "Discount{" + "id=" + id + ", code=" + code + ", description=" + description + ", percent=" + percent + ", quantity=" + quantity + ", validFrom=" + validFrom + ", validTo=" + validTo + ", status=" + status + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", createdByUsername=" + createdByUsername + ", createdByFullName=" + createdByFullName + ", createdByEmail=" + createdByEmail + '}';
     }
-    
-    
 }

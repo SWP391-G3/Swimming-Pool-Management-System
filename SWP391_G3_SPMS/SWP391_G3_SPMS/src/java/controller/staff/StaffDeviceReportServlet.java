@@ -1,4 +1,4 @@
-package controller.staff;
+package controller.Staff;
 
 import dao.manager.DeviceDao;
 import model.customer.User;
@@ -28,7 +28,7 @@ public class StaffDeviceReportServlet extends HttpServlet {
         String status = request.getParameter("status");
         String pageStr = request.getParameter("page");
         String pageSizeStr = request.getParameter("pageSize");
-        int page = 1, pageSize = 10;
+        int page = 1, pageSize = 5;
         try {
             if (pageStr != null && !pageStr.isEmpty()) {
                 page = Integer.parseInt(pageStr);

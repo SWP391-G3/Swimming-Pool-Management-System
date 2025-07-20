@@ -42,7 +42,7 @@
         <div class="name">Khu vực: <%= Location%></div>
     </div>
     <ul class="menu">
-
+        
         <li>
             <a href="managerListDeviceServlet"
                <c:if test="${activeMenu eq 'device'}">class="active"</c:if>>
@@ -87,22 +87,16 @@
             <li>
                 <a href="managerDiscountServlet"
                 <c:if test="${activeMenu eq 'voucher'}">class="active"</c:if>>
-                    <svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="2" /><circle cx="8" cy="12" r="2" /><circle cx="16" cy="12" r="2" /></svg>
-                    Quản lý voucher
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ticket-check-icon lucide-ticket-check"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="m9 12 2 2 4-4"/></svg>
+                    Quản lý Voucher
                 </a>
             </li>
+            
             <li>
-                <a href="area-revenue.jsp"
-                <c:if test="${activeMenu eq 'revenue'}">class="active"</c:if>>
-                    <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="8"/><rect x="10" y="8" width="4" height="12"/><rect x="17" y="4" width="4" height="16"/></svg>
-                    Quản lý doanh thu khu vực
-                </a>
-            </li>
-            <li>
-                <a href="feedback-management.jsp"
+                <a href="managerFeedbackServlet"
                 <c:if test="${activeMenu eq 'feedback'}">class="active"</c:if>>
                 <svg viewBox="0 0 24 24"><path d="M21 6H3v12h4v4l4-4h10z"/></svg>
-                Quản lý feedback
+                Quản lý Feedback
             </a>
         </li>
         <li>

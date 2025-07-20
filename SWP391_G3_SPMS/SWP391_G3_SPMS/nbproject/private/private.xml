@@ -73,20 +73,22 @@
             <file>file:/E:/HK_5_SU2025/SWP_ITER2/SWP391_G3_SPMS/SWP391_G3_SPMS/web/VoucherDetail.jsp</file>
             <file>file:/E:/HK_5_SU2025/SWP_ITER2/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dal/DBContext.java</file>
         </group>
+        <group name="SWP-ITER3">
+            <file>file:/E:/HK_5_SU2025/SWP-ITER4/SWP391_G3_SPMS/SWP391_G3_SPMS/web/managerDevice.jsp</file>
+            <file>file:/E:/HK_5_SU2025/SWP-ITER4/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dal/DBContext.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP-ITER4/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/util/EmailFeedbackUtil.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP-ITER4/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/manager/ManagerUpdateDeviceServlet.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP-ITER4/SWP391_G3_SPMS/SWP391_G3_SPMS/web/managerUpdateDevice.jsp</file>
+            <file>file:/E:/HK_5_SU2025/SWP-ITER4/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/manager/ManagerAddDeviceServlet.java</file>
+        </group>
+        <group name="SWP-ITER4">
+            <file>file:/E:/HK_5_SU2025/SWP-ITER5/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dao/manager/DeviceDao.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP-ITER5/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/util/EmailFeedbackUtil.java</file>
+            <file>file:/E:/HK_5_SU2025/SWP-ITER5/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dal/DBContext.java</file>
+        </group>
         <group>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/ManagerServiceProcess.jsp</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/pool_service_list.jsp</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/manager/ManagerProcessServiceReport.java</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dao/manager/PoolServiceDAO.java</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/staffDeviceReport.jsp</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/staff/StaffDeviceReportServlet.java</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/manager/ManagerListServiceReportServlet.java</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/model/staff/DeviceReport.java</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/model/manager/ServiceReport.java</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/staffServiceReport.jsp</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/web/serviceReportList.jsp</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/staff/StaffServiceReportServlet.java</file>
-            <file>file:/D:/SWP_ITER/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dao/manager/ServiceReport.java</file>
+            <file>file:/D:/Workspace/Github_Project/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/dao/customer/BookingDetailDAO.java</file>
+            <file>file:/D:/Workspace/Github_Project/SWP391_G3_SPMS/SWP391_G3_SPMS/src/java/controller/Customer/BookingServlet.java</file>
         </group>
     </open-files>
 </project-private>

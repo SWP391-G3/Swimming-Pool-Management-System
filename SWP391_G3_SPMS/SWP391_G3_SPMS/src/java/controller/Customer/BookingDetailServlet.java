@@ -1,18 +1,29 @@
 package controller.Customer;
 
-import dao.customer.*;
+import dao.customer.BookingDAO;
+import dao.customer.BookingDetailDAO;
+import dao.customer.FeedbackDAO;
+import dao.customer.PaymentDAO;
+import dao.customer.TicketTypeDAO;
+import dao.customer.UserDAO;
 import model.customer.*;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.List;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.Duration;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
 /**
  *
  * @author LAZYVL
  */
-
 public class BookingDetailServlet extends HttpServlet {
 
     @Override
@@ -39,34 +50,58 @@ public class BookingDetailServlet extends HttpServlet {
                 FeedbackDAO feedbackDAO = new FeedbackDAO();
                 List<Feedback> feedbackList = feedbackDAO.getFeedbackByUserId(user.getUser_id());
                 for (Feedback fb : feedbackList) {
-                    // Nếu user đã feedback cho pool này
                     if (fb.getPoolId() == bookingDetail.getPoolId()) {
                         userFeedback = fb;
                         break;
                     }
                 }
             }
-            
-             // Xử lý quantity cho từng ticket ở đây
+
+            // Xử lý quantity cho từng ticket
             List<Ticket> tickets = bookingDetail.getTickets();
             TicketTypeDAO ticketTypeDAO = new TicketTypeDAO();
             for (Ticket ticket : tickets) {
                 int ticketTypeId = ticket.getTicketTypeId();
                 TicketSlot slot = ticketTypeDAO.getTicketSlotByTicketTypeId(ticketTypeId);
-                int quantity = (slot != null) ? slot.getTicketSlot(): 1;
+                int quantity = (slot != null) ? slot.getTicketSlot() : 1;
                 ticket.setQuantity(quantity);
             }
 
-            // Kiểm tra có cho phép huỷ không (nếu ngày đặt < hôm nay thì không cho huỷ)
+            // Kiểm tra có cho phép huỷ
             LocalDate today = LocalDate.now();
-            boolean canCancel = bookingDetail.getBookingDate().toLocalDate().isAfter(today);
-            
-            request.setAttribute("tickets", tickets);  
+            boolean canCancel = bookingDetail.getBookingDate().toLocalDate().isAfter(today)
+                    && ("pending".equalsIgnoreCase(bookingDetail.getBookingStatus())
+                    || "confirmed".equalsIgnoreCase(bookingDetail.getBookingStatus()));
+
+            // Kiểm tra có cho phép hoàn tiền
+            boolean canRefund = false;
+            long minutesSinceCancel = Long.MAX_VALUE;
+            PaymentDAO paymentDAO = new PaymentDAO();
+            Payment payment = paymentDAO.getPaymentByBookingId(bookingId);
+            if ("cancelled".equalsIgnoreCase(bookingDetail.getBookingStatus())
+                    && !("refunded".equalsIgnoreCase(payment.getPaymentStatus()))) {
+                // Lấy updatedAt từ Booking entity
+                BookingDAO bookingDAO = new BookingDAO();
+                Booking booking = bookingDAO.getBookingById(bookingId);
+                Date updatedAt = booking.getCreatedAt();
+                if (updatedAt != null) {
+                    LocalDateTime cancelledTime = LocalDateTime.ofInstant(updatedAt.toInstant(), ZoneId.of("Asia/Ho_Chi_Minh"));
+                    LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+                    minutesSinceCancel = Duration.between(cancelledTime, now).toMinutes();
+                    if (minutesSinceCancel <= 60) {
+                        canRefund = true;
+                    }
+                }
+            }
+
+            request.setAttribute("tickets", tickets);
             request.setAttribute("bookingDetail", bookingDetail);
             request.setAttribute("userFeedback", userFeedback);
             request.setAttribute("successMsg", request.getParameter("success"));
             request.setAttribute("errorMsg", request.getParameter("error"));
             request.setAttribute("canCancel", canCancel);
+            request.setAttribute("canRefund", canRefund);
+            request.setAttribute("minutesSinceCancel", minutesSinceCancel);
             request.getRequestDispatcher("BookingDetail.jsp").forward(request, response);
         } catch (SQLException e) {
             throw new ServletException(e);
@@ -76,87 +111,112 @@ public class BookingDetailServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String action = request.getParameter("action");
+        String service = request.getParameter("service");
+        System.out.println("service param: " + service);
 
-        // ----------- Xử lý huỷ đặt bể -----------
-        if ("cancelBooking".equals(action)) {
+        User currentUser = (User) request.getSession().getAttribute("currentUser");
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+        int userId = currentUser.getUser_id();
+
+        if ("cancelBooking".equals(service)) {
             String bookingIdStr = request.getParameter("bookingId");
-            User currentUser = (User) request.getSession().getAttribute("currentUser");
-            int userId = currentUser.getUser_id();
             try {
                 int bookingId = Integer.parseInt(bookingIdStr);
                 BookingDetailDAO bookingDetailDAO = new BookingDetailDAO();
                 BookingDetails bookingDetail = bookingDetailDAO.getBookingDetailById(bookingId);
-                // Kiểm tra quyền huỷ
                 if (bookingDetail == null || bookingDetail.getUserId() != userId) {
                     response.sendRedirect("booking_history");
                     return;
                 }
-                // Kiểm tra ngày đặt để không cho huỷ nếu đã quá hoặc bằng hôm nay
                 LocalDate today = LocalDate.now();
                 if (!bookingDetail.getBookingDate().toLocalDate().isAfter(today)) {
                     response.sendRedirect("booking_detail?bookingId=" + bookingId + "&error=1");
                     return;
                 }
-                // Huỷ đặt bể
                 bookingDetailDAO.cancelBooking(bookingId);
                 response.sendRedirect("booking_detail?bookingId=" + bookingId);
-                return;
             } catch (Exception e) {
                 e.printStackTrace();
-                response.sendRedirect("booking_detail?bookingId=" + bookingIdStr + "&error=1");
-                return;
+                response.sendRedirect("booking_detail?bookingId=" + request.getParameter("bookingId") + "&error=1");
             }
-        }
+        } else if ("requestRefund".equals(service)) {
+            String bookingIdStr = request.getParameter("bookingId");
+            try {
+                int bookingId = Integer.parseInt(bookingIdStr);
+                BookingDAO bookingDAO = new BookingDAO();
+                Booking booking = bookingDAO.getBookingById(bookingId);
 
-        // ----------- Xử lý gửi feedback -----------
-        User currentUser = (User) request.getSession().getAttribute("currentUser");
-        int userId = currentUser.getUser_id();
+                PaymentDAO paymentDAO = new PaymentDAO();
+                Payment payment = paymentDAO.getPaymentByBookingId(bookingId);
 
-        UserDAO userDAO = new UserDAO();
-        User user = userDAO.getUserByID(userId);
-
-        if (user == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-        String bookingIdStr = request.getParameter("bookingId");
-        String poolIdStr = request.getParameter("poolId");
-        String ratingStr = request.getParameter("rating");
-        String comment = request.getParameter("comment");
-
-        try {
-            int bookingId = Integer.parseInt(bookingIdStr);
-            int poolId = Integer.parseInt(poolIdStr);
-            int rating = Integer.parseInt(ratingStr);
-
-            // Kiểm tra quyền feedback
-            BookingDetailDAO bookingDetailDAO = new BookingDetailDAO();
-            BookingDetails bookingDetail = bookingDetailDAO.getBookingDetailById(bookingId);
-            if (bookingDetail == null || bookingDetail.getUserId() != user.getUser_id()) {
-                response.sendRedirect("booking_history");
-                return;
-            }
-
-            // Đảm bảo user chỉ feedback 1 lần cho hồ bơi này
-            FeedbackDAO feedbackDAO = new FeedbackDAO();
-            List<Feedback> feedbackList = feedbackDAO.getFeedbackByUserId(user.getUser_id());
-            boolean alreadyFeedback = false;
-            for (Feedback fb : feedbackList) {
-                if (fb.getPoolId() == poolId) {
-                    alreadyFeedback = true;
-                    break;
+                if (booking == null && payment == null) {
+                    response.sendRedirect("booking_detail?bookingId=" + request.getParameter("bookingId") + "&error=1");
+                    return;
                 }
+
+                Date createdAt = booking.getCreatedAt();
+                LocalDateTime creationTime = LocalDateTime.ofInstant(createdAt.toInstant(), ZoneId.of("Asia/Ho_Chi_Minh"));
+                String transDateStr = creationTime.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+
+//                    response.sendRedirect("vnpayrefund?order_id=" + payment.getPaymentId()
+//                            + "&amount=" + payment.getTotalAmount().intValue()
+//                            + "&trans_date=" + transDateStr
+//                            + "&user=" + currentUser.getFull_name());
+//            request.setAttribute("order_id", payment.getPaymentId());
+//            request.setAttribute("amount", payment.getTotalAmount().intValue());
+//            request.setAttribute("trans_date", transDateStr);
+//            request.setAttribute("user", currentUser.getFull_name());
+//            request.getRequestDispatcher("vnpayrefund").forward(request, response);
+                String redirectUrl = request.getContextPath() + "/vnpayrefund"
+                        + "?order_id=" + payment.getPaymentId()
+                        + "&amount=" + payment.getTotalAmount().intValue()
+                        + "&trans_date=" + transDateStr
+                        + "&user=" + URLEncoder.encode(currentUser.getFull_name(), "UTF-8");
+                response.sendRedirect(redirectUrl);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.sendRedirect("booking_detail?bookingId=" + request.getParameter("bookingId") + "&error=1");
             }
-            if (!alreadyFeedback) {
-                feedbackDAO.sendFeedback(user, poolId, rating, comment);
-                response.sendRedirect("booking_detail?bookingId=" + bookingId + "&success=1");
-            } else {
-                response.sendRedirect("booking_detail?bookingId=" + bookingId + "&error=1");
+            //Xử lý feedback
+        } else {
+            String bookingIdStr = request.getParameter("bookingId");
+            String poolIdStr = request.getParameter("poolId");
+            String ratingStr = request.getParameter("rating");
+            String comment = request.getParameter("comment");
+
+            try {
+                int bookingId = Integer.parseInt(bookingIdStr);
+                int poolId = Integer.parseInt(poolIdStr);
+                int rating = Integer.parseInt(ratingStr);
+                BookingDetailDAO bookingDetailDAO = new BookingDetailDAO();
+                BookingDetails bookingDetail = bookingDetailDAO.getBookingDetailById(bookingId);
+                if (bookingDetail == null || bookingDetail.getUserId() != userId) {
+                    response.sendRedirect("booking_history");
+                    return;
+                }
+                FeedbackDAO feedbackDAO = new FeedbackDAO();
+                List<Feedback> feedbackList = feedbackDAO.getFeedbackByUserId(userId);
+                boolean alreadyFeedback = false;
+                for (Feedback fb : feedbackList) {
+                    if (fb.getPoolId() == poolId) {
+                        alreadyFeedback = true;
+                        break;
+                    }
+                }
+                if (!alreadyFeedback) {
+                    feedbackDAO.sendFeedback(currentUser, poolId, rating, comment);
+                    response.sendRedirect("booking_detail?bookingId=" + bookingId + "&success=1");
+                } else {
+                    response.sendRedirect("booking_detail?bookingId=" + bookingId + "&error=1");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.sendRedirect("booking_detail?bookingId=" + request.getParameter("bookingId") + "&error=1");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.sendRedirect("booking_detail?bookingId=" + request.getParameter("bookingId") + "&error=1");
         }
     }
 }

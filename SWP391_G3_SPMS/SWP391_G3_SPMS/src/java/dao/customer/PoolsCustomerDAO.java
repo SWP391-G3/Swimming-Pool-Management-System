@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import static java.util.Collections.list;
 import java.util.List;
-import model.customer.PoolService;
 
 public class PoolsCustomerDAO extends DBContext {
 
@@ -30,13 +29,12 @@ public class PoolsCustomerDAO extends DBContext {
                 pool.setCreated_at(rs.getTimestamp("created_at") != null
                         ? rs.getTimestamp("created_at").toLocalDateTime().toLocalDate()
                         : null);
+
                 pool.setUpdated_at(rs.getTimestamp("updated_at") != null
                         ? rs.getTimestamp("updated_at").toLocalDateTime().toLocalDate()
                         : null);
-                pool.setPool_description(rs.getString("pool_description"));
 
-                // ❌ KHÔNG còn cột list_image
-                // pool.setList_image(rs.getString("list_image"));
+                pool.setPool_description(rs.getString("pool_description"));
                 return pool;
             }
         } catch (SQLException e) {
@@ -82,7 +80,9 @@ public class PoolsCustomerDAO extends DBContext {
             sql.append(" AND close_time = ?");
             params.add(closeTime);
         }
+        
 
+       
         sql.append(" ORDER BY pool_id ASC");
         sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
         params.add((page - 1) * pageSize);
@@ -114,12 +114,12 @@ public class PoolsCustomerDAO extends DBContext {
                 }
                 pool.setPool_description(rs.getString("pool_description"));
                 list.add(pool);
-
+               
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return list;
+       return list;
     }
 
     public int countFilteredPools(String name, String location, String capacity, String openTime, String closeTime) {
@@ -224,7 +224,8 @@ public class PoolsCustomerDAO extends DBContext {
             e.printStackTrace();
         }
         return list;
-
+        
+        
     }
 
 }

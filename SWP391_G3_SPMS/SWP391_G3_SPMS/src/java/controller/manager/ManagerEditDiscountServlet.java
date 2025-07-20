@@ -17,22 +17,6 @@ import model.customer.User;
 @WebServlet(name = "ManagerEditDiscountServlet", urlPatterns = {"/managerEditDiscountServlet"})
 public class ManagerEditDiscountServlet extends HttpServlet {
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ManagerEditDiscountServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ManagerEditDiscountServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -54,6 +38,14 @@ public class ManagerEditDiscountServlet extends HttpServlet {
             DiscountDAO dao = new DiscountDAO();
             Discount d = dao.getDiscountById(id);
             if (d == null) {
+                response.sendRedirect("managerDiscountServlet");
+                return;
+            }
+
+            // Chỉ cho phép manager tạo discount này mới được sửa
+            int managerId = currentUser.getUser_id();
+            if (!dao.canManagerEditDiscount(id, managerId)) {
+                session.setAttribute("error", "Bạn không phải người tạo voucher này, không có quyền chỉnh sửa!");
                 response.sendRedirect("managerDiscountServlet");
                 return;
             }
@@ -87,6 +79,7 @@ public class ManagerEditDiscountServlet extends HttpServlet {
             response.sendRedirect("login.jsp");
             return;
         }
+        int managerId = currentUser.getUser_id(); // hoặc getId()
 
         request.setCharacterEncoding("UTF-8");
         DiscountDAO dao = new DiscountDAO();
@@ -100,6 +93,13 @@ public class ManagerEditDiscountServlet extends HttpServlet {
 
         try {
             int discountId = Integer.parseInt(idRaw);
+
+            // Kiểm tra quyền sửa trước khi xử lý gì thêm!
+            if (!dao.canManagerEditDiscount(discountId, managerId)) {
+                session.setAttribute("error", "Bạn không phải người tạo voucher này, không có quyền chỉnh sửa!");
+                response.sendRedirect("managerDiscountServlet");
+                return;
+            }
 
             String description = request.getParameter("description");
             String percentStr = request.getParameter("discount_percent");
@@ -207,12 +207,14 @@ public class ManagerEditDiscountServlet extends HttpServlet {
             d.setValidTo(validTo);
             d.setStatus(checkedStatus);
             d.setCode(discountCode);
-
-            boolean result = dao.update(d);
+            
+            // Cập nhập Voucher
+            boolean result = dao.update(d, managerId); // Truyền managerId vào DAO
 
             if (result) {
                 session.setAttribute("success", "Cập nhật voucher thành công!");
             } else {
+                // Không đúng quyền thì đã redirect ở trên. Nếu lỗi khác thì báo lỗi chung.
                 session.setAttribute("error", "Lỗi khi cập nhật!");
             }
 

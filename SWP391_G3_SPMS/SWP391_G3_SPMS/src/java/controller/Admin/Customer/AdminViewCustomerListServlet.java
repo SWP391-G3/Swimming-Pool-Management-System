@@ -62,52 +62,56 @@ public class AdminViewCustomerListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("currentUser");
+
         CustomerDAO dao = new CustomerDAO();
-        String pageSize = request.getParameter("pageSize");
-        int totalCustomer = dao.getTotalCustomer();
-        int page = 1;
-        int customerContain;
-        if (pageSize == null) {
-            customerContain = 5;
-        } else {
-            try {
-                customerContain = Integer.parseInt(pageSize);
-            } catch (NumberFormatException e) {
-                customerContain = 5;
-            }
+
+        String pageSizeParam = request.getParameter("pageSize");
+        int pageSize;
+        try {
+            pageSize = (pageSizeParam == null) ? 5 : Integer.parseInt(pageSizeParam);
+        } catch (NumberFormatException e) {
+            pageSize = 5;
         }
-        int totalPages = (int) Math.ceil(totalCustomer * 1.0 / customerContain);
+
+        int totalCustomer = dao.getTotalCustomer();
+        int totalPages = (int) Math.ceil((double) totalCustomer / pageSize);
         if (totalPages == 0) {
             totalPages = 1;
         }
+
+        int currentPage = 1;
         try {
-            String pageStr = request.getParameter("page");
-            if (pageStr != null) {
-                page = Integer.parseInt(pageStr);
-                if (page < 1) {
-                    page = 1;
-                } else if (page > totalPages) {
-                    page = totalPages;
-                }
+            String pageParam = request.getParameter("page");
+            if (pageParam != null) {
+                currentPage = Integer.parseInt(pageParam);
             }
         } catch (NumberFormatException e) {
-            page = 1;
+            currentPage = 1;
         }
-        int start = (page - 1) * customerContain;
-        List<Customer> listCustomer = dao.getCustomersAndPage(start, customerContain);
+
+        if (currentPage < 1) {
+            currentPage = 1;
+        }
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+
+        int offset = (currentPage - 1) * pageSize;
+
+        List<Customer> listCustomer = dao.getCustomersAndPage(offset, pageSize);
+
         request.setAttribute("listCustomer", listCustomer);
-        request.setAttribute("currentPage", page);
+        request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("totalrecords", totalCustomer);
+        request.setAttribute("pageSize", pageSize);
         session.setAttribute("currentUser", currentUser);
-        boolean isAjax = "true".equals(request.getParameter("ajax"));
-        if (isAjax) {
-            request.getRequestDispatcher("customerListFragment.jsp").forward(request, response);
-        } else {
-            request.getRequestDispatcher("adminViewCustomerList.jsp").forward(request, response);
-        }
+
+        request.getRequestDispatcher("adminViewCustomerList.jsp").forward(request, response);
+
     }
 
     /**

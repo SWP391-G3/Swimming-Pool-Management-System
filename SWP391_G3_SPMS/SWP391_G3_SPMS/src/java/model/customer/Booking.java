@@ -10,7 +10,7 @@ import java.sql.Time;
 public class Booking {
 
     private int bookingId;
-    private int userId;
+    private Integer  userId;
     private int poolId;
     private Integer discountId;
     private Date bookingDate;
@@ -24,7 +24,7 @@ public class Booking {
     public Booking() {
     }
 
-    public Booking(int bookingId, int userId, int poolId, Integer discountId, Date bookingDate, Time startTime, Time endTime,
+    public Booking(int bookingId, Integer  userId, int poolId, Integer discountId, Date bookingDate, Time startTime, Time endTime,
             int slotCount, String bookingStatus, java.util.Date createdAt, java.util.Date updatedAt) {
         this.bookingId = bookingId;
         this.userId = userId;
@@ -39,7 +39,7 @@ public class Booking {
         this.updatedAt = updatedAt;
     }
 
-    public Booking(int userId, int poolId, Integer discountId, Date bookingDate, Time startTime, Time endTime, int slotCount, String bookingStatus, java.util.Date createdAt, java.util.Date updatedAt) {
+    public Booking(Integer  userId, int poolId, Integer discountId, Date bookingDate, Time startTime, Time endTime, int slotCount, String bookingStatus, java.util.Date createdAt, java.util.Date updatedAt) {
         this.userId = userId;
         this.poolId = poolId;
         this.discountId = discountId;
@@ -52,7 +52,7 @@ public class Booking {
         this.updatedAt = updatedAt;
     }
 
-    public Booking(int userId, int poolId, Integer discountId, Date bookingDate, Time startTime, Time endTime, int slotCount, String bookingStatus) {
+    public Booking(Integer  userId, int poolId, Integer discountId, Date bookingDate, Time startTime, Time endTime, int slotCount, String bookingStatus) {
         this.userId = userId;
         this.poolId = poolId;
         this.discountId = discountId;
@@ -72,11 +72,11 @@ public class Booking {
         this.bookingId = bookingId;
     }
 
-    public int getUserId() {
+    public Integer  getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 

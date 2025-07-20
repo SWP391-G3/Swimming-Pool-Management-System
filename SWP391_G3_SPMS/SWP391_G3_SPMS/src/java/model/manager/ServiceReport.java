@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model.manager;
 
 import java.sql.Timestamp;
@@ -10,38 +6,17 @@ public class ServiceReport {
 
     private int reportId, staffId, poolId, branchId, serviceId;
     private String serviceName, reportReason, suggestion, status;
-    private java.sql.Timestamp reportDate;
+    private Timestamp reportDate;
 
-    // --- Thêm các trường hiển thị ---
-    private String poolName;      // Tên hồ bơi
-    private String staffName;     // Tên nhân viên tạo báo cáo
-    private String branchName;    // Tên chi nhánh
+    // --- Thêm các trường hiển thị và xử lý ---
+    private String poolName;      // Tên hồ bơi, lấy từ bảng liên quan
+    private String staffName;     // Tên nhân viên tạo báo cáo, lấy từ bảng nhân viên
+    private String branchName;    // Tên chi nhánh, lấy từ bảng chi nhánh
+    private String managerNote;   // Ghi chú của quản lý, lưu trong bảng service_report
+    private Timestamp processedAt; // Thời gian xử lý, thêm để theo dõi
+    private int processedBy;      // ID của người xử lý, thêm để theo dõi
 
-    // Getter/Setter cho các trường mới
-    public String getPoolName() {
-        return poolName;
-    }
-
-    public void setPoolName(String poolName) {
-        this.poolName = poolName;
-    }
-
-    public String getStaffName() {
-        return staffName;
-    }
-
-    public void setStaffName(String staffName) {
-        this.staffName = staffName;
-    }
-
-    public String getBranchName() {
-        return branchName;
-    }
-
-    public void setBranchName(String branchName) {
-        this.branchName = branchName;
-    }
-
+    // Getter và Setter cho các trường cơ bản
     public int getReportId() {
         return reportId;
     }
@@ -122,4 +97,52 @@ public class ServiceReport {
         this.reportDate = reportDate;
     }
 
+    // Getter và Setter cho các trường mới
+    public String getPoolName() {
+        return poolName;
+    }
+
+    public void setPoolName(String poolName) {
+        this.poolName = poolName;
+    }
+
+    public String getStaffName() {
+        return staffName;
+    }
+
+    public void setStaffName(String staffName) {
+        this.staffName = staffName;
+    }
+
+    public String getBranchName() {
+        return branchName;
+    }
+
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
+    }
+
+    public String getManagerNote() {
+        return managerNote;
+    }
+
+    public void setManagerNote(String managerNote) {
+        this.managerNote = managerNote;
+    }
+
+    public Timestamp getProcessedAt() {
+        return processedAt;
+    }
+
+    public void setProcessedAt(Timestamp processedAt) {
+        this.processedAt = processedAt;
+    }
+
+    public int getProcessedBy() {
+        return processedBy;
+    }
+
+    public void setProcessedBy(int processedBy) {
+        this.processedBy = processedBy;
+    }
 }

@@ -115,39 +115,65 @@
             <!-- Navigation Menu -->
             <div class="flex-1 space-y-1">
                 <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3">
-                    <i class="fas fa-bars mr-2"></i>Menu Chính
+                    <i class="fas fa-chart-bar mr-2"></i>Thống kê
                 </div>
+
+                <a href="adminDashBoard" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                    <div class="nav-icon">
+                        <i class="fa-solid fa-chart-line text-sm"></i>
+                    </div>
+                    <span class="font-medium text-sm">Dashboard</span>
+                    <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
+                </a>
+
+                <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3 mt-4">
+                    <i class="fas fa-bars mr-2"></i>Quản lý
+                </div>
+
                 <a href="adminPoolManagement" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-water text-sm"></i></div>
+                    <div class="nav-icon">
+                        <i class="fa-solid fa-water text-sm"></i>
+                    </div>
                     <span class="font-medium text-sm">Quản lý bể bơi</span>
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                 </a>
-                <a href="adminViewStaffCategory.jsp" class="nav-item active-nav px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-user-tie text-sm"></i></div>
+
+                <a href="adminViewManagerList"
+                   class="nav-item active-nav px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                    <div class="nav-icon">
+                        <i class="fa-solid fa-user-tie text-sm"></i>
+                    </div>
                     <span class="font-medium text-sm">Quản lý nhân viên</span>
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                 </a>
-                <a href="adminViewCustomerList" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-user-check text-sm"></i></div>
+
+                <a href="adminViewCustomerList"
+                   class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                    <div class="nav-icon">
+                        <i class="fa-solid fa-user-check text-sm"></i>
+                    </div>
                     <span class="font-medium text-sm">Quản lý khách hàng</span>
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                 </a>
-                <a href="#" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-chart-line text-sm"></i></div>
-                    <span class="font-medium text-sm">Thống kê & Báo cáo</span>
-                    <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
-                </a>
+
                 <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3 mt-4">
-                    <i class="fas fa-cog mr-2"></i>Hệ thống
+                    <i class="fas fa-phone"></i> Liên hệ 
                 </div>
-                <a href="#" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-gear text-sm"></i></div>
-                    <span class="font-medium text-sm">Cài đặt hệ thống</span>
+
+                <a href="adminViewCustomerContact" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                    <div class="nav-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <span class="font-medium text-sm">Liên hệ khách hàng</span>
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                 </a>
+
                 <div class="mt-3 pt-3 border-t border-white/20">
-                    <a href="LogoutServlet" class="logout-btn nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 Światowy z-10 font-semibold">
-                        <div class="nav-icon"><i class="fa-solid fa-right-from-bracket text-sm"></i></div>
+                    <a href="LogoutServlet"
+                       class="logout-btn nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10 font-semibold">
+                        <div class="nav-icon">
+                            <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                        </div>
                         <span class="text-sm">Đăng xuất</span>
                         <i class="fas fa-sign-out-alt ml-auto text-sm"></i>
                     </a>
@@ -237,7 +263,6 @@
             </div>
         </div>
 
-
         <script>
             function closeErrorModal() {
                 document.getElementById("errorModal").classList.add("hidden");
@@ -249,23 +274,26 @@
                 const email = document.getElementsByName("email")[0].value.trim();
                 const phone = document.getElementsByName("phone")[0].value.trim();
                 const address = document.getElementsByName("address")[0].value.trim();
+                const branchId = document.getElementsByName("branch_id")[0].value;
+
+                const nameRegex = /^[A-Za-zÀ-ỹà-ỹ\s']{2,}$/;
+                const emailRegex = /^[\w\.-]+@[\w\.-]+\.\w{2,}$/;
+                const phoneRegex = /^0\d{9}$/;
+                const addressRegex = /^[A-Za-zÀ-ỹà-ỹ0-9\s']+$/;
 
                 let errorMsg = "";
 
-                const nameRegex = /^[a-zA-ZÀ-ỹ\s]+$/;
-                const emailRegex = /^[\w\.-]+@[\w\.-]+\.\w{2,}$/;
-                const phoneRegex = /^0\d{9}$/;
-
-                if (fullName.length < 2 || !nameRegex.test(fullName)) {
-                    errorMsg = "Họ tên không hợp lệ. Phải ít nhất 2 ký tự và chỉ chứa chữ.";
+                if (!nameRegex.test(fullName)) {
+                    errorMsg = "Họ tên phải có ít nhất 2 ký tự, chỉ chứa chữ và khoảng trắng.";
                 } else if (!emailRegex.test(email)) {
                     errorMsg = "Email không hợp lệ.";
                 } else if (!phoneRegex.test(phone)) {
-                    errorMsg = "Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số.";
-                } else if (address.length < 5) {
-                    errorMsg = "Địa chỉ phải có ít nhất 5 ký tự.";
+                    errorMsg = "Số điện thoại phải bắt đầu bằng 0 và đủ 10 chữ số.";
+                } else if (address.length < 5 || !addressRegex.test(address)) {
+                    errorMsg = "Địa chỉ phải có ít nhất 5 ký tự và chỉ chứa chữ, số, khoảng trắng, hoặc dấu nháy đơn.";
+                } else if (!branchId || parseInt(branchId) <= 0) {
+                    errorMsg = "Vui lòng chọn chi nhánh hợp lệ.";
                 }
-
                 if (errorMsg !== "") {
                     event.preventDefault();
                     document.getElementById('errorMessage').textContent = errorMsg;
@@ -273,6 +301,20 @@
                 }
             });
         </script>
+
+
+        <% 
+            String error = (String) request.getAttribute("error");
+            if (error != null && !error.isEmpty()) {
+        %>
+        <script>
+
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById('errorMessage').textContent = "<%= error.replace("\"", "\\\"") %>";
+                document.getElementById('errorModal').classList.remove('hidden');
+            });
+        </script>
+        <% } %>
 
 
 

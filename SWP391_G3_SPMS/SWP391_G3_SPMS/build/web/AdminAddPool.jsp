@@ -12,61 +12,99 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/global.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLndnUkP4OYlT6DkL4kSVV8Vsl5W0RXp2Pl3T/jCGX0gLexyO3J54+lZ7c2tXj4w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <style>
-            /* Ensure no horizontal scrollbar */
             body {
                 overflow-x: hidden;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             }
-            .main-content {
-                width: 100%;
-                max-width: 100%;
+            label{
+                text-align: start;
             }
-            @media (min-width: 768px) {
-                .main-content {
-                    margin-left: 18rem; /* đúng với w-72 của sidebar */
-                }
+
+            .nav-item {
+                transition: background-color 0.2s, transform 0.2s;
+                color: white;
             }
-            .table-container {
-                max-width: 100%;
-                overflow-x: hidden;
+
+            .nav-item:hover {
+                background-color: rgba(255, 255, 255, 0.15);
+                transform: translateX(4px);
             }
-            table {
-                width: 100%;
-                table-layout: auto;
+
+            .active-nav {
+                background-color: rgba(255, 255, 255, 0.2);
+                font-weight: 600;
             }
-            th, td {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
+
+            .pulse-animation {
+                animation: pulse 1.5s infinite;
             }
-            @media (max-width: 768px) {
-                .main-content {
-                    width: 100%;
-                    margin-left: 0;
-                }
-                th, td {
-                    font-size: 0.875rem;
-                    padding: 0.5rem;
-                }
-            }
-            @keyframes fade-in {
-                from {
-                    opacity: 0;
-                    transform: scale(0.95);
-                }
-                to {
-                    opacity: 1;
+
+            @keyframes pulse {
+                0% {
                     transform: scale(1);
+                    opacity: 0.9;
+                }
+                50% {
+                    transform: scale(1.2);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(1);
+                    opacity: 0.9;
                 }
             }
-            .animate-fade-in {
-                animation: fade-in 0.2s ease-out;
+
+            /* Modal animation */
+            @keyframes fade-in-down {
+                0% {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
+
+            .animate-fade-in-down {
+                animation: fade-in-down 0.25s ease-out;
+            }
+
+            input[type="text"],
+            input[type="number"],
+            input[type="file"],
+            input[type="time"],
+            select {
+                font-size: 0.95rem;
+            }
+
+            @media screen and (max-width: 768px) {
+                #sidebar {
+                    width: 100%;
+                    height: auto;
+                    position: relative;
+                }
+
+                .main-content {
+                    margin-left: 0 !important;
+                }
+
+                .grid {
+                    grid-template-columns: 1fr !important;
+                }
+
+                .flex-1.ml-72 {
+                    margin-left: 0 !important;
+                }
+            }
+
         </style>
 
     </head>
-    <body class="bg-gray-100 min-h-screen flex">
+    <body class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 text-gray-800 flex min-h-screen">
         <!-- Sidebar -->
-        <nav id="sidebar" class="w-72 sidebar-gradient text-white p-4 flex flex-col h-screen fixed top-0 left-0 shadow-2xl overflow-y-auto z-50 md:translate-x-0">
+        <nav id="sidebar"
+             class="w-72 sidebar-gradient text-white p-4 flex flex-col h-screen fixed top-0 left-0 shadow-2xl overflow-y-auto z-50">
             <!-- Logo Section -->
             <div class="logo-container mb-6 p-3 rounded-2xl text-center">
                 <div class="flex items-center justify-center mb-3">
@@ -84,12 +122,16 @@
             <div class="profile-card p-3 rounded-2xl mb-4">
                 <div class="flex items-center gap-3">
                     <div class="relative">
-                        <img src="https://cdn.kona-blue.com/upload/kona-blue_com/post/images/2024/09/19/465/avatar-trang-1.jpg"
-                             alt="Avatar" class="w-12 h-12 rounded-full border-3 border-white object-cover shadow-lg" />
-                        <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 rounded-full border-2 border-white"></div>
+                        <div
+                            class="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-white text-lg"></i>
+                        </div>
+                        <div
+                            class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 rounded-full border-2 border-white pulse-animation">
+                        </div>
                     </div>
                     <div class="flex-1">
-                        <h4 class="text-sm font-semibold text-white"></h4>
+                        <h4 class="text-sm font-semibold text-white">Nguyễn Văn A</h4>
                         <p class="text-xs text-blue-100">Administrator</p>
                         <a href="#" class="text-xs text-yellow-300 hover:text-yellow-200 hover:underline transition-colors">
                             <i class="fas fa-user-edit mr-1"></i>Xem chi tiết
@@ -101,39 +143,65 @@
             <!-- Navigation Menu -->
             <div class="flex-1 space-y-1">
                 <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3">
-                    <i class="fas fa-bars mr-2"></i>Menu Chính
+                    <i class="fas fa-chart-bar mr-2"></i>Thống kê
                 </div>
+
+                <a href="adminDashBoard" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                    <div class="nav-icon">
+                        <i class="fa-solid fa-chart-line text-sm"></i>
+                    </div>
+                    <span class="font-medium text-sm">Dashboard</span>
+                    <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
+                </a>
+
+                <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3 mt-4">
+                    <i class="fas fa-bars mr-2"></i>Quản lý
+                </div>
+
                 <a href="adminPoolManagement" class="nav-item active-nav px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-water text-sm"></i></div>
+                    <div class="nav-icon">
+                        <i class="fa-solid fa-water text-sm"></i>
+                    </div>
                     <span class="font-medium text-sm">Quản lý bể bơi</span>
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                 </a>
-                <a href="adminViewStaffCategory.jsp" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-user-tie text-sm"></i></div>
+
+                <a href="adminViewStaffCategory.jsp"
+                   class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                    <div class="nav-icon">
+                        <i class="fa-solid fa-user-tie text-sm"></i>
+                    </div>
                     <span class="font-medium text-sm">Quản lý nhân viên</span>
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                 </a>
-                <a href="adminViewCustomerList" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-user-check text-sm"></i></div>
+
+                <a href="adminViewCustomerList"
+                   class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                    <div class="nav-icon">
+                        <i class="fa-solid fa-user-check text-sm"></i>
+                    </div>
                     <span class="font-medium text-sm">Quản lý khách hàng</span>
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                 </a>
-                <a href="#" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-chart-line text-sm"></i></div>
-                    <span class="font-medium text-sm">Thống kê & Báo cáo</span>
-                    <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
-                </a>
+
                 <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3 mt-4">
-                    <i class="fas fa-cog mr-2"></i>Hệ thống
+                    <i class="fas fa-phone"></i> Liên hệ 
                 </div>
-                <a href="#" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-gear text-sm"></i></div>
-                    <span class="font-medium text-sm">Cài đặt hệ thống</span>
+
+                <a href="adminViewCustomerContact" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                    <div class="nav-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <span class="font-medium text-sm">Liên hệ khách hàng</span>
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                 </a>
+
                 <div class="mt-3 pt-3 border-t border-white/20">
-                    <a href="LogoutServlet" class="logout-btn nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 Światowy z-10 font-semibold">
-                        <div class="nav-icon"><i class="fa-solid fa-right-from-bracket text-sm"></i></div>
+                    <a href="LogoutServlet"
+                       class="logout-btn nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10 font-semibold">
+                        <div class="nav-icon">
+                            <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                        </div>
                         <span class="text-sm">Đăng xuất</span>
                         <i class="fas fa-sign-out-alt ml-auto text-sm"></i>
                     </a>
@@ -142,88 +210,91 @@
 
             <!-- Footer -->
             <div class="mt-auto pt-4 border-t border-white/20 text-center">
-                <p class="text-xs text-blue-200">© 2025 Pool Management</p>
+                <p class="text-xs text-blue-200">© 2024 Pool Management</p>
                 <p class="text-xs text-blue-300 mt-1">Version 2.1.0</p>
             </div>
         </nav>
 
-        <div class="main-content ml-0 md:ml-72 p-2 sm:p-4 md:p-6 w-full">
-            <!-- Main content -->
-            <main class="w-full max-w-full space-y-6">
+        <!-- Main Content -->
+        <div class="flex-1 ml-72 p-6 space-y-8 overflow-y-auto">
 
+            <!-- Header -->
+            <div class="mb-8">
 
-                <!-- Header -->
-                <div class="flex justify-between items-center bg-white shadow rounded p-4 mb-6">
-                    <h2 class="text-2xl font-bold text-blue-600">Thêm bể bơi mới</h2>
-                </div>
-
-                <% String error = (String) request.getAttribute("error"); %>
-                <!-- Form -->
-                <form id="addPoolForm" action="adminAddPool" enctype="multipart/form-data" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white shadow rounded p-6">
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Tên bể bơi</label>
-                        <input type="text" name="poolName" value="${param.poolName}" class="mt-1 w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nhập tên bể bơi" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Hình ảnh</label>
-                        <input type="file" name="poolImage" value="${param.poolImage}" class="mt-1 w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nhập link hình ảnh" required >
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Mô tả</label>
-                        <input type="text" name="poolDescription" value="${param.poolDescription}" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" placeholder="Nhập mô tả" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Tên đường</label>
-                        <input type="text" name="poolRoad" value="${param.poolRoad}" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" placeholder="Nhập địa chỉ" >
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Khu vực</label>
-                        <select id="poolAddress" name="poolAddress" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" >
-                            <option value="">-- Chọn khu vực --</option>
-                            <option value="Hà Nội">Hà Nội</option>
-                            <option value="Hồ Chí Minh">Hồ Chí Minh</option>
-                            <option value="Đà Nẵng">Đà Nẵng</option>
-                            <option value="Cần Thơ">Cần Thơ</option>
-                            <option value="Quy Nhơn">Quy Nhơn</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Sức chứa</label>
-                        <input type="number" name="maxSlot" value="${param.maxSlot}" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" placeholder="Nhập sức chứa" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Giờ mở cửa</label>
-                        <input type="time" name="openTime" value="${param.openTime}" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Giờ đóng cửa</label>
-                        <input type="time" name="closeTime" value="${param.closeTime}" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Trạng thái</label>
-                        <select name="poolStatus" class="mt-1 w-full border border-gray-300 rounded px-3 py-2">
-                            <option value="true" selected>Đang hoạt động</option>
-                            <option value="false">Hủy hoạt động</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Mã Khu vực</label>
-                        <input type="number" id="branchId" name="branch_id" value="${param.branch_id}" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" placeholder="Nhập mã khu vực" readonly>
-                        <p class="text-sm text-gray-500 mt-1">1 - Hà Nội, 2 - HCM, 3 - Đà Nẵng, 4 - Cần thơ, 5 - Quy Nhơn</p>
+                <main>
+                    <!-- Header -->
+                    <div class="flex justify-between items-center bg-white shadow rounded p-4 mb-6">
+                        <h2 class="text-2xl font-bold text-blue-600">Thêm bể bơi mới</h2>
                     </div>
 
-                    <!-- Button -->
-                    <div class="col-span-1 md:col-span-2 flex gap-4">
-                        <button id="addPool" type="submit" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-medium">
-                            <i class="bi bi-plus-circle"></i> Thêm bể bơi
-                        </button>
-                        <a href="adminPoolManagement" class="flex items-center gap-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded font-medium">
-                            <i class="bi bi-arrow-left-circle"></i> Quay lại
-                        </a>
-                    </div>
-                </form>
-            </main>
+                    <% String error = (String) request.getAttribute("error"); %>
+                    <!-- Form -->
+                    <form id="addPoolForm" action="adminAddPool" enctype="multipart/form-data" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white shadow rounded p-6">
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Tên bể bơi</label>
+                            <input type="text" name="poolName" value="${param.poolName}" class="mt-1 w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nhập tên bể bơi" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Hình ảnh</label>
+                            <input type="file" name="poolImage" value="${param.poolImage}" class="mt-1 w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nhập link hình ảnh" required >
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Mô tả</label>
+                            <input type="text" name="poolDescription" value="${param.poolDescription}" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" placeholder="Nhập mô tả" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Tên đường</label>
+                            <input type="text" name="poolRoad" value="${param.poolRoad}" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" placeholder="Nhập địa chỉ" >
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Khu vực</label>
+                            <select id="poolAddress" name="poolAddress" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" >
+                                <option value="">-- Chọn khu vực --</option>
+                                <option value="Hà Nội">Hà Nội</option>
+                                <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                                <option value="Đà Nẵng">Đà Nẵng</option>
+                                <option value="Cần Thơ">Cần Thơ</option>
+                                <option value="Quy Nhơn">Quy Nhơn</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Sức chứa</label>
+                            <input type="number" name="maxSlot" value="${param.maxSlot}" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" placeholder="Nhập sức chứa" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Giờ mở cửa</label>
+                            <input type="time" name="openTime" value="${param.openTime}" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Giờ đóng cửa</label>
+                            <input type="time" name="closeTime" value="${param.closeTime}" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Trạng thái</label>
+                            <select name="poolStatus" class="mt-1 w-full border border-gray-300 rounded px-3 py-2">
+                                <option value="true" selected>Đang hoạt động</option>
+                                <option value="false">Hủy hoạt động</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Mã Khu vực</label>
+                            <input type="number" id="branchId" name="branch_id" value="${param.branch_id}" class="mt-1 w-full border border-gray-300 rounded px-3 py-2" placeholder="Nhập mã khu vực" readonly>
+                            <p class="text-sm text-gray-500 mt-1">1 - Hà Nội, 2 - HCM, 3 - Đà Nẵng, 4 - Cần thơ, 5 - Quy Nhơn</p>
+                        </div>
+
+                        <!-- Button -->
+                        <div class="col-span-1 md:col-span-2 flex gap-4">
+                            <button id="addPool" type="submit" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-medium">
+                                <i class="bi bi-plus-circle"></i> Thêm bể bơi
+                            </button>
+                            <a href="adminPoolManagement" class="flex items-center gap-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded font-medium">
+                                <i class="bi bi-arrow-left-circle"></i> Quay lại
+                            </a>
+                        </div>
+                    </form>
+                </main>
+            </div>
         </div>
 
         <!-- Error Modal (Tailwind version) -->

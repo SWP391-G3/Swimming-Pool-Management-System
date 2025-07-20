@@ -5,8 +5,6 @@ import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PoolsCustomer {
 
@@ -23,7 +21,7 @@ public class PoolsCustomer {
     private String pool_image;
     private LocalDate created_at;
     private LocalDate updated_at;
-  
+    
     
     
     
@@ -62,8 +60,6 @@ public class PoolsCustomer {
         this.pool_description = pool_description;
     }
 
-  
-    
     public int getPool_id() {
         return pool_id;
     }
@@ -159,7 +155,5 @@ public class PoolsCustomer {
     public void setUpdated_at(LocalDate updated_at) {
         this.updated_at = updated_at;
     }
-
-   
 
 }

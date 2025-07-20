@@ -275,7 +275,7 @@
                         <option value="">--Tất cả trạng thái--</option>
                         <option value="pending" ${status == 'pending' ? 'selected' : ''}>Chờ xử lý</option>
                         <option value="done" ${status == 'done' ? 'selected' : ''}>Hoàn thành</option>
-                        <option value="rejected" ${status == 'rejected' ? 'selected' : ''}>Từ chối</option>
+                      
                     </select>
                     <button type="submit" class="btn-filter">Lọc</button>
                     <a href="staffDeviceReport" class="btn-reset">Reset</a>
@@ -315,9 +315,7 @@
                                                 <c:when test="${r.status eq 'pending'}">
                                                     <span class="badge badge-pending">Chờ xử lý</span>
                                                 </c:when>
-                                                <c:when test="${r.status eq 'rejected'}">
-                                                    <span class="badge badge-rejected">Từ chối</span>
-                                                </c:when>
+                                               
                                                 <c:otherwise>
                                                     <span class="badge">${r.status}</span>
                                                 </c:otherwise>

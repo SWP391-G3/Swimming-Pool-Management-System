@@ -119,39 +119,65 @@
             <!-- Navigation Menu -->
             <div class="flex-1 space-y-1">
                 <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3">
-                    <i class="fas fa-bars mr-2"></i>Menu Chính
+                    <i class="fas fa-chart-bar mr-2"></i>Thống kê
                 </div>
+
+                <a href="adminDashBoard" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                    <div class="nav-icon">
+                        <i class="fa-solid fa-chart-line text-sm"></i>
+                    </div>
+                    <span class="font-medium text-sm">Dashboard</span>
+                    <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
+                </a>
+
+                <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3 mt-4">
+                    <i class="fas fa-bars mr-2"></i>Quản lý
+                </div>
+
                 <a href="adminPoolManagement" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-water text-sm"></i></div>
+                    <div class="nav-icon">
+                        <i class="fa-solid fa-water text-sm"></i>
+                    </div>
                     <span class="font-medium text-sm">Quản lý bể bơi</span>
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                 </a>
-                <a href="adminViewStaffCategory.jsp" class="nav-item active-nav px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-user-tie text-sm"></i></div>
+
+                <a href="adminViewEmployeeList"
+                   class="nav-item active-nav px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                    <div class="nav-icon">
+                        <i class="fa-solid fa-user-tie text-sm"></i>
+                    </div>
                     <span class="font-medium text-sm">Quản lý nhân viên</span>
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                 </a>
-                <a href="adminViewCustomerList" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-user-check text-sm"></i></div>
+
+                <a href="adminViewCustomerList"
+                   class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                    <div class="nav-icon">
+                        <i class="fa-solid fa-user-check text-sm"></i>
+                    </div>
                     <span class="font-medium text-sm">Quản lý khách hàng</span>
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                 </a>
-                <a href="#" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-chart-line text-sm"></i></div>
-                    <span class="font-medium text-sm">Thống kê & Báo cáo</span>
-                    <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
-                </a>
+
                 <div class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2 px-3 mt-4">
-                    <i class="fas fa-cog mr-2"></i>Hệ thống
+                    <i class="fas fa-phone"></i> Liên hệ 
                 </div>
-                <a href="#" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
-                    <div class="nav-icon"><i class="fa-solid fa-gear text-sm"></i></div>
-                    <span class="font-medium text-sm">Cài đặt hệ thống</span>
+
+                <a href="adminViewCustomerContact" class="nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10">
+                    <div class="nav-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <span class="font-medium text-sm">Liên hệ khách hàng</span>
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-60"></i>
                 </a>
+
                 <div class="mt-3 pt-3 border-t border-white/20">
-                    <a href="LogoutServlet" class="logout-btn nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 Światowy z-10 font-semibold">
-                        <div class="nav-icon"><i class="fa-solid fa-right-from-bracket text-sm"></i></div>
+                    <a href="LogoutServlet"
+                       class="logout-btn nav-item px-3 py-2.5 rounded-xl flex items-center gap-3 relative z-10 font-semibold">
+                        <div class="nav-icon">
+                            <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                        </div>
                         <span class="text-sm">Đăng xuất</span>
                         <i class="fas fa-sign-out-alt ml-auto text-sm"></i>
                     </a>
@@ -180,12 +206,12 @@
 
                 <!-- Form -->
                 <form action="adminAddNewEmployee" method="post" class="bg-white p-6 rounded-lg shadow grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div><label class="font-medium">Tên đăng nhập:</label><input type="text" name="username" required class="w-full mt-1 border rounded px-3 py-2" /></div>
-                    <div><label class="font-medium">Mật khẩu:</label><input type="password" name="password" required class="w-full mt-1 border rounded px-3 py-2" /></div>
-                    <div><label class="font-medium">Họ tên:</label><input type="text" name="fullName" required class="w-full mt-1 border rounded px-3 py-2" /></div>
-                    <div><label class="font-medium">Email:</label><input type="email" name="email" required class="w-full mt-1 border rounded px-3 py-2" /></div>
-                    <div><label class="font-medium">SĐT:</label><input type="text" name="phone" class="w-full mt-1 border rounded px-3 py-2" /></div>
-                    <div><label class="font-medium">Ngày sinh:</label><input type="date" name="dob" required class="w-full mt-1 border rounded px-3 py-2" /></div>
+                    <div><label class="font-medium">Tên đăng nhập:</label><input type="text" name="username" value="${param.username}" required class="w-full mt-1 border rounded px-3 py-2" /></div>
+                    <div><label class="font-medium">Mật khẩu:</label><input type="password" name="password" value="${param.password}" required class="w-full mt-1 border rounded px-3 py-2" /></div>
+                    <div><label class="font-medium">Họ tên:</label><input type="text" name="fullName" value="${param.fullName}" required class="w-full mt-1 border rounded px-3 py-2" /></div>
+                    <div><label class="font-medium">Email:</label><input type="email" name="email" value="${param.email}" required class="w-full mt-1 border rounded px-3 py-2" /></div>
+                    <div><label class="font-medium">SĐT:</label><input type="text" name="phone" value="${param.phone}" class="w-full mt-1 border rounded px-3 py-2" /></div>
+                    <div><label class="font-medium">Ngày sinh:</label><input type="date" name="dob" value="${param.dob}" required class="w-full mt-1 border rounded px-3 py-2" /></div>
                     <div>
                         <label class="font-medium">Giới tính:</label>
                         <select name="gender" required class="w-full mt-1 border rounded px-3 py-2">
@@ -195,7 +221,7 @@
                             <option value="Other">Khác</option>
                         </select>
                     </div>
-                    <div><label class="font-medium">Địa chỉ:</label><input type="text" name="address" class="w-full mt-1 border rounded px-3 py-2" /></div>
+                    <div><label class="font-medium">Địa chỉ:</label><input type="text" value="${param.address}" name="address" class="w-full mt-1 border rounded px-3 py-2" /></div>
 
                     <!-- Chi nhánh -->
                     <div>
@@ -239,6 +265,20 @@
                 </form>
             </main>
         </div>
+
+        <!-- Popup thông báo lỗi -->
+        <div id="errorPopup" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+            <div class="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full animate-fade-in">
+                <h2 class="text-lg font-bold text-red-600 mb-4"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Lỗi nhập liệu</h2>
+                <pre id="errorMessage" class="text-sm text-gray-700 whitespace-pre-wrap mb-4"></pre>
+                <div class="text-right">
+                    <button onclick="closeErrorPopup()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg shadow">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+
 
         <!-- AJAX load pool -->
         <script>
@@ -288,50 +328,114 @@
                 const username = document.querySelector('[name="username"]').value.trim();
                 const password = document.querySelector('[name="password"]').value.trim();
                 const fullName = document.querySelector('[name="fullName"]').value.trim();
+                const email = document.querySelector('[name="email"]').value.trim();
+                const phone = document.querySelector('[name="phone"]').value.trim();
                 const address = document.querySelector('[name="address"]').value.trim();
                 const dob = document.querySelector('[name="dob"]').value;
+                const gender = document.querySelector('[name="gender"]').value;
+                const branchId = document.querySelector('[name="branchId"]').value;
+                const poolId = document.querySelector('[name="poolId"]').value;
+                const staffTypeId = document.querySelector('[name="staffTypeId"]').value;
 
-                // Validate Tên đăng nhập: ít nhất 2 ký tự, không chứa ký tự đặc biệt
-                const usernameRegex = /^[a-zA-Z0-9]{2,}$/;
-                if (!usernameRegex.test(username)) {
-                    errorMsg += "- Tên đăng nhập phải từ 2 ký tự trở lên và không chứa ký tự đặc biệt.\n";
-                    isValid = false;
-                }
-
-                const addressRegex = /^[a-zA-Z0-9]{5,}$/;
-                if (!addressRegex.test(address)) {
-                    errorMsg += "- Địa chỉ phải từ 5 ký tự trở lên và không chứa ký tự đặc biệt.\n";
-                    isValid = false;
-                }
-
-                // Validate Mật khẩu: đúng 9 chữ số
-                const passwordRegex = /^\d{9}$/;
-                if (!passwordRegex.test(password)) {
-                    errorMsg += "- Mật khẩu phải đúng 9 chữ số.\n";
-                    isValid = false;
-                }
-
-                // Validate Họ và tên: chỉ chứa chữ cái (kể cả tiếng Việt, có dấu)
+                // Regex
+                const usernameRegex = /^[a-zA-Z0-9]{2,15}$/;
+                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_])[A-Za-z\d\W_]{9}$/;
                 const fullNameRegex = /^[A-Za-zÀ-ỹ\s]+$/;
-                if (!fullNameRegex.test(fullName) || fullName.length < 2) {
-                    errorMsg += "- Họ và tên chỉ được chứa chữ cái và phải từ 2 ký tự trở lên.\n";
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const phoneRegex = /^0\d{9}$/;
+                const addressRegex = /^[\w\s.,-]{5,}$/;
+
+                // Kiểm tra từng trường
+                if (!usernameRegex.test(username)) {
+                    errorMsg += "- Tên đăng nhập phải từ 2 ký tự trở lên và tối đa 15 ký tự và không chứa ký tự đặc biệt.\n";
                     isValid = false;
                 }
 
-                // Validate Ngày sinh: không được lớn hơn ngày hiện tại
-                const today = new Date().toISOString().split("T")[0];
-                if (dob === "" || dob > today) {
-                    errorMsg += "- Ngày sinh không được lớn hơn ngày hiện tại.\n";
+                if (!passwordRegex.test(password)) {
+                    errorMsg += "- Mật khẩu phải đúng 9 chữ số, có chứa ít nhất 1 chữ in hoa , 1 chữ in thường và 1 ký tự đặc biệt.\n";
+                    isValid = false;
+                }
+
+                if (!fullNameRegex.test(fullName) || fullName.length < 2) {
+                    errorMsg += "- Họ tên chỉ chứa chữ cái và từ 2 ký tự trở lên.\n";
+                    isValid = false;
+                }
+
+                if (!emailRegex.test(email)) {
+                    errorMsg += "- Email không đúng định dạng.\n";
+                    isValid = false;
+                }
+
+                if (!phoneRegex.test(phone)) {
+                    errorMsg += "- Số điện thoại phải bắt đầu bằng 0 và gồm 10 chữ số và không chứa ký tự khác.\n";
+                    isValid = false;
+                }
+
+                if (!addressRegex.test(address)) {
+                    errorMsg += "- Địa chỉ phải từ 5 ký tự trở lên, không chứa ký tự đặc biệt.\n";
+                    isValid = false;
+                }
+
+                const today = new Date();
+                if (!dob) {
+                    errorMsg += "- Ngày sinh không được để trống.\n";
+                    isValid = false;
+                } else {
+                    const birthDate = new Date(dob);
+                    const age = today.getFullYear() - birthDate.getFullYear();
+                    const m = today.getMonth() - birthDate.getMonth();
+                    const isBirthdayPassed = m > 0 || (m === 0 && today.getDate() >= birthDate.getDate());
+                    const exactAge = isBirthdayPassed ? age : age - 1;
+
+                    if (birthDate > today) {
+                        errorMsg += "- Ngày sinh không được lớn hơn ngày hiện tại.\n";
+                        isValid = false;
+                    } else if (exactAge < 14) {
+                        errorMsg += "- Tuổi phải từ 14 trở lên mới được đăng ký.\n";
+                        isValid = false;
+                    }
+                }
+
+
+                if (!gender) {
+                    errorMsg += "- Vui lòng chọn giới tính.\n";
+                    isValid = false;
+                }
+
+                if (!branchId) {
+                    errorMsg += "- Vui lòng chọn chi nhánh.\n";
+                    isValid = false;
+                }
+
+                if (!poolId) {
+                    errorMsg += "- Vui lòng chọn bể bơi.\n";
+                    isValid = false;
+                }
+
+                if (!staffTypeId) {
+                    errorMsg += "- Vui lòng chọn loại công việc.\n";
                     isValid = false;
                 }
 
                 // Nếu có lỗi
                 if (!isValid) {
-                    alert("Lỗi nhập liệu:\n" + errorMsg);
-                    e.preventDefault(); // Ngăn form submit
+                    showErrorPopup("Lỗi nhập liệu:\n" + errorMsg);
+                    e.preventDefault(); // Ngăn submit
                 }
             });
         </script>
+
+        <script>
+            function showErrorPopup(message) {
+                document.getElementById("errorMessage").textContent = message;
+                document.getElementById("errorPopup").classList.remove("hidden");
+            }
+
+            function closeErrorPopup() {
+                document.getElementById("errorPopup").classList.add("hidden");
+            }
+        </script>
+
 
     </body>
 </html>

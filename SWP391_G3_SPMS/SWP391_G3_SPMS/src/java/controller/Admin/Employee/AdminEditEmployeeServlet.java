@@ -125,8 +125,10 @@ public class AdminEditEmployeeServlet extends HttpServlet {
 
             // Gọi DAO để cập nhật dữ liệu
             EmployeeDAO edao = new EmployeeDAO();
+            EmployeeAccountDAO eadao = new EmployeeAccountDAO();
+            EmployeeAccount ea = eadao.getEmployeeAccount(staffId);
 
-            if (edao.isEmailExists(email)) {
+            if (edao.isEmailExists(email) && !email.equalsIgnoreCase(ea.getEmail())) {
                 EmployeeDAO dao = new EmployeeDAO();
                 EmployeeAccountDAO acdao = new EmployeeAccountDAO();
                 PoolDAO pdao = new PoolDAO();

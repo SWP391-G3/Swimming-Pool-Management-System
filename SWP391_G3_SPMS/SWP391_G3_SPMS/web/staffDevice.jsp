@@ -264,7 +264,7 @@
                                         </div>
                                         <div class="card-info"><b>Ghi chú:</b> ${device.notes}</div>
                                         <div class="card-action">
-                                            <a href="staffDeviceDetailServlet?id=${device.deviceId}" class="btn-detail">Xem chi tiết</a>
+                                            <a href="staffDeviceDetailServlet?id=${device.deviceId}" class="btn-detail">Báo cáo</a>
                                         </div>
                                     </div>
                                 </div>

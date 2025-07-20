@@ -6,10 +6,11 @@
     if (pageData == null) {
         out.println("<h2>Lỗi: Không có dữ liệu trang Booking!</h2>");
         return;
-    } 
+    }
     User user = pageData.getUser();
     Pool pool = pageData.getPool();
     List<TicketType> ticketTypes = pageData.getTicketTypes();
+    Map<Integer, Integer> ticketTypeSlotMap = (java.util.Map<Integer, Integer>) request.getAttribute("ticketTypeSlotMap");
     List<PoolService> poolServices = pageData.getPoolServices();
     List<Discounts> discounts = pageData.getDiscounts();
 %>  
@@ -24,12 +25,12 @@
         <link rel="stylesheet" href="css/styles.css" />
     </head>
     <body class="bg-gray-50 min-h-screen font-['Inter'] antialiased">
-        
+
         <%@include file="header.jsp" %>
-        
+
         <div class="container mx-auto px-4 py-8 max-w-5xl">
             <div class="flex items-center mb-6">
-                <a href="customerHome" class="flex items-center text-gray-700 hover:text-blue-600">
+                <a href="customerViewPoolList" class="flex items-center text-gray-700 hover:text-blue-600">
                     <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                     </svg>
@@ -38,14 +39,14 @@
             </div>
 
             <% String error = (String) request.getAttribute("error"); %>
-            <% if (error != null && !error.isEmpty()) { %>
+            <% if (error != null && !error.isEmpty()) {%>
             <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-center font-semibold">
-                <%= error %>
+                <%= error%>
             </div>
-            <% } %>
+            <% }%>
             <form id="bookingForm" action="booking" method="post">
                 <input type="hidden" name="service" value="makeBooking"/>
-                <input type="hidden" name="poolId" value="<%= pool.getPool_id() %>"/>
+                <input type="hidden" name="poolId" value="<%= pool.getPool_id()%>"/>
                 <input type="hidden" name="bookingDate" id="inputBookingDate"/>
                 <input type="hidden" name="startTime" id="inputStartTime"/>
                 <input type="hidden" name="endTime" id="inputEndTime"/>
@@ -67,7 +68,7 @@
                                     class="w-24 h-24 bg-gray-100 rounded flex items-center justify-center shrink-0"
                                     >
                                     <img
-                                        src="<%= pool.getPool_image() %>"
+                                        src="<%= pool.getPool_image()%>"
                                         alt="Hồ bơi"
                                         class="w-20 h-20 object-cover rounded"
                                         />
@@ -75,10 +76,10 @@
                                 <!-- Thông tin tên, địa chỉ (chữ nhỏ lại, căn dòng đẹp) -->
                                 <div class="flex flex-col justify-center flex-1">
                                     <span class="font-semibold text-base leading-tight">
-                                        <%= pool.getPool_name() %>
+                                        <%= pool.getPool_name()%>
                                     </span>
                                     <span class="flex items-center gap-2 mt-1 text-gray-500 text-sm">
-                                        Địa chỉ: <%= pool.getPool_road() + ", " + pool.getPool_address() %>
+                                        Địa chỉ: <%= pool.getPool_road() + ", " + pool.getPool_address()%>
                                     </span>
                                 </div>
                             </div>
@@ -140,11 +141,11 @@
                             <div class="font-bold text-lg mb-1">Người đặt</div>
                             <div class="flex justify-between text-gray-700 text-sm">
                                 <span>Họ và tên</span>
-                                <span class="font-semibold"><%= user.getFull_name() %></span>
+                                <span class="font-semibold"><%= user.getFull_name()%></span>
                             </div>
                             <div class="flex justify-between text-gray-700 text-sm">
                                 <span>Số điện thoại:</span>
-                                <span class="font-semibold"><%= user.getPhone() != null ? user.getPhone() : "" %></span>
+                                <span class="font-semibold"><%= user.getPhone() != null ? user.getPhone() : ""%></span>
                             </div>
                         </div>
 
@@ -176,7 +177,9 @@
                                 >
                                 <span>+ Thêm vé</span>
                             </button>
-                            <div class="flex items-center gap-1 text-xs text-gray-400 mt-2">
+                            <button id="policyBtn"
+                                    class="flex items-center gap-1 text-xs text-gray-400 mt-2 hover:underline focus:outline-none"
+                                    type="button">
                                 <svg
                                     class="w-3 h-3"
                                     fill="none"
@@ -186,8 +189,8 @@
                                 <circle cx="12" cy="12" r="10" stroke-width="2" />
                                 <path d="M8 12h4v4" stroke-width="2" stroke-linecap="round" />
                                 </svg>
-                                Chính sách
-                            </div>
+                                <span>Chính sách</span>
+                            </button>
                         </div>
                         <!-- Thuê đồ -->
                         <div
@@ -339,7 +342,20 @@
                     </button>
                 </div>
             </div>
-
+            <!-- Popup chính sách hoàn tiền -->
+            <div id="policyModal"
+                 class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center transition-all hidden">
+                <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-md p-6 flex flex-col gap-4">
+                    <div class="font-bold text-lg mb-2">Chính sách hoàn tiền</div>
+                    <div class="text-gray-700 text-base mb-4">
+                        Chính sách hoàn tiền chỉ áp dụng cho các khách hàng có thời gian đặt vé trong vòng 1 tiếng đồng hồ.
+                    </div>
+                    <button id="closePolicyModal"
+                            class="px-3 py-1 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 text-sm font-medium shadow transition self-end">
+                        Đóng
+                    </button>
+                </div>
+            </div>
             <!-- Popup chọn đồ thuê -->
             <div
                 id="rentModal"
@@ -399,7 +415,11 @@
             // Cập nhật slotCount trước khi submit
             const slotCountInput = document.getElementById('inputSlotCount');
             if (slotCountInput) {
-            const totalSlotCount = selectedTickets.reduce((sum, t) => sum + t.quantity, 0);
+            const totalSlotCount = selectedTickets.reduce((sum, t) => {
+            const type = ticketTypes.find(tt => tt.id === t.id);
+            const slot = type ? type.slot : 1;
+            return sum + t.quantity * slot;
+            }, 0);
             slotCountInput.value = totalSlotCount;
             }
 
@@ -410,12 +430,14 @@
             return false;
             }
 
-
-
             // Validate: Số lượng vé tối đa 10
-            const totalTicketQty = selectedTickets.reduce((sum, t) => sum + t.quantity, 0);
-            if (totalTicketQty > 10) {
-            alert("Bạn chỉ được đặt tối đa 10 vé!");
+            const totalSlotCount = selectedTickets.reduce((sum, t) => {
+            const type = ticketTypes.find(tt => tt.id === t.id);
+            const slot = type ? type.slot : 1;
+            return sum + t.quantity * slot;
+            }, 0);
+            if (totalSlotCount > 10) {
+            alert("Bạn chỉ được đặt tối đa 10 người!");
             e.preventDefault();
             return false;
             }
@@ -423,14 +445,6 @@
             // Nếu muốn kiểm tra bắt buộc phải có ít nhất 1 vé
             if (selectedTickets.length === 0) {
             alert("Bạn phải chọn ít nhất 1 vé!");
-            e.preventDefault();
-            return false;
-            }
-
-            // Validate: Số lượng đồ thuê tối đa 10
-            const totalRentQty = selectedRents.reduce((sum, r) => sum + r.quantity, 0);
-            if (totalRentQty > 10) {
-            alert("Bạn chỉ được thuê tối đa 10 món!");
             e.preventDefault();
             return false;
             }
@@ -665,15 +679,17 @@
     // --------- Vé ---------
     const ticketTypes = [
     <%
-    for (int i = 0; i < ticketTypes.size(); i++) {
-        TicketType t = ticketTypes.get(i);
+        for (int i = 0; i < ticketTypes.size(); i++) {
+            TicketType t = ticketTypes.get(i);
+            int slot = ticketTypeSlotMap.getOrDefault(t.getTicketTypeId(), 1);
     %>
     {
-    id: <%= t.getTicketTypeId() %>,
-            name: "<%= t.getTypeName() %>",
-            price: <%= t.getBasePrice() != null ? t.getBasePrice().intValue() : 0 %>,
-            description: "<%= t.getDescription() != null ? t.getDescription().replace("\"", "\\\"") : "" %>"
-    }<%= (i < ticketTypes.size() - 1) ? "," : "" %>
+    id: <%= t.getTicketTypeId()%>,
+            name: "<%= t.getTypeName()%>",
+            price: <%= t.getBasePrice() != null ? t.getBasePrice().intValue() : 0%>,
+            description: "<%= t.getDescription() != null ? t.getDescription().replace("\"", "\\\"") : ""%>",
+            slot: <%= slot%>
+    }<%= (i < ticketTypes.size() - 1) ? "," : ""%>
     <% } %>
     ];
     let selectedTickets = [];
@@ -844,14 +860,32 @@
     });
     }
 
+    // --------- Hoàn tiền ---------
+    const policyBtn = document.getElementById("policyBtn");
+    const policyModal = document.getElementById("policyModal");
+    const closePolicyModal = document.getElementById("closePolicyModal");
+    if (policyBtn && policyModal && closePolicyModal) {
+    policyBtn.onclick = function () {
+    policyModal.classList.remove("hidden");
+    };
+    closePolicyModal.onclick = function () {
+    policyModal.classList.add("hidden");
+    };
+    policyModal.onclick = function (e) {
+    if (e.target === policyModal) {
+    policyModal.classList.add("hidden");
+    }
+    };
+    }
+
     // --------- Đồ thuê ---------
     const rentTypes = [
-    <% for (PoolService s : poolServices) { %>
+    <% for (PoolService s : poolServices) {%>
     {
-    id: <%= s.getPoolServiceId() %>,
-            name: "<%= s.getServiceName() %>",
-            price: <%= s.getPrice().intValue() %>,
-            description: "<%= s.getDescription() != null ? s.getDescription().replace("\"", "\\\"") : "" %>"
+    id: <%= s.getPoolServiceId()%>,
+            name: "<%= s.getServiceName()%>",
+            price: <%= s.getPrice().intValue()%>,
+            description: "<%= s.getDescription() != null ? s.getDescription().replace("\"", "\\\"") : ""%>"
     },
     <% } %>
     ];
@@ -911,9 +945,19 @@
     plusBtn.className =
             "w-9 h-9 text-lg font-bold text-gray-700 hover:bg-gray-100 rounded-r transition";
     plusBtn.onclick = function () {
+    // Tính tổng số người (slot) đã đặt
+    const slotCount = selectedTickets.reduce((sum, t) => {
+    const type = ticketTypes.find(tt => tt.id === t.id);
+    const slot = type ? type.slot : 1;
+    return sum + t.quantity * slot;
+    }, 0);
+    if (rent.quantity < slotCount) {
     rent.quantity++;
     renderSelectedRents();
     updatePaymentDetail();
+    } else {
+    alert("Bạn chỉ được thuê tối đa " + slotCount + " " + rent.name + " (tương ứng tổng số người/vé đã đặt)!");
+    }
     };
     const qtySpan = document.createElement("span");
     qtySpan.className = "px-3 font-semibold";
@@ -1025,15 +1069,15 @@
 
     // --------- Voucher ---------
     const voucherTypes = [
-    <% for (Discounts d : discounts) { %>
+    <% for (Discounts d : discounts) {%>
     {
-    code: "<%= d.getDiscountCode() %>",
-            info: "<%= d.getDescription() != null ? d.getDescription().replace("\"", "\\\"") : "" %>",
-            expire: "<%= d.getValidTo() != null ? d.getValidTo().toString().substring(0,10) : "" %>",
+    code: "<%= d.getDiscountCode()%>",
+            info: "<%= d.getDescription() != null ? d.getDescription().replace("\"", "\\\"") : ""%>",
+            expire: "<%= d.getValidTo() != null ? d.getValidTo().toString().substring(0, 10) : ""%>",
             used: "",
-            detail: "<%= d.getDescription() != null ? d.getDescription().replace("\"", "\\\"") : "" %>"
+            detail: "<%= d.getDescription() != null ? d.getDescription().replace("\"", "\\\"") : ""%>"
     },
-    <% } %>
+    <% }%>
     ];
     let selectedVoucher = null;
     const chooseVoucherSpan = document.getElementById("chooseVoucherSpan");
@@ -1192,7 +1236,11 @@
     // Cập nhật giá trị input hidden slotCount
     const slotCountInput = document.getElementById('inputSlotCount');
     if (slotCountInput) {
-    const totalSlotCount = selectedTickets.reduce((sum, t) => sum + t.quantity, 0);
+    const totalSlotCount = selectedTickets.reduce((sum, t) => {
+    const type = ticketTypes.find(tt => tt.id === t.id);
+    const slot = type ? type.slot : 1;
+    return sum + t.quantity * slot;
+    }, 0);
     slotCountInput.value = totalSlotCount;
     }
 </script>
