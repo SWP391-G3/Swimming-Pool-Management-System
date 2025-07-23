@@ -1,5 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<% 
+    java.time.LocalDate now = java.time.LocalDate.now();
+    java.time.LocalDate minDob = now.minusYears(14);
+    pageContext.setAttribute("maxDob", minDob.toString());
+%>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
@@ -104,6 +110,10 @@
                                    class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                    required />
 
+                            <input type="date" name="dob" max="${maxDob}"
+                                   class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                   required
+                                   title="Bạn phải từ 14 tuổi trở lên" />
 
                             <div class="relative">
                                 <input type="password" id="passwordInput" name="password" placeholder="Mật khẩu"
@@ -131,6 +141,10 @@
                             <input type="text" name="username" placeholder="Tên đăng nhập"
                                    value="${param.username != null ? param.username : ''}"
                                    class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400" required />
+
+                            <input type="text" name="address" placeholder="Địa chỉ (Không bắt buộc)"
+                                   value="${param.address != null ? param.address : ''}"
+                                   class="w-full px-4 py-2 border rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-400" />
 
                             <div class="relative">
                                 <input type="password" id="confirmPasswordInput" name="confirm_password" placeholder="Nhập lại mật khẩu"
