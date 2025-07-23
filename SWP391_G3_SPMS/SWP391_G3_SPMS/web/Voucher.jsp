@@ -12,6 +12,7 @@
     String sort = (String) request.getAttribute("sort");
     Integer currentPage = (Integer) request.getAttribute("page");
     Integer totalPages = (Integer) request.getAttribute("totalPage");
+    String voucherMsg = (String) request.getAttribute("voucherMsg");
 
     if (search == null) {
         search = "";
@@ -43,9 +44,32 @@
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
         <link rel="stylesheet" href="css/styles.css" />
+        <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-30px) translateX(-50%);}
+            to   { opacity: 1; transform: translateY(0) translateX(-50%);}
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0) translateX(-50%);}
+            to   { opacity: 0; transform: translateY(-30px) translateX(-50%);}
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.6s;
+        }
+        .animate-fadeOut {
+            animation: fadeOut 0.6s;
+        }
+        </style>
     </head>
     <body class="bg-gray-50 min-h-screen font-['Inter'] antialiased">
         <%@include file="header.jsp" %>
+        <% if (voucherMsg != null && !voucherMsg.isEmpty()) { %>
+            <div id="toastMsg"
+                 class="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded shadow-lg bg-green-600 text-white text-lg font-semibold animate-fadeIn"
+                 style="min-width:280px; text-align:center;">
+                <%= voucherMsg %>
+            </div>
+        <% } %>
         <div class="container mx-auto px-4 py-8">
             <!-- Nút quay về -->
             <a href="my_account" class="inline-flex items-center text-blue-600 font-medium mb-8 hover:underline">
@@ -54,7 +78,6 @@
                 </svg>
                 Tài khoản của tôi
             </a>
-
             <!-- Hero Image Section -->
             <div class="relative w-full h-52 md:h-64 mb-8 rounded-lg overflow-hidden shadow-lg">
                 <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=compress&fit=crop&w=1200&q=80"
@@ -65,7 +88,6 @@
                     DANH SÁCH VOUCHER
                 </h1>
             </div>
-
             <!-- Main Content with Sidebar -->
             <div class="flex flex-col lg:flex-row gap-8">
                 <!-- Sidebar: Bộ lọc tìm kiếm -->
@@ -74,7 +96,7 @@
                     <form id="voucherFilterForm" method="get" action="voucher">
                         <input type="hidden" name="service" value="showVoucher"/>
                         <div class="mb-4">
-                            <label class="block text-gray-600 mb-1 font-medium" for="search">Tìm kiếm</label>
+                            <label class="block text-gray-600 mb-1 font-medium" for="search">Tìm kiếm / Nhận mã voucher</label>
                             <div class="relative">
                                 <input
                                     type="text"
@@ -83,7 +105,7 @@
                                     value="<%= search%>"
                                     maxlength="100"
                                     class="w-full border border-gray-300 rounded-md px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                    placeholder="Nhập mã hoặc nội dung voucher"
+                                    placeholder="Nhập mã voucher để tìm kiếm hoặc nhận voucher mới"
                                     />
                                 <span class="text-red-500 text-sm hidden" id="errSearch"></span>
                             </div>
@@ -123,7 +145,7 @@
                             type="submit"
                             class="w-full bg-blue-600 text-white px-4 py-2 rounded-md font-semibold shadow hover:bg-blue-700 transition-colors"
                             >
-                            Lọc
+                            Lọc / Nhận voucher
                         </button>
                     </form>
                 </aside>
@@ -274,6 +296,19 @@
         <%@include file="footer.jsp" %>
     </body>
     <script>
+        // Toast popup auto close
+        window.addEventListener('DOMContentLoaded', function() {
+            var toast = document.getElementById('toastMsg');
+            if (toast) {
+                setTimeout(function() {
+                    toast.classList.remove('animate-fadeIn');
+                    toast.classList.add('animate-fadeOut');
+                    setTimeout(function() {
+                        toast.style.display = "none";
+                    }, 600);
+                }, 3000);
+            }
+        });
         // Ẩn/hiện trường nhập khoảng ngày khi chọn "Chọn khoảng ngày"
         document.getElementById('expiryStatus').addEventListener('change', function () {
             let fields = document.getElementById('expiryRangeFields');

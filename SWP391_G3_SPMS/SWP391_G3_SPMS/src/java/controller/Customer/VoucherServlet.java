@@ -12,10 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.customer.DiscountDetail;
 import model.customer.User;
-/**
- *
- * @author LAZYVL
- */
+
 public class VoucherServlet extends HttpServlet {
 
     @Override
@@ -27,16 +24,42 @@ public class VoucherServlet extends HttpServlet {
             service = "showVoucher";
         }
 
-        if (service.equals("showVoucher")) {
-            HttpSession session = request.getSession();
-            User user = (User) session.getAttribute("currentUser");
-            if (user == null) {
-                response.sendRedirect("login.jsp");
-                return;
-            }
-            int userId = user.getUser_id();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("currentUser");
+        if (user == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+        int userId = user.getUser_id();
 
-            String search = request.getParameter("search");
+        // Xử lý nhận voucher mới qua input search
+        String search = request.getParameter("search");
+        if (search != null && !search.trim().isEmpty()) {
+            DiscountDetailDAO dao = new DiscountDetailDAO();
+            try {
+                DiscountDetail voucherDetail = null;
+                try {
+                    voucherDetail = dao.getVoucherDetailByUserIdAndCode(userId, search.trim());
+                } catch (Exception ex) {
+                    voucherDetail = null;
+                }
+                // Nếu đã có voucher này rồi và đã dùng
+                if (voucherDetail != null && voucherDetail.getUsedDiscount() != null && !voucherDetail.getUsedDiscount()) {
+                    request.setAttribute("voucherMsg", "Bạn đã sử dụng voucher này.");
+                } else {
+                    boolean added = dao.addVoucherToCustomer(userId, search.trim());
+                    if (added) {
+                        request.setAttribute("voucherMsg", "Nhận voucher thành công!");
+                    } else {
+                        request.setAttribute("voucherMsg", "Không tìm thấy mã voucher hoặc đã nhận rồi.");
+                    }
+                }
+            } catch (SQLException e) {
+                request.setAttribute("voucherMsg", "Có lỗi khi nhận voucher.");
+            }
+        }
+
+        if (service.equals("showVoucher")) {
             String expiryStatus = request.getParameter("expiryStatus");
             String expiryFrom = request.getParameter("expiryFrom");
             String expiryTo = request.getParameter("expiryTo");

@@ -153,7 +153,7 @@ public class DiscountDetailDAO extends DBContext {
         }
         return list;
     }
-    
+
     public DiscountDetail getVoucherDetailByUserIdAndCode(int userId, String code) throws SQLException {
         String sql = "SELECT d.*, cd.used_discount, "
                 + " (SELECT COUNT(*) FROM Customer_Discount WHERE discount_id = d.discount_id AND used_discount = 1) AS used_count, "
@@ -190,6 +190,29 @@ public class DiscountDetailDAO extends DBContext {
             }
         }
         return null;
+    }
+
+    // Thêm voucher mới cho user
+    public boolean addVoucherToCustomer(int userId, String voucherCode) throws SQLException {
+        // Tìm discount_id theo code
+        String getDiscountIdSql = "SELECT discount_id FROM Discounts WHERE discount_code = ?";
+        try (PreparedStatement st1 = connection.prepareStatement(getDiscountIdSql)) {
+            st1.setString(1, voucherCode);
+            try (ResultSet rs = st1.executeQuery()) {
+                if (rs.next()) {
+                    int discountId = rs.getInt("discount_id");
+                    // Thêm vào Customer_Discount nếu chưa có
+                    String insertSql = "INSERT INTO Customer_Discount (user_id, discount_id, used_discount) VALUES (?, ?, 1)";
+                    try (PreparedStatement st2 = connection.prepareStatement(insertSql)) {
+                        st2.setInt(1, userId);
+                        st2.setInt(2, discountId);
+                        int affected = st2.executeUpdate();
+                        return affected > 0;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 }
