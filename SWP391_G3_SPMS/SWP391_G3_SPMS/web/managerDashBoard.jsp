@@ -610,6 +610,7 @@
     </style>
 </head>
 
+
 <body>
     <!-- Loading Spinner -->
     <div class="loading-spinner" id="loadingSpinner">
@@ -658,7 +659,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+<!--                            <div class="col-md-4">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-swimming-pool me-2 fs-5"></i>
                                     <div>
@@ -672,10 +673,10 @@
                                                     0/5 hồ
                                                 </c:otherwise>
                                             </c:choose>
-                                        </div>
+                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -720,7 +721,7 @@
                         <option value="monthly" ${selectedPeriod == 'monthly' ? 'selected' : ''}>12 tháng gần nhất</option>
                     </select>
                 </div>
-                <div class="col-lg-5 col-md-6 mb-3">
+<!--                <div class="col-lg-5 col-md-6 mb-3">
                     <label class="form-label fw-bold">
                         <i class="fas fa-tools me-1"></i>Thao tác nhanh:
                     </label>
@@ -735,7 +736,7 @@
                             <i class="fas fa-chart-line me-2"></i>Phân tích chi tiết
                         </button>
                     </div>
-                </div>
+                </div>-->
                 <div class="col-lg-4 mb-3">
                     <div class="quick-stats">
                         <div class="row text-center">
@@ -746,7 +747,7 @@
                                     <div class="h5 mb-0 text-primary fw-bold">
                                         <c:choose>
                                             <c:when test="${poolStats != null}">
-                                                ${poolStats.size()}/5
+                                                ${poolStats.size()}
                                             </c:when>
                                             <c:otherwise>
                                                 0/5
@@ -763,7 +764,7 @@
                                         <c:set var="activeCount" value="0"/>
                                         <c:if test="${poolStats != null}">
                                             <c:forEach var="pool" items="${poolStats}">
-                                                <c:if test="${pool.status == 'Hoạt động'}">
+                                                <c:if test="${pool.status == 'Active'}">
                                                     <c:set var="activeCount" value="${activeCount + 1}"/>
                                                 </c:if>
                                             </c:forEach>
@@ -772,16 +773,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-4">
-                                <div class="d-flex flex-column align-items-center">
-                                    <i class="fas fa-star text-warning mb-1"></i>
-                                    <small class="text-muted">Hiệu suất</small>
-                                    <div class="h5 mb-0">
-                                        <span class="performance-indicator indicator-excellent"></span>
-                                        <span class="text-success fw-bold">Tốt</span>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -800,13 +792,24 @@
                                         currencySymbol="" pattern="#,##0"/>₫
                     </div>
                     <div class="stat-label">Doanh Thu Tổng</div>
-                    <c:if test="${previousStats != null && previousStats.totalRevenue != null}">
-                        <c:set var="revenueGrowth" value="${(stats.totalRevenue - previousStats.totalRevenue) * 100 / (previousStats.totalRevenue > 0 ? previousStats.totalRevenue : 1)}"/>
-                        <div class="stat-comparison ${revenueGrowth > 0 ? 'comparison-up' : (revenueGrowth < 0 ? 'comparison-down' : 'comparison-neutral')}">
-                            <i class="fas fa-arrow-${revenueGrowth > 0 ? 'up' : (revenueGrowth < 0 ? 'down' : 'right')}"></i>
-                            <fmt:formatNumber value="${revenueGrowth}" pattern="#.#"/>% so với kỳ trước
-                        </div>
-                    </c:if>
+<c:if test="${previousStats != null && previousStats.totalRevenue != null}">
+    <c:set var="revenueGrowth" value="${previousStats.totalRevenue > 0
+        ? (stats.totalRevenue - previousStats.totalRevenue) * 100.0 / previousStats.totalRevenue
+        : 100.0}"/>
+    <div class="stat-comparison ${revenueGrowth > 0 ? 'comparison-up' : (revenueGrowth < 0 ? 'comparison-down' : 'comparison-neutral')}">
+        <i class="fas fa-arrow-${revenueGrowth > 0 ? 'up' : (revenueGrowth < 0 ? 'down' : 'right')}"></i>
+        <fmt:formatNumber value="${revenueGrowth}" pattern="#.##"/>%
+        so với
+        <c:choose>
+            <c:when test="${selectedPeriod == 'monthly'}">12 tháng trước</c:when>
+            <c:when test="${selectedPeriod == 'weekly'}">12 tuần trước</c:when>
+            <c:otherwise>30 ngày trước</c:otherwise>
+        </c:choose>
+        <c:if test="${previousStats.totalRevenue == 0}">
+            <span class="text-success ms-2">(Vượt trội)</span>
+        </c:if>
+    </div>
+</c:if>
                 </div>
                 
                 <div class="stat-card booking-trend animate__animated animate__fadeInUp" data-aos="fade-up" data-aos-delay="200">
@@ -815,13 +818,24 @@
                     </div>
                     <div class="stat-number">${stats.totalBookings}</div>
                     <div class="stat-label">Tổng Booking</div>
-                    <c:if test="${previousStats != null}">
-                        <c:set var="bookingGrowth" value="${(stats.totalBookings - previousStats.totalBookings) * 100 / (previousStats.totalBookings > 0 ? previousStats.totalBookings : 1)}"/>
-                        <div class="stat-comparison ${bookingGrowth > 0 ? 'comparison-up' : (bookingGrowth < 0 ? 'comparison-down' : 'comparison-neutral')}">
-                            <i class="fas fa-arrow-${bookingGrowth > 0 ? 'up' : (bookingGrowth < 0 ? 'down' : 'right')}"></i>
-                            <fmt:formatNumber value="${bookingGrowth}" pattern="#.#"/>% so với kỳ trước
-                        </div>
-                    </c:if>
+<c:if test="${previousStats != null}">
+    <c:set var="bookingGrowth" value="${previousStats.totalBookings > 0
+        ? (stats.totalBookings - previousStats.totalBookings) * 100.0 / previousStats.totalBookings
+        : 100.0}"/>
+    <div class="stat-comparison ${bookingGrowth > 0 ? 'comparison-up' : (bookingGrowth < 0 ? 'comparison-down' : 'comparison-neutral')}">
+        <i class="fas fa-arrow-${bookingGrowth > 0 ? 'up' : (bookingGrowth < 0 ? 'down' : 'right')}"></i>
+        <fmt:formatNumber value="${bookingGrowth}" pattern="#.##"/>%
+        so với
+        <c:choose>
+            <c:when test="${selectedPeriod == 'monthly'}">12 tháng trước</c:when>
+            <c:when test="${selectedPeriod == 'weekly'}">12 tuần trước</c:when>
+            <c:otherwise>30 ngày trước</c:otherwise>
+        </c:choose>
+        <c:if test="${previousStats.totalBookings == 0}">
+            <span class="text-success ms-2">(Vượt trội)</span>
+        </c:if>
+    </div>
+</c:if>
                 </div>
                 
                 <div class="stat-card customer-trend animate__animated animate__fadeInUp" data-aos="fade-up" data-aos-delay="300">
@@ -830,13 +844,24 @@
                     </div>
                     <div class="stat-number">${stats.totalCustomers}</div>
                     <div class="stat-label">Khách Hàng</div>
-                    <c:if test="${previousStats != null}">
-                        <c:set var="customerGrowth" value="${(stats.totalCustomers - previousStats.totalCustomers) * 100 / (previousStats.totalCustomers > 0 ? previousStats.totalCustomers : 1)}"/>
-                        <div class="stat-comparison ${customerGrowth > 0 ? 'comparison-up' : (customerGrowth < 0 ? 'comparison-down' : 'comparison-neutral')}">
-                            <i class="fas fa-arrow-${customerGrowth > 0 ? 'up' : (customerGrowth < 0 ? 'down' : 'right')}"></i>
-                            <fmt:formatNumber value="${customerGrowth}" pattern="#.#"/>% so với kỳ trước
-                        </div>
-                    </c:if>
+<c:if test="${previousStats != null}">
+    <c:set var="customerGrowth" value="${previousStats.totalCustomers > 0
+        ? (stats.totalCustomers - previousStats.totalCustomers) * 100.0 / previousStats.totalCustomers
+        : 100.0}"/>
+    <div class="stat-comparison ${customerGrowth > 0 ? 'comparison-up' : (customerGrowth < 0 ? 'comparison-down' : 'comparison-neutral')}">
+        <i class="fas fa-arrow-${customerGrowth > 0 ? 'up' : (customerGrowth < 0 ? 'down' : 'right')}"></i>
+        <fmt:formatNumber value="${customerGrowth}" pattern="#.##"/>%
+        so với
+        <c:choose>
+            <c:when test="${selectedPeriod == 'monthly'}">12 tháng trước</c:when>
+            <c:when test="${selectedPeriod == 'weekly'}">12 tuần trước</c:when>
+            <c:otherwise>30 ngày trước</c:otherwise>
+        </c:choose>
+        <c:if test="${previousStats.totalCustomers == 0}">
+            <span class="text-success ms-2">(Vượt trội)</span>
+        </c:if>
+    </div>
+</c:if>
                 </div>
                 
                 <div class="stat-card rating-trend animate__animated animate__fadeInUp" data-aos="fade-up" data-aos-delay="400">
@@ -879,7 +904,7 @@
                     </div>
                     <div class="stat-number">${stats.totalPools}</div>
                     <div class="stat-label">Hồ Bơi Hoạt Động</div>
-                    <div class="stat-comparison comparison-neutral">
+<!--                    <div class="stat-comparison comparison-neutral">
                         <c:if test="${poolStats != null && poolStats.size() > 0}">
                             <c:set var="avgUtilization" value="0"/>
                             <c:forEach var="pool" items="${poolStats}">
@@ -888,7 +913,7 @@
                             <i class="fas fa-chart-bar"></i>
                             <fmt:formatNumber value="${avgUtilization / poolStats.size()}" pattern="#.#"/>% tỷ lệ sử dụng TB
                         </c:if>
-                    </div>
+                    </div>-->
                 </div>
             </div>
         </c:if>
@@ -910,23 +935,10 @@
                     <div id="revenueChartAlert"></div>
                 </div>
             </div>
-            <div class="col-lg-4">
-                <div class="chart-container animate__animated animate__fadeInRight" data-aos="fade-left">
-                    <div class="chart-title">
-                        <i class="fas fa-clock me-3"></i>Khung Giờ Cao Điểm
-                    </div>
-                    <canvas id="peakHourChart" class="dashboard-canvas"></canvas>
-                    <div id="peakHourChartAlert"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Charts Row 2 - Pool Performance and Customer Trend -->
-        <div class="row">
-            <div class="col-lg-6">
+             <div class="col-lg-4">
                 <div class="chart-container animate__animated animate__fadeInLeft" data-aos="fade-right">
                     <div class="chart-title">
-                        <i class="fas fa-swimming-pool me-3"></i>Hiệu Suất Các Hồ Bơi
+                        <i class="fas fa-swimming-pool me-3"></i>Doanh thu từng Hồ Bơi
                         <div class="ms-auto">
                             <div class="btn-group btn-group-sm">
                                 <button class="btn btn-outline-primary active" onclick="changePoolChartType('bar')">Cột</button>
@@ -938,51 +950,10 @@
                     <div id="poolPerformanceChartAlert"></div>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="chart-container animate__animated animate__fadeInRight" data-aos="fade-left">
-                    <div class="chart-title">
-                        <i class="fas fa-users-cog me-3"></i>Xu Hướng Khách Hàng
-                        <div class="ms-auto">
-                            <div class="btn-group btn-group-sm">
-                                <button class="btn btn-outline-primary active" onclick="changeCustomerTrendType('line')">Đường</button>
-                                <button class="btn btn-outline-primary" onclick="changeCustomerTrendType('area')">Vùng</button>
-                            </div>
-                        </div>
-                    </div>
-                    <canvas id="customerTrendChart" class="dashboard-canvas"></canvas>
-                    <div id="customerTrendChartAlert"></div>
-                </div>
-            </div>
+            
         </div>
         
-        <!-- Charts Row 3 - Top Customers and Booking Status -->
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="chart-container animate__animated animate__fadeInLeft" data-aos="fade-right">
-                    <div class="chart-title">
-                        <i class="fas fa-trophy me-3"></i>Top Khách Hàng VIP
-                    </div>
-                    <canvas id="topCustomersChart" class="dashboard-canvas"></canvas>
-                    <div id="topCustomersChartAlert"></div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="chart-container animate__animated animate__fadeInRight" data-aos="fade-left">
-                    <div class="chart-title">
-                        <i class="fas fa-chart-pie me-3"></i>Trạng Thái Booking
-                        <div class="ms-auto">
-                            <div class="btn-group btn-group-sm">
-                                <button class="btn btn-outline-primary active" onclick="changeBookingChartType('pie')">Tròn</button>
-                                <button class="btn btn-outline-primary" onclick="changeBookingChartType('doughnut')">Vành</button>
-                            </div>
-                        </div>
-                    </div>
-                    <canvas id="bookingStatusChart" class="dashboard-canvas"></canvas>
-                    <div id="bookingStatusChartAlert"></div>
-                </div>
-            </div>
-        </div>
-
+        
         <!-- Pool Details Section -->
         <c:if test="${poolStats != null && poolStats.size() > 0}">
             <div class="chart-container animate__animated animate__fadeInUp" data-aos="fade-up">
@@ -1035,12 +1006,12 @@
                                     <div class="utilization-fill" style="width: ${pool.utilizationRate > 100 ? 100 : pool.utilizationRate}%"></div>
                                 </div>
                                 <div class="d-flex justify-content-between small text-muted mb-3">
-                                    <span>
+<!--                                    <span>
                                         <strong>Tỷ lệ sử dụng:</strong> 
                                         <span class="fw-bold text-dark">
                                             <fmt:formatNumber value="${pool.utilizationRate}" pattern="#.#"/>%
                                         </span>
-                                    </span>
+                                    </span>-->
                                     <span>
                                         <strong>Max:</strong> ${pool.maxSlot} slots
                                     </span>
@@ -1051,17 +1022,87 @@
                                         <i class="fas fa-clock me-1"></i>
                                         ${pool.openTime} - ${pool.closeTime}
                                     </small>
-                                    <span class="status-badge ${pool.status == 'Hoạt động' ? 'status-active' : 'status-inactive'}">
-                                        <i class="fas fa-${pool.status == 'Hoạt động' ? 'check-circle' : 'pause-circle'} me-1"></i>
+                                    <span class="status-badge ${pool.status == 'Active' ? 'status-active' : 'status-inactive'}">
+                                        <i class="fas fa-${pool.status == 'Active' ? 'check-circle' : 'pause-circle'} me-1"></i>
                                         ${pool.status}
                                     </span>
                                 </div>
                             </div>
                         </div>
                     </c:forEach>
+                    
+                    
+                    <div class="col-lg-4">
+                <div class="chart-container animate__animated animate__fadeInRight" data-aos="fade-left">
+                    <div class="chart-title">
+                        <i class="fas fa-clock me-3"></i>Khung Giờ Cao Điểm
+                    </div>
+                    <canvas id="peakHourChart" class="dashboard-canvas"></canvas>
+                    <div id="peakHourChartAlert"></div>
                 </div>
             </div>
+                    
+                    
+                </div>
+                    
+                    
+            </div>
         </c:if>
+        
+        
+        
+        
+        
+
+<!--         Charts Row 2 - Pool Performance and Customer Trend 
+        <div class="row">
+           
+            <div class="col-lg-6">
+                <div class="chart-container animate__animated animate__fadeInRight" data-aos="fade-left">
+                    <div class="chart-title">
+                        <i class="fas fa-users-cog me-3"></i>Xu Hướng Khách Hàng
+                        <div class="ms-auto">
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary active" onclick="changeCustomerTrendType('line')">Đường</button>
+                                <button class="btn btn-outline-primary" onclick="changeCustomerTrendType('area')">Vùng</button>
+                            </div>
+                        </div>
+                    </div>
+                    <canvas id="customerTrendChart" class="dashboard-canvas"></canvas>
+                    <div id="customerTrendChartAlert"></div>
+                </div>
+            </div>
+        </div>
+        
+         Charts Row 3 - Top Customers and Booking Status 
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="chart-container animate__animated animate__fadeInLeft" data-aos="fade-right">
+                    <div class="chart-title">
+                        <i class="fas fa-trophy me-3"></i>Top Khách Hàng VIP
+                    </div>
+                    <canvas id="topCustomersChart" class="dashboard-canvas"></canvas>
+                    <div id="topCustomersChartAlert"></div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="chart-container animate__animated animate__fadeInRight" data-aos="fade-left">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-pie me-3"></i>Trạng Thái Booking
+                        <div class="ms-auto">
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary active" onclick="changeBookingChartType('pie')">Tròn</button>
+                                <button class="btn btn-outline-primary" onclick="changeBookingChartType('doughnut')">Vành</button>
+                            </div>
+                        </div>
+                    </div>
+                    <canvas id="bookingStatusChart" class="dashboard-canvas"></canvas>
+                    <div id="bookingStatusChartAlert"></div>
+                </div>
+            </div>
+        </div>-->
+
+        
     </div>
 
     <!-- Scripts -->
@@ -1478,254 +1519,254 @@
             });
     }
 
-    function loadCustomerTrendChart() {
-        return fetch('managerDashBoardServlet?action=customer-trend&period=monthly')
-            .then(response => response.json())
-            .then(data => {
-                const alertDiv = document.getElementById('customerTrendChartAlert');
-                alertDiv.innerHTML = '';
-                const canvas = document.getElementById('customerTrendChart');
+//    function loadCustomerTrendChart() {
+//        return fetch('managerDashBoardServlet?action=customer-trend&period=monthly')
+//            .then(response => response.json())
+//            .then(data => {
+//                const alertDiv = document.getElementById('customerTrendChartAlert');
+//                alertDiv.innerHTML = '';
+//                const canvas = document.getElementById('customerTrendChart');
+//
+//                if (!Array.isArray(data)) {
+//                    if (data && data.error) {
+//                        showChartError('customerTrendChartAlert', 'Lỗi tải dữ liệu: ' + data.error);
+//                    } else {
+//                        showChartError('customerTrendChartAlert', 'Lỗi dữ liệu không hợp lệ!');
+//                    }
+//                    canvas.style.display = "none";
+//                    if (customerTrendChart) customerTrendChart.destroy();
+//                    return;
+//                }
+//
+//                canvas.style.display = "block";
+//                if (data.length === 0) {
+//                    if (customerTrendChart) customerTrendChart.destroy();
+//                    canvas.style.display = "none";
+//                    showChartInfo('customerTrendChartAlert', 'Không có dữ liệu xu hướng khách hàng!');
+//                    return;
+//                }
+//                if (customerTrendChart) customerTrendChart.destroy();
+//                const ctx = canvas.getContext('2d');
+//                
+//                // Create gradients for area chart
+//                var newCustomersGradient = ctx.createLinearGradient(0, 0, 0, 400);
+//                newCustomersGradient.addColorStop(0, 'rgba(54, 162, 235, 0.3)');
+//                newCustomersGradient.addColorStop(1, 'rgba(54, 162, 235, 0)');
+//                
+//                var returningCustomersGradient = ctx.createLinearGradient(0, 0, 0, 400);
+//                returningCustomersGradient.addColorStop(0, 'rgba(255, 99, 132, 0.3)');
+//                returningCustomersGradient.addColorStop(1, 'rgba(255, 99, 132, 0)');
+//                
+//                customerTrendChart = new Chart(ctx, {
+//                    type: customerTrendType === 'area' ? 'line' : customerTrendType,
+//                    data: {
+//                        labels: data.map(item => item.periodLabel || item.label),
+//                        datasets: [{
+//                            label: 'Khách mới',
+//                            data: data.map(item => item.newCustomers || item.value),
+//                            borderColor: '#36A2EB',
+//                            backgroundColor: customerTrendType === 'area' ? newCustomersGradient : 'rgba(54, 162, 235, 0.2)',
+//                            borderWidth: 3,
+//                            fill: customerTrendType === 'area',
+//                            tension: 0.4,
+//                            pointBackgroundColor: '#fff',
+//                            pointBorderColor: '#36A2EB',
+//                            pointBorderWidth: 2,
+//                            pointRadius: 4,
+//                            pointHoverRadius: 6
+//                        }, {
+//                            label: 'Khách quay lại',
+//                            data: data.map(item => item.returningCustomers || 0),
+//                            borderColor: '#FF6384',
+//                            backgroundColor: customerTrendType === 'area' ? returningCustomersGradient : 'rgba(255, 99, 132, 0.2)',
+//                            borderWidth: 3,
+//                            fill: customerTrendType === 'area',
+//                            tension: 0.4,
+//                            pointBackgroundColor: '#fff',
+//                            pointBorderColor: '#FF6384',
+//                            pointBorderWidth: 2,
+//                            pointRadius: 4,
+//                            pointHoverRadius: 6
+//                        }]
+//                    },
+//                    options: {
+//                        responsive: true,
+//                        maintainAspectRatio: false,
+//                        scales: { 
+//                            y: { 
+//                                beginAtZero: true,
+//                                grid: { color: 'rgba(0, 0, 0, 0.05)' }
+//                            },
+//                            x: {
+//                                grid: { display: false }
+//                            }
+//                        },
+//                        plugins: {
+//                            tooltip: {
+//                                callbacks: {
+//                                    label: function(context) {
+//                                        return context.dataset.label + ': ' + context.parsed.y;
+//                                    }
+//                                }
+//                            }
+//                        },
+//                        animation: {
+//                            duration: 1000,
+//                            easing: 'easeOutQuart'
+//                        }
+//                    }
+//                });
+//            })
+//            .catch(error => {
+//                showChartError('customerTrendChartAlert', 'Lỗi tải dữ liệu: ' + error);
+//                const canvas = document.getElementById('customerTrendChart');
+//                canvas.style.display = "none";
+//                if (customerTrendChart) customerTrendChart.destroy();
+//            });
+//    }
 
-                if (!Array.isArray(data)) {
-                    if (data && data.error) {
-                        showChartError('customerTrendChartAlert', 'Lỗi tải dữ liệu: ' + data.error);
-                    } else {
-                        showChartError('customerTrendChartAlert', 'Lỗi dữ liệu không hợp lệ!');
-                    }
-                    canvas.style.display = "none";
-                    if (customerTrendChart) customerTrendChart.destroy();
-                    return;
-                }
+//    function loadTopCustomersChart() {
+//        return fetch('managerDashBoardServlet?action=top-customers')
+//            .then(response => response.json())
+//            .then(data => {
+//                const alertDiv = document.getElementById('topCustomersChartAlert');
+//                alertDiv.innerHTML = '';
+//                const canvas = document.getElementById('topCustomersChart');
+//                canvas.style.display = "block";
+//                if (!data || data.length === 0) {
+//                    if (topCustomersChart) topCustomersChart.destroy();
+//                    canvas.style.display = "none";
+//                    showChartInfo('topCustomersChartAlert', 'Không có dữ liệu top khách hàng!');
+//                    return;
+//                }
+//                if (topCustomersChart) topCustomersChart.destroy();
+//                const ctx = canvas.getContext('2d');
+//                
+//                // Sort data by value descending
+//                data.sort((a, b) => b.value - a.value);
+//                
+//                topCustomersChart = new Chart(ctx, {
+//                    type: 'bar',
+//                    data: {
+//                        labels: data.map(item => item.label),
+//                        datasets: [{
+//                            label: 'Doanh Thu (₫)',
+//                            data: data.map(item => item.value),
+//                            backgroundColor: data.map((item, index) => 
+//                                index % 2 === 0 ? '#FFCE56' : '#36A2EB'
+//                            ),
+//                            borderColor: data.map((item, index) => 
+//                                index % 2 === 0 ? '#FFB347' : '#2E86C1'
+//                            ),
+//                            borderWidth: 1,
+//                            borderRadius: 5
+//                        }]
+//                    },
+//                    options: {
+//                        responsive: true,
+//                        maintainAspectRatio: false,
+//                        indexAxis: 'y', // Horizontal bar chart
+//                        scales: { 
+//                            x: { 
+//                                beginAtZero: true,
+//                                grid: { color: 'rgba(0, 0, 0, 0.05)' }
+//                            },
+//                            y: {
+//                                grid: { display: false }
+//                            }
+//                        },
+//                        plugins: {
+//                            legend: { display: false },
+//                            tooltip: {
+//                                callbacks: {
+//                                    label: function(context) {
+//                                        return 'Doanh thu: ' + context.parsed.x.toLocaleString() + '₫';
+//                                    }
+//                                }
+//                            }
+//                        },
+//                        animation: {
+//                            duration: 1000,
+//                            easing: 'easeOutQuart'
+//                        }
+//                    }
+//                });
+//            })
+//            .catch(error => {
+//                showChartError('topCustomersChartAlert', 'Lỗi tải dữ liệu: ' + error);
+//                const canvas = document.getElementById('topCustomersChart');
+//                canvas.style.display = "none";
+//                if (topCustomersChart) topCustomersChart.destroy();
+//            });
+//    }
 
-                canvas.style.display = "block";
-                if (data.length === 0) {
-                    if (customerTrendChart) customerTrendChart.destroy();
-                    canvas.style.display = "none";
-                    showChartInfo('customerTrendChartAlert', 'Không có dữ liệu xu hướng khách hàng!');
-                    return;
-                }
-                if (customerTrendChart) customerTrendChart.destroy();
-                const ctx = canvas.getContext('2d');
-                
-                // Create gradients for area chart
-                var newCustomersGradient = ctx.createLinearGradient(0, 0, 0, 400);
-                newCustomersGradient.addColorStop(0, 'rgba(54, 162, 235, 0.3)');
-                newCustomersGradient.addColorStop(1, 'rgba(54, 162, 235, 0)');
-                
-                var returningCustomersGradient = ctx.createLinearGradient(0, 0, 0, 400);
-                returningCustomersGradient.addColorStop(0, 'rgba(255, 99, 132, 0.3)');
-                returningCustomersGradient.addColorStop(1, 'rgba(255, 99, 132, 0)');
-                
-                customerTrendChart = new Chart(ctx, {
-                    type: customerTrendType === 'area' ? 'line' : customerTrendType,
-                    data: {
-                        labels: data.map(item => item.periodLabel || item.label),
-                        datasets: [{
-                            label: 'Khách mới',
-                            data: data.map(item => item.newCustomers || item.value),
-                            borderColor: '#36A2EB',
-                            backgroundColor: customerTrendType === 'area' ? newCustomersGradient : 'rgba(54, 162, 235, 0.2)',
-                            borderWidth: 3,
-                            fill: customerTrendType === 'area',
-                            tension: 0.4,
-                            pointBackgroundColor: '#fff',
-                            pointBorderColor: '#36A2EB',
-                            pointBorderWidth: 2,
-                            pointRadius: 4,
-                            pointHoverRadius: 6
-                        }, {
-                            label: 'Khách quay lại',
-                            data: data.map(item => item.returningCustomers || 0),
-                            borderColor: '#FF6384',
-                            backgroundColor: customerTrendType === 'area' ? returningCustomersGradient : 'rgba(255, 99, 132, 0.2)',
-                            borderWidth: 3,
-                            fill: customerTrendType === 'area',
-                            tension: 0.4,
-                            pointBackgroundColor: '#fff',
-                            pointBorderColor: '#FF6384',
-                            pointBorderWidth: 2,
-                            pointRadius: 4,
-                            pointHoverRadius: 6
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: { 
-                            y: { 
-                                beginAtZero: true,
-                                grid: { color: 'rgba(0, 0, 0, 0.05)' }
-                            },
-                            x: {
-                                grid: { display: false }
-                            }
-                        },
-                        plugins: {
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return context.dataset.label + ': ' + context.parsed.y;
-                                    }
-                                }
-                            }
-                        },
-                        animation: {
-                            duration: 1000,
-                            easing: 'easeOutQuart'
-                        }
-                    }
-                });
-            })
-            .catch(error => {
-                showChartError('customerTrendChartAlert', 'Lỗi tải dữ liệu: ' + error);
-                const canvas = document.getElementById('customerTrendChart');
-                canvas.style.display = "none";
-                if (customerTrendChart) customerTrendChart.destroy();
-            });
-    }
-
-    function loadTopCustomersChart() {
-        return fetch('managerDashBoardServlet?action=top-customers')
-            .then(response => response.json())
-            .then(data => {
-                const alertDiv = document.getElementById('topCustomersChartAlert');
-                alertDiv.innerHTML = '';
-                const canvas = document.getElementById('topCustomersChart');
-                canvas.style.display = "block";
-                if (!data || data.length === 0) {
-                    if (topCustomersChart) topCustomersChart.destroy();
-                    canvas.style.display = "none";
-                    showChartInfo('topCustomersChartAlert', 'Không có dữ liệu top khách hàng!');
-                    return;
-                }
-                if (topCustomersChart) topCustomersChart.destroy();
-                const ctx = canvas.getContext('2d');
-                
-                // Sort data by value descending
-                data.sort((a, b) => b.value - a.value);
-                
-                topCustomersChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: data.map(item => item.label),
-                        datasets: [{
-                            label: 'Doanh Thu (₫)',
-                            data: data.map(item => item.value),
-                            backgroundColor: data.map((item, index) => 
-                                index % 2 === 0 ? '#FFCE56' : '#36A2EB'
-                            ),
-                            borderColor: data.map((item, index) => 
-                                index % 2 === 0 ? '#FFB347' : '#2E86C1'
-                            ),
-                            borderWidth: 1,
-                            borderRadius: 5
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        indexAxis: 'y', // Horizontal bar chart
-                        scales: { 
-                            x: { 
-                                beginAtZero: true,
-                                grid: { color: 'rgba(0, 0, 0, 0.05)' }
-                            },
-                            y: {
-                                grid: { display: false }
-                            }
-                        },
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return 'Doanh thu: ' + context.parsed.x.toLocaleString() + '₫';
-                                    }
-                                }
-                            }
-                        },
-                        animation: {
-                            duration: 1000,
-                            easing: 'easeOutQuart'
-                        }
-                    }
-                });
-            })
-            .catch(error => {
-                showChartError('topCustomersChartAlert', 'Lỗi tải dữ liệu: ' + error);
-                const canvas = document.getElementById('topCustomersChart');
-                canvas.style.display = "none";
-                if (topCustomersChart) topCustomersChart.destroy();
-            });
-    }
-
-    function loadBookingStatusChart() {
-        return fetch('managerDashBoardServlet?action=booking-status')
-            .then(response => response.json())
-            .then(data => {
-                const alertDiv = document.getElementById('bookingStatusChartAlert');
-                alertDiv.innerHTML = '';
-                const canvas = document.getElementById('bookingStatusChart');
-                canvas.style.display = "block";
-                if (!data || data.length === 0) {
-                    if (bookingStatusChart) bookingStatusChart.destroy();
-                    canvas.style.display = "none";
-                    showChartInfo('bookingStatusChartAlert', 'Không có dữ liệu trạng thái booking!');
-                    return;
-                }
-                if (bookingStatusChart) bookingStatusChart.destroy();
-                const ctx = canvas.getContext('2d');
-                
-                bookingStatusChart = new Chart(ctx, {
-                    type: bookingChartType,
-                    data: {
-                        labels: data.map(item => item.label),
-                        datasets: [{
-                            label: 'Số lượng',
-                            data: data.map(item => item.value),
-                            backgroundColor: data.map(item => item.color || '#36A2EB'),
-                            borderColor: '#fff',
-                            borderWidth: bookingChartType === 'pie' ? 1 : 2,
-                            hoverOffset: 15
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { 
-                                position: 'bottom',
-                                labels: {
-                                    usePointStyle: true,
-                                    pointStyle: 'circle'
-                                }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        const label = context.label || '';
-                                        const value = context.raw || 0;
-                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                        const percentage = Math.round((value / total) * 100);
-                                        return `${label}: ${value} (${percentage}%)`;
-                                    }
-                                }
-                            }
-                        },
-                        animation: {
-                            duration: 1000,
-                            easing: 'easeOutQuart'
-                        }
-                    }
-                });
-            })
-            .catch(error => {
-                showChartError('bookingStatusChartAlert', 'Lỗi tải dữ liệu: ' + error);
-                const canvas = document.getElementById('bookingStatusChart');
-                canvas.style.display = "none";
-                if (bookingStatusChart) bookingStatusChart.destroy();
-            });
-    }
+//    function loadBookingStatusChart() {
+//        return fetch('managerDashBoardServlet?action=booking-status')
+//            .then(response => response.json())
+//            .then(data => {
+//                const alertDiv = document.getElementById('bookingStatusChartAlert');
+//                alertDiv.innerHTML = '';
+//                const canvas = document.getElementById('bookingStatusChart');
+//                canvas.style.display = "block";
+//                if (!data || data.length === 0) {
+//                    if (bookingStatusChart) bookingStatusChart.destroy();
+//                    canvas.style.display = "none";
+//                    showChartInfo('bookingStatusChartAlert', 'Không có dữ liệu trạng thái booking!');
+//                    return;
+//                }
+//                if (bookingStatusChart) bookingStatusChart.destroy();
+//                const ctx = canvas.getContext('2d');
+//                
+//                bookingStatusChart = new Chart(ctx, {
+//                    type: bookingChartType,
+//                    data: {
+//                        labels: data.map(item => item.label),
+//                        datasets: [{
+//                            label: 'Số lượng',
+//                            data: data.map(item => item.value),
+//                            backgroundColor: data.map(item => item.color || '#36A2EB'),
+//                            borderColor: '#fff',
+//                            borderWidth: bookingChartType === 'pie' ? 1 : 2,
+//                            hoverOffset: 15
+//                        }]
+//                    },
+//                    options: {
+//                        responsive: true,
+//                        maintainAspectRatio: false,
+//                        plugins: {
+//                            legend: { 
+//                                position: 'bottom',
+//                                labels: {
+//                                    usePointStyle: true,
+//                                    pointStyle: 'circle'
+//                                }
+//                            },
+//                            tooltip: {
+//                                callbacks: {
+//                                    label: function(context) {
+//                                        const label = context.label || '';
+//                                        const value = context.raw || 0;
+//                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+//                                        const percentage = Math.round((value / total) * 100);
+//                                        return `${label}: ${value} (${percentage}%)`;
+//                                    }
+//                                }
+//                            }
+//                        },
+//                        animation: {
+//                            duration: 1000,
+//                            easing: 'easeOutQuart'
+//                        }
+//                    }
+//                });
+//            })
+//            .catch(error => {
+//                showChartError('bookingStatusChartAlert', 'Lỗi tải dữ liệu: ' + error);
+//                const canvas = document.getElementById('bookingStatusChart');
+//                canvas.style.display = "none";
+//                if (bookingStatusChart) bookingStatusChart.destroy();
+//            });
+//    }
     
     function showChartError(alertDivId, message) {
         var alertDiv = document.getElementById(alertDivId);

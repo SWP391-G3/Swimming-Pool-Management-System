@@ -223,7 +223,7 @@ public class ManagerDashboardDAO extends DBContext {
                 p.close_time,
                 p.pool_image,
                 p.pool_description,
-                CASE WHEN p.pool_status = 1 THEN 'Hoạt động' ELSE 'Tạm dừng' END as status,
+                CASE WHEN p.pool_status = 1 THEN 'Active' ELSE 'InActive' END as status,
                 COALESCE(SUM(pay.total_amount), 0) as revenue,
                 COUNT(DISTINCT b.booking_id) as total_bookings,
                 COUNT(DISTINCT b.user_id) as total_customers,

@@ -70,7 +70,9 @@ public class ManagerDashBoardServlet extends HttpServlet {
         }
 
         String action = request.getParameter("action");
-        if (action == null) action = "dashboard";
+        if (action == null) {
+            action = "dashboard";
+        }
 
         try {
             switch (action) {
@@ -112,7 +114,7 @@ public class ManagerDashBoardServlet extends HttpServlet {
     }
 
     private void showManagerDashboard(HttpServletRequest request, HttpServletResponse response,
-                                     int managerId, int branchId) throws ServletException, IOException, SQLException {
+            int managerId, int branchId) throws ServletException, IOException, SQLException {
 
         // Lấy chi nhánh của manager
         Branch branch = dao.getBranchByManager(managerId);
@@ -121,19 +123,32 @@ public class ManagerDashBoardServlet extends HttpServlet {
             branch = new Branch();
             branch.setBranchId(branchId);
             switch (branchId) {
-                case 1: branch.setBranchName("Chi nhánh Hà Nội"); break;
-                case 2: branch.setBranchName("Chi nhánh Hồ Chí Minh"); break;
-                case 3: branch.setBranchName("Chi nhánh Đà Nẵng"); break;
-                case 4: branch.setBranchName("Chi nhánh Quy Nhơn"); break;
-                case 5: branch.setBranchName("Chi nhánh Cần Thơ"); break;
-                default: branch.setBranchName("Chi nhánh");
+                case 1:
+                    branch.setBranchName("Chi nhánh Hà Nội");
+                    break;
+                case 2:
+                    branch.setBranchName("Chi nhánh Hồ Chí Minh");
+                    break;
+                case 3:
+                    branch.setBranchName("Chi nhánh Đà Nẵng");
+                    break;
+                case 4:
+                    branch.setBranchName("Chi nhánh Quy Nhơn");
+                    break;
+                case 5:
+                    branch.setBranchName("Chi nhánh Cần Thơ");
+                    break;
+                default:
+                    branch.setBranchName("Chi nhánh");
             }
             branch.setManagerName("Poweye");
         }
         request.setAttribute("branch", branch);
 
         String period = request.getParameter("period");
-        if (period == null) period = "monthly";
+        if (period == null) {
+            period = "monthly";
+        }
 
         DashboardStats stats = dao.getBranchStats(branchId, period);
         request.setAttribute("stats", stats);
@@ -153,7 +168,8 @@ public class ManagerDashBoardServlet extends HttpServlet {
         }
 
         request.setAttribute("selectedPeriod", period);
-        request.setAttribute("currentUser", "Poweye");
+        //request.setAttribute("currentUser", "Poweye");
+        request.setAttribute("currentUser", branch.getManagerName());
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
@@ -164,65 +180,78 @@ public class ManagerDashBoardServlet extends HttpServlet {
     }
 
     private void getRevenueData(HttpServletRequest request, HttpServletResponse response,
-                               int branchId) throws IOException, SQLException {
+            int branchId) throws IOException, SQLException {
         String period = request.getParameter("period");
-        if (period == null) period = "monthly";
+        if (period == null) {
+            period = "monthly";
+        }
         List<RevenueChart> revenueData = dao.getRevenueByPeriod(branchId, period);
         sendJsonResponse(response, revenueData);
     }
 
     private void getPoolPerformanceData(HttpServletRequest request, HttpServletResponse response,
-                                       int branchId) throws IOException, SQLException {
+            int branchId) throws IOException, SQLException {
         String period = request.getParameter("period");
-        if (period == null) period = "monthly";
+        if (period == null) {
+            period = "monthly";
+        }
         List<RevenueChart> poolPerformance = dao.getPoolPerformanceComparison(branchId, period);
         sendJsonResponse(response, poolPerformance);
     }
 
     private void getCustomerTrendData(HttpServletRequest request, HttpServletResponse response,
-                                     int branchId) throws IOException, SQLException {
+            int branchId) throws IOException, SQLException {
         String period = request.getParameter("period");
-        if (period == null) period = "monthly";
+        if (period == null) {
+            period = "monthly";
+        }
         List<CustomerTrend> customerTrend = dao.getCustomerTrendByBranch(branchId, period);
         sendJsonResponse(response, customerTrend);
     }
 
     private void getPeakHourData(HttpServletRequest request, HttpServletResponse response,
-                                int branchId) throws IOException, SQLException {
+            int branchId) throws IOException, SQLException {
         List<RevenueChart> peakHourData = dao.getPeakHourAnalysis(branchId);
         sendJsonResponse(response, peakHourData);
     }
 
     private void getPoolDetailsData(HttpServletRequest request, HttpServletResponse response,
-                                   int branchId) throws IOException, SQLException {
+            int branchId) throws IOException, SQLException {
         String period = request.getParameter("period");
-        if (period == null) period = "monthly";
+        if (period == null) {
+            period = "monthly";
+        }
         List<PoolStats> poolStats = dao.getPoolStatsInBranch(branchId, period);
         sendJsonResponse(response, poolStats);
     }
 
     private void getBookingStatusData(HttpServletRequest request, HttpServletResponse response,
-                                     int branchId) throws IOException, SQLException {
+            int branchId) throws IOException, SQLException {
         List<RevenueChart> bookingStatus = dao.getBookingStatusStats(branchId);
         sendJsonResponse(response, bookingStatus);
     }
 
     private void getTopCustomersData(HttpServletRequest request, HttpServletResponse response,
-                                    int branchId) throws IOException, SQLException {
+            int branchId) throws IOException, SQLException {
         int limit = 10;
         String limitParam = request.getParameter("limit");
         if (limitParam != null) {
-            try { limit = Integer.parseInt(limitParam); }
-            catch (NumberFormatException e) { limit = 10; }
+            try {
+                limit = Integer.parseInt(limitParam);
+            } catch (NumberFormatException e) {
+                limit = 10;
+            }
         }
         List<RevenueChart> topCustomers = dao.getTopCustomers(branchId, limit);
         sendJsonResponse(response, topCustomers);
     }
 
     private void getSummaryData(HttpServletRequest request, HttpServletResponse response,
-                               int branchId) throws IOException, SQLException {
+            int branchId) throws IOException, SQLException {
         String period = request.getParameter("period");
-        if (period == null) period = "monthly";
+        if (period == null) {
+            period = "monthly";
+        }
         Map<String, Object> summary = new HashMap<>();
         DashboardStats stats = dao.getBranchStats(branchId, period);
         summary.put("stats", stats);
@@ -235,7 +264,7 @@ public class ManagerDashBoardServlet extends HttpServlet {
                     .orElse(0.0);
             summary.put("avgUtilization", avgUtilization);
             long activePools = poolStats.stream()
-                    .filter(p -> "Hoạt động".equals(p.getStatus()))
+                    .filter(p -> "Active".equals(p.getStatus()))
                     .count();
             summary.put("activePools", activePools);
         }
@@ -251,17 +280,17 @@ public class ManagerDashBoardServlet extends HttpServlet {
     }
 
     private void handleError(HttpServletRequest request, HttpServletResponse response,
-                            String errorMessage) throws ServletException, IOException {
+            String errorMessage) throws ServletException, IOException {
         request.setAttribute("error", errorMessage);
         request.getRequestDispatcher("managerError.jsp").forward(request, response);
     }
 
     private void sendJsonError(HttpServletResponse response, String message) throws IOException {
-    response.setContentType("application/json");
-    response.setCharacterEncoding("UTF-8");
-    response.getWriter().write("{\"error\": \"" + message.replace("\"", "\\\"") + "\"}");
-}
-    
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write("{\"error\": \"" + message.replace("\"", "\\\"") + "\"}");
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
