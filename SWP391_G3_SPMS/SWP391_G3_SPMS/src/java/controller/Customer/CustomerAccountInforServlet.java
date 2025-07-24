@@ -104,6 +104,9 @@ public class CustomerAccountInforServlet extends HttpServlet {
                     dob = dateFormat.parse(dobStr);
                 }
 
+                // Cập nhật thông tin user trước validate ảnh để hiển thị lại dữ liệu nếu có lỗi upload
+                User userFromDb = userDAO.getUserByID(userId);
+
                 // Xử lý upload ảnh
                 Part filePart = request.getPart("images");
                 String images = null;
@@ -118,14 +121,21 @@ public class CustomerAccountInforServlet extends HttpServlet {
                         && filePart.getSubmittedFileName() != null
                         && !filePart.getSubmittedFileName().isEmpty()) {
 
+                    // Kiểm tra loại file (validate MIME type)
+                    String contentType = filePart.getContentType();
+                    if (contentType == null || !contentType.startsWith("image/")) {
+                        request.setAttribute("user", userFromDb);
+                        request.setAttribute("error", "File tải lên phải là hình ảnh!");
+                        request.getRequestDispatcher("EditAccountInfo.jsp").forward(request, response);
+                        return;
+                    }
+
                     String fileName = System.currentTimeMillis() + "_" + filePart.getSubmittedFileName();
                     String filePath = uploadPath + File.separator + fileName;
                     filePart.write(filePath);
                     images = "uploads/" + fileName;
                 }
 
-                // Cập nhật thông tin user
-                User userFromDb = userDAO.getUserByID(userId);
                 if (userFromDb != null) {
                     // Validate email/phone
                     if (userDAO.isEmailExistsForOtherUser(email, userId)) {
