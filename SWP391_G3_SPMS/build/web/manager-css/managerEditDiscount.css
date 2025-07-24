@@ -1,0 +1,340 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Jun 28, 2025, 10:21:56 PM
+    Author     : Tuan Anh
+*/
+
+
+:root {
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --primary-light: #93c5fd;
+    --danger: #ef4444;
+    --danger-light: #fee2e2;
+    --success: #10b981;
+    --success-light: #d1fae5;
+    --warning: #f59e0b;
+    --border-radius: 10px;
+    --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+    line-height: 1.5;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+    animation: fadeIn 0.6s var(--ease-out) forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.form-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 32px;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    transition: var(--transition);
+    transform: translateY(20px);
+    opacity: 0;
+    animation: slideUp 0.6s 0.2s var(--ease-out) forwards;
+}
+
+@keyframes slideUp {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.form-container:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px) scale(1.005);
+}
+
+h2 {
+    text-align: center;
+    color: #1e40af;
+    margin-bottom: 32px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 12px;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInSlideUp 0.5s 0.4s var(--ease-out) forwards;
+}
+
+@keyframes fadeInSlideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(to right, var(--primary), var(--success));
+    border-radius: 2px;
+    animation: scaleIn 0.6s 0.8s var(--ease-out) forwards;
+}
+
+@keyframes scaleIn {
+    to {
+        transform: translateX(-50%) scaleX(1);
+    }
+}
+
+.error-message, 
+.success-message {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInSlideUp 0.5s var(--ease-out) forwards;
+}
+
+.error-message {
+    animation-delay: 0.3s;
+    background-color: var(--danger-light);
+    color: var(--danger);
+    border-left: 4px solid var(--danger);
+}
+
+.success-message {
+    animation-delay: 0.3s;
+    background-color: var(--success-light);
+    color: var(--success);
+    border-left: 4px solid var(--success);
+}
+
+.discount-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    transition: var(--transition);
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+/* Staggered animation for form groups */
+.form-group:nth-child(1) { animation: fadeInSlideUp 0.5s 0.5s var(--ease-out) forwards; }
+.form-group:nth-child(2) { animation: fadeInSlideUp 0.5s 0.6s var(--ease-out) forwards; }
+.form-group:nth-child(3) { animation: fadeInSlideUp 0.5s 0.7s var(--ease-out) forwards; }
+.form-group:nth-child(4) { animation: fadeInSlideUp 0.5s 0.8s var(--ease-out) forwards; }
+.form-group:nth-child(5) { animation: fadeInSlideUp 0.5s 0.9s var(--ease-out) forwards; }
+.form-group:nth-child(6) { animation: fadeInSlideUp 0.5s 1.0s var(--ease-out) forwards; }
+.form-group:nth-child(7) { animation: fadeInSlideUp 0.5s 1.1s var(--ease-out) forwards; }
+.form-group:nth-child(8) { animation: fadeInSlideUp 0.5s 1.2s var(--ease-out) forwards; }
+.form-group:nth-child(9) { animation: fadeInSlideUp 0.5s 1.3s var(--ease-out) forwards; }
+
+.form-group:hover {
+    transform: translateX(5px) translateY(0);
+}
+
+.form-group label {
+    width: 220px;
+    flex-shrink: 0;
+    font-weight: 500;
+    color: #334155;
+    font-size: 0.95rem;
+    transition: var(--transition);
+}
+
+.form-control {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--border-radius);
+    font-size: 0.95rem;
+    background: #f8fafc;
+    transition: var(--transition);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+    transform-origin: left center;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    transform: scale(1.01);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+    transition: min-height 0.3s var(--ease-out);
+}
+
+textarea.form-control:focus {
+    min-height: 120px;
+}
+
+select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364758b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 36px;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(0);
+    opacity: 0;
+    animation: fadeInSlideUp 0.5s 1.4s var(--ease-out) forwards;
+}
+
+.btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(1px) scale(0.98);
+}
+
+.btn-primary {
+    background: linear-gradient(to right, var(--primary), var(--primary-dark));
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(to right, var(--primary-dark), var(--primary));
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+}
+
+.discount-value-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.discount-value-group .form-control {
+    flex: 0 1 120px;
+}
+
+.discount-unit {
+    font-weight: 500;
+    color: #475569;
+    min-width: 40px;
+    transition: var(--transition);
+}
+
+input[type="datetime-local"] {
+    position: relative;
+}
+
+.btn-secondary {
+    background: linear-gradient(to right, #64748b, #475569);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(to right, #475569, #64748b);
+    box-shadow: 0 4px 16px rgba(71, 85, 105, 0.3);
+}
+
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+@media (max-width: 768px) {
+    .form-container {
+        padding: 24px;
+        margin: 20px;
+        animation: mobileSlideUp 0.6s 0.2s var(--ease-out) forwards;
+    }
+
+    @keyframes mobileSlideUp {
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .form-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .form-group label {
+        width: 100%;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+
+    .discount-value-group {
+        width: 100%;
+    }
+
+    .discount-value-group .form-control {
+        flex: 1;
+    }
+}
+
+.form-group:focus-within label {
+    color: var(--primary);
+    font-weight: 600;
+    transform: translateX(5px);
+}
+
+.form-group:focus-within .form-control {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    transform: scale(1.01);
+}
