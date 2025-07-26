@@ -40,7 +40,7 @@
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" >
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
-                Lịch sử đặt bể
+                Lịch sử đặt vé
             </a>
             <div class="relative w-full h-44 md:h-56 mb-8 rounded-lg overflow-hidden shadow-lg">
                 <img src="https://images.pexels.com/photos/261185/pexels-photo-261185.jpeg?auto=compress&fit=crop&w=900&q=80" alt="Pool Banner" class="w-full h-full object-cover"/>
@@ -53,13 +53,13 @@
                 <!-- Nút Huỷ đặt bể -->
                 <% if (canCancel) {%>
                 <form method="post" action="booking_detail"
-                      onsubmit="return confirm('Bạn chắc chắn muốn huỷ đặt bể này?');"
+                      onsubmit="return confirm('Bạn chắc chắn muốn huỷ đặt vé này?');"
                       class="absolute top-8 right-8">
                     <input type="hidden" name="bookingId" value="<%= bookingDetail.getBookingId()%>"/>
                     <input type="hidden" name="service" value="cancelBooking"/>
                     <button type="submit"
                             class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-md shadow transition-colors">
-                        Huỷ đặt bể
+                        Huỷ đặt vé
                     </button>
                 </form>
                 <% } else if (canRefund) { %>

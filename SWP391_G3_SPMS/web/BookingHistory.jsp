@@ -22,7 +22,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Lịch sử đặt bể</title>
+        <title>Lịch sử đặt vé</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link
             href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
@@ -199,7 +199,7 @@
                             </tr>
                             <% }} else {%>
                             <tr>
-                                <td colspan="9" class="text-center text-gray-500 py-8">Không có lịch sử đặt bể nào.</td>
+                                <td colspan="9" class="text-center text-gray-500 py-8">Không có lịch sử đặt vé nào.</td>
                             </tr>
                             <%}%>
                         </tbody>

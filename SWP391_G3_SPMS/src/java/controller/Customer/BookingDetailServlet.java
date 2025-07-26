@@ -68,8 +68,10 @@ public class BookingDetailServlet extends HttpServlet {
             }
 
             // Kiểm tra có cho phép huỷ
-            LocalDate today = LocalDate.now();
-            boolean canCancel = bookingDetail.getBookingDate().toLocalDate().isAfter(today)
+            ZoneId vietnamZone = ZoneId.of("Asia/Ho_Chi_Minh");
+            LocalDateTime now = LocalDateTime.now(vietnamZone);
+            LocalDateTime bookingDateTime = LocalDateTime.of(new java.util.Date(bookingDetail.getBookingDate().getTime()).toInstant().atZone(vietnamZone).toLocalDate(), bookingDetail.getStartTime().toLocalTime());
+            boolean canCancel = bookingDateTime.isAfter(now.plusHours(6))
                     && ("pending".equalsIgnoreCase(bookingDetail.getBookingStatus())
                     || "confirmed".equalsIgnoreCase(bookingDetail.getBookingStatus()));
 
@@ -86,7 +88,6 @@ public class BookingDetailServlet extends HttpServlet {
                 Date updatedAt = booking.getCreatedAt();
                 if (updatedAt != null) {
                     LocalDateTime cancelledTime = LocalDateTime.ofInstant(updatedAt.toInstant(), ZoneId.of("Asia/Ho_Chi_Minh"));
-                    LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
                     minutesSinceCancel = Duration.between(cancelledTime, now).toMinutes();
                     if (minutesSinceCancel <= 60) {
                         canRefund = true;
