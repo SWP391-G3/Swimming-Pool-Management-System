@@ -41,30 +41,6 @@
     <body class="main-layout">
         <%@include file="header.jsp" %>
 
-
-        <c:if test="${not empty sessionScope.message}">
-            <div id="loginSuccessToast"
-                 style="position:fixed;top:1.5rem;left:50%;transform:translateX(-50%);
-                 background:#38a169;color:#fff;padding:0.75rem 1.25rem;
-                 border-radius:0.5rem;box-shadow:0 4px 12px rgba(0,0,0,0.15);
-                 z-index:9999;font-weight:600;display:flex;align-items:center;gap:.5rem;">
-                <i class="fa-solid fa-circle-check" ></i>
-
-                 ${sessionScope.message}
-                <button onclick="this.parentElement.style.display = 'none'"
-                        style="margin-left:0.75rem;font-weight:bold;">×</button>
-            </div>
-
-            <c:remove var="message" scope="session" />
-            <script>
-                setTimeout(() => {
-                    const toast = document.getElementById('loginSuccessToast');
-                    if (toast)
-                        toast.style.display = 'none';
-                }, 4000);
-            </script>
-        </c:if>
-
         <!-- banner -->
         <section class="relative w-full overflow-hidden">
             <!-- Carousel Wrapper -->

@@ -39,78 +39,84 @@ public class ManagerDashboardDAO extends DBContext {
         return null;
     }
 
-    // Thống kê tổng quan chi nhánh
+    // Thống kê tổng quan chi nhánh (đã chuẩn hóa doanh thu thực tế)
     public DashboardStats getBranchStats(int branchId, String period) throws SQLException {
         String sql = """
-            WITH CurrentPeriodStats AS (
+            WITH CurrentRevenue AS (
                 SELECT 
                     b.branch_id,
                     b.branch_name,
                     COALESCE(SUM(p.total_amount), 0) as total_revenue,
                     COUNT(DISTINCT bk.booking_id) as total_bookings,
                     COUNT(DISTINCT bk.user_id) as total_customers,
-                    COUNT(DISTINCT po.pool_id) as total_pools,
-                    COALESCE(AVG(CAST(f.rating AS DECIMAL(3,2))), 0) as avg_rating
+                    COUNT(DISTINCT po.pool_id) as total_pools
                 FROM Branchs b
-                LEFT JOIN Pools po ON b.branch_id = po.branch_id AND po.pool_status = 1
-                LEFT JOIN Booking bk ON po.pool_id = bk.pool_id
-                    AND bk.booking_date >= ?
-                    AND bk.booking_status IN ('confirmed', 'completed')
-                LEFT JOIN Payments p ON bk.booking_id = p.booking_id 
-                    AND p.payment_status = 'completed'
-                LEFT JOIN Feedbacks f ON po.pool_id = f.pool_id
-                    AND f.created_at >= ?
+                JOIN Pools po ON b.branch_id = po.branch_id AND po.pool_status = 1
+                JOIN Booking bk ON po.pool_id = bk.pool_id AND bk.booking_status IN ('confirmed', 'completed')
+                JOIN Payments p ON bk.booking_id = p.booking_id AND p.payment_status = 'completed'
+                    AND p.payment_date >= ?
                 WHERE b.branch_id = ?
                 GROUP BY b.branch_id, b.branch_name
             ),
-            PreviousPeriodStats AS (
+            CurrentAvgRating AS (
+                SELECT 
+                    b.branch_id,
+                    COALESCE(AVG(CAST(f.rating AS DECIMAL(3,2))), 0) as avg_rating
+                FROM Branchs b
+                JOIN Pools po ON b.branch_id = po.branch_id AND po.pool_status = 1
+                JOIN Feedbacks f ON po.pool_id = f.pool_id AND f.created_at >= ?
+                WHERE b.branch_id = ?
+                GROUP BY b.branch_id
+            ),
+            PreviousRevenue AS (
                 SELECT 
                     b.branch_id,
                     COALESCE(SUM(p.total_amount), 0) as previous_revenue,
                     COUNT(DISTINCT bk.booking_id) as previous_bookings,
                     COUNT(DISTINCT bk.user_id) as previous_customers
                 FROM Branchs b
-                LEFT JOIN Pools po ON b.branch_id = po.branch_id
-                LEFT JOIN Booking bk ON po.pool_id = bk.pool_id
-                    AND bk.booking_date >= ? AND bk.booking_date < ?
-                    AND bk.booking_status IN ('confirmed', 'completed')
-                LEFT JOIN Payments p ON bk.booking_id = p.booking_id 
-                    AND p.payment_status = 'completed'
+                JOIN Pools po ON b.branch_id = po.branch_id AND po.pool_status = 1
+                JOIN Booking bk ON po.pool_id = bk.pool_id AND bk.booking_status IN ('confirmed', 'completed')
+                JOIN Payments p ON bk.booking_id = p.booking_id AND p.payment_status = 'completed'
+                    AND p.payment_date >= ? AND p.payment_date < ?
                 WHERE b.branch_id = ?
                 GROUP BY b.branch_id
             )
             SELECT 
-                cps.*,
-                pps.previous_revenue,
-                pps.previous_bookings,
-                pps.previous_customers,
+                cr.*,
+                car.avg_rating,
+                pr.previous_revenue,
+                pr.previous_bookings,
+                pr.previous_customers,
                 CASE 
-                    WHEN pps.previous_revenue > 0 THEN
-                        CAST((cps.total_revenue - pps.previous_revenue) * 100.0 / pps.previous_revenue AS DECIMAL(5,2))
+                    WHEN pr.previous_revenue > 0 THEN
+                        CAST((cr.total_revenue - pr.previous_revenue) * 100.0 / NULLIF(pr.previous_revenue, 0) AS DECIMAL(18,2))
                     ELSE 0
                 END as revenue_growth,
                 CASE 
-                    WHEN pps.previous_bookings > 0 THEN
-                        CAST((cps.total_bookings - pps.previous_bookings) * 100.0 / pps.previous_bookings AS DECIMAL(5,2))
+                    WHEN pr.previous_bookings > 0 THEN
+                        CAST((cr.total_bookings - pr.previous_bookings) * 100.0 / NULLIF(pr.previous_bookings, 0) AS DECIMAL(18,2))
                     ELSE 0
                 END as booking_growth,
                 CASE 
-                    WHEN pps.previous_customers > 0 THEN
-                        CAST((cps.total_customers - pps.previous_customers) * 100.0 / pps.previous_customers AS DECIMAL(5,2))
+                    WHEN pr.previous_customers > 0 THEN
+                        CAST((cr.total_customers - pr.previous_customers) * 100.0 / NULLIF(pr.previous_customers, 0) AS DECIMAL(18,2))
                     ELSE 0
                 END as customer_growth
-            FROM CurrentPeriodStats cps
-            LEFT JOIN PreviousPeriodStats pps ON cps.branch_id = pps.branch_id
+            FROM CurrentRevenue cr
+            LEFT JOIN CurrentAvgRating car ON cr.branch_id = car.branch_id
+            LEFT JOIN PreviousRevenue pr ON cr.branch_id = pr.branch_id
         """;
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             Date[] dates = getPeriodDates(period);
-            stmt.setDate(1, new java.sql.Date(dates[0].getTime())); // current start
-            stmt.setDate(2, new java.sql.Date(dates[0].getTime())); // current start for feedback
-            stmt.setInt(3, branchId);
-            stmt.setDate(4, new java.sql.Date(dates[1].getTime())); // previous start
-            stmt.setDate(5, new java.sql.Date(dates[0].getTime())); // previous end (current start)
-            stmt.setInt(6, branchId);
+            stmt.setDate(1, new java.sql.Date(dates[0].getTime())); // current start for payment_date
+            stmt.setInt(2, branchId);
+            stmt.setDate(3, new java.sql.Date(dates[0].getTime())); // current start for feedback
+            stmt.setInt(4, branchId);
+            stmt.setDate(5, new java.sql.Date(dates[1].getTime())); // previous start for payment_date
+            stmt.setDate(6, new java.sql.Date(dates[0].getTime())); // previous end for payment_date (current start)
+            stmt.setInt(7, branchId);
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -136,7 +142,7 @@ public class ManagerDashboardDAO extends DBContext {
         return null;
     }
 
-    // Xu hướng doanh thu theo thời gian
+    // Xu hướng doanh thu theo thời gian (chuẩn hóa: chỉ lấy payment completed, lọc theo payment_date)
     public List<RevenueChart> getRevenueByPeriod(int branchId, String period) throws SQLException {
         String sql = "";
         if ("daily".equalsIgnoreCase(period)) {
@@ -194,7 +200,6 @@ public class ManagerDashboardDAO extends DBContext {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, branchId);
             ResultSet rs = stmt.executeQuery();
-            int rowCount = 0;
             while (rs.next()) {
                 RevenueChart chart = new RevenueChart();
                 chart.setLabel(rs.getString("label"));
@@ -202,59 +207,66 @@ public class ManagerDashboardDAO extends DBContext {
                 chart.setCategory(rs.getString("category"));
                 chart.setPeriod(period);
                 result.add(chart);
-                // Debug:
-                System.out.println("RevenueChart: Label=" + chart.getLabel() + ", Value=" + chart.getValue());
-                rowCount++;
             }
-            System.out.println("Total rows in revenueData: " + rowCount);
         }
         return result;
     }
 
-    // Thống kê từng hồ bơi trong chi nhánh
+    // Thống kê từng hồ bơi trong chi nhánh (chuẩn hóa: không join feedback khi tính doanh thu)
     public List<PoolStats> getPoolStatsInBranch(int branchId, String period) throws SQLException {
         String sql = """
-            SELECT 
-                p.pool_id,
-                p.pool_name,
-                p.pool_address,
-                p.max_slot,
-                p.open_time,
-                p.close_time,
-                p.pool_image,
-                p.pool_description,
-                CASE WHEN p.pool_status = 1 THEN N'Active' ELSE 'InActive' END as status,
-                COALESCE(SUM(pay.total_amount), 0) as revenue,
-                COUNT(DISTINCT b.booking_id) as total_bookings,
-                COUNT(DISTINCT b.user_id) as total_customers,
-                COALESCE(AVG(CAST(f.rating AS DECIMAL(3,2))), 0) as avg_rating,
+            WITH PoolRevenue AS (
+                SELECT 
+                    p.pool_id,
+                    p.pool_name,
+                    p.pool_address,
+                    p.max_slot,
+                    p.open_time,
+                    p.close_time,
+                    p.pool_image,
+                    p.pool_description,
+                    CASE WHEN p.pool_status = 1 THEN N'Active' ELSE 'InActive' END as status,
+                    COALESCE(SUM(pay.total_amount), 0) as revenue,
+                    COUNT(DISTINCT b.booking_id) as total_bookings,
+                    COUNT(DISTINCT b.user_id) as total_customers
+                FROM Pools p
+                LEFT JOIN Booking b ON p.pool_id = b.pool_id
+                    AND b.booking_date >= ?
+                    AND b.booking_status IN ('confirmed', 'completed')
+                LEFT JOIN Payments pay ON b.booking_id = pay.booking_id
+                    AND pay.payment_status = 'completed'
+                    AND pay.payment_date >= ?
+                WHERE p.branch_id = ?
+                GROUP BY p.pool_id, p.pool_name, p.pool_address, p.max_slot, 
+                        p.open_time, p.close_time, p.pool_status, p.pool_image, p.pool_description
+            ), PoolRating AS (
+                SELECT p.pool_id, COALESCE(AVG(CAST(f.rating AS DECIMAL(5,2))), 0) as avg_rating
+                FROM Pools p
+                LEFT JOIN Feedbacks f ON p.pool_id = f.pool_id AND f.created_at >= ?
+                WHERE p.branch_id = ?
+                GROUP BY p.pool_id
+            )
+            SELECT pr.*, prt.avg_rating,
                 CASE 
-                    WHEN p.max_slot > 0 AND DATEDIFF(day, ?, GETDATE()) > 0 THEN 
-                        CAST(COUNT(DISTINCT b.booking_id) * 100.0 / (p.max_slot * DATEDIFF(day, ?, GETDATE())) AS DECIMAL(5,2))
+                    WHEN pr.max_slot > 0 AND DATEDIFF(day, ?, GETDATE()) > 0 THEN 
+                        CAST(pr.total_bookings * 100.0 / NULLIF((pr.max_slot * DATEDIFF(day, ?, GETDATE())), 0) AS DECIMAL(18,2))
                     ELSE 0 
                 END as utilization_rate
-            FROM Pools p
-            LEFT JOIN Booking b ON p.pool_id = b.pool_id
-                AND b.booking_date >= ?
-                AND b.booking_status IN ('confirmed', 'completed')
-            LEFT JOIN Payments pay ON b.booking_id = pay.booking_id
-                AND pay.payment_status = 'completed'
-            LEFT JOIN Feedbacks f ON p.pool_id = f.pool_id
-                AND f.created_at >= ?
-            WHERE p.branch_id = ?
-            GROUP BY p.pool_id, p.pool_name, p.pool_address, p.max_slot, 
-                     p.open_time, p.close_time, p.pool_status, p.pool_image, p.pool_description
-            ORDER BY revenue DESC
+            FROM PoolRevenue pr
+            LEFT JOIN PoolRating prt ON pr.pool_id = prt.pool_id
+            ORDER BY pr.revenue DESC
         """;
 
         List<PoolStats> poolStats = new ArrayList<>();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             Date startDate = getStartDateByPeriod(period);
-            stmt.setDate(1, new java.sql.Date(startDate.getTime()));
-            stmt.setDate(2, new java.sql.Date(startDate.getTime()));
-            stmt.setDate(3, new java.sql.Date(startDate.getTime()));
-            stmt.setDate(4, new java.sql.Date(startDate.getTime()));
+            stmt.setDate(1, new java.sql.Date(startDate.getTime())); // for booking_date
+            stmt.setDate(2, new java.sql.Date(startDate.getTime())); // for payment_date
+            stmt.setInt(3, branchId);
+            stmt.setDate(4, new java.sql.Date(startDate.getTime())); // for feedback created_at
             stmt.setInt(5, branchId);
+            stmt.setDate(6, new java.sql.Date(startDate.getTime())); // for utilization_rate
+            stmt.setDate(7, new java.sql.Date(startDate.getTime())); // for utilization_rate
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -279,7 +291,7 @@ public class ManagerDashboardDAO extends DBContext {
         return poolStats;
     }
 
-    // So sánh hiệu suất các hồ bơi
+    // So sánh hiệu suất các hồ bơi (chỉ lấy payment completed, lọc payment_date)
     public List<RevenueChart> getPoolPerformanceComparison(int branchId, String period) throws SQLException {
         String sql = """
             SELECT 
@@ -288,15 +300,15 @@ public class ManagerDashboardDAO extends DBContext {
                 'performance' as category,
                 CASE 
                     WHEN SUM(SUM(pay.total_amount)) OVER() > 0 THEN
-                        CAST(SUM(pay.total_amount) * 100.0 / SUM(SUM(pay.total_amount)) OVER() AS DECIMAL(5,2))
+                        CAST(SUM(pay.total_amount) * 100.0 / NULLIF(SUM(SUM(pay.total_amount)) OVER(), 0) AS DECIMAL(18,2))
                     ELSE 0
                 END as percentage
             FROM Pools p
             LEFT JOIN Booking b ON p.pool_id = b.pool_id
-                AND b.booking_date >= ?
                 AND b.booking_status IN ('confirmed', 'completed')
             LEFT JOIN Payments pay ON b.booking_id = pay.booking_id
                 AND pay.payment_status = 'completed'
+                AND pay.payment_date >= ?
             WHERE p.branch_id = ?
             GROUP BY p.pool_id, p.pool_name
             ORDER BY value DESC
@@ -326,124 +338,105 @@ public class ManagerDashboardDAO extends DBContext {
         return result;
     }
 
-// Xu hướng khách hàng: trả về số khách mới/quay lại/tổng... theo từng ngày/tuần/tháng
-// Xu hướng khách hàng: trả về số khách mới/quay lại/tổng... theo từng ngày/tuần/tháng
-public List<CustomerTrend> getCustomerTrendByBranch(int branchId, String period) throws SQLException {
-    String groupBy, periodLabel, periodValue;
-    switch (period.toLowerCase()) {
-        case "daily":
-            groupBy = "CAST(bk.booking_date AS DATE)";
-            periodLabel = "FORMAT(bk.booking_date, 'dd/MM')";
-            periodValue = "CAST(bk.booking_date AS DATE) AS period_value";
-            break;
-        case "weekly":
-            groupBy = "DATEPART(year, bk.booking_date), DATEPART(week, bk.booking_date)";
-            periodLabel = "'Tuần ' + CAST(DATEPART(week, bk.booking_date) AS NVARCHAR) + '/' + CAST(DATEPART(year, bk.booking_date) AS NVARCHAR)";
-            periodValue = "DATEPART(year, bk.booking_date) AS period_year, DATEPART(week, bk.booking_date) AS period_week";
-            break;
-        case "monthly":
-            groupBy = "YEAR(bk.booking_date), MONTH(bk.booking_date)";
-            periodLabel = "FORMAT(bk.booking_date, 'MM/yyyy')";
-            periodValue = "YEAR(bk.booking_date) AS period_year, MONTH(bk.booking_date) AS period_month";
-            break;
-        default: throw new IllegalArgumentException("Invalid period: " + period);
-    }
-
-    // Xây dựng phần select CTE, luôn đặt tên cho từng cột!
-    String cteSelect;
-    if ("daily".equalsIgnoreCase(period)) {
-        cteSelect = String.format(
-            "%s, %s AS period_label, bk.user_id, MIN(bk.booking_date) AS booking_date, COUNT(*) AS user_bookings, SUM(p.total_amount) AS user_spending, " +
-            "CASE WHEN MIN(bk.booking_date) > fb.first_booking_date THEN 'returning' ELSE 'new' END AS customer_type",
-            periodValue, periodLabel
-        );
-    } else if ("weekly".equalsIgnoreCase(period)) {
-        cteSelect = String.format(
-            "%s, %s AS period_label, bk.user_id, MIN(bk.booking_date) AS booking_date, COUNT(*) AS user_bookings, SUM(p.total_amount) AS user_spending, " +
-            "CASE WHEN MIN(bk.booking_date) > fb.first_booking_date THEN 'returning' ELSE 'new' END AS customer_type",
-            periodValue, periodLabel
-        );
-    } else {
-        cteSelect = String.format(
-            "%s, %s AS period_label, bk.user_id, MIN(bk.booking_date) AS booking_date, COUNT(*) AS user_bookings, SUM(p.total_amount) AS user_spending, " +
-            "CASE WHEN MIN(bk.booking_date) > fb.first_booking_date THEN 'returning' ELSE 'new' END AS customer_type",
-            periodValue, periodLabel
-        );
-    }
-
-    // GROUP BY đầy đủ các trường đã đặt tên trong SELECT
-    String cteGroup;
-    if ("daily".equalsIgnoreCase(period)) {
-        cteGroup = "CAST(bk.booking_date AS DATE), FORMAT(bk.booking_date, 'dd/MM'), bk.user_id, po.branch_id, fb.first_booking_date";
-    } else if ("weekly".equalsIgnoreCase(period)) {
-        cteGroup = "DATEPART(year, bk.booking_date), DATEPART(week, bk.booking_date), 'Tuần ' + CAST(DATEPART(week, bk.booking_date) AS NVARCHAR) + '/' + CAST(DATEPART(year, bk.booking_date) AS NVARCHAR), bk.user_id, po.branch_id, fb.first_booking_date";
-    } else {
-        cteGroup = "YEAR(bk.booking_date), MONTH(bk.booking_date), FORMAT(bk.booking_date, 'MM/yyyy'), bk.user_id, po.branch_id, fb.first_booking_date";
-    }
-
-    // GROUP BY ngoài cùng chỉ cần period_label!
-    String sql = String.format("""
-        WITH FirstBooking AS (
-            SELECT po.branch_id, bk.user_id, MIN(bk.booking_date) AS first_booking_date
-            FROM Booking bk
-            JOIN Pools po ON bk.pool_id = po.pool_id
-            WHERE po.branch_id = ?
-              AND bk.booking_status IN ('confirmed', 'completed')
-            GROUP BY po.branch_id, bk.user_id
-        ),
-        CustomerBookings AS (
-            SELECT 
-                %s
-            FROM Booking bk
-            JOIN Pools po ON bk.pool_id = po.pool_id
-            LEFT JOIN Payments p ON bk.booking_id = p.booking_id AND p.payment_status = 'completed'
-            JOIN FirstBooking fb ON fb.branch_id = po.branch_id AND fb.user_id = bk.user_id
-            WHERE po.branch_id = ?
-                AND bk.booking_date >= ?
-                AND bk.booking_status IN ('confirmed', 'completed')
-            GROUP BY %s
-        )
-        SELECT 
-            period_label,
-            MIN(booking_date) AS booking_date,
-            COUNT(DISTINCT CASE WHEN customer_type = 'new' THEN user_id END) AS new_customers,
-            COUNT(DISTINCT CASE WHEN customer_type = 'returning' THEN user_id END) AS returning_customers,
-            COUNT(DISTINCT user_id) AS total_customers,
-            COALESCE(AVG(user_spending), 0) AS avg_spending,
-            CASE 
-                WHEN COUNT(DISTINCT user_id) > 0 THEN
-                    CAST(COUNT(DISTINCT CASE WHEN customer_type = 'returning' THEN user_id END) * 100.0 / COUNT(DISTINCT user_id) AS DECIMAL(5,2))
-                ELSE 0
-            END AS retention_rate
-        FROM CustomerBookings
-        GROUP BY period_label
-        ORDER BY MIN(booking_date)
-    """, cteSelect, cteGroup);
-
-    List<CustomerTrend> result = new ArrayList<>();
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-        stmt.setInt(1, branchId); // FirstBooking
-        stmt.setInt(2, branchId); // CustomerBookings
-        Date startDate = getStartDateByPeriod(period);
-        stmt.setDate(3, new java.sql.Date(startDate.getTime())); // CustomerBookings
-
-        ResultSet rs = stmt.executeQuery();
-        while (rs.next()) {
-            CustomerTrend trend = new CustomerTrend();
-            trend.setDate(rs.getDate("booking_date"));
-            trend.setNewCustomers(rs.getInt("new_customers"));
-            trend.setReturningCustomers(rs.getInt("returning_customers"));
-            trend.setTotalCustomers(rs.getInt("total_customers"));
-            trend.setAvgSpending(rs.getBigDecimal("avg_spending"));
-            trend.setRetentionRate(rs.getDouble("retention_rate"));
-            trend.setPeriodLabel(rs.getString("period_label"));
-            trend.setPeriod(period);
-            trend.setBranchId(branchId);
-            result.add(trend);
+    // Xu hướng khách hàng: trả về số khách mới/quay lại/tổng... theo từng ngày/tuần/tháng
+    public List<CustomerTrend> getCustomerTrendByBranch(int branchId, String period) throws SQLException {
+        String groupBy, periodLabel, periodValue;
+        switch (period.toLowerCase()) {
+            case "daily":
+                groupBy = "CAST(bk.booking_date AS DATE)";
+                periodLabel = "FORMAT(bk.booking_date, 'dd/MM')";
+                periodValue = "CAST(bk.booking_date AS DATE) AS period_value";
+                break;
+            case "weekly":
+                groupBy = "DATEPART(year, bk.booking_date), DATEPART(week, bk.booking_date)";
+                periodLabel = "'Tuần ' + CAST(DATEPART(week, bk.booking_date) AS NVARCHAR) + '/' + CAST(DATEPART(year, bk.booking_date) AS NVARCHAR)";
+                periodValue = "DATEPART(year, bk.booking_date) AS period_year, DATEPART(week, bk.booking_date) AS period_week";
+                break;
+            case "monthly":
+                groupBy = "YEAR(bk.booking_date), MONTH(bk.booking_date)";
+                periodLabel = "FORMAT(bk.booking_date, 'MM/yyyy')";
+                periodValue = "YEAR(bk.booking_date) AS period_year, MONTH(bk.booking_date) AS period_month";
+                break;
+            default: throw new IllegalArgumentException("Invalid period: " + period);
         }
+
+        String cteSelect = String.format(
+            "%s, %s AS period_label, bk.user_id, MIN(bk.booking_date) AS booking_date, COUNT(*) AS user_bookings, SUM(p.total_amount) AS user_spending, " +
+            "CASE WHEN MIN(bk.booking_date) > fb.first_booking_date THEN 'returning' ELSE 'new' END AS customer_type",
+            periodValue, periodLabel
+        );
+
+        String cteGroup;
+        if ("daily".equalsIgnoreCase(period)) {
+            cteGroup = "CAST(bk.booking_date AS DATE), FORMAT(bk.booking_date, 'dd/MM'), bk.user_id, po.branch_id, fb.first_booking_date";
+        } else if ("weekly".equalsIgnoreCase(period)) {
+            cteGroup = "DATEPART(year, bk.booking_date), DATEPART(week, bk.booking_date), 'Tuần ' + CAST(DATEPART(week, bk.booking_date) AS NVARCHAR) + '/' + CAST(DATEPART(year, bk.booking_date) AS NVARCHAR), bk.user_id, po.branch_id, fb.first_booking_date";
+        } else {
+            cteGroup = "YEAR(bk.booking_date), MONTH(bk.booking_date), FORMAT(bk.booking_date, 'MM/yyyy'), bk.user_id, po.branch_id, fb.first_booking_date";
+        }
+
+        String sql = String.format("""
+            WITH FirstBooking AS (
+                SELECT po.branch_id, bk.user_id, MIN(bk.booking_date) AS first_booking_date
+                FROM Booking bk
+                JOIN Pools po ON bk.pool_id = po.pool_id
+                WHERE po.branch_id = ?
+                  AND bk.booking_status IN ('confirmed', 'completed')
+                GROUP BY po.branch_id, bk.user_id
+            ),
+            CustomerBookings AS (
+                SELECT 
+                    %s
+                FROM Booking bk
+                JOIN Pools po ON bk.pool_id = po.pool_id
+                LEFT JOIN Payments p ON bk.booking_id = p.booking_id AND p.payment_status = 'completed'
+                JOIN FirstBooking fb ON fb.branch_id = po.branch_id AND fb.user_id = bk.user_id
+                WHERE po.branch_id = ?
+                    AND bk.booking_date >= ?
+                    AND bk.booking_status IN ('confirmed', 'completed')
+                GROUP BY %s
+            )
+            SELECT 
+                period_label,
+                MIN(booking_date) AS booking_date,
+                COUNT(DISTINCT CASE WHEN customer_type = 'new' THEN user_id END) AS new_customers,
+                COUNT(DISTINCT CASE WHEN customer_type = 'returning' THEN user_id END) AS returning_customers,
+                COUNT(DISTINCT user_id) AS total_customers,
+                COALESCE(AVG(user_spending), 0) AS avg_spending,
+                CASE 
+                    WHEN COUNT(DISTINCT user_id) > 0 THEN
+                        CAST(COUNT(DISTINCT CASE WHEN customer_type = 'returning' THEN user_id END) * 100.0 / COUNT(DISTINCT user_id) AS DECIMAL(5,2))
+                    ELSE 0
+                END AS retention_rate
+            FROM CustomerBookings
+            GROUP BY period_label
+            ORDER BY MIN(booking_date)
+        """, cteSelect, cteGroup);
+
+        List<CustomerTrend> result = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, branchId); // FirstBooking
+            stmt.setInt(2, branchId); // CustomerBookings
+            Date startDate = getStartDateByPeriod(period);
+            stmt.setDate(3, new java.sql.Date(startDate.getTime())); // CustomerBookings
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                CustomerTrend trend = new CustomerTrend();
+                trend.setDate(rs.getDate("booking_date"));
+                trend.setNewCustomers(rs.getInt("new_customers"));
+                trend.setReturningCustomers(rs.getInt("returning_customers"));
+                trend.setTotalCustomers(rs.getInt("total_customers"));
+                trend.setAvgSpending(rs.getBigDecimal("avg_spending"));
+                trend.setRetentionRate(rs.getDouble("retention_rate"));
+                trend.setPeriodLabel(rs.getString("period_label"));
+                trend.setPeriod(period);
+                trend.setBranchId(branchId);
+                result.add(trend);
+            }
+        }
+        return result;
     }
-    return result;
-}
 
     // Phân tích khung giờ cao điểm
     public List<RevenueChart> getPeakHourAnalysis(int branchId) throws SQLException {
@@ -554,7 +547,6 @@ public List<CustomerTrend> getCustomerTrendByBranch(int branchId, String period)
             stmt.setInt(1, branchId);
             ResultSet rs = stmt.executeQuery();
 
-            // Optional: Map status to color
             java.util.Map<String, String> statusColors = java.util.Map.of(
                     "pending", "#FFC107",
                     "confirmed", "#28A745",

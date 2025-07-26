@@ -901,7 +901,7 @@
                         <i class="fas fa-swimming-pool"></i>
                     </div>
                     <div class="stat-number">${stats.totalPools}</div>
-                    <div class="stat-label">Hồ Bơi Hoạt Động</div>
+                    <div class="stat-label">Hồ Bơi Có Lượt Đặt Vé</div>
 <!--                    <div class="stat-comparison comparison-neutral">
                         <c:if test="${poolStats != null && poolStats.size() > 0}">
                             <c:set var="avgUtilization" value="0"/>

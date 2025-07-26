@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import model.customer.User;
 
 
 public class LogoutServlet extends HttpServlet {
@@ -16,11 +17,24 @@ public class LogoutServlet extends HttpServlet {
             throws ServletException, IOException {
         // Lấy session hiện tại nếu có
         HttpSession session = request.getSession(false);
-        if (session != null) {
-            // Hủy session để đăng xuất
-            session.invalidate();
+        User user = (User) session.getAttribute("currentUser");
+        int role = user.getRole_id();
+        switch (role) {
+            case 1:
+                session.removeAttribute("adminAccount");
+                break;
+            case 2:
+                session.removeAttribute("managerAccount");
+                break;
+            case 3:
+                session.removeAttribute("staffAccount");
+                break;
+            case 4:
+                session.removeAttribute("customerAccount");
+                break;
+            default:
+                throw new AssertionError();
         }
-        // Chuyển hướng về trang homepage hoặc login tùy ý
         response.sendRedirect("LandingPage.jsp");
     }
 }
