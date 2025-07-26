@@ -127,21 +127,10 @@ public class BookingDetailServlet extends HttpServlet {
             try {
                 int bookingId = Integer.parseInt(bookingIdStr);
                 BookingDetailDAO bookingDetailDAO = new BookingDetailDAO();
-                BookingDetails bookingDetail = bookingDetailDAO.getBookingDetailById(bookingId);
-                if (bookingDetail == null || bookingDetail.getUserId() != userId) {
-                    response.sendRedirect("booking_history");
-                    return;
-                }
-                LocalDate today = LocalDate.now();
-                if (!bookingDetail.getBookingDate().toLocalDate().isAfter(today)) {
-                    response.sendRedirect("booking_detail?bookingId=" + bookingId + "&error=1");
-                    return;
-                }
                 bookingDetailDAO.cancelBooking(bookingId);
-                response.sendRedirect("booking_detail?bookingId=" + bookingId);
+                response.sendRedirect("booking_detail?bookingId=" + bookingId + "&success=cancelled");
             } catch (Exception e) {
                 e.printStackTrace();
-                response.sendRedirect("booking_detail?bookingId=" + request.getParameter("bookingId") + "&error=1");
             }
         } else if ("requestRefund".equals(service)) {
             String bookingIdStr = request.getParameter("bookingId");
@@ -162,15 +151,6 @@ public class BookingDetailServlet extends HttpServlet {
                 LocalDateTime creationTime = LocalDateTime.ofInstant(createdAt.toInstant(), ZoneId.of("Asia/Ho_Chi_Minh"));
                 String transDateStr = creationTime.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 
-//                    response.sendRedirect("vnpayrefund?order_id=" + payment.getPaymentId()
-//                            + "&amount=" + payment.getTotalAmount().intValue()
-//                            + "&trans_date=" + transDateStr
-//                            + "&user=" + currentUser.getFull_name());
-//            request.setAttribute("order_id", payment.getPaymentId());
-//            request.setAttribute("amount", payment.getTotalAmount().intValue());
-//            request.setAttribute("trans_date", transDateStr);
-//            request.setAttribute("user", currentUser.getFull_name());
-//            request.getRequestDispatcher("vnpayrefund").forward(request, response);
                 String redirectUrl = request.getContextPath() + "/vnpayrefund"
                         + "?order_id=" + payment.getPaymentId()
                         + "&amount=" + payment.getTotalAmount().intValue()

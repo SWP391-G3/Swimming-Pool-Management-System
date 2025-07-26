@@ -464,9 +464,6 @@ public class BookingDetailDAO extends DBContext {
 
 //    public static void main(String[] args) throws SQLException {
 //        BookingDetailDAO b = new BookingDetailDAO();
-//        List<BookingDetails> ll = b.getBookingDetailsByUserId(41);
-//        for (BookingDetails bookingDetails : ll) {
-//            System.out.println(bookingDetails.toString());
-//        }
+//        b.cancelBooking(35);
 //    }
 }
