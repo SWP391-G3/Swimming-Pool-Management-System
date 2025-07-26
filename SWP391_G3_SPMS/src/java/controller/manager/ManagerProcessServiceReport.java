@@ -58,7 +58,7 @@ public class ManagerProcessServiceReport extends HttpServlet {
             int quantity = Integer.parseInt(quantityRaw.trim());
 
             HttpSession session = request.getSession();
-            User currentUser = (User) session.getAttribute("currentUser");
+            User currentUser = (User) session.getAttribute("managerAccount");
             int managerId = (currentUser != null) ? currentUser.getRole_id(): 0;
             if (managerId == 0) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Vui lòng đăng nhập để xử lý báo cáo.");

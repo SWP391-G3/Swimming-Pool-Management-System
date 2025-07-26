@@ -75,24 +75,7 @@
         <div class="relative z-10 bg-white/80 backdrop-blur-xl shadow-2xl rounded-2xl w-full max-w-md p-8 space-y-6">
             <h2 class="text-2xl font-bold text-center text-blue-600">Đăng nhập</h2>
 
-            <!-- ✅ Thông báo đăng ký thành công -->
-            <c:if test="${not empty sessionScope.message}">
-                <div id="registerSuccessToast" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center justify-between space-x-4 transition-all duration-500 z-50">
-                    <span>✅ ${sessionScope.message}</span>
-                    <button onclick="document.getElementById('registerSuccessToast').style.display = 'none'" class="text-white text-lg font-bold">×</button>
-                </div>
-                <c:remove var="message" scope="session" />
-            </c:if>
-            <script>
-                window.addEventListener('DOMContentLoaded', () => {
-                    const toast = document.getElementById('registerSuccessToast');
-                    if (toast) {
-                        setTimeout(() => {
-                            toast.style.display = 'none';
-                        }, 5000);
-                    }
-                });
-            </script>
+
 
 
             <!-- ❌ Thông báo lỗi -->

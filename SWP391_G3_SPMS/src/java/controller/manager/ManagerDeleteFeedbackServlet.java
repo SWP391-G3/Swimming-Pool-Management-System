@@ -45,7 +45,7 @@ public class ManagerDeleteFeedbackServlet extends HttpServlet {
             throws ServletException, IOException {
         // Only allow delete by logged-in user
         HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute("managerAccount");
        if (currentUser == null) {
             response.getWriter().println("<div class='error-message'>Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!</div>");
             return;

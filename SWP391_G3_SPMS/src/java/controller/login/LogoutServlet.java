@@ -16,8 +16,12 @@ public class LogoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Lấy session hiện tại nếu có
-        HttpSession session = request.getSession(false);
-        User user = (User) session.getAttribute("currentUser");
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("currentUser");  
+        if (user == null) {
+            response.sendRedirect("LandingPage.jsp");
+            return;
+        }
         int role = user.getRole_id();
         switch (role) {
             case 1:

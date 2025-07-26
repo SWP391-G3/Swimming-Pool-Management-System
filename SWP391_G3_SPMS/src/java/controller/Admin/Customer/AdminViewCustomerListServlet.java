@@ -63,8 +63,6 @@ public class AdminViewCustomerListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
 
         CustomerDAO dao = new CustomerDAO();
 
@@ -108,7 +106,6 @@ public class AdminViewCustomerListServlet extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("totalrecords", totalCustomer);
         request.setAttribute("pageSize", pageSize);
-        session.setAttribute("currentUser", currentUser);
 
         request.getRequestDispatcher("adminViewCustomerList.jsp").forward(request, response);
 

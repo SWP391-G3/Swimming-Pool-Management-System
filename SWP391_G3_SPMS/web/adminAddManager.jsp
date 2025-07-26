@@ -1,9 +1,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="model.customer.User"%>
-<%@page import="java.util.List, model.admin.Branch"%>
+<%@page import="java.util.List, model.admin.Branch,model.customer.User"%>
 <%
-    User currentUser = (User) session.getAttribute("currentUser");
-    String userName = currentUser != null ? currentUser.getFull_name() : "Admin";
+    User currentUser = (User) session.getAttribute("adminAccount");
+    String userName = currentUser != null ? currentUser.getFull_name() : "";
     List<Branch> availableBranchs = (List<Branch>) request.getAttribute("availableBranchs");
 %>
 <!DOCTYPE html>

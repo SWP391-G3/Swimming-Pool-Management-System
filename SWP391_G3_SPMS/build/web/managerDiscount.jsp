@@ -1,4 +1,5 @@
 
+
 <%-- 
     Document   : managerDiscount
     Created on : Jun 23, 2025, 1:24:34 PM
@@ -177,12 +178,20 @@
                                                    title="Cập nhật">
                                                     Cập nhật
                                                 </a>
-                                                <a href="managerDeleteDiscountServlet?id=${discount.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}"
-                                                   class="btn-disable"
-                                                   title="Xóa"
-                                                   onclick="return confirm('Bạn có chắc chắn muốn xóa mã giảm giá này?');">
-                                                    Xóa
-                                                </a>
+                                                <c:choose>
+                                                    <c:when test="${discount.status and discount.validFrom le now and discount.validTo ge now}">
+                                                        <!-- Đang hoạt động: Không cho xóa -->
+                                                        <span class="btn-disable-disabled" title="Không thể xóa khi đang hoạt động" style="color: #ccc; cursor: not-allowed;">Xóa</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a href="managerDeleteDiscountServlet?id=${discount.id}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&status=${fn:escapeXml(status)}"
+                                                           class="btn-disable"
+                                                           title="Xóa"
+                                                           onclick="return confirm('Bạn có chắc chắn muốn xóa mã giảm giá này?');">
+                                                            Xóa
+                                                        </a>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </td>
                                         </tr>
                                     </c:forEach>

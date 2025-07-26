@@ -48,7 +48,7 @@ public class ManagerTicketServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute("managerAccount");
         if (currentUser == null) {
             response.sendRedirect("login.jsp");
             return;

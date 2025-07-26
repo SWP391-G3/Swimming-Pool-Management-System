@@ -17,7 +17,7 @@
         startPage = Math.max(1, endPage - visiblePages + 1);
     }
 
-    User currentUser = (User) session.getAttribute("currentUser");
+    User currentUser = (User) session.getAttribute("adminAccount");
     String userName = currentUser != null ? currentUser.getFull_name() : "";
 %>
 

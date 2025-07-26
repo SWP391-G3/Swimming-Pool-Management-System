@@ -7,7 +7,7 @@
 <%
     List<Branch> branches = (List<Branch>) request.getAttribute("branches");
     List<StaffType> staffTypes = (List<StaffType>) request.getAttribute("staffTypes");
-    User currentUser = (User) session.getAttribute("currentUser");
+    User currentUser = (User) session.getAttribute("adminAccount");
     String userName = currentUser != null ? currentUser.getFull_name() : "";
 %>
 

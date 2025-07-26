@@ -59,7 +59,7 @@
     </head>
     <body class="bg-gray-100 text-gray-800">
         <%
-            User currentUser = (User) session.getAttribute("currentUser");
+            User currentUser = (User) session.getAttribute("adminAccount");
             String userName = currentUser != null ? currentUser.getFull_name() : "";
         %>
 

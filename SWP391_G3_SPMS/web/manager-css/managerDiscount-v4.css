@@ -8,6 +8,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 */
 
 /* CSS tổng quát */
+
+
 :root {
     --main-bg: #f6f8fc;
     --sidebar-bg: #172554;
@@ -430,4 +432,15 @@ body {
         padding: 8px 10px;
         font-size: 0.9rem;
     }
+}
+
+.btn-disable-disabled {
+    background: #eee;
+    color: #bbb !important;
+    padding: 6px 12px;
+    border-radius: 4px;
+    pointer-events: none;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    display: inline-block;
 }

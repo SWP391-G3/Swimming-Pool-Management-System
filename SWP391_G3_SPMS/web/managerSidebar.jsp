@@ -8,7 +8,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@page import = "model.customer.User" %>
 <%
-    User currentUser = (User) session.getAttribute("currentUser");
+    User currentUser = (User) session.getAttribute("managerAccount");
     String userName;
     String Location;
     if (currentUser != null && currentUser.getUser_id() == 2) {

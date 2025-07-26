@@ -37,7 +37,7 @@ public class ManagerAddDeviceServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute("managerAccount");
         int branchId = 0;
         if (currentUser != null) {
             int currentUser_id = currentUser.getUser_id();

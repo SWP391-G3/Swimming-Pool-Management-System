@@ -78,10 +78,9 @@ public class FeedbackDAO extends DBContext {
             }
         }
 
-        // Query chính
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT f.feedback_id, f.user_id, f.pool_id, f.rating, f.comment, f.created_at, ")
-                .append("u.full_name as user_name, u.images as user_image, u.email as user_email, p.pool_name ")
+                .append("u.full_name as user_name, u.images as user_image, u.email as user_email, p.pool_name, f.replied ") // Thêm f.replied
                 .append("FROM Feedbacks f ")
                 .append("JOIN Users u ON f.user_id = u.user_id ")
                 .append("JOIN Pools p ON f.pool_id = p.pool_id ")
@@ -109,7 +108,8 @@ public class FeedbackDAO extends DBContext {
                 fb.setUserName(rs.getString("user_name"));
                 fb.setUserImage(rs.getString("user_image"));
                 fb.setPoolName(rs.getString("pool_name"));
-                fb.setUserEmail(rs.getString("user_email")); // THÊM DÒNG NÀY
+                fb.setUserEmail(rs.getString("user_email"));
+                fb.setReplied(rs.getBoolean("replied")); // mapping trường mới
                 list.add(fb);
             }
         }
@@ -147,36 +147,51 @@ public class FeedbackDAO extends DBContext {
     }
 
     public Feedback getFeedbackById(int id, int branchId) throws SQLException {
-    String sql = "SELECT f.*, u.full_name as user_name, u.images as user_image, u.email as user_email, p.pool_name "
-            + "FROM Feedbacks f "
-            + "JOIN Users u ON f.user_id = u.user_id "
-            + "JOIN Pools p ON f.pool_id = p.pool_id "
-            + "WHERE f.feedback_id = ? AND p.branch_id = ?";
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-        stmt.setInt(1, id);
-        stmt.setInt(2, branchId);
-        ResultSet rs = stmt.executeQuery();
-        if (rs.next()) {
-            Feedback fb = new Feedback();
-            fb.setFeedbackId(rs.getInt("feedback_id"));
-            fb.setUserId(rs.getInt("user_id"));
-            fb.setPoolId(rs.getInt("pool_id"));
-            fb.setRating(rs.getInt("rating"));
-            fb.setComment(rs.getString("comment"));
-            fb.setCreatedAt(rs.getTimestamp("created_at"));
-            fb.setUserName(rs.getString("user_name"));
-            fb.setUserImage(rs.getString("user_image"));
-            fb.setUserEmail(rs.getString("user_email")); // 
-            fb.setPoolName(rs.getString("pool_name"));
-            return fb;
+        String sql = "SELECT f.*, u.full_name as user_name, u.images as user_image, u.email as user_email, p.pool_name "
+                + "FROM Feedbacks f "
+                + "JOIN Users u ON f.user_id = u.user_id "
+                + "JOIN Pools p ON f.pool_id = p.pool_id "
+                + "WHERE f.feedback_id = ? AND p.branch_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.setInt(2, branchId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Feedback fb = new Feedback();
+                fb.setFeedbackId(rs.getInt("feedback_id"));
+                fb.setUserId(rs.getInt("user_id"));
+                fb.setPoolId(rs.getInt("pool_id"));
+                fb.setRating(rs.getInt("rating"));
+                fb.setComment(rs.getString("comment"));
+                fb.setCreatedAt(rs.getTimestamp("created_at"));
+                fb.setUserName(rs.getString("user_name"));
+                fb.setUserImage(rs.getString("user_image"));
+                fb.setUserEmail(rs.getString("user_email"));
+                fb.setPoolName(rs.getString("pool_name"));
+                fb.setReplied(rs.getBoolean("replied")); // <--- mapping trường mới
+                return fb;
+            }
+        }
+        return null;
+    }
+
+    public boolean markFeedbackReplied(int feedbackId, String replyContent, int managerId) throws SQLException {
+        String sql = "UPDATE Feedbacks SET replied = 1, reply_content = ?, reply_at = GETDATE(), replied_by = ? WHERE feedback_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, replyContent);
+            stmt.setInt(2, managerId);
+            stmt.setInt(3, feedbackId);
+            return stmt.executeUpdate() > 0;
         }
     }
-    return null;
-}
-    
-    
-    
-    
+
+    public boolean markFeedbackReplied(int feedbackId) throws SQLException {
+        String sql = "UPDATE Feedbacks SET replied = 1 WHERE feedback_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, feedbackId);
+            return stmt.executeUpdate() > 0;
+        }
+    }
 
     public static void main(String[] args) {
 

@@ -47,7 +47,7 @@ public class ManagerReplyFeedbackServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute("managerAccount");
 
         if (currentUser == null) {
             response.sendRedirect("login.jsp");
@@ -119,7 +119,7 @@ public class ManagerReplyFeedbackServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute("managerAccount");
         if (currentUser == null) {
             response.sendRedirect("login.jsp");
             return;
@@ -212,6 +212,9 @@ public class ManagerReplyFeedbackServlet extends HttpServlet {
             );
 
             if (emailSent) {
+                // Gọi update trạng thái đã phản hồi
+                dao.markFeedbackReplied(feedbackId);
+                
                 String redirectUrl = "managerFeedbackServlet?page=" + (page != null ? page : "1")
                         + "&pageSize=" + (pageSize != null ? pageSize : "10")
                         + "&keyword=" + java.net.URLEncoder.encode(keyword != null ? keyword : "", "UTF-8")

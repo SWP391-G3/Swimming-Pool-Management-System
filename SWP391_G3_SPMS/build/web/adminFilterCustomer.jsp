@@ -8,6 +8,7 @@
     int currentPage = (Integer) request.getAttribute("currentPage");
     int totalPages = (Integer) request.getAttribute("totalPages");
 
+
     int visiblePages = 5;
     int startPage = Math.max(1, currentPage - visiblePages / 2);
     int endPage = Math.min(totalPages, startPage + visiblePages - 1);
@@ -83,7 +84,7 @@
         </style>
     </head>
     <% 
-    User currentUser = (User) session.getAttribute("currentUser");
+    User currentUser = (User) session.getAttribute("adminAccount");
     String userName = (currentUser != null) ? currentUser.getFull_name() : "";
     %>
 

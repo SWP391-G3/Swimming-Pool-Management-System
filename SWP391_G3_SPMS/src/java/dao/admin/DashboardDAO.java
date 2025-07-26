@@ -21,6 +21,7 @@ import model.admin.PoolStatusStats;
 import model.admin.RevenueBranchByMonth;
 import model.admin.RevenueByMonth;
 import model.admin.ServiceTotalStats;
+import model.admin.TotalRevenue;
 import model.admin.TotalServiceUsage;
 import model.admin.TotalTicketUsage;
 import model.admin.UserCountByRole;
@@ -699,6 +700,36 @@ public class DashboardDAO extends DBContext {
                 list.add(p);
             }
             return list;
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+    
+    public List<TotalRevenue> getTotalRevenue(){
+        List<TotalRevenue> listRevenues = new ArrayList<>();
+        String sql = """
+                     SELECT 
+                         ISNULL(br.branch_name, N'TOÀN HỆ THỐNG') AS branch_name,
+                         SUM(p.total_amount) AS total_revenue
+                     FROM 
+                         Payments p
+                     JOIN Booking b ON p.booking_id = b.booking_id
+                     JOIN Pools po ON b.pool_id = po.pool_id
+                     JOIN Branchs br ON po.branch_id = br.branch_id
+                     WHERE 
+                         p.payment_status = 'completed'
+                     GROUP BY 
+                         ROLLUP(br.branch_name);
+                     """;
+        try(PreparedStatement st = connection.prepareStatement(sql)) {
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {                
+                TotalRevenue tr = new TotalRevenue();
+                tr.setBranch_name(rs.getString(1));
+                tr.setTotal_revenue(rs.getDouble(2));
+                listRevenues.add(tr);
+            }
+            return listRevenues;
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
         }

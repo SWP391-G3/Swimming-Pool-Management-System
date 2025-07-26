@@ -11,7 +11,7 @@ import java.util.Date;
  * @author Tuan Anh
  */
 public class Feedback {
- 
+
     private int feedbackId;
     private int userId;
     private int poolId;
@@ -23,6 +23,7 @@ public class Feedback {
     private String userImage;
     private String poolName;
     private String userEmail;
+    private boolean replied;
 
     public Feedback() {
     }
@@ -38,6 +39,14 @@ public class Feedback {
         this.userImage = userImage;
         this.poolName = poolName;
         this.userEmail = userEmail;
+    }
+
+    public boolean isReplied() {
+        return replied;
+    }
+
+    public void setReplied(boolean replied) {
+        this.replied = replied;
     }
 
     public int getFeedbackId() {
@@ -124,9 +133,5 @@ public class Feedback {
     public String toString() {
         return "Feedback{" + "feedbackId=" + feedbackId + ", userId=" + userId + ", poolId=" + poolId + ", rating=" + rating + ", comment=" + comment + ", createdAt=" + createdAt + ", userName=" + userName + ", userImage=" + userImage + ", poolName=" + poolName + ", userEmail=" + userEmail + '}';
     }
-  
-    
-    
-    
-    
+
 }

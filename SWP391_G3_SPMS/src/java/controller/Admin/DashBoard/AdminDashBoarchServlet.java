@@ -28,6 +28,7 @@ import model.admin.PoolStatusStats;
 import model.admin.RevenueBranchByMonth;
 import model.admin.RevenueByMonth;
 import model.admin.ServiceTotalStats;
+import model.admin.TotalRevenue;
 import model.admin.TotalServiceUsage;
 import model.admin.TotalTicketUsage;
 import model.admin.UserCountByRole;
@@ -136,6 +137,7 @@ public class AdminDashBoarchServlet extends HttpServlet {
         CustomerJoinStats cj = dao.getCustomerJoinStats();
         List<TotalTicketUsage> totalTicketUsages = dao.getTotalTicketUsages();
         List<CustomerPoolFeedback> customerPoolFeedbacks = dao.getPoolFeedbacks();
+        List<TotalRevenue> listRevenues = dao.getTotalRevenue();
         request.setAttribute("branchLabels", labels);
         request.setAttribute("activeStaffData", activeData);
         request.setAttribute("inactiveStaffData", inactiveData);
@@ -158,6 +160,7 @@ public class AdminDashBoarchServlet extends HttpServlet {
         request.setAttribute("totalServiceUsageByMonth", totalServiceUsageByMonth);
         request.setAttribute("totalTicketUsages", totalTicketUsages);
         request.setAttribute("customerPoolFeedbacks", customerPoolFeedbacks);
+        request.setAttribute("listRevenues", listRevenues);
         request.setAttribute("cj", cj);
         request.getRequestDispatcher("adminDashBoard.jsp").forward(request, response);
     }

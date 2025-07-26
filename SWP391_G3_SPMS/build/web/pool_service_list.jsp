@@ -244,9 +244,10 @@
             <div class="content-panel">
                 <div class="header">
                     <h2>Quản lý dịch vụ hồ bơi</h2>
-                    <button class="btn-add" onclick="window.location.href = 'pool-service?action=add'">+ Thêm dịch vụ</button>
-                    <button class="btn-add" onclick="window.location.href = 'managerListServiceReportServlet'">+ Xem báo cáo</button>
-
+                    <div class="header-buttons">
+                        <button class="btn-add" onclick="window.location.href = 'pool-service?action=add'">+ Thêm dịch vụ</button>
+                        <button class="btn-add" onclick="window.location.href = 'managerListServiceReportServlet'">+ Xem báo cáo</button>
+                    </div>
                 </div>
                 <!-- Bộ lọc -->
                 <form class="filter-form" method="get" action="pool-service">
@@ -279,6 +280,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Tên dịch vụ</th>
+                                    <th>Hồ bơi</th>
                                     <th>Giá (VND)</th>
                                     <th>Ảnh</th>
                                     <th>Số lượng</th>
@@ -288,9 +290,10 @@
                             </thead>
                             <tbody>
                                 <c:forEach var="ps" items="${list}">
-                                    <tr  onclick="location.href = 'pool-service?action=detail&id=${ps.poolServiceId}'" style="cursor:pointer;">
+                                    <tr onclick="location.href = 'pool-service?action=detail&id=${ps.poolServiceId}'" style="cursor:pointer;">
                                         <td>${ps.poolServiceId}</td>
                                         <td><strong>${ps.serviceName}</strong></td>
+                                        <td>${ps.poolName}</td>
                                         <td>${ps.price}</td>
                                         <td>
                                             <img src="${ps.serviceImage}" alt="">
@@ -309,7 +312,6 @@
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>
-
                                         <td style="white-space:nowrap;">
                                             <button class="btn-edit" onclick="event.stopPropagation(); window.location.href = 'pool-service?action=edit&id=${ps.poolServiceId}'">Chỉnh sửa</button>
                                             <button class="btn-delete"
@@ -357,7 +359,6 @@
             </div>
         </div>
 
-
         <c:if test="${not empty sessionScope.errorMessage}">
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script>
@@ -383,10 +384,9 @@
                         confirmButtonColor: '#7c4dff'
                     });
 
-                    return; // Dừng lại, không thực hiện xóa
+                    return;
                 }
 
-                // Nếu status là "unavailable", tiếp tục cho phép xóa
                 Swal.fire({
                     title: 'Xác nhận xóa dịch vụ?',
                     text: 'Bạn sẽ không thể hoàn tác thao tác này!',
@@ -417,8 +417,6 @@
                     }
                 });
             }
-
         </script>
-
     </body>
 </html>

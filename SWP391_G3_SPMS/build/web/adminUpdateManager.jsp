@@ -2,7 +2,7 @@
 <%@page import="model.admin.Manager, model.customer.User, model.admin.Branch, java.util.List"%>
 
 <%
-    User currentUser = (User) session.getAttribute("currentUser");
+    User currentUser = (User) session.getAttribute("adminAccount");
     String userName = currentUser != null ? currentUser.getFull_name() : "";
 
     Manager manager = (Manager) request.getAttribute("manager");

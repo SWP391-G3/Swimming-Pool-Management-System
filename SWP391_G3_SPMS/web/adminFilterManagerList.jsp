@@ -71,7 +71,7 @@
     <body class="bg-gray-100 font-sans leading-relaxed antialiased text-gray-800">
 
         <%
-            User currentUser = (User) session.getAttribute("currentUser");
+            User currentUser = (User) session.getAttribute("adminAccount");
             String userName = currentUser != null ? currentUser.getFull_name() : "";
 
             List<Manager> managers = (List<Manager>) request.getAttribute("managers");

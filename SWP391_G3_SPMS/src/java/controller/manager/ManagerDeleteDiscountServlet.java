@@ -20,7 +20,7 @@ public class ManagerDeleteDiscountServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         // Lấy user hiện tại
-        User currentUser = (User) session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute("managerAccount");
         if (currentUser == null) {
             response.sendRedirect("login.jsp");
             return;

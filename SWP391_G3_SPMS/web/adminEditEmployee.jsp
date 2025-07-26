@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
 <%@ page import="model.admin.Branch,model.admin.StaffType,model.admin.Employee" %>
-<%@ page import="model.customer.Pool" %>
+<%@ page import="model.customer.Pool,model.customer.User" %>
 <%@ page import="model.admin.EmployeeAccount" %>
 
 <%
@@ -10,7 +10,8 @@
     List<Pool> pools = (List<Pool>) request.getAttribute("pools");
     EmployeeAccount employee = (EmployeeAccount) request.getAttribute("employee");
     Employee emp = (Employee) request.getAttribute("e");
-    String userName = (String) session.getAttribute("userName"); // Lấy tên user từ session
+    User currentUser = (User) session.getAttribute("adminAccount");
+    String userName = currentUser != null ? currentUser.getFull_name() : "";
     String error = (String) request.getAttribute("error"); 
     if(error == null) {
         error = "";

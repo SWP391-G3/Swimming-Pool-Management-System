@@ -33,7 +33,7 @@ public class PoolServiceServlet extends HttpServlet {
         String action = request.getParameter("action");
         HttpSession session = request.getSession();
 
-        User currentUser = (User) session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute("managerAccount");
         String location = "";
         if (currentUser != null) {
             switch (currentUser.getUser_id()) {
@@ -78,7 +78,6 @@ public class PoolServiceServlet extends HttpServlet {
                 return;
             }
 
-            // 1. Thêm mới (Form trống)
             if ("add".equals(action)) {
                 request.setAttribute("poolList", poolList);
                 request.getRequestDispatcher("pool_service_form.jsp").forward(request, response);
@@ -103,7 +102,6 @@ public class PoolServiceServlet extends HttpServlet {
                 return;
             }
 
-            // 2. Chỉnh sửa
             if ("edit".equals(action)) {
                 String idStr = request.getParameter("id");
                 if (idStr == null || idStr.isEmpty()) {
@@ -122,7 +120,6 @@ public class PoolServiceServlet extends HttpServlet {
                 return;
             }
 
-            // 3. Hiển thị & lọc danh sách dịch vụ
             String name = request.getParameter("name");
             String minPriceStr = request.getParameter("minPrice");
             String maxPriceStr = request.getParameter("maxPrice");
@@ -198,7 +195,7 @@ public class PoolServiceServlet extends HttpServlet {
             throws ServletException, IOException {
         String action = request.getParameter("action");
         HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute("managerAccount");
         String location = "";
         if (currentUser != null) {
             switch (currentUser.getUser_id()) {
@@ -238,7 +235,6 @@ public class PoolServiceServlet extends HttpServlet {
                 }
 
                 String serviceName = request.getParameter("service_name");
-                // Kiểm tra trùng tên dịch vụ
                 List<Integer> selectedPoolIds = new ArrayList<>();
                 for (String poolIdStr : poolIdsParam) {
                     try {
@@ -247,14 +243,13 @@ public class PoolServiceServlet extends HttpServlet {
                             selectedPoolIds.add(poolId);
                         }
                     } catch (NumberFormatException ignore) {
-                        // Bỏ qua nếu poolId không hợp lệ
                     }
                 }
 
                 if (!selectedPoolIds.isEmpty() && dao.isServiceNameExists(serviceName, selectedPoolIds)) {
                     session.setAttribute("errorMessage", "Tên dịch vụ '" + serviceName + "' đã tồn tại cho hồ bơi được chọn!");
                     request.setAttribute("poolList", poolList);
-                    request.setAttribute("service_name", serviceName); // Giữ lại giá trị nhập
+                    request.setAttribute("service_name", serviceName);
                     request.setAttribute("description", request.getParameter("description"));
                     request.setAttribute("price", request.getParameter("price"));
                     request.setAttribute("quantity", request.getParameter("quantity"));
@@ -267,7 +262,6 @@ public class PoolServiceServlet extends HttpServlet {
                 String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
                 String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
 
-                // Đường dẫn thư mục lưu ảnh
                 String appPath = getServletContext().getRealPath("/");
                 String uploadPath = appPath + "images" + File.separator + "pool";
                 File uploadDir = new File(uploadPath);
@@ -275,11 +269,9 @@ public class PoolServiceServlet extends HttpServlet {
                     uploadDir.mkdirs();
                 }
 
-                // Lưu file ảnh
                 String filePath = uploadPath + File.separator + uniqueFileName;
                 filePart.write(filePath);
 
-                // Đường dẫn ảnh để lưu DB
                 String serviceImage = "images/pool/" + uniqueFileName;
                 String description = request.getParameter("description");
                 double price = Double.parseDouble(request.getParameter("price"));
@@ -300,6 +292,11 @@ public class PoolServiceServlet extends HttpServlet {
                     ps.setServiceImage(serviceImage);
                     ps.setQuantity(quantity);
                     ps.setServiceStatus(serviceStatus);
+                    ps.setPoolName(poolList.stream()
+                            .filter(p -> p.getPool_id() == poolId)
+                            .findFirst()
+                            .map(Pool::getPool_name)
+                            .orElse(""));
 
                     dao.add(ps);
                 }
@@ -320,6 +317,11 @@ public class PoolServiceServlet extends HttpServlet {
                 String serviceImage = request.getParameter("service_image");
                 int quantity = Integer.parseInt(request.getParameter("quantity"));
                 String serviceStatus = request.getParameter("service_status");
+                String poolName = poolList.stream()
+                        .filter(p -> p.getPool_id() == poolId)
+                        .findFirst()
+                        .map(Pool::getPool_name)
+                        .orElse("");
 
                 PoolService ps = new PoolService();
                 ps.setPoolId(poolId);
@@ -330,6 +332,7 @@ public class PoolServiceServlet extends HttpServlet {
                 ps.setQuantity(quantity);
                 ps.setServiceStatus(serviceStatus);
                 ps.setPoolServiceId(Integer.parseInt(request.getParameter("pool_service_id")));
+                ps.setPoolName(poolName);
 
                 dao.update(ps);
                 response.sendRedirect("pool-service");

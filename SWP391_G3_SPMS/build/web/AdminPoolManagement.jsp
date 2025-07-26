@@ -57,7 +57,7 @@
     </head>
     <body class="bg-gray-100 text-gray-800 overflow-x-hidden">
         <%
-            User currentUser = (User) session.getAttribute("currentUser");
+            User currentUser = (User) session.getAttribute("adminAccount");
             String userName = (currentUser != null) ? currentUser.getFull_name() : "";
             String nameWork = (String) request.getAttribute("nameWork");
             List<Pool> listPool = (List<Pool>) request.getAttribute("listPool");
@@ -103,12 +103,13 @@
                         <div class="flex-1">
                             <h4 class="text-sm font-semibold text-white"><%= userName %></h4>
                             <p class="text-xs text-blue-100">Administrator</p>
-                            <a href="adminProfile?service=showProfile" class="text-xs text-yellow-300 hover:text-yellow-200 hover:underline transition-colors">
+                            <a href="#" class="text-xs text-yellow-300 hover:text-yellow-200 hover:underline transition-colors">
                                 <i class="fas fa-user-edit mr-1"></i>Xem chi tiết
                             </a>
                         </div>
                     </div>
                 </div>
+
 
                 <!-- Navigation Menu -->
                 <div class="flex-1 space-y-1">

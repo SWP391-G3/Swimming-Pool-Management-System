@@ -1,9 +1,3 @@
-<%-- 
-    Document   : managerFeedback
-    Created on : Jul 5, 2025, 2:40:00 PM
-    Author     : Tuan Anh
---%>
-
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -21,12 +15,39 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <link rel="stylesheet" href="./manager-css/manager-panel.css">
         <link rel="stylesheet" href="./manager-css/managerFeedback-v3.css">
+
+        <style>
+            .badge {
+                display: inline-block;
+                padding: 4px 14px 4px 10px;
+                font-size: 13px;
+                border-radius: 18px;
+                font-weight: 600;
+                letter-spacing: 0.5px;
+                line-height: 1;
+                vertical-align: middle;
+                white-space: nowrap;
+                margin-right: 2px;
+                margin-left: 2px;
+            }
+            .badge-success {
+                background: #d4f7d6;
+                color: #249c42;
+                border: 1px solid #67cb7f;
+            }
+            .badge-warning {
+                background: #fff6de;
+                color: #c47d18;
+                border: 1px solid #ffd48a;
+            }
+        </style>
+
+
     </head>
 
     <body>
 
         <div id="toast" class="toast"></div>
-
 
         <div class="layout">
             <div class="sidebar">
@@ -36,14 +57,12 @@
                 <div class="header">
                     <div class="header-title-row">
                         <h2>Quản lý phản hồi</h2>
-
                     </div>
 
                     <div class="filter-row">
                         <form class="search-form" method="get" action="managerFeedbackServlet" id="searchForm">
                             <input type="text" name="keyword" placeholder="Tìm theo tên hoặc nội dung..." 
                                    value="${fn:escapeXml(keyword)}" maxlength="100">
-
                             <select name="poolId">
                                 <option value="all" <c:if test="${poolId == 'all' || empty poolId}">selected</c:if>>-- Tất cả hồ bơi --</option>
                                 <c:forEach var="pool" items="${poolList}">
@@ -52,7 +71,6 @@
                                     </option>
                                 </c:forEach>
                             </select>
-
                             <select name="rating">
                                 <option value="all" <c:if test="${rating == 'all' || empty rating}">selected</c:if>>Tất cả đánh giá</option>
                                 <option value="1" <c:if test="${rating == '1'}">selected</c:if>>1 sao</option>
@@ -61,31 +79,26 @@
                                 <option value="4" <c:if test="${rating == '4'}">selected</c:if>>4 sao</option>
                                 <option value="5" <c:if test="${rating == '5'}">selected</c:if>>5 sao</option>
                                 </select>
-
                                 <select name="dateFilter">
                                     <option value="all" <c:if test="${dateFilter == 'all' || empty dateFilter}">selected</c:if>>Tất cả thời gian</option>
                                 <option value="today" <c:if test="${dateFilter == 'today'}">selected</c:if>>Hôm nay</option>
                                 <option value="week" <c:if test="${dateFilter == 'week'}">selected</c:if>>Tuần này</option>
                                 <option value="month" <c:if test="${dateFilter == 'month'}">selected</c:if>>Tháng này</option>
                                 </select>
-
                                 <select name="pageSize" id="pageSizeSelect">
                                     <option value="5" <c:if test="${pageSize == 5}">selected</c:if>>5/Trang</option>
                                 <option value="10" <c:if test="${pageSize == 10}">selected</c:if>>10/Trang</option>
                                 <option value="15" <c:if test="${pageSize == 15}">selected</c:if>>15/Trang</option>
                                 <option value="25" <c:if test="${pageSize == 25}">selected</c:if>>25/Trang</option>
                                 </select>
-
                                 <input type="hidden" name="page" value="1">
                                 <button type="submit"><i class="fas fa-search"></i></button>
                             </form>
-
                             <div class="action-buttons">
                                 <a href="managerFeedbackServlet" class="btn-copy">
                                     <i class="fa-solid fa-arrows-rotate"></i> Làm mới
                                 </a>
                             </div>
-
                         </div>
                     </div>
                     <div class="feedback-list">
@@ -98,7 +111,8 @@
                                     <th>Hồ bơi</th>
                                     <th>Đánh giá</th>
                                     <th>Nội dung</th>
-                                    <th>Ngày tạo</th>
+                                    <th>Ngày</th>
+                                    <th>Trạng thái</th>
                                     <th>Thao tác</th>
                                 </tr>
                             </thead>
@@ -106,7 +120,7 @@
                             <c:choose>
                                 <c:when test="${empty feedbackList}">
                                     <tr>
-                                        <td colspan="7" style="text-align: center; color: gray; font-style: italic;">
+                                        <td colspan="9" style="text-align: center; color: gray; font-style: italic;">
                                             Không tìm thấy phản hồi nào phù hợp.
                                         </td>
                                     </tr>
@@ -144,12 +158,30 @@
                                                 <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy HH:mm"/>
                                             </td>
                                             <td>
-
-                                                <a href="managerReplyFeedbackServlet?id=${feedback.feedbackId}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&rating=${fn:escapeXml(rating)}&dateFilter=${fn:escapeXml(dateFilter)}&poolId=${fn:escapeXml(poolId)}"
-                                                   class="action-btn btn-reply"
-                                                   title="Phản hồi">
-                                                    <i class="fas fa-reply"></i>
-                                                </a>
+                                                <c:choose>
+                                                    <c:when test="${feedback.replied}">
+                                                        <span class="badge badge-success">Đã phản hồi</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="badge badge-warning">Chưa phản hồi</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${!feedback.replied}">
+                                                        <a href="managerReplyFeedbackServlet?id=${feedback.feedbackId}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&rating=${fn:escapeXml(rating)}&dateFilter=${fn:escapeXml(dateFilter)}&poolId=${fn:escapeXml(poolId)}"
+                                                           class="action-btn btn-reply"
+                                                           title="Phản hồi">
+                                                            <i class="fas fa-reply"></i>
+                                                        </a>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <button class="action-btn btn-reply" title="Đã phản hồi" disabled style="opacity:0.5;cursor:not-allowed;">
+                                                            <i class="fas fa-reply"></i>
+                                                        </button>
+                                                    </c:otherwise>
+                                                </c:choose>
                                                 <a href="managerDeleteFeedbackServlet?id=${feedback.feedbackId}&page=${page}&pageSize=${pageSize}&keyword=${fn:escapeXml(keyword)}&rating=${fn:escapeXml(rating)}&dateFilter=${fn:escapeXml(dateFilter)}&poolId=${fn:escapeXml(poolId)}"
                                                    class="action-btn btn-disable"
                                                    title="Xóa"
@@ -182,14 +214,11 @@
             </div>
         </div>
 
-
-
         <script>
             function toggleComment(button) {
                 const cell = button.closest('.comment-cell');
                 const content = cell.querySelector('.comment-content');
                 content.classList.toggle('expanded');
-
                 if (content.classList.contains('expanded')) {
                     button.textContent = 'Thu gọn';
                 } else {
@@ -197,15 +226,10 @@
                 }
             }
 
-
-
-
-
             // Tự động submit form khi thay đổi filter
             document.addEventListener('DOMContentLoaded', function () {
                 const searchForm = document.getElementById('searchForm');
                 const inputs = searchForm.querySelectorAll('select[name], input[name]');
-
                 inputs.forEach(input => {
                     if (input.id !== 'pageSizeSelect') {
                         input.addEventListener('change', function () {
@@ -214,18 +238,15 @@
                         });
                     }
                 });
-
                 // Validate keyword
                 searchForm.addEventListener('submit', function (e) {
                     const keywordInput = document.querySelector('input[name="keyword"]');
                     const keyword = keywordInput.value.trim();
-
                     if (keyword.length > 100) {
                         alert("Từ khóa tìm kiếm không được vượt quá 100 ký tự.");
                         e.preventDefault();
                         return;
                     }
-
                     const invalidPattern = /[<>']/;
                     if (invalidPattern.test(keyword)) {
                         alert("Từ khóa không được chứa ký tự < > hoặc dấu nháy.");
@@ -235,8 +256,6 @@
                 });
             });
         </script>
-
-
 
         <script>
             function showToast(message, type = 'success') {

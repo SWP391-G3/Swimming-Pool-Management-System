@@ -8,7 +8,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import = "model.customer.User" %>
 <% 
-            User currentUser1 = (User) session.getAttribute("currentUser");
+            User currentUser1 = (User) session.getAttribute("managerAccount");
             String userName1;
             if(currentUser1 != null) {
                 userName1 = currentUser1.getFull_name();

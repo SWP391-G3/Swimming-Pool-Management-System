@@ -1,5 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.List, model.customer.Pool" %>
+<%@page import="java.util.List, model.customer.Pool,model.customer.User" %>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
@@ -106,8 +106,11 @@
                             class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 rounded-full border-2 border-white pulse-animation">
                         </div>
                     </div>
+                    <%
+                        User admin = (User) session.getAttribute("adminAccount");                        
+                    %>
                     <div class="flex-1">
-                        <h4 class="text-sm font-semibold text-white">Nguyễn Văn A</h4>
+                        <h4 class="text-sm font-semibold text-white"><%= admin != null ? admin.getFull_name() : "" %></h4>
                         <p class="text-xs text-blue-100">Administrator</p>
                         <a href="#" class="text-xs text-yellow-300 hover:text-yellow-200 hover:underline transition-colors">
                             <i class="fas fa-user-edit mr-1"></i>Xem chi tiết

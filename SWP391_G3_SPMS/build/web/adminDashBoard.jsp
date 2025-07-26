@@ -10,10 +10,14 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Map.Entry" %>
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@page import="model.customer.User" %>
 <%@page import="model.admin.DashboardStats,model.admin.RevenueByMonth,model.admin.UserGrowth,model.admin.CustomerJoinStats" %>
 <%@page import="model.admin.PoolStatusStats,model.admin.BookingTrendStats,model.admin.UserCountByRole,model.admin.DeviceStatusStats" %>
 <%@page import="model.admin.UserDetails,model.customer.Pool,model.admin.RevenueBranchByMonth,model.admin.Branch,model.admin.BookingSummary" %>
 <%@page import="model.admin.VoucherUsage,model.admin.TotalServiceUsage,model.admin.TotalTicketUsage,model.admin.CustomerPoolFeedback" %>
+<%@page import="model.admin.TotalRevenue" %>
 <% 
     DashboardStats ds = (DashboardStats) request.getAttribute("ds");
     RevenueByMonth rm = (RevenueByMonth) request.getAttribute("rm");
@@ -90,8 +94,11 @@
                             class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 rounded-full border-2 border-white pulse-animation">
                         </div>
                     </div>
+                    <%
+                         User admin = (User) session.getAttribute("adminAccount");                        
+                    %>
                     <div class="flex-1">
-                        <h4 class="text-sm font-semibold text-white">Nguyễn Văn A</h4>
+                        <h4 class="text-sm font-semibold text-white"><%= admin != null ? admin.getFull_name() : "" %></h4>
                         <p class="text-xs text-blue-100">Administrator</p>
                         <a href="#" class="text-xs text-yellow-300 hover:text-yellow-200 hover:underline transition-colors">
                             <i class="fas fa-user-edit mr-1"></i>Xem chi tiết
@@ -298,8 +305,8 @@
                         <h3 class="text-lg font-semibold text-gray-800" id="stat-revenue">Doanh thu theo tháng</h3>
                         <div class="flex items-center space-x-2">
                             <button id="btn6Month"
-                                    class="px-3 py-1 bg-blue-100 text-blue-600 rounded-lg text-sm font-medium">6 tháng</button>
-                            <button id="btn12Month" class="px-3 py-1 text-gray-500 rounded-lg text-sm">12 tháng</button>
+                                    class="px-3 py-1 text-gray-500 rounded-lg text-sm">6 tháng</button>
+                            <button id="btn12Month" class="px-3 py-1 bg-blue-100 text-blue-600 rounded-lg text-sm font-medium">12 tháng</button>
                         </div>
                     </div>
                     <div class="p-4">
@@ -315,8 +322,8 @@
                         <h3 class="text-lg font-semibold text-gray-800" id="stat-user-growth">Tăng trưởng người dùng</h3>
                         <div class="flex items-center space-x-2">
                             <button id="userGrowthBtn6"
-                                    class="px-3 py-1 bg-blue-100 text-blue-600 rounded-lg text-sm font-medium">6 tháng</button>
-                            <button id="userGrowthBtn12" class="px-3 py-1 text-gray-500 rounded-lg text-sm">12
+                                    class="px-3 py-1 text-gray-500 rounded-lg text-sm">6 tháng</button>
+                            <button id="userGrowthBtn12" class="px-3 py-1 bg-blue-100 text-blue-600 rounded-lg text-sm font-medium">12
                                 tháng</button>
                         </div>
                     </div>
@@ -571,7 +578,7 @@
                     %>
                     <div class="border border-gray-200 rounded-xl bg-gray-50 p-4 shadow-sm hover:shadow-md transition-shadow">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="inline-block px-2 py-1 rounded-full text-xs font-semibold bg-green-200 text-green-600 mr-2"><%= f.getFeedbackUser() %></span>
+                            <span class="inline-block px-2 py-1 rounded-full text-xs font-semibold bg-green-200 text-green-600 mr-2">Khách hàng: <%= f.getFeedbackUser() %></span>
                             <span class="text-sm text-gray-500"><%= f.getFeedbackDate() %></span>
                         </div>
                         <p class="text-gray-800 italic mb-2">"<%= f.getComment() %>"</p>
@@ -602,13 +609,33 @@
         <div id="revenuePopup" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
             <div class="bg-white rounded-xl p-6 w-full max-w-2xl shadow-xl max-h-[90vh] flex flex-col">
                 <!-- Header -->
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-bold text-purple-700">
-                        <i class="fas fa-chart-line text-purple-500 mr-2"></i>
-                        Chi tiết doanh thu theo chi nhánh
-                    </h2>
-                    <button onclick="toggleRevenuePopup()" class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
+                <%
+                    LocalDate currentDate = LocalDate.now();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, dd/MM/yyyy", new java.util.Locale("vi", "VN"));
+                    String formattedDate = currentDate.format(formatter);
+                %>
+
+                <!-- Header doanh thu -->
+                <div class="flex items-center justify-between bg-purple-50 px-6 py-4 rounded-lg shadow-sm mb-6">
+
+                    <!-- Tiêu đề -->
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-chart-line text-purple-500 text-xl"></i>
+                        <h2 class="text-xl font-bold text-purple-700">Chi tiết doanh thu theo chi nhánh</h2>
+                    </div>
+
+                    <!-- Ngày hiện tại -->
+                    <div class="flex items-center text-sm text-gray-600 space-x-2">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span><%= formattedDate %></span>
+                    </div>
+
+                    <!-- Nút đóng -->
+                    <button onclick="toggleRevenuePopup()" class="text-gray-500 hover:text-red-500 text-2xl font-bold focus:outline-none">
+                        &times;
+                    </button>
                 </div>
+
 
                 <!-- Nội dung chính có scroll -->
                 <div class="overflow-y-auto pr-2 space-y-4 text-sm text-gray-700 max-h-[70vh]">
@@ -659,14 +686,79 @@
                         <span class="text-base font-semibold text-gray-700">Tổng doanh thu tháng toàn khu vực:</span>
                         <span class="text-2xl font-bold text-green-700 ml-2"><%= vnCurrency.format(ds.getCurrentRevenue()) %></span>
                     </p>
-                    <div class="text-right">
-                        <button onclick="toggleContactManagerPopup()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg shadow">
-                            <i class="fas fa-paper-plane mr-1"></i> Gửi thông báo
+                    <div class="text-right space-x-2 mt-4">
+                        <!-- Nút xem doanh thu hệ thống -->
+                        <button onclick="toggleRevenueAllPopup()"
+                                class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white px-5 py-2.5 rounded-xl shadow-md hover:from-blue-600 hover:to-blue-800 transition-all duration-200">
+                            <i class="fas fa-chart-line"></i>
+                            Xem Doanh Thu Hệ Thống
+                        </button>
+
+                        <!-- Nút gửi thông báo -->
+                        <button onclick="toggleContactManagerPopup()"
+                                class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md transition-all duration-200">
+                            <i class="fas fa-paper-plane"></i>
+                            Gửi thông báo
                         </button>
                     </div>
                 </div>
             </div>
         </div>
+
+
+        <!-- Popup Total Revenue All Branch -->
+        <div id="revenuePopupAll" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
+            <div class="bg-white rounded-xl p-6 shadow-2xl w-full max-w-3xl relative">
+
+                <!-- Nút đóng (X) -->
+                <button onclick="toggleRevenueAllPopup()" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-xl font-bold">
+                    &times;
+                </button>
+
+                <!-- Tiêu đề -->
+                <h2 class="text-2xl font-bold text-blue-700 text-center mb-6">Tổng doanh thu theo từng khu vực</h2>
+
+                <!-- Bảng doanh thu -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-center border-collapse">
+                        <thead class="bg-gradient-to-r from-blue-100 to-blue-200 text-gray-700">
+                            <tr class="border-b border-gray-300">
+                                <th class="py-3 px-4 border-r">Khu vực</th>
+                                <th class="py-3 px-4">Tổng doanh thu (VNĐ)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white">
+                            <%
+                                List<TotalRevenue> listRevenues = (List<TotalRevenue>) request.getAttribute("listRevenues");
+                                if (listRevenues != null) {
+                                    for (TotalRevenue r : listRevenues) {
+                            %>
+                            <tr class="hover:bg-blue-50 transition">
+                                <td class="py-3 px-4 border-t border-gray-200 font-medium text-gray-800"><%= r.getBranch_name() %></td>
+                                <td class="py-3 px-4 border-t border-gray-200 text-blue-700 font-semibold">
+                                    <%= String.format("%,.2f", r.getTotal_revenue()) %>
+                                </td>
+                            </tr>
+                            <%
+                                    }
+                                }
+                            %>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- JS toggle -->
+        <script>
+            function toggleRevenueAllPopup() {
+                const popup = document.getElementById("revenuePopupAll");
+                popup.style.display = popup.style.display === "none" ? "flex" : "none";
+            }
+        </script>
+
 
 
 
@@ -1152,7 +1244,7 @@
                     });
                 }
                 // Khởi tạo lần đầu là 6 tháng
-                renderRevenueChart(revenueLabels6, revenueData6);
+                renderRevenueChart(revenueLabels12, revenueData12);
 
                 // User Growth Chart
                 let userGrowthChart;
@@ -1393,7 +1485,7 @@
                 });
 
                 // Khởi tạo mặc định là 6 tháng
-                renderUserGrowthChart(userGrowthLabels6, userGrowthData6);
+                renderUserGrowthChart(userGrowthLabels12, userGrowthData12);
 
                 document.getElementById('userGrowthBtn6').addEventListener('click', function () {
                     renderUserGrowthChart(userGrowthLabels6, userGrowthData6);

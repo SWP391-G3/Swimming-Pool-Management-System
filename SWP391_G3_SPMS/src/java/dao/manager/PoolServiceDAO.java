@@ -11,7 +11,6 @@ import model.manager.ServiceReport;
 
 public class PoolServiceDAO extends DBContext {
 
-    // Các phương thức hiện có của bạn giữ nguyên, chỉ thêm phương thức mới dưới đây
     // Kiểm tra xem tên dịch vụ đã tồn tại trong danh sách poolIds hay chưa
     public boolean isServiceNameExists(String serviceName, List<Integer> poolIds) throws SQLException {
         if (poolIds == null || poolIds.isEmpty()) {
@@ -32,10 +31,9 @@ public class PoolServiceDAO extends DBContext {
         }
     }
 
-    // Các phương thức khác giữ nguyên
     public List<PoolService> getAll() throws SQLException {
         List<PoolService> list = new ArrayList<>();
-        String sql = "SELECT * FROM Pool_Service";
+        String sql = "SELECT ps.*, p.pool_name FROM Pool_Service ps JOIN Pools p ON ps.pool_id = p.pool_id";
         PreparedStatement st = connection.prepareStatement(sql);
         ResultSet rs = st.executeQuery();
         while (rs.next()) {
@@ -47,7 +45,8 @@ public class PoolServiceDAO extends DBContext {
                     rs.getDouble("price"),
                     rs.getString("service_image"),
                     rs.getInt("quantity"),
-                    rs.getString("service_status")
+                    rs.getString("service_status"),
+                    rs.getString("pool_name")
             ));
         }
         return list;
@@ -72,7 +71,7 @@ public class PoolServiceDAO extends DBContext {
     }
 
     public PoolService getById(int id) throws SQLException {
-        String sql = "SELECT * FROM Pool_Service WHERE pool_service_id = ?";
+        String sql = "SELECT ps.*, p.pool_name FROM Pool_Service ps JOIN Pools p ON ps.pool_id = p.pool_id WHERE pool_service_id = ?";
         PreparedStatement st = connection.prepareStatement(sql);
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
@@ -85,7 +84,8 @@ public class PoolServiceDAO extends DBContext {
                     rs.getDouble("price"),
                     rs.getString("service_image"),
                     rs.getInt("quantity"),
-                    rs.getString("service_status")
+                    rs.getString("service_status"),
+                    rs.getString("pool_name")
             );
         }
         return null;
@@ -229,15 +229,14 @@ public class PoolServiceDAO extends DBContext {
             return list;
         }
 
-        StringBuilder sql = new StringBuilder("SELECT * FROM Pool_Service WHERE ");
+        StringBuilder sql = new StringBuilder("SELECT ps.*, p.pool_name FROM Pool_Service ps JOIN Pools p ON ps.pool_id = p.pool_id WHERE ");
         if (poolId != null) {
-            // Chỉ lọc 1 pool cụ thể (và phải thuộc allowedPoolIds)
             if (!allowedPoolIds.contains(poolId)) {
                 return list;
             }
-            sql.append("pool_id = ?");
+            sql.append("ps.pool_id = ?");
         } else {
-            sql.append("pool_id IN (");
+            sql.append("ps.pool_id IN (");
             for (int i = 0; i < allowedPoolIds.size(); i++) {
                 sql.append("?");
                 if (i < allowedPoolIds.size() - 1) {
@@ -247,15 +246,15 @@ public class PoolServiceDAO extends DBContext {
             sql.append(")");
         }
         if (name != null && !name.trim().isEmpty()) {
-            sql.append(" AND service_name LIKE ?");
+            sql.append(" AND ps.service_name LIKE ?");
         }
         if (minPrice != null) {
-            sql.append(" AND price >= ?");
+            sql.append(" AND ps.price >= ?");
         }
         if (maxPrice != null) {
-            sql.append(" AND price <= ?");
+            sql.append(" AND ps.price <= ?");
         }
-        sql.append(" ORDER BY pool_service_id ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        sql.append(" ORDER BY ps.pool_service_id ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
 
         try (PreparedStatement st = connection.prepareStatement(sql.toString())) {
             int idx = 1;
@@ -288,7 +287,8 @@ public class PoolServiceDAO extends DBContext {
                         rs.getDouble("price"),
                         rs.getString("service_image"),
                         rs.getInt("quantity"),
-                        rs.getString("service_status")
+                        rs.getString("service_status"),
+                        rs.getString("pool_name")
                 ));
             }
         }
@@ -301,14 +301,14 @@ public class PoolServiceDAO extends DBContext {
         if (allowedPoolIds == null || allowedPoolIds.isEmpty()) {
             return 0;
         }
-        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Pool_Service WHERE ");
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Pool_Service ps JOIN Pools p ON ps.pool_id = p.pool_id WHERE ");
         if (poolId != null) {
             if (!allowedPoolIds.contains(poolId)) {
                 return 0;
             }
-            sql.append("pool_id = ?");
+            sql.append("ps.pool_id = ?");
         } else {
-            sql.append("pool_id IN (");
+            sql.append("ps.pool_id IN (");
             for (int i = 0; i < allowedPoolIds.size(); i++) {
                 sql.append("?");
                 if (i < allowedPoolIds.size() - 1) {
@@ -318,13 +318,13 @@ public class PoolServiceDAO extends DBContext {
             sql.append(")");
         }
         if (name != null && !name.trim().isEmpty()) {
-            sql.append(" AND service_name LIKE ?");
+            sql.append(" AND ps.service_name LIKE ?");
         }
         if (minPrice != null) {
-            sql.append(" AND price >= ?");
+            sql.append(" AND ps.price >= ?");
         }
         if (maxPrice != null) {
-            sql.append(" AND price <= ?");
+            sql.append(" AND ps.price <= ?");
         }
 
         try (PreparedStatement st = connection.prepareStatement(sql.toString())) {
@@ -362,7 +362,7 @@ public class PoolServiceDAO extends DBContext {
         }
 
         StringBuilder sql = new StringBuilder(
-                "SELECT s.* "
+                "SELECT s.*, p.pool_name "
                 + "FROM Pool_Service s "
                 + "JOIN Pools p ON s.pool_id = p.pool_id "
                 + "WHERE p.pool_name = ? "
@@ -403,7 +403,8 @@ public class PoolServiceDAO extends DBContext {
                         rs.getDouble("price"),
                         rs.getString("service_image"),
                         rs.getInt("quantity"),
-                        rs.getString("service_status")
+                        rs.getString("service_status"),
+                        rs.getString("pool_name")
                 ));
             }
         }

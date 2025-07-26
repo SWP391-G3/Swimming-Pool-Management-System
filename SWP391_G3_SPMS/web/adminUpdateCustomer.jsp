@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="model.admin.Customer" %>
+<%@page import="model.admin.Customer,model.customer.User" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -103,8 +103,11 @@
                                  alt="Avatar" class="w-12 h-12 rounded-full border-3 border-white object-cover shadow-lg" />
                             <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 rounded-full border-2 border-white"></div>
                         </div>
+                        <%
+                             User admin = (User) session.getAttribute("adminAccount");                        
+                        %>
                         <div class="flex-1">
-                            <h4 class="text-sm font-semibold text-white"></h4>
+                            <h4 class="text-sm font-semibold text-white"><%= admin != null ? admin.getFull_name() : "" %></h4>
                             <p class="text-xs text-blue-100">Administrator</p>
                             <a href="#" class="text-xs text-yellow-300 hover:text-yellow-200 hover:underline transition-colors">
                                 <i class="fas fa-user-edit mr-1"></i>Xem chi tiết

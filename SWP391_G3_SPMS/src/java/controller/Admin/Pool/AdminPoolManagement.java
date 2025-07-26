@@ -63,7 +63,6 @@ public class AdminPoolManagement extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
         PoolDAO dao = new PoolDAO();
         String error = request.getParameter("error");
         int totalRecords = dao.getTotalRecord();
@@ -94,7 +93,6 @@ public class AdminPoolManagement extends HttpServlet {
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("nameWork", nameWork);
-        session.setAttribute("currentUser", currentUser);
         session.setAttribute("error", error);
         request.getRequestDispatcher("AdminPoolManagement.jsp").forward(request, response);
     }
