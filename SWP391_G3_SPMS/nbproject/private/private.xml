@@ -97,10 +97,7 @@
             <file>file:/D:/5rd_Semester_FPTU/SWP391/All_Iter/SWP_Final/SWP_Final/SWP391_G3_SPMS/SWP391_G3_SPMS/SWP391_G3_SPMS/web/AdminPoolManagement.jsp</file>
         </group>
         <group>
-            <file>file:/C:/Users/Administrator/Desktop/SWP391_G3_SPMS/src/java/controller/Customer/VoucherServlet.java</file>
-            <file>file:/C:/Users/Administrator/Desktop/SWP391_G3_SPMS/src/java/controller/Customer/VoucherDetailServlet.java</file>
-            <file>file:/C:/Users/Administrator/Desktop/SWP391_G3_SPMS/src/java/controller/Customer/CustomerAccountInforServlet.java</file>
-            <file>file:/C:/Users/Administrator/Desktop/SWP391_G3_SPMS/web/EditAccountInfo.jsp</file>
+            <file>file:/D:/Workspace/Github_Project/SWP391_G3_SPMS/src/java/dal/DBContext.java</file>
         </group>
     </open-files>
 </project-private>

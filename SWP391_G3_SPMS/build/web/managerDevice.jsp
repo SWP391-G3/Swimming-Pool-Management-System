@@ -14,7 +14,7 @@
 <%
   request.setAttribute("activeMenu", "device");
 
-  // === ĐOẠN NÀY ĐẢM BẢO THÔNG BÁO CHỈ HIỆN 1 LẦN ===
+  
   List<String> importErrors = (List<String>) session.getAttribute("importErrors");
   String importSuccess = (String) session.getAttribute("importSuccess");
   if (importErrors != null) {
@@ -26,6 +26,25 @@
       session.removeAttribute("importSuccess");
   }
 %>
+<style>
+    .alert {
+        position: relative;
+        padding-right: 35px;
+    }
+    .closebtn {
+        position: absolute;
+        right: 10px;
+        top: 5px;
+        color: #888;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 100;
+    }
+    .closebtn:hover {
+        color: #000;
+    }
+</style>
 
 
 
@@ -42,23 +61,12 @@
 
 
 
-    <c:if test="${not empty importSuccess}">
-        <div class="alert alert-success" id="successAlert">
-            ${importSuccess}
-        </div>
-    </c:if>
-    <c:if test="${not empty importErrors}">
-        <div class="alert alert-error" id="errorAlert">
-            <ul style="margin: 0; padding-left: 20px;">
-                <c:forEach var="err" items="${importErrors}">
-                    <li>${err}</li>
-                    </c:forEach>
-            </ul>
-        </div>
-    </c:if>
+
 
 
     <body>
+
+
         <div class="layout">
             <!-- Sidebar  --> 
             <%@ include file="../managerSidebar.jsp" %>
@@ -70,25 +78,40 @@
                 <div class="header">
                     <h2>Quản lý thiết bị hồ bơi</h2>
 
+                    <c:if test="${not empty importSuccess}">
+                        <div class="alert alert-success" id="successAlert">
+                            <span class="closebtn" onclick="this.parentElement.style.display = 'none';">&times;</span>
+                            ${importSuccess}
+                        </div>
+                    </c:if>
+                    <c:if test="${not empty importErrors}">
+                        <div class="alert alert-error" id="errorAlert">
+                            <span class="closebtn" onclick="this.parentElement.style.display = 'none';">&times;</span>
+                            <ul style="margin: 0; padding-left: 20px;">
+                                <c:forEach var="err" items="${importErrors}">
+                                    <li>${err}</li>
+                                    </c:forEach>
+                            </ul>
+                        </div>
+                    </c:if>
 
 
-
-                    <script>
-                        window.onload = function () {
-                            var successAlert = document.getElementById('successAlert');
-                            if (successAlert) {
-                                setTimeout(function () {
-                                    successAlert.style.display = 'none';
-                                }, 3000);
-                            }
-                            var errorAlert = document.getElementById('errorAlert');
-                            if (errorAlert) {
-                                setTimeout(function () {
-                                    errorAlert.style.display = 'none';
-                                }, 3000);
-                            }
-                        };
-                    </script>
+                    <!--                    <script>
+                                            window.onload = function () {
+                                                var successAlert = document.getElementById('successAlert');
+                                                if (successAlert) {
+                                                    setTimeout(function () {
+                                                        successAlert.style.display = 'none';
+                                                    }, 3000);
+                                                }
+                                                var errorAlert = document.getElementById('errorAlert');
+                                                if (errorAlert) {
+                                                    setTimeout(function () {
+                                                        errorAlert.style.display = 'none';
+                                                    }, 3000);
+                                                }
+                                            };
+                                        </script>-->
 
 
 

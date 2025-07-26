@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao.manager;
 
 import dal.DBContext;
@@ -15,6 +11,28 @@ import model.manager.ServiceReport;
 
 public class PoolServiceDAO extends DBContext {
 
+    // Các phương thức hiện có của bạn giữ nguyên, chỉ thêm phương thức mới dưới đây
+    // Kiểm tra xem tên dịch vụ đã tồn tại trong danh sách poolIds hay chưa
+    public boolean isServiceNameExists(String serviceName, List<Integer> poolIds) throws SQLException {
+        if (poolIds == null || poolIds.isEmpty()) {
+            return false;
+        }
+        String sql = "SELECT COUNT(*) FROM Pool_Service WHERE service_name = ? AND pool_id IN ("
+                + String.join(",", poolIds.stream().map(id -> "?").toArray(String[]::new)) + ")";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setString(1, serviceName);
+            for (int i = 0; i < poolIds.size(); i++) {
+                st.setInt(i + 2, poolIds.get(i));
+            }
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+            return false;
+        }
+    }
+
+    // Các phương thức khác giữ nguyên
     public List<PoolService> getAll() throws SQLException {
         List<PoolService> list = new ArrayList<>();
         String sql = "SELECT * FROM Pool_Service";
@@ -86,7 +104,6 @@ public class PoolServiceDAO extends DBContext {
         return st.executeUpdate() > 0;
     }
 
-    // Cập nhật trạng thái và số lượng của PoolService
     public void updatePoolService(int serviceId, String serviceStatus, int quantity) throws SQLException {
         String query = "UPDATE pool_service SET service_status = ?, quantity = ? WHERE pool_service_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -100,7 +117,6 @@ public class PoolServiceDAO extends DBContext {
         }
     }
 
-    // Các phương thức khác của PoolServiceDAO (giả định dựa trên Servlet)
     public ServiceReport getReportById(int reportId) throws SQLException {
         String query = "SELECT sr.*, p.pool_name, u.full_name AS staff_name "
                 + "FROM service_reports sr "
@@ -204,7 +220,6 @@ public class PoolServiceDAO extends DBContext {
         st.setInt(1, id);
         return st.executeUpdate() > 0;
     }
-// Lấy danh sách dịch vụ theo poolIds, filter nâng cao
 
     public List<PoolService> filterServicesWithPoolIds(
             String name, Double minPrice, Double maxPrice, Integer poolId, int offset, int limit, List<Integer> allowedPoolIds
@@ -280,7 +295,6 @@ public class PoolServiceDAO extends DBContext {
         return list;
     }
 
-// Đếm số lượng dịch vụ theo poolIds, filter nâng cao
     public int countFilteredWithPoolIds(
             String name, Double minPrice, Double maxPrice, Integer poolId, List<Integer> allowedPoolIds
     ) throws SQLException {
@@ -440,10 +454,9 @@ public class PoolServiceDAO extends DBContext {
                 r.setReportDate(rs.getTimestamp("report_date"));
                 r.setPoolName(rs.getString("pool_name"));
                 r.setBranchName(rs.getString("branch_name"));
-                String managerNote = rs.getString("manager_note"); // Sử dụng đúng tên cột
-                r.setManagerNote(managerNote != null ? managerNote : ""); // Gán chuỗi rỗng nếu null
+                String managerNote = rs.getString("manager_note");
+                r.setManagerNote(managerNote != null ? managerNote : "");
                 list.add(r);
-               
             }
         }
         return list;
@@ -578,7 +591,7 @@ public class PoolServiceDAO extends DBContext {
                 r.setPoolName(rs.getString("pool_name"));
                 r.setStaffName(rs.getString("staff_name"));
                 r.setBranchName(rs.getString("branch_name"));
-                r.setManagerNote(rs.getString("manager_note")); // 💡 Dòng quan trọng!
+                r.setManagerNote(rs.getString("manager_note"));
                 list.add(r);
             }
         }
@@ -629,5 +642,4 @@ public class PoolServiceDAO extends DBContext {
             return st.executeUpdate() > 0;
         }
     }
-
 }

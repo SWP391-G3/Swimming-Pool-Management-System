@@ -119,6 +119,18 @@
                     select[multiple] {
                         height: auto;
                     }
+                    .error-message {
+                        color: red;
+                        margin: 0 auto 20px auto;
+                        font-weight: 500;
+                        padding: 12px 20px;
+                        background-color: #ffebee;
+                        border-radius: 6px;
+                        border: 1px solid #ef9a9a;
+                        text-align: center;
+                        max-width: 70%;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    }
                     @media (max-width: 900px) {
                         .form-panel {
                             padding: 22px 8vw;
@@ -127,6 +139,12 @@
                             flex-direction: column;
                             gap: 0;
                         }
+                        .error-message {
+                            max-width: 90%;
+                        }
+                    }
+                    img#image-preview {
+                        display: none;
                     }
                 </style>
             </head>
@@ -134,9 +152,15 @@
                 <div class="layout">
             <%@ include file="../managerSidebar.jsp" %>
             <div class="content-panel">
+                <!-- Hiển thị thông báo lỗi từ session -->
+                <c:if test="${not empty sessionScope.errorMessage}">
+                    <div class="error-message">${fn:escapeXml(sessionScope.errorMessage)}</div>
+                    <c:remove var="errorMessage" scope="session"/>
+                </c:if>
+
                 <form class="form-panel" method="post" action="pool-service" enctype="multipart/form-data" autocomplete="off">
                     <div class="form-header">
-                        <a href="pool-service" class="btn-back">&#8592; Danh sách</a>
+                        <a href="pool-service" class="btn-back">← Danh sách</a>
                         <h2><c:choose><c:when test="${isEdit}">Cập nhật dịch vụ hồ bơi</c:when><c:otherwise>Thêm mới dịch vụ hồ bơi</c:otherwise></c:choose></h2>
                             </div>
                                 <input type="hidden" name="action" value="<c:choose><c:when test='${isEdit}'>update</c:when><c:otherwise>add</c:otherwise></c:choose>"/>
@@ -176,37 +200,41 @@
                         <div class="form-group" style="margin-bottom: 22px;">
                             <label for="service_name">Tên dịch vụ <span style="color:red">*</span></label>
                             <input type="text" name="service_name" id="service_name"
-                                   value="${isEdit ? fn:escapeXml(poolService.serviceName) : ''}"  maxlength="100"
-                            title="Tên dịch vụ không được chứa ký tự đặc biệt hoặc khoảng trắng!"/>
+                                   value="${not empty param.service_name ? fn:escapeXml(param.service_name) : (isEdit ? fn:escapeXml(poolService.serviceName) : '')}" maxlength="100"
+                            title="Tên dịch vụ không được chứa ký tự đặc biệt hoặc khoảng trắng thừa!"/>
                     </div>
 
                     <!-- Giá và số lượng -->
                     <div class="form-row">
                         <div class="form-group">
                             <label for="price">Giá dịch vụ (VND) <span style="color:red">*</span></label>
-                            <input type="text" name="price" id="price" value="${isEdit ? poolService.price : ''}"  min="0" />
-
+                            <input type="text" name="price" id="price" value="${not empty param.price ? fn:escapeXml(param.price) : (isEdit ? poolService.price : '')}" min="0" />
                         </div>
                         <div class="form-group">
                             <label for="quantity">Số lượng <span style="color:red">*</span></label>
-                            <input type="number" name="quantity" id="quantity" value="${isEdit ? poolService.quantity : 1}" min="1" />
+                            <input type="text" 
+                                   name="quantity" 
+                                   id="quantity" 
+                                   value="${not empty param.quantity ? fn:escapeXml(param.quantity) : (isEdit ? poolService.quantity : 1)}" 
+                                   min="1" 
+                                   max="1000"
+                                   required
+                                   oninput="validateQuantity(this)"
+                                   />
                         </div>
                     </div>
 
                     <!-- Ảnh -->
                     <div class="form-group" style="margin-bottom: 20px;">
                         <label for="service_image">Ảnh dịch vụ (URL) <span style="color:red">*</span></label>
-                        <input type="file" name="service_image" id="service_image" value="${isEdit ? fn:escapeXml(poolService.serviceImage) : ''}" 
-                               />
-                        <div class="form-img-preview" id="imgPreview" style="display:${isEdit && poolService.serviceImage != null && !poolService.serviceImage.isEmpty() ? 'flex' : 'none'};">
-                            <img id="imgTag" src="${isEdit ? poolService.serviceImage : ''}" alt="Preview"/>
-                        </div>
+                        <input type="file" name="service_image" id="service_image" value="${not empty param.service_image ? fn:escapeXml(param.service_image) : (isEdit ? fn:escapeXml(poolService.serviceImage) : '')}" />
+
                     </div>
 
                     <!-- Mô tả -->
                     <div class="form-group" style="margin-bottom: 10px;">
                         <label for="description">Mô tả</label>
-                        <textarea name="description" id="description" maxlength="1000">${isEdit ? fn:escapeXml(poolService.description) : ''}</textarea>
+                        <textarea name="description" id="description" maxlength="1000">${not empty param.description ? fn:escapeXml(param.description) : (isEdit ? fn:escapeXml(poolService.description) : '')}</textarea>
                     </div>
 
                     <!-- Buttons -->
@@ -221,6 +249,15 @@
         </div>
         <script>
             document.addEventListener("DOMContentLoaded", () => {
+
+                window.addEventListener("DOMContentLoaded", function () {
+                    if (priceInput && priceInput.value.trim() !== "") {
+                        const value = parseFloat(priceInput.value);
+                        if (!isNaN(value)) {
+                            priceInput.value = value.toFixed(1); // hoặc toFixed(2) nếu muốn 2 số thập phân
+                        }
+                    }
+                });
                 const form = document.querySelector("form");
                 const poolSelect = document.getElementById("pool_id");
                 const nameInput = document.getElementById("service_name");
@@ -228,7 +265,7 @@
                 const quantityInput = document.getElementById("quantity");
                 const urlInput = document.getElementById("service_image");
 
-                // Kiểm tra hồ bơi đã chọn
+                // Kiểm tra hồ bơi
                 const validatePool = () => {
                     if (!poolSelect.value) {
                         poolSelect.setCustomValidity("Chưa chọn hồ bơi!");
@@ -252,51 +289,67 @@
                     nameInput.reportValidity();
                 };
 
-                // Kiểm tra giá dịch vụ
+                // Kiểm tra giá
+                // Kiểm tra giá
                 const validatePrice = () => {
                     const v = priceInput.value.trim();
+
                     if (!v) {
                         priceInput.setCustomValidity("Giá dịch vụ không được để trống!");
-                    } else if (!/^-?\d+(\.\d+)?$/.test(v)) {
-                        priceInput.setCustomValidity("Giá dịch vụ chỉ được nhập số!");
-                    } else if (Number(v) > 100000000) {
-                        priceInput.setCustomValidity("Giá dịch vụ không được vượt quá 100,000,000!");
+                    } else if (!/^\d+(\.\d+)?$/.test(v)) {
+                        // Cho phép số nguyên hoặc số thập phân (ví dụ: 10000 hoặc 10000.5)
+                        priceInput.setCustomValidity("Giá dịch vụ phải là số nguyên dương hoặc số thập phân dương!");
                     } else {
-                        priceInput.setCustomValidity("");
+                        const num = parseFloat(v);
+                        if (num <= 0) {
+                            priceInput.setCustomValidity("Giá dịch vụ phải lớn hơn 0!");
+                        } else if (num > 100000000) {
+                            priceInput.setCustomValidity("Giá dịch vụ không được vượt quá 100,000,000 VND!");
+                        } else {
+                            priceInput.setCustomValidity("");
+                        }
                     }
+
                     priceInput.reportValidity();
                 };
 
+
                 // Kiểm tra số lượng
+                // Kiểm tra số lượng - Phiên bản đã sửa
                 const validateQuantity = () => {
                     const v = quantityInput.value.trim();
+
                     if (!v) {
                         quantityInput.setCustomValidity("Số lượng không được để trống!");
                     } else if (!/^\d+$/.test(v)) {
-                        quantityInput.setCustomValidity("Số lượng chỉ được nhập số!");
-                    } else if (Number(v) > 10000) {
-                        quantityInput.setCustomValidity("Số lượng không được phép quá 10000!");
+                        quantityInput.setCustomValidity("Số lượng chỉ được nhập số nguyên dương!");
                     } else {
-                        quantityInput.setCustomValidity("");
+                        const num = parseInt(v, 10);
+                        if (num < 1) {
+                            quantityInput.setCustomValidity("Số lượng tối thiểu phải là 1!");
+                        } else if (num > 1000) {
+                            quantityInput.setCustomValidity("Số lượng không được vượt quá 1000!");
+                        } else {
+                            quantityInput.setCustomValidity("");
+                        }
                     }
+
                     quantityInput.reportValidity();
                 };
+
 
                 // Kiểm tra URL ảnh
                 const validateURL = () => {
                     const v = urlInput.value.trim();
-                    const regex = /^(https?:\/\/).+/;
                     if (!v) {
-                       // urlInput.setCustomValidity("URL ảnh không được để trống!");
-                    } else if (!regex.test(v)) {
-                      //  urlInput.setCustomValidity("URL ảnh không đúng định dạng!");
+                        urlInput.setCustomValidity("URL ảnh không được để trống!");
                     } else {
                         urlInput.setCustomValidity("");
                     }
                     urlInput.reportValidity();
                 };
 
-                // Gắn sự kiện kiểm tra
+                // Gắn sự kiện
                 [
                     [poolSelect, validatePool],
                     [nameInput, validateName],
@@ -304,12 +357,10 @@
                     [quantityInput, validateQuantity],
                     [urlInput, validateURL]
                 ].forEach(([el, fn]) => {
-                    ["input", "blur", "change"].forEach(evt =>
-                        el.addEventListener(evt, fn)
-                    );
+                    ["input", "blur", "change"].forEach(evt => el.addEventListener(evt, fn));
                 });
 
-                // Ngăn submit nếu còn lỗi
+                // Xử lý submit
                 form.addEventListener("submit", e => {
                     validatePool();
                     validateName();
@@ -318,26 +369,11 @@
                     validateURL();
 
                     if (!form.checkValidity()) {
-                        form.reportValidity();
                         e.preventDefault();
+                        form.reportValidity();
                     }
                 });
             });
-        </script>
-        <script>
-            function previewImage(url) {
-                const imgPreview = document.getElementById('imgPreview');
-                const imgTag = document.getElementById('imgTag');
-
-                if (!url || url.trim() === "") {
-                    imgPreview.style.display = 'none';
-                    imgTag.src = '';
-                    return;
-                }
-
-                imgTag.src = url;
-                imgPreview.style.display = 'flex';
-            }
         </script>
 
     </body>

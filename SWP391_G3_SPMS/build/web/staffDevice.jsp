@@ -320,23 +320,26 @@
         <!-- JavaScript tìm kiếm tự động -->
         <script>
             function resetSearch() {
-                document.querySelector('input[name="keyword"]').value = "";
-                document.querySelector('select[name="poolId"]').value = "";
-                document.querySelector('select[name="status"]').value = "";
-                document.querySelector('select[name="pageSize"]').value = "5";
-                document.querySelector('input[name="page"]').value = 1;
-                document.getElementById('searchForm').submit();
+                // Cách 1: Đơn giản nhất - redirect thẳng đến servlet với tham số mặc định
+                window.location.href = "staffListDeviceServlet?page=1&pageSize=5";
+
+              
             }
+
+            // Giữ nguyên phần tìm kiếm tự động
             const searchInput = document.querySelector('input[name="keyword"]');
             const searchForm = document.getElementById('searchForm');
             let timeout = null;
-            searchInput && searchInput.addEventListener('input', function () {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    document.querySelector('input[name="page"]').value = 1; // reset về trang 1
-                    searchForm.submit();
-                }, 400);
-            });
+
+            if (searchInput && searchForm) {
+                searchInput.addEventListener('input', function () {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        document.querySelector('input[name="page"]').value = 1;
+                        searchForm.submit();
+                    }, 400);
+                });
+            }
         </script>
 
     </body>
