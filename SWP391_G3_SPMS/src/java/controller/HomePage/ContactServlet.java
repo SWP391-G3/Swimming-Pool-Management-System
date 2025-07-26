@@ -31,7 +31,7 @@ public class ContactServlet extends HttpServlet {
 
         // Kiểm tra session user (nếu có)
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("currentUser");
+        User user = (User) session.getAttribute("customerAccount");
         Integer userId = (user != null) ? user.getUser_id(): null;
 
         // Tạo đối tượng Contact

@@ -41,7 +41,7 @@ public class StaffDeviceDetailServlet extends HttpServlet {
             throws ServletException, IOException {
         // Lấy thông tin gửi từ form
         HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute("staffAccount");
         int deviceId = Integer.parseInt(request.getParameter("deviceId"));
         String deviceName = request.getParameter("deviceName");
         int poolId = Integer.parseInt(request.getParameter("poolId"));

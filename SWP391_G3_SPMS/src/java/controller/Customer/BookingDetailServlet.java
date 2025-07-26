@@ -44,7 +44,7 @@ public class BookingDetailServlet extends HttpServlet {
             }
 
             // Lấy user hiện tại từ session
-            User user = (User) request.getSession().getAttribute("currentUser");
+            User user = (User) request.getSession().getAttribute("customerAccount");
             Feedback userFeedback = null;
             if (user != null) {
                 FeedbackDAO feedbackDAO = new FeedbackDAO();
@@ -114,7 +114,7 @@ public class BookingDetailServlet extends HttpServlet {
         String service = request.getParameter("service");
         System.out.println("service param: " + service);
 
-        User currentUser = (User) request.getSession().getAttribute("currentUser");
+        User currentUser = (User) request.getSession().getAttribute("customerAccount");
         if (currentUser == null) {
             response.sendRedirect("login.jsp");
             return;

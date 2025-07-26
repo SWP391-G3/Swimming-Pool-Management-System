@@ -38,7 +38,7 @@ public class CustomerAccountInforServlet extends HttpServlet {
         if (service.equals("showProfile")) {
             // Thực tế nên lấy từ session
             HttpSession session = request.getSession();
-            User user = (User) session.getAttribute("currentUser");
+            User user = (User) session.getAttribute("customerAccount");
             if (user == null) {
                 response.sendRedirect("login.jsp");
                 return;
@@ -56,7 +56,7 @@ public class CustomerAccountInforServlet extends HttpServlet {
             }
         } else if (service.equals("changePassword")) {
             HttpSession session = request.getSession();
-            User currentUser = (User) session.getAttribute("currentUser");
+            User currentUser = (User) session.getAttribute("customerAccount");
             if (currentUser == null) {
                 response.sendRedirect("login.jsp");
                 return;
@@ -74,7 +74,7 @@ public class CustomerAccountInforServlet extends HttpServlet {
             throws ServletException, IOException {
         // Thực tế nên lấy từ session
         HttpSession session = request.getSession();
-        User user1 = (User) session.getAttribute("currentUser");
+        User user1 = (User) session.getAttribute("customerAccount");
         if (user1 == null) {
             response.sendRedirect("login.jsp");
             return;
@@ -165,7 +165,7 @@ public class CustomerAccountInforServlet extends HttpServlet {
                     userDAO.updateUser(userFromDb);
 
                     // Cập nhật lại session
-                    session.setAttribute("currentUser", userFromDb);
+                    session.setAttribute("customerAccount", userFromDb);
 
                     request.setAttribute("updateSuccess", "Cập nhật thông tin thành công!");
                     request.setAttribute("user", userFromDb);

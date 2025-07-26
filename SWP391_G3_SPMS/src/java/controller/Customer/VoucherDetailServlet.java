@@ -17,7 +17,7 @@ public class VoucherDetailServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        model.customer.User user = (session != null) ? (model.customer.User) session.getAttribute("currentUser") : null;
+        model.customer.User user = (session != null) ? (model.customer.User) session.getAttribute("customerAccount") : null;
         Integer userId = (user != null) ? user.getUser_id(): null;
         String code = request.getParameter("code");
 

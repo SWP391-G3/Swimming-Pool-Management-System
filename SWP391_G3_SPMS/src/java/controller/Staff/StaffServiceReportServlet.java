@@ -18,7 +18,7 @@ public class StaffServiceReportServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute("staffAccount");
         if (currentUser == null) {
             response.sendRedirect("login.jsp");
             return;

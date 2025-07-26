@@ -7,7 +7,7 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="model.customer.*, java.util.*" %>
 <%
-    User currentUser = (User) session.getAttribute("currentUser");
+    User currentUser = (User) session.getAttribute("customerAccount");
     String userName = (currentUser != null) ? currentUser.getFull_name() : "";
     String avatar = (currentUser != null && currentUser.getImages() != null && !currentUser.getImages().isEmpty())
         ? currentUser.getImages() : "default-avatar.png";

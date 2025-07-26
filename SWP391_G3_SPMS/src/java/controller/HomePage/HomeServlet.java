@@ -30,7 +30,7 @@ public class HomeServlet extends HttpServlet {
         List<Pool> list = dao.getTop3();
         List<Pool> list2 = dao.getPoolImage();
         List<FeedbackHomepage> listFeedback = fdao.getFeedback();
-        User user = (User) session.getAttribute("currentUser");
+        User user = (User) session.getAttribute("customerAccount");
         request.setAttribute("listPool", list);
         request.setAttribute("listPool2", list2);
         request.setAttribute("listPool3", listFeedback);

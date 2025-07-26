@@ -22,7 +22,7 @@ public class StaffListDeviceServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute("staffAccount");
         int branchId = 0;
         String poolName = null;
         if (currentUser != null) {

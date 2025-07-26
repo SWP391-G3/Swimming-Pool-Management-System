@@ -20,7 +20,7 @@ public class StaffPoolServiceServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute("staffAccount");
 
         String poolName = null;
         StaffDAO staffDAO = new StaffDAO(); // hoặc inject qua DI

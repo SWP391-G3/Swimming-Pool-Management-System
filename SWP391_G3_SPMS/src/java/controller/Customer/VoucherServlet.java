@@ -25,7 +25,7 @@ public class VoucherServlet extends HttpServlet {
         }
 
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("currentUser");
+        User user = (User) session.getAttribute("customerAccount");
         if (user == null) {
             response.sendRedirect("login.jsp");
             return;

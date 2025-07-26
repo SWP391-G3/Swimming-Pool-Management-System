@@ -24,7 +24,7 @@ public class BookingHistoryServlet extends HttpServlet {
             throws ServletException, IOException {
         try {
             HttpSession session = request.getSession();
-            User currentUser = (User) session.getAttribute("currentUser");
+            User currentUser = (User) session.getAttribute("customerAccount");
             if (currentUser == null) {
                 response.sendRedirect("login.jsp");
                 return;

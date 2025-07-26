@@ -4,7 +4,7 @@
 
 <%
     model.staff.StaffJoinedTable staff = (model.staff.StaffJoinedTable) session.getAttribute("staff");
-    model.customer.User user = (model.customer.User) session.getAttribute("currentUser");
+    model.customer.User user = (model.customer.User) session.getAttribute("staffAccount");
 %>
 
 <!DOCTYPE html>

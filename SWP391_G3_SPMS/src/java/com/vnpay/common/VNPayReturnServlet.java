@@ -93,7 +93,7 @@ public class VNPayReturnServlet extends HttpServlet {
                         // Lấy lại dữ liệu từ session
                         BookingPageData pageData = (BookingPageData) session.getAttribute("bookingPageData");
                         String htmlContent = EmailTicketUtil.createResponseTemplate(pageData, request, response);
-                        User user = (User) session.getAttribute("currentUser");
+                        User user = (User) session.getAttribute("customerAccount");
                         String email = (user != null) ? user.getEmail() : "";
                         String customerName = (user != null) ? user.getFull_name() : "";
 

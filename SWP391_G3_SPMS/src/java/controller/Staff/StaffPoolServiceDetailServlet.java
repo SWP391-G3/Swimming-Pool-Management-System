@@ -26,7 +26,7 @@ public class StaffPoolServiceDetailServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute("staffAccount");
         String poolName = null;
         StaffDAO staffDAO = new StaffDAO(); // hoặc inject qua DI
         Staff staff = staffDAO.getStaffById(currentUser.getUser_id());
@@ -64,7 +64,7 @@ public class StaffPoolServiceDetailServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute("staffAccount");
 
         int serviceId = Integer.parseInt(request.getParameter("serviceId"));
         String serviceName = request.getParameter("serviceName");

@@ -30,7 +30,6 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-       
 
         UserDAO dao = new UserDAO();
         User user = dao.getUserByUsername(username); // Lấy user theo username
@@ -43,21 +42,25 @@ public class LoginServlet extends HttpServlet {
 
                 HttpSession session = request.getSession();
                 session.setAttribute("currentUser", user);
-                session.setAttribute("message", "Đăng nhập thành công!"); 
+                session.setAttribute("message", "Đăng nhập thành công!");
                 int roleId = user.getRole_id();
 
                 switch (roleId) {
                     case 1:
+                        session.setAttribute("adminAccount", user);
                         response.sendRedirect("adminDashBoard");
                         break;
                     case 2:
-                        response.sendRedirect("managerPanel.jsp"); 
+                        session.setAttribute("managerAccount", user);
+                        response.sendRedirect("managerPanel.jsp");
                         break;
                     case 3:
+                        session.setAttribute("staffAccount", user);
                         response.sendRedirect("staffManager");
                         break;
                     case 4:
-                        response.sendRedirect("customerHome");                     
+                        session.setAttribute("customerAccount", user);
+                        response.sendRedirect("customerHome");
                         break;
                     default:
                         response.sendRedirect("LandingPage.jsp");

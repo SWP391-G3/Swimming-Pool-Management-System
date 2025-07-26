@@ -18,7 +18,7 @@ public class StaffManager extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("currentUser");
+        User user = (User) session.getAttribute("staffAccount");
         if (user == null) {
             response.sendRedirect("login.jsp");
             return;
@@ -47,7 +47,7 @@ public class StaffManager extends HttpServlet {
             response.sendRedirect("staffListDeviceServlet");
         } else if (staffTypeId == 4) {
             response.sendRedirect("staffPoolService");
-        } else if (staffTypeId == 2){
+        } else if (staffTypeId == 2 || staffTypeId == 1){
             response.sendRedirect("checkin_list");
         }
     }

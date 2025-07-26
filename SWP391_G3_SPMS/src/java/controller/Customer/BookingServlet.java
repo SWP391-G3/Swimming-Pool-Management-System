@@ -24,7 +24,7 @@ public class BookingServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("currentUser");
+        User user = (User) session.getAttribute("customerAccount");
         if (user == null) {
             response.sendRedirect("login.jsp");
             return;
@@ -135,7 +135,7 @@ public class BookingServlet extends HttpServlet {
         }
 
         // Lấy user từ session
-        User user = (User) request.getSession().getAttribute("currentUser");
+        User user = (User) request.getSession().getAttribute("customerAccount");
         // Lấy pool, discount nếu cần hiển thị chi tiết
         Pool pool = new PoolDAO().getPoolByID(poolId);
         Discounts selectedDiscount = discountCode != null && !discountCode.isEmpty()

@@ -3,7 +3,7 @@
 
 <%
     model.staff.StaffJoinedTable staffSidebar = (model.staff.StaffJoinedTable) session.getAttribute("staff");
-    model.customer.User currentUser = (model.customer.User) session.getAttribute("currentUser");
+    model.customer.User currentUser = (model.customer.User) session.getAttribute("staffAccount");
     String staffName = (currentUser != null) ? currentUser.getFull_name() : "";
     String staffType = (staffSidebar != null) ? staffSidebar.getTypeName() : "";
     int staffTypeId = (staffSidebar != null) ? staffSidebar.getStaffTypeId() : -1;
