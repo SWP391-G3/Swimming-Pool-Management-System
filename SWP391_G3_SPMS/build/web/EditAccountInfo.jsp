@@ -84,14 +84,6 @@
                             </svg>
                             Thiết lập bảo mật
                         </a>
-                        <a href="profile?service=paymentMethod"
-                           class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 font-medium">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M17 9V7a5 5 0 00-10 0v2a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2z"/>
-                            </svg>
-                            Phương thức thanh toán
-                        </a>
                     </nav>
                 </aside>
 

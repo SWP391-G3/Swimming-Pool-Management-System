@@ -97,7 +97,9 @@
             <file>file:/D:/5rd_Semester_FPTU/SWP391/All_Iter/SWP_Final/SWP_Final/SWP391_G3_SPMS/SWP391_G3_SPMS/SWP391_G3_SPMS/web/AdminPoolManagement.jsp</file>
         </group>
         <group>
-            <file>file:/D:/Workspace/Github_Project/SWP391_G3_SPMS/src/java/dal/DBContext.java</file>
+            <file>file:/D:/Workspace/Github_Project/SWP391_G3_SPMS/src/java/dao/customer/BookingDetailDAO.java</file>
+            <file>file:/D:/Workspace/Github_Project/SWP391_G3_SPMS/src/java/controller/Customer/BookingDetailServlet.java</file>
+            <file>file:/D:/Workspace/Github_Project/SWP391_G3_SPMS/web/BookingDetail.jsp</file>
         </group>
     </open-files>
 </project-private>

@@ -709,17 +709,14 @@ public class DashboardDAO extends DBContext {
         List<TotalRevenue> listRevenues = new ArrayList<>();
         String sql = """
                      SELECT 
-                         ISNULL(br.branch_name, N'TOÀN HỆ THỐNG') AS branch_name,
-                         SUM(p.total_amount) AS total_revenue
-                     FROM 
-                         Payments p
-                     JOIN Booking b ON p.booking_id = b.booking_id
-                     JOIN Pools po ON b.pool_id = po.pool_id
-                     JOIN Branchs br ON po.branch_id = br.branch_id
-                     WHERE 
-                         p.payment_status = 'completed'
-                     GROUP BY 
-                         ROLLUP(br.branch_name);
+                             ISNULL(br.branch_name, N'TOÀN HỆ THỐNG') AS branch_name,
+                             SUM(p.total_amount) AS total_revenue
+                         FROM 
+                             Branchs br
+                         LEFT JOIN Pools po ON br.branch_id = po.branch_id
+                         LEFT JOIN Booking b ON po.pool_id = b.pool_id
+                         LEFT JOIN Payments p ON b.booking_id = p.booking_id AND p.payment_status = 'completed'
+                         GROUP BY ROLLUP(br.branch_name);
                      """;
         try(PreparedStatement st = connection.prepareStatement(sql)) {
             ResultSet rs = st.executeQuery();
