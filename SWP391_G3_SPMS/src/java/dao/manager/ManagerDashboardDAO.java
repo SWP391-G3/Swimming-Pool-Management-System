@@ -52,7 +52,7 @@ public class ManagerDashboardDAO extends DBContext {
                     COUNT(DISTINCT po.pool_id) as total_pools
                 FROM Branchs b
                 JOIN Pools po ON b.branch_id = po.branch_id AND po.pool_status = 1
-                JOIN Booking bk ON po.pool_id = bk.pool_id AND bk.booking_status IN ('confirmed', 'completed')
+                JOIN Booking bk ON po.pool_id = bk.pool_id
                 JOIN Payments p ON bk.booking_id = p.booking_id AND p.payment_status = 'completed'
                     AND p.payment_date >= ?
                 WHERE b.branch_id = ?
@@ -76,7 +76,7 @@ public class ManagerDashboardDAO extends DBContext {
                     COUNT(DISTINCT bk.user_id) as previous_customers
                 FROM Branchs b
                 JOIN Pools po ON b.branch_id = po.branch_id AND po.pool_status = 1
-                JOIN Booking bk ON po.pool_id = bk.pool_id AND bk.booking_status IN ('confirmed', 'completed')
+                JOIN Booking bk ON po.pool_id = bk.pool_id
                 JOIN Payments p ON bk.booking_id = p.booking_id AND p.payment_status = 'completed'
                     AND p.payment_date >= ? AND p.payment_date < ?
                 WHERE b.branch_id = ?
@@ -215,56 +215,55 @@ public class ManagerDashboardDAO extends DBContext {
     // Thống kê từng hồ bơi trong chi nhánh (chuẩn hóa: không join feedback khi tính doanh thu)// Thống kê từng hồ bơi trong chi nhánh: HIỂN THỊ TẤT CẢ HỒ BƠI (kể cả không có doanh thu, số liệu = 0 nếu không phát sinh)
     public List<PoolStats> getPoolStatsInBranch(int branchId, String period) throws SQLException {
         String sql = """
-        WITH PoolRevenue AS (
-            SELECT 
-                p.pool_id,
-                p.pool_name,
-                p.pool_address,
-                p.max_slot,
-                p.open_time,
-                p.close_time,
-                p.pool_image,
-                p.pool_description,
-                CASE WHEN p.pool_status = 1 THEN N'Active' ELSE 'InActive' END as status,
-                COALESCE(SUM(CASE WHEN pay.payment_status = 'completed' AND pay.payment_date >= ? THEN pay.total_amount ELSE 0 END), 0) as revenue,
-                COUNT(DISTINCT CASE WHEN pay.payment_status = 'completed' AND pay.payment_date >= ? THEN b.booking_id END) as total_bookings,
-                COUNT(DISTINCT CASE WHEN pay.payment_status = 'completed' AND pay.payment_date >= ? THEN b.user_id END) as total_customers
-            FROM Pools p
-            LEFT JOIN ngBooki b ON p.pool_id = b.pool_id AND b.booking_status IN ('confirmed', 'completed')
-            LEFT JOIN Payments pay ON b.booking_id = pay.booking_id
-            WHERE p.branch_id = ?
-            GROUP BY p.pool_id, p.pool_name, p.pool_address, p.max_slot, 
-                    p.open_time, p.close_time, p.pool_status, p.pool_image, p.pool_description
-        ), PoolRating AS (
-            SELECT p.pool_id, COALESCE(AVG(CAST(f.rating AS DECIMAL(5,2))), 0) as avg_rating
-            FROM Pools p
-            LEFT JOIN Feedbacks f ON p.pool_id = f.pool_id AND f.created_at >= ?
-            WHERE p.branch_id = ?
-            GROUP BY p.pool_id
-        )
-        SELECT pr.*, prt.avg_rating,
-            CASE 
-                WHEN pr.max_slot > 0 AND DATEDIFF(day, ?, GETDATE()) > 0 THEN 
-                    CAST(pr.total_bookings * 100.0 / NULLIF((pr.max_slot * DATEDIFF(day, ?, GETDATE())), 0) AS DECIMAL(18,2))
-                ELSE 0 
-            END as utilization_rate
-        FROM PoolRevenue pr
-        LEFT JOIN PoolRating prt ON pr.pool_id = prt.pool_id
-        ORDER BY pr.revenue DESC
-    """;
+            WITH PoolRevenue AS (
+                SELECT 
+                    p.pool_id,
+                    p.pool_name,
+                    p.pool_address,
+                    p.max_slot,
+                    p.open_time,
+                    p.close_time,
+                    p.pool_image,
+                    p.pool_description,
+                    CASE WHEN p.pool_status = 1 THEN N'Active' ELSE 'InActive' END as status,
+                    COALESCE(SUM(CASE WHEN pay.payment_status = 'completed' AND pay.payment_date >= ? THEN pay.total_amount ELSE 0 END), 0) as revenue,
+                    COUNT(DISTINCT CASE WHEN pay.payment_status = 'completed' AND pay.payment_date >= ? THEN b.booking_id END) as total_bookings,
+                    COUNT(DISTINCT CASE WHEN pay.payment_status = 'completed' AND pay.payment_date >= ? THEN b.user_id END) as total_customers
+                FROM Pools p
+                LEFT JOIN Booking b ON p.pool_id = b.pool_id
+                LEFT JOIN Payments pay ON b.booking_id = pay.booking_id
+                WHERE p.branch_id = ?
+                GROUP BY p.pool_id, p.pool_name, p.pool_address, p.max_slot, 
+                        p.open_time, p.close_time, p.pool_status, p.pool_image, p.pool_description
+            ), PoolRating AS (
+                SELECT p.pool_id, COALESCE(AVG(CAST(f.rating AS DECIMAL(5,2))), 0) as avg_rating
+                FROM Pools p
+                LEFT JOIN Feedbacks f ON p.pool_id = f.pool_id AND f.created_at >= ?
+                WHERE p.branch_id = ?
+                GROUP BY p.pool_id
+            )
+            SELECT pr.*, prt.avg_rating,
+                CASE 
+                    WHEN pr.max_slot > 0 AND DATEDIFF(day, ?, GETDATE()) > 0 THEN 
+                        CAST(pr.total_bookings * 100.0 / NULLIF((pr.max_slot * DATEDIFF(day, ?, GETDATE())), 0) AS DECIMAL(18,2))
+                    ELSE 0 
+                END as utilization_rate
+            FROM PoolRevenue pr
+            LEFT JOIN PoolRating prt ON pr.pool_id = prt.pool_id
+            ORDER BY pr.revenue DESC
+        """;
 
         List<PoolStats> poolStats = new ArrayList<>();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             Date startDate = getStartDateByPeriod(period);
-            // Dùng cùng một ngày lọc cho các điều kiện payment_date
-            stmt.setDate(1, new java.sql.Date(startDate.getTime())); // revenue
-            stmt.setDate(2, new java.sql.Date(startDate.getTime())); // total_bookings
-            stmt.setDate(3, new java.sql.Date(startDate.getTime())); // total_customers
+            stmt.setDate(1, new java.sql.Date(startDate.getTime())); // for revenue
+            stmt.setDate(2, new java.sql.Date(startDate.getTime())); // for total_bookings
+            stmt.setDate(3, new java.sql.Date(startDate.getTime())); // for total_customers
             stmt.setInt(4, branchId); // WHERE p.branch_id = ?
-            stmt.setDate(5, new java.sql.Date(startDate.getTime())); // feedback
-            stmt.setInt(6, branchId); // feedback branch id
-            stmt.setDate(7, new java.sql.Date(startDate.getTime())); // utilization_rate
-            stmt.setDate(8, new java.sql.Date(startDate.getTime())); // utilization_rate
+            stmt.setDate(5, new java.sql.Date(startDate.getTime())); // for feedback created_at
+            stmt.setInt(6, branchId); // for feedback branch id
+            stmt.setDate(7, new java.sql.Date(startDate.getTime())); // for utilization_rate (first)
+            stmt.setDate(8, new java.sql.Date(startDate.getTime())); // for utilization_rate (second)
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {

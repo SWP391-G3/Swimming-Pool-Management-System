@@ -403,7 +403,7 @@ CREATE TABLE PoolImage (
     pool_image NVARCHAR(MAX)
 );
 
-
+ALTER TABLE Feedbacks ADD replied BIT DEFAULT 0; -- 0: chưa phản hồi, 1: đã phản hồi
 
 
 -- Phần này chạy sau
