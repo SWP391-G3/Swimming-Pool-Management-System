@@ -1,4 +1,4 @@
-﻿--CREATE DATABASE SwimmingPoolDB2
+--CREATE DATABASE SwimmingPoolDB2
 
 CREATE TABLE Roles (
     role_id INT IDENTITY(1,1) PRIMARY KEY,

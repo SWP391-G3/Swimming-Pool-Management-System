@@ -1,4 +1,4 @@
-﻿-- Thêm dữ liệu vào bảng Roles
+-- Thêm dữ liệu vào bảng Roles
 INSERT INTO Roles(role_name) VALUES (N'admin'),(N'manager'),(N'staff'),(N'customer');
 
 -- Thêm dữ liệu vào bảng Users
