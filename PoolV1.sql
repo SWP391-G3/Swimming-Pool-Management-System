@@ -423,3 +423,5 @@ BEGIN
     JOIN Ticket_Types tt ON t.ticket_type_id = tt.ticket_type_id
     WHERE t.ticket_code IS NULL;
 END;
+
+
