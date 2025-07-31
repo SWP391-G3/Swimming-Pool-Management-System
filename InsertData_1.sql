@@ -1269,3 +1269,5 @@ INSERT INTO PoolImage (pool_id, pool_image) VALUES
 (25, N'https://dochoibomhoi.vn/wp-content/uploads/2020/10/9356d5a4ae52550c0c43-1.jpg'),
 (25, N'https://halotravel.vn/wp-content/uploads/2020/05/pool-party.jpg'),
 (25, N'https://npvgroup.vn/wp-content/uploads/2021/07/1.jpg');
+
+
